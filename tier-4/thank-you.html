@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>System Mastery Architecture: Phase 1 — Architecture Deployment Initiated</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      /* ── TIER 4 THANK-YOU: ARCHITECTURE ACTIVE ──
+         Amber confirmed. The cleared perimeter is now occupied.
+         The heat remains but carries forward momentum, not threat. */
+      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0e0d0a;
+      --text: #E8E4F0; --text-dim: #7C7A9A; --text-ghost: #484860;
+      --amber: #C9804C; --amber-glow: rgba(201,128,76,0.18); --amber-border: rgba(201,128,76,0.2);
+      --gold: #C9A84C; --gold-hover: #E8C56A; --gold-glow: rgba(201,168,76,0.15);
+      --violet: #7C5CFC; --violet-border: rgba(124,92,252,0.15);
+      --cyan: #3EF7E8; --cyan-dim: rgba(62,247,232,0.06);
+      --success: #2ECC8F; --success-dim: rgba(46,204,143,0.1); --success-border: rgba(46,204,143,0.2);
+      --border: rgba(124,92,252,0.12); --border-subtle: rgba(255,255,255,0.04);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    /* Residual heat lines — softer than sales page. The burn is done. */
+    .heat-line { position: fixed; left: 0; right: 0; height: 1px; pointer-events: none; z-index: 0; }
+    .heat-line:nth-child(1) { top: 25%; background: linear-gradient(90deg, transparent, rgba(201,128,76,0.04), transparent); animation: heatSettle 14s ease-in-out infinite; }
+    .heat-line:nth-child(2) { top: 65%; background: linear-gradient(90deg, transparent, rgba(201,128,76,0.03), transparent); animation: heatSettle 14s ease-in-out 5s infinite; }
+    @keyframes heatSettle { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ── CONFIRMATION HERO ── */
+    .confirm { padding: 80px 0 56px; text-align: center; }
+    .arch-badge {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--amber);
+      border: 1px solid var(--amber-border); padding: 10px 20px; display: inline-block; margin-bottom: 28px;
+      text-transform: uppercase; position: relative;
+    }
+    .arch-badge::before { content: ''; position: absolute; inset: -5px; border: 1px solid rgba(201,128,76,0.06); animation: archPulse 4s ease-in-out infinite; }
+    @keyframes archPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0; transform: scale(1.12); } }
+    .status-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .dot-active { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: dotPulse 2.5s ease-in-out infinite; }
+    @keyframes dotPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(46,204,143,0.5); } 50% { box-shadow: 0 0 0 8px rgba(46,204,143,0); } }
+    .status-text { font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--success); text-transform: uppercase; }
+    .confirm h1 { font-size: clamp(26px, 5vw, 44px); font-weight: 700; line-height: 1.12; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .confirm h1 em { font-style: italic; color: var(--amber); font-weight: 400; }
+    .confirm p { font-size: 17px; color: var(--text-dim); max-width: 500px; margin: 0 auto 36px; font-weight: 300; line-height: 1.8; }
+
+    /* ── ACCESS BUTTONS ── */
+    .access-grid { display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto 16px; }
+    .btn-primary { display: block; background: var(--amber); color: #050508; font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 17px 32px; text-decoration: none; text-align: center; transition: background 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; }
+    .btn-primary:hover { background: #D8906A; box-shadow: 0 0 40px var(--amber-glow); }
+    .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); animation: shimmer 6s ease-in-out infinite; }
+    @keyframes shimmer { 0%,100% { left: -100%; } 50% { left: 100%; } }
+    .btn-secondary { display: block; font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); border: 1px solid rgba(62,247,232,0.2); padding: 16px 32px; text-decoration: none; text-align: center; transition: background 0.2s, border-color 0.2s; }
+    .btn-secondary:hover { background: var(--cyan-dim); border-color: rgba(62,247,232,0.4); }
+    .btn-label { font-family: var(--mono); font-size: 10px; color: var(--text-ghost); text-align: center; letter-spacing: 1px; margin-top: 4px; }
+
+    /* ── ONBOARDING CALLOUT ── */
+    .onboard { background: var(--bg-elevated); border: 1px solid var(--amber-border); padding: 28px 32px; margin: 40px 0 24px; position: relative; }
+    .onboard::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--amber); opacity: 0.5; }
+    .onboard-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); opacity: 0.7; text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .onboard h3 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .onboard p { font-size: 14px; color: var(--text-dim); font-weight: 300; line-height: 1.7; }
+
+    /* ── 8-WEEK DEPLOYMENT SEQUENCE ── */
+    .deploy { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
+    .deploy h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .deploy .intro { font-size: 15px; color: var(--text-dim); font-weight: 300; margin-bottom: 32px; }
+    .modules { display: flex; flex-direction: column; gap: 2px; }
+    .module { background: var(--bg-card); border: 1px solid var(--border); padding: 22px 28px; display: flex; gap: 20px; position: relative; transition: border-color 0.2s; }
+    .module:hover { border-color: rgba(201,128,76,0.2); }
+    .module::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--amber); opacity: 0.25; transition: opacity 0.2s; }
+    .module:hover::before { opacity: 0.5; }
+    .module-mark { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--amber); min-width: 56px; padding-top: 2px; flex-shrink: 0; opacity: 0.8; }
+    .module h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .module p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.65; margin: 0; }
+
+    /* ── WHAT EXPECT SECTION ── */
+    .expect { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
+    .expect h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 28px; letter-spacing: -0.01em; }
+    .expect-items { display: flex; flex-direction: column; gap: 0; }
+    .expect-item { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border-subtle); align-items: flex-start; }
+    .expect-item:last-child { border-bottom: none; }
+    .expect-num { font-family: var(--mono); font-size: 10px; color: var(--amber); min-width: 28px; padding-top: 3px; opacity: 0.7; }
+    .expect-item h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .expect-item p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.6; }
+
+    /* ── BRIDGE TO TIER 5 ── */
+    .bridge { background: var(--bg-card); border: 1px solid var(--border); padding: 48px; text-align: center; margin: 24px 0 64px; position: relative; }
+    .bridge::before { content: ''; position: absolute; top: -1px; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(124,92,252,0.35), transparent); }
+    .bridge-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: rgba(124,92,252,0.6); text-transform: uppercase; margin-bottom: 16px; display: block; }
+    .bridge h3 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .bridge p { font-size: 15px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .bridge p.price-signal { color: var(--gold); font-family: var(--mono); font-size: 12px; letter-spacing: 1px; margin-bottom: 24px; }
+    .btn-bridge { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--violet); border: 1px solid rgba(124,92,252,0.3); padding: 14px 36px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .btn-bridge:hover { background: rgba(124,92,252,0.06); border-color: var(--violet); }
+
+    .footer { border-top: 1px solid var(--border-subtle); padding: 40px 0; text-align: center; }
+    .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+    .footer .sig { font-family: var(--display); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+
+    @media (max-width: 560px) {
+      .module { flex-direction: column; gap: 6px; padding: 18px 20px; }
+      .bridge { padding: 32px 24px; }
+      .expect-item { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="container">
+
+    <!-- CONFIRMATION -->
+    <section class="confirm">
+      <div class="arch-badge">SYSTEM MASTERY ARCHITECTURE — PHASE 1</div>
+      <div class="status-row">
+        <div class="dot-active"></div>
+        <span class="status-text">ARCHITECTURE DEPLOYMENT INITIATED</span>
+      </div>
+      <h1>The perimeter is cleared.<br>Now <em>build inside it.</em></h1>
+      <p>You've moved from theory to implementation. The 8-week build sequence begins when you access the portal. Two actions required now.</p>
+
+      <div class="access-grid">
+        <a href="https://sovereign-synthesis.vercel.app/course" class="btn-primary" target="_blank">ACCESS COURSE PORTAL — MODULE 001</a>
+        <p class="btn-label">5 modules &middot; Progressive unlock &middot; Begins immediately</p>
+        <a href="https://t.me/sovereignsynthesis" class="btn-secondary" target="_blank">JOIN TELEGRAM CHANNEL</a>
+        <p class="btn-label">Daily protocol transmissions &middot; Direct access &middot; Required for Week 1</p>
+      </div>
+    </section>
+
+    <!-- IMMEDIATE PROTOCOL -->
+    <div class="onboard">
+      <span class="onboard-label">// IMMEDIATE PROTOCOL</span>
+      <h3>Before Week 1 begins: complete the intake scan.</h3>
+      <p>Module 001 opens with the Vampire Scan — a dark psychology audit that maps your current reactive patterns. It takes approximately 25 minutes. This is not optional preparation. It is the data source for everything that follows. Do not proceed to Week 2 without completing it.</p>
+    </div>
+
+    <!-- 8-WEEK SEQUENCE -->
+    <section class="deploy">
+      <h2>The 8-week deployment sequence</h2>
+      <p class="intro">Each module is accessible in the portal after its predecessor is acknowledged. The sequence is intentional — do not skip forward.</p>
+      <div class="modules">
+        <div class="module">
+          <div class="module-mark">WK 01–02</div>
+          <div>
+            <h3>Module 001 — The Vampire Scan</h3>
+            <p>Dark Psychology Audit, Lexical Containment, Pattern Interrupt. Live mapping of your current reactive patterns — exact triggers, exact responses, exact cost of each loop. Data, not theory. Available now.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 03–04</div>
+          <div>
+            <h3>Module 002 — The Generator Blueprint</h3>
+            <p>Defense installation customized to your environment. Gray Rock, Faraday, Lighthouse, and Sovereign Anchor deployed against your specific interference vectors — not as principles, but as live operational protocols. Unlocks after Module 001.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 05–06</div>
+          <div>
+            <h3>Module 003 — The Scorched Earth Protocol</h3>
+            <p>The Override. Decision filters, execution frameworks, morning protocols from the Manifesto — installed in sequence, verified against live conditions. This is where reactive stops and engineering begins. Unlocks after Module 002.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 06–07</div>
+          <div>
+            <h3>Module 004 — The Sovereign Node Network</h3>
+            <p>Building the external architecture — relationships, environments, and systems that reinforce the sovereign operating system rather than undermining it. Unlocks after Module 003.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 07–08</div>
+          <div>
+            <h3>Module 005 — The Net Liquid Sum</h3>
+            <p>Stress-testing the new system under pressure. Difficult conversations, high-stakes decisions, environmental triggers. Verifying the architecture holds before certification. Final module.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT TO EXPECT -->
+    <section class="expect">
+      <h2>How the 8 weeks run</h2>
+      <div class="expect-items">
+        <div class="expect-item">
+          <span class="expect-num">01</span>
+          <div>
+            <h3>Telegram is the primary channel</h3>
+            <p>Daily protocol transmissions are delivered through the Sovereign Synthesis Telegram channel. This is not supplementary — it is the operational layer of the program. Join before Week 1 begins.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">02</span>
+          <div>
+            <h3>Each module includes live implementation support</h3>
+            <p>When you post implementation questions in the channel, you get direct feedback from Ace. Not a support team. Not a forum. The architect who built the system.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">03</span>
+          <div>
+            <h3>Modules unlock sequentially — this is by design</h3>
+            <p>The system is not a content library. It is a protocol sequence. Each module builds on verified completion of the previous one. Attempting to skip the sequence is the same glitch the whole program is designed to override.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">04</span>
+          <div>
+            <h3>An email confirmation with your receipt is on its way</h3>
+            <p>If you don't see it within 10 minutes, check spam. Your portal access is active now regardless — access it directly through the button above.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRIDGE TO T5 -->
+    <section class="bridge">
+      <span class="bridge-label">// NEXT TRANSMISSION</span>
+      <h3>Phase 1 builds the architecture.<br>Phase 2 stress-tests it at scale.</h3>
+      <p>System Mastery Architecture Phase 2 opens when the Phase 1 architecture has been verified under live conditions. 8 weeks of advanced implementation — higher-stakes environments, financial architecture, and sovereign positioning at scale.</p>
+      <p class="price-signal">// PHASE 2 — $1,497 &middot; AVAILABLE AFTER PHASE 1 COMPLETION</p>
+      <a href="../tier-5/phase-2.html" class="btn-bridge">SEE PHASE 2 OVERVIEW</a>
+    </section>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

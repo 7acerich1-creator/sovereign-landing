@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>The Inner Circle — Sovereign Synthesis | Direct Access</title>
+  <meta name="description" content="Not a program. A direct access arrangement. Application required.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      /* ── TIER 7: FULL SOVEREIGN LUMINOSITY ──
+         The architecture is complete. The signal is clear.
+         No performance needed. Stillness and earned authority.
+         A vault that's already open, waiting for someone who was expected. */
+      --bg: #0A0805; --bg-card: #110e08; --bg-elevated: #16120c;
+      --text: #F5F0E8; --text-dim: #A09080; --text-ghost: #6A6050;
+      --gold: #E8C56A; --gold-primary: #C9A84C; --gold-glow: rgba(232,197,106,0.3); --gold-border: rgba(232,197,106,0.25);
+      --cream: #FAF6EE;
+      --border: rgba(232,197,106,0.12); --border-subtle: rgba(255,240,200,0.05);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    /* Single soft gold breath — barely visible */
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 80% 30% at 50% -10%, rgba(232,197,106,0.05) 0%, transparent 60%); pointer-events: none; z-index: 0; }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* HERO */
+    .hero { padding: 96px 0 64px; text-align: center; position: relative; }
+    .main-badge {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 4px; color: var(--gold);
+      border: 1px solid var(--gold-border); padding: 8px 20px; display: inline-block; margin-bottom: 32px;
+      text-transform: uppercase; position: relative;
+      animation: goldBreathe 6s ease-in-out infinite;
+    }
+    @keyframes goldBreathe { 0%,100% { box-shadow: 0 0 0 0 rgba(232,197,106,0); } 50% { box-shadow: 0 0 20px rgba(232,197,106,0.12); } }
+    .hero h1 { font-size: clamp(26px, 5vw, 44px); font-weight: 700; line-height: 1.12; margin-bottom: 20px; letter-spacing: -0.02em; color: var(--cream); }
+    .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
+    .hero p { font-size: 17px; color: var(--text-dim); max-width: 480px; margin: 0 auto; font-weight: 300; line-height: 1.85; }
+
+    /* IS NOT BLOCK */
+    .is-not { padding: 56px 0; text-align: center; border-top: 1px solid var(--border-subtle); }
+    .is-not-items { display: flex; flex-direction: column; align-items: center; gap: 0; max-width: 320px; margin: 0 auto; }
+    .is-not-line { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--text-dim); padding: 14px 0; width: 100%; border-bottom: 1px solid rgba(232,197,106,0.06); text-transform: uppercase; }
+    .is-not-line:last-child { border-bottom: none; }
+
+    /* SECTIONS */
+    .section { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
+    .section h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; color: var(--cream); }
+    .section p { font-size: 16px; color: var(--text-dim); margin-bottom: 16px; font-weight: 300; line-height: 1.8; }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* QUALIFICATION CALLOUT */
+    .qual-block { background: var(--bg-elevated); border: 1px solid var(--gold-border); padding: 28px 32px; margin: 28px 0 0; position: relative; }
+    .qual-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.4; }
+    .qual-block p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.75; margin: 0; font-style: italic; }
+
+    /* APPLICATION SECTION */
+    .application { padding: 56px 0 0; border-top: 1px solid var(--border-subtle); }
+    .application h2 { font-size: 22px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em; color: var(--cream); }
+    .application .pre-form { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .form-wrap { background: var(--bg-card); border: 1px solid var(--border); padding: 32px; }
+    .form-wrap iframe { display: block; }
+
+    .footer { border-top: 1px solid var(--border-subtle); padding: 48px 0; text-align: center; margin-top: 64px; }
+    .footer .sig { font-family: var(--display); font-size: 15px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+    .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+
+    @media (max-width: 520px) { .form-wrap { padding: 20px 16px; } .qual-block { padding: 20px 22px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="main-badge">SOVEREIGN SYNTHESIS — INNER CIRCLE</div>
+      <h1>This is not a program.<br>It is a <em>direct access arrangement.</em></h1>
+      <p>The Inner Circle is reserved for those who have completed the full three-phase Sovereign Synthesis architecture and are ready for bilateral engagement with the architect.</p>
+    </section>
+
+    <!-- WHAT IT IS NOT -->
+    <section class="is-not">
+      <div class="is-not-items">
+        <div class="is-not-line">// This is not coaching.</div>
+        <div class="is-not-line">// This is not a mastermind.</div>
+        <div class="is-not-line">// This is not a course.</div>
+      </div>
+    </section>
+
+    <!-- WHAT IT IS -->
+    <section class="section">
+      <h2>What the Inner Circle is</h2>
+      <p>Direct bilateral access to Ace Richie. Not mediated by a team, a support system, or a curriculum. When architecture decisions need to be made in real time, the access is there.</p>
+      <p>Quarterly intensive reviews of the complete sovereign architecture across financial, environmental, relational, and operational layers. Not theory. Live architectural review of what is actually running.</p>
+      <p>Lifetime access to all future phases and protocols as they are developed. The Inner Circle is the access tier that does not have a ceiling.</p>
+    </section>
+
+    <!-- SELECTION -->
+    <section class="section">
+      <h2>Who this is for</h2>
+      <p>Applicants who have completed System Mastery Architecture Phases 1, 2, and 3. The application is designed to verify the architecture is operational — not to evaluate potential. If the architecture is not built, the access arrangement would not be useful.</p>
+      <div class="qual-block">
+        <p>The application is not a pitch. Do not apply to convince anyone of anything. Apply only if the architecture is complete and the access would be immediately deployable.</p>
+      </div>
+    </section>
+
+    <!-- APPLICATION FORM -->
+    <section class="application">
+      <h2>Submit your application</h2>
+      <p class="pre-form">// Reviewed directly by Ace Richie &middot; Response within 72 hours</p>
+      <div class="form-wrap">
+        <iframe data-tally-src="https://tally.so/embed/wz7X7V?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" title="Inner Circle Application"></iframe>
+        <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

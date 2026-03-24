@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>The Reality Override Manual | Free Diagnostic</title>
+  <meta name="description" content="A 12-page diagnostic that maps the patterns keeping you stuck. Three patterns. One night to complete. Free.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* ── TIER 1: THE FIRST CRACK ──
+         Near-black. One vertical crack of cyan.
+         The containment field is breaking.
+         ── Brand tokens: blue-shifted dark, canonical cyan begins to emerge. ── */
+      --bg: #050508;
+      --bg-card: #09090f;
+      --bg-elevated: #0e0e1a;
+      --text: #E8E4F0;
+      --text-dim: #7C7A9A;
+      --text-ghost: #484860;
+      --accent: #3EF7E8;
+      --accent-dim: rgba(62, 247, 232, 0.06);
+      --gold: #C9A84C;
+      --gold-hover: #E8C56A;
+      --gold-glow: rgba(201, 168, 76, 0.12);
+      --gold-dim-border: rgba(201, 168, 76, 0.2);
+      --border: rgba(120, 80, 255, 0.12);
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --display: 'Space Grotesk', sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
+
+    body {
+      font-family: var(--display);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ AMBIENT CRACK ═══ */
+    .crack {
+      position: fixed;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(62, 247, 232, 0.03) 20%,
+        rgba(62, 247, 232, 0.07) 50%,
+        rgba(62, 247, 232, 0.03) 80%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      padding: 88px 0 64px;
+      text-align: center;
+    }
+    .hero::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.4;
+      margin: 48px auto 0;
+    }
+    .proof-bar {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-ghost);
+      text-transform: uppercase;
+    }
+    .proof-num { color: var(--accent); font-weight: bold; }
+    .hero h1 {
+      font-size: clamp(28px, 5.5vw, 46px);
+      font-weight: 700;
+      line-height: 1.12;
+      margin-bottom: 20px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* ═══ PITCH ═══ */
+    .pitch {
+      padding: 64px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .pitch h2 {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .pitch p {
+      font-size: 17px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* ═══ EMAIL CAPTURE ═══ */
+    .capture-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 56px 48px;
+      text-align: center;
+      margin: 24px 0 64px;
+      position: relative;
+    }
+    .capture-section::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.25;
+    }
+    .capture-section h3 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .capture-section p {
+      font-size: 16px;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+    .form-row {
+      display: flex;
+      gap: 10px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .form-row input[type="email"] {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      padding: 14px 20px;
+      outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .form-row input[type="email"]:focus {
+      border-color: rgba(62, 247, 232, 0.4);
+    }
+    .form-row input[type="email"]::placeholder {
+      color: var(--text-ghost);
+    }
+    .btn-submit {
+      background: var(--gold);
+      color: #050508;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .btn-submit:hover {
+      background: var(--gold-hover);
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      animation: shimmer 5s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0%, 100% { left: -100%; } 50% { left: 100%; } }
+
+    .form-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-ghost);
+      margin-top: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* ═══ STATES ═══ */
+    .form-state.hidden { display: none; }
+    .success-state { display: none; }
+    .success-state.active { display: block; }
+
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(62,247,232,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(62,247,232,0); }
+    }
+    .success-state h3 { font-size: 22px; color: var(--text); margin-bottom: 12px; font-weight: 600; }
+    .success-state p { font-size: 15px; color: var(--text-dim); margin-bottom: 20px; font-weight: 300; }
+    .btn-download {
+      display: inline-block;
+      background: var(--gold);
+      color: #050508;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 36px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-download:hover { background: var(--gold-hover); }
+
+    .error-msg {
+      display: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    /* ═══ FOOTER ═══ */
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 0;
+      text-align: center;
+    }
+    .footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-ghost);
+      letter-spacing: 1px;
+    }
+    .footer .sig {
+      font-family: var(--display);
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+
+    @media (max-width: 540px) {
+      .form-row { flex-direction: column; }
+      .capture-section { padding: 40px 24px; }
+      .proof-bar { gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="crack"></div>
+
+  <div class="container">
+
+    <section class="hero">
+      <div class="proof-bar">
+        <span class="proof-item"><span class="proof-num">12</span>-PAGE DIAGNOSTIC</span>
+        <span class="proof-item"><span class="proof-num">3</span> PATTERNS MAPPED</span>
+        <span class="proof-item"><span class="proof-num">1</span> NIGHT TO COMPLETE</span>
+      </div>
+      <h1>The patterns are there.<br>You just haven't been shown <em>where to look.</em></h1>
+      <p>A 12-page diagnostic that maps the invisible systems keeping you reactive, drained, and predictable. Identify the three patterns running your life — in one sitting.</p>
+    </section>
+
+    <section class="pitch">
+      <h2>Something has been off for a while.</h2>
+      <p>You're not lazy. You're not broken. You're not missing motivation. You are running patterns that were installed before you had a say in the matter — and they are producing results that serve everyone except you.</p>
+      <p>The Reality Override Manual is a 12-page diagnostic designed to make those patterns visible. Not with theory. Not with motivation. With a structured framework that maps exactly where your energy is going and why.</p>
+      <p>Complete it in one sitting. You'll see what's been running in the background your entire life.</p>
+    </section>
+
+    <section class="capture-section">
+      <div class="form-state" id="formState">
+        <h3>Get the diagnostic. Free.</h3>
+        <p>Enter your email. The PDF arrives instantly.</p>
+        <form id="captureForm">
+          <div class="form-row">
+            <input type="email" id="emailInput" placeholder="your@email.com" required>
+            <button type="submit" class="btn-submit" id="submitBtn">GET ACCESS</button>
+          </div>
+        </form>
+        <p class="form-note">No spam. No sequence. Just the manual.</p>
+        <p class="error-msg" id="errorMsg"></p>
+      </div>
+
+      <div class="success-state" id="successState">
+        <h3><span class="status-dot"></span> Access granted</h3>
+        <p>Your diagnostic is ready. Open it now and complete it tonight.</p>
+        <a href="https://wzthxohtgojenukmdubz.supabase.co/storage/v1/object/public/public-assets/reality-override-manual.pdf" class="btn-download" target="_blank">DOWNLOAD THE MANUAL</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
+    const MAKE_WEBHOOK = 'https://hook.us2.make.com/wf0ttyqrjk8mz4fohjb9bpokzrk1hdrf';
+
+    document.getElementById('captureForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value.trim();
+      const btn = document.getElementById('submitBtn');
+      const errEl = document.getElementById('errorMsg');
+      if (!email) return;
+      btn.textContent = 'PROCESSING...';
+      btn.disabled = true;
+      errEl.style.display = 'none';
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/initiates`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email, source: 'landing-page', tier: 0, created_at: new Date().toISOString() })
+        });
+        fetch(MAKE_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, event: 'new_initiate' })
+        }).catch(() => {});
+        document.getElementById('formState').classList.add('hidden');
+        document.getElementById('successState').classList.add('active');
+      } catch (err) {
+        errEl.textContent = 'CONNECTION ERROR — TRY AGAIN';
+        errEl.style.display = 'block';
+        btn.textContent = 'GET ACCESS';
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

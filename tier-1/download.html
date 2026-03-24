@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Access Granted | Reality Override Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050508; --bg-card: #09090f; --text: #E8E4F0; --text-dim: #7C7A9A; --text-ghost: #484860;
+      --accent: #3EF7E8; --gold: #C9A84C; --gold-hover: #E8C56A; --gold-glow: rgba(201,168,76,0.12);
+      --border: rgba(124,92,252,0.12); --border-subtle: rgba(255,255,255,0.04);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+    .hero { padding: 80px 0 56px; text-align: center; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); display: inline-block; margin-right: 8px; vertical-align: middle; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(62,247,232,0.4); } 50% { box-shadow: 0 0 0 10px rgba(62,247,232,0); } }
+    .status-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 24px; display: inline-flex; align-items: center; }
+    .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 700; line-height: 1.15; margin-bottom: 20px; color: var(--text); letter-spacing: -0.01em; }
+    .hero p { font-size: 17px; color: var(--text-dim); max-width: 500px; margin: 0 auto 32px; font-weight: 300; }
+    .btn-download { display: inline-block; background: var(--gold); color: #050508; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 18px 56px; text-decoration: none; transition: background 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; }
+    .btn-download:hover { background: var(--gold-hover); box-shadow: 0 0 40px var(--gold-glow); }
+    .btn-download::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); animation: shimmer 5s ease-in-out infinite; }
+    @keyframes shimmer { 0%,100% { left: -100%; } 50% { left: 100%; } }
+    .dl-meta { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); margin-top: 12px; letter-spacing: 1px; }
+    .steps { padding: 60px 0; border-top: 1px solid var(--border-subtle); }
+    .steps h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 28px; letter-spacing: -0.01em; }
+    .step { display: flex; gap: 20px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid var(--border-subtle); }
+    .step:last-child { border-bottom: none; }
+    .step-num { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; color: var(--accent); min-width: 32px; padding-top: 3px; }
+    .step h3 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .step p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.7; }
+    .bridge { background: var(--bg-card); border: 1px solid var(--border); padding: 48px; text-align: center; margin: 24px 0 60px; }
+    .bridge h3 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .bridge p { font-size: 15px; color: var(--text-dim); margin-bottom: 24px; font-weight: 300; max-width: 440px; margin-left: auto; margin-right: auto; margin-bottom: 24px; }
+    .btn-bridge { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 14px 36px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .btn-bridge:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+    .footer { border-top: 1px solid var(--border-subtle); padding: 40px 0; text-align: center; }
+    .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+    .footer .sig { font-family: var(--display); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+    @media (max-width: 520px) { .bridge { padding: 32px 24px; } .step { flex-direction: column; gap: 8px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="status-tag"><span class="status-dot"></span> ACCESS GRANTED</div>
+      <h1>Your diagnostic is ready.</h1>
+      <p>Download it now. Set aside one uninterrupted hour tonight. Complete every section. What you find may surprise you.</p>
+      <a href="https://wzthxohtgojenukmdubz.supabase.co/storage/v1/object/public/public-assets/reality-override-manual.pdf" class="btn-download" target="_blank">DOWNLOAD THE MANUAL</a>
+      <p class="dl-meta">PDF &middot; 12 pages &middot; Complete in one sitting</p>
+    </section>
+    <section class="steps">
+      <h2>What to do next</h2>
+      <div class="step">
+        <span class="step-num">01</span>
+        <div><h3>Complete the diagnostic tonight</h3><p>Don't skim it. The framework only works if you answer honestly. One hour, no distractions, pen in hand.</p></div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div><h3>Identify your three patterns</h3><p>By the end of the manual you'll have mapped the specific behavioral loops that are running your decisions. Write them down.</p></div>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div><h3>Decide what to do about them</h3><p>The diagnostic makes the patterns visible. What you do next is up to you. If you want the defense system, it's waiting.</p></div>
+      </div>
+    </section>
+    <section class="bridge">
+      <h3>Ready for the next step?</h3>
+      <p>The diagnostic shows you the patterns. Protocol 77 gives you the defense system to neutralize them.</p>
+      <a href="../tier-2/protocol-77.html" class="btn-bridge">LEARN ABOUT PROTOCOL 77</a>
+    </section>
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

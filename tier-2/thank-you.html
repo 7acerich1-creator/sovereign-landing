@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Protocol 77 — Shield Activated</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0d0d1a;
+      --text: #E8E4F0; --text-dim: #7C7A9A; --text-ghost: #484860;
+      --accent: #3EF7E8; --accent-border: rgba(62,247,232,0.2);
+      --gold: #C9A84C; --gold-hover: #E8C56A; --gold-glow: rgba(201,168,76,0.15);
+      --border: rgba(124,92,252,0.14); --border-subtle: rgba(255,255,255,0.04);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+    /* CONFIRMATION */
+    .confirm { padding: 80px 0 56px; text-align: center; }
+    .shield-icon {
+      width: 64px; height: 64px; margin: 0 auto 28px;
+      border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 22px; color: var(--accent);
+      position: relative;
+    }
+    .shield-icon::before {
+      content: '';
+      position: absolute; inset: -4px;
+      border: 1px solid rgba(62,247,232,0.08);
+      animation: shieldPulse 3s ease-in-out infinite;
+    }
+    @keyframes shieldPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0; transform: scale(1.15); } }
+    .status-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(62,247,232,0.4); } 50% { box-shadow: 0 0 0 8px rgba(62,247,232,0); } }
+    .status-text { font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+    .confirm h1 { font-size: clamp(26px, 5vw, 40px); font-weight: 700; line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.01em; }
+    .confirm p { font-size: 17px; color: var(--text-dim); max-width: 480px; margin: 0 auto 32px; font-weight: 300; line-height: 1.8; }
+    .btn-download { display: inline-block; background: var(--gold); color: #050508; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 16px 48px; text-decoration: none; transition: background 0.2s, box-shadow 0.3s; }
+    .btn-download:hover { background: var(--gold-hover); box-shadow: 0 0 36px var(--gold-glow); }
+    .dl-note { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); margin-top: 12px; letter-spacing: 1px; }
+
+    /* DEPLOYMENT SEQUENCE */
+    .deployment { padding: 60px 0; border-top: 1px solid var(--border-subtle); }
+    .deployment h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 28px; letter-spacing: -0.01em; }
+    .seq-item { display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border-subtle); align-items: flex-start; }
+    .seq-item:last-child { border-bottom: none; }
+    .seq-day { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--accent); min-width: 48px; padding-top: 2px; }
+    .seq-item h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .seq-item p { font-size: 14px; color: var(--text-dim); font-weight: 300; line-height: 1.6; }
+
+    /* BRIDGE TO TIER 3 */
+    .bridge { background: var(--bg-card); border: 1px solid var(--border); padding: 48px; text-align: center; margin: 24px 0 60px; position: relative; }
+    .bridge::before { content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, rgba(124,92,252,0.4), transparent); }
+    .bridge-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: rgba(124,92,252,0.6); text-transform: uppercase; margin-bottom: 16px; display: block; }
+    .bridge h3 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .bridge p { font-size: 15px; color: var(--text-dim); margin-bottom: 24px; font-weight: 300; max-width: 420px; margin-left: auto; margin-right: auto; margin-bottom: 24px; }
+    .btn-bridge { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 14px 36px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .btn-bridge:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+
+    .footer { border-top: 1px solid var(--border-subtle); padding: 40px 0; text-align: center; }
+    .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+    .footer .sig { font-family: var(--display); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+
+    @media (max-width: 520px) { .bridge { padding: 32px 24px; } .seq-item { flex-direction: column; gap: 6px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="confirm">
+      <div class="shield-icon">//</div>
+      <div class="status-row"><div class="dot"></div><span class="status-text">SHIELD ACTIVATED</span></div>
+      <h1>Protocol 77 confirmed.<br>Your perimeter is sealed.</h1>
+      <p>Your 21-day deployment sequence is live. Don't read it — run it. The Guided Runner walks you through each phase with deployment timers, audit fields, and your Sovereign Anchor composer.</p>
+      <a href="./protocol-77-runner.html" class="btn-download">LAUNCH THE GUIDED RUNNER →</a>
+      <p class="dl-note">Interactive deployment app &middot; 4 phases &middot; State saves automatically &middot; <a href="https://wzthxohtgojenukmdubz.supabase.co/storage/v1/object/public/public-assets/protocol-77.pdf" target="_blank" style="color:var(--text-dim);text-decoration:underline;font-size:12px">PDF backup also available</a></p>
+    </section>
+
+    <section class="deployment">
+      <h2>The 21-day deployment sequence</h2>
+      <div class="seq-item">
+        <span class="seq-day">DAY 0</span>
+        <div><h3>Receive Protocol 77</h3><p>Read the full manual tonight. Do not skim. Mark every section that describes a pattern you recognize.</p></div>
+      </div>
+      <div class="seq-item">
+        <span class="seq-day">DAY 1</span>
+        <div><h3>Interference Vector Audit — Phase 1</h3><p>Map the top 5 people, systems, and environments currently extracting your bandwidth. Name them precisely.</p></div>
+      </div>
+      <div class="seq-item">
+        <span class="seq-day">DAY 2</span>
+        <div><h3>Input Embargo — Phase 2</h3><p>Begin your first 72-hour blackout of classified Noise streams. Audit every incoming information channel.</p></div>
+      </div>
+      <div class="seq-item">
+        <span class="seq-day">DAY 5</span>
+        <div><h3>Write Your Sovereign Anchor — Phase 4</h3><p>A single, irreducible statement of your core identity and mission. This is the fixed point around which everything else rotates.</p></div>
+      </div>
+      <div class="seq-item">
+        <span class="seq-day">DAY 7</span>
+        <div><h3>Lighthouse Calibration — Phase 3</h3><p>Post on one platform from the new position. Transmit signal without absorbing the response.</p></div>
+      </div>
+      <div class="seq-item">
+        <span class="seq-day">DAY 21</span>
+        <div><h3>Protocol 77 Fully Operational</h3><p>Measure frequency state against Day 0 baseline. The perimeter is secured. The Map is ready.</p></div>
+      </div>
+    </section>
+
+    <section class="bridge">
+      <span class="bridge-label">// NEXT TRANSMISSION</span>
+      <h3>Shield activated. Now install the OS.</h3>
+      <p>Protocol 77 secured the perimeter. The Manifesto gives you the complete navigation system — 46 pages, five phases, the full internal architecture.</p>
+      <a href="../tier-3/manifesto.html" class="btn-bridge">SEE THE MANIFESTO — $177</a>
+    </section>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>
