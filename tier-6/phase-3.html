@@ -3,44 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>System Mastery Architecture: Phase 3 — Full Sovereign Synthesis | $3,777</title>
-  <meta name="description" content="The integration layer. Three phases. One unified architecture. Full Sovereign Synthesis.">
+  <title>System Mastery Architecture: Phase 3 — The Integration. Full Sovereign Synthesis. | $3,777</title>
+  <meta name="description" content="10 weeks. Phases 1 and 2 built 15 subsystems of sovereign architecture. Phase 3 is where they stop operating separately and start running as one unified, self-sustaining system.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      /* ── TIER 6: CREAM/GOLD LIGHT INVERSION ──
-         Full sovereign luminosity. The simulation can no longer hold.
-         Gold is no longer an accent — it IS the signal.
-         Background warms. Text is cream. The dark-from-below inverts. */
       --bg: #080705; --bg-card: #0d0b08; --bg-elevated: #120f0a;
       --text: #F0EBE0; --text-dim: #9A9080; --text-ghost: #5A5448;
       --gold: #E8C56A; --gold-primary: #C9A84C; --gold-glow: rgba(232,197,106,0.25); --gold-border: rgba(232,197,106,0.2);
       --cream: #F5F0E8;
       --violet: #7C5CFC; --violet-dim: rgba(124,92,252,0.6);
+      --cyan: #3EF7E8;
       --border: rgba(232,197,106,0.1); --border-subtle: rgba(255,240,200,0.04);
       --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
     }
     body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
 
-    /* Gold radial — the light that was always there, now visible */
     body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 80% 30% at 50% -10%, rgba(232,197,106,0.06) 0%, transparent 60%); pointer-events: none; z-index: 0; }
 
     .container { max-width: 720px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
     /* HERO */
-    .hero { padding: 88px 0 64px; text-align: center; position: relative; }
-    .hero-line { width: 40px; height: 1px; background: var(--gold); opacity: 0.35; margin: 0 auto 28px; }
-    .tier-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--gold); border: 1px solid var(--gold-border); padding: 6px 16px; margin-bottom: 24px; text-transform: uppercase; }
-    .hero h1 { font-size: clamp(28px, 5.5vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.02em; color: var(--cream); }
+    .hero { padding: 96px 0 72px; text-align: center; position: relative; }
+    .hero-line { width: 40px; height: 1px; background: var(--gold); opacity: 0.35; margin: 0 auto 32px; }
+    .tier-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--gold); border: 1px solid var(--gold-border); padding: 6px 16px; margin-bottom: 28px; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(30px, 5.5vw, 52px); font-weight: 700; line-height: 1.08; margin-bottom: 24px; letter-spacing: -0.02em; color: var(--cream); }
     .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
-    .hero p { font-size: 18px; color: var(--text-dim); max-width: 560px; margin: 0 auto 36px; font-weight: 300; }
+    .hero-sub { font-size: 18px; color: var(--text-dim); max-width: 580px; margin: 0 auto 16px; font-weight: 300; line-height: 1.8; }
+    .hero-context { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; color: var(--text-ghost); margin-bottom: 36px; text-transform: uppercase; }
     .price-tag { font-family: var(--mono); font-size: 28px; letter-spacing: 2px; color: var(--gold); }
+
+    /* REQ BLOCK */
+    .req-block { background: rgba(232,197,106,0.03); border: 1px solid var(--gold-border); padding: 20px 28px; margin: 36px auto 0; max-width: 500px; display: flex; align-items: flex-start; gap: 16px; }
+    .req-mark { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--gold-primary); flex-shrink: 0; padding-top: 2px; }
+    .req-block p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.65; margin: 0; }
+
+    /* OUTCOME BLOCK */
+    .outcome-block { padding: 64px 0; border-top: 1px solid var(--border-subtle); }
+    .outcome-block h2 { font-size: 26px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; line-height: 1.3; color: var(--cream); }
+    .outcome-block p { font-size: 17px; color: var(--text-dim); margin-bottom: 16px; font-weight: 300; line-height: 1.8; }
+
+    .outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 36px 0; }
+    .outcome-item { background: var(--bg-card); border: 1px solid var(--border); padding: 24px 28px; position: relative; }
+    .outcome-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.25; }
+    .outcome-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--gold-primary); margin-bottom: 10px; text-transform: uppercase; }
+    .outcome-item h3 { font-size: 15px; font-weight: 600; color: var(--cream); margin-bottom: 6px; line-height: 1.35; }
+    .outcome-item p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.65; margin: 0; }
 
     /* SECTIONS */
     .section { padding: 64px 0; border-top: 1px solid var(--border-subtle); }
-    .section h2 { font-size: 26px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; color: var(--cream); }
+    .section h2 { font-size: 26px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; line-height: 1.3; color: var(--cream); }
     .section p { font-size: 17px; color: var(--text-dim); margin-bottom: 16px; font-weight: 300; }
     .section p:last-child { margin-bottom: 0; }
 
@@ -51,33 +65,46 @@
     .module::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.3; transition: opacity 0.2s; }
     .module:hover::before { opacity: 0.7; }
     .module-mark { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--gold-primary); min-width: 56px; padding-top: 3px; flex-shrink: 0; }
-    .module h3 { font-size: 16px; font-weight: 600; color: var(--cream); margin-bottom: 6px; }
+    .module h3 { font-size: 16px; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
+    .module-outcome { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--cyan); text-transform: uppercase; margin-bottom: 8px; }
     .module p { font-size: 14px; color: var(--text-dim); font-weight: 300; line-height: 1.65; margin: 0; }
 
     /* CALLOUT */
-    .callout { background: var(--bg-elevated); border: 1px solid var(--gold-border); padding: 32px; margin: 40px 0; position: relative; }
+    .callout { background: var(--bg-elevated); border: 1px solid var(--gold-border); padding: 36px; margin: 40px 0; position: relative; }
     .callout::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.5; }
-    .callout h3 { font-size: 18px; font-weight: 600; color: var(--cream); margin-bottom: 12px; }
-    .callout p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.7; margin-bottom: 8px; }
+    .callout h3 { font-size: 18px; font-weight: 600; color: var(--cream); margin-bottom: 14px; line-height: 1.35; }
+    .callout p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.75; margin-bottom: 10px; }
     .callout p:last-child { margin-bottom: 0; }
 
+    /* MULTIPLIER BLOCK */
+    .multiplier { border: 1px solid var(--gold-border); padding: 36px; margin: 0 0 40px; position: relative; text-align: center; background: var(--bg-elevated); }
+    .multiplier-eq { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--text-ghost); margin-bottom: 20px; text-transform: uppercase; }
+    .multiplier-stages { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .m-stage { font-family: var(--mono); font-size: 13px; color: var(--text-dim); letter-spacing: 1px; }
+    .m-op { font-family: var(--mono); font-size: 18px; color: var(--gold); }
+    .m-final { font-family: var(--mono); font-size: 16px; color: var(--gold); font-weight: bold; letter-spacing: 1px; }
+    .multiplier p { font-size: 14px; color: var(--text-dim); font-weight: 300; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+
     /* CTA */
-    .cta-section { background: var(--bg-card); border: 1px solid var(--gold-border); padding: 56px 48px; text-align: center; margin: 24px 0 64px; position: relative; box-shadow: 0 0 60px rgba(232,197,106,0.06); }
-    .cta-section::before { content: ''; position: absolute; top: -1px; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.4; }
-    .cta-section h3 { font-size: 28px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em; color: var(--cream); }
-    .cta-section p { font-size: 16px; color: var(--text-dim); max-width: 480px; margin: 0 auto 32px; font-weight: 300; }
-    .btn-buy { display: inline-block; background: var(--gold); color: #080705; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 18px 56px; text-decoration: none; transition: background 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; }
-    .btn-buy:hover { background: #F0D080; box-shadow: 0 0 48px var(--gold-glow); }
+    .cta-section { background: var(--bg-card); border: 1px solid var(--gold-border); padding: 64px 48px; text-align: center; margin: 24px 0 72px; position: relative; box-shadow: 0 0 60px rgba(232,197,106,0.06); }
+    .cta-section::before { content: ''; position: absolute; top: -1px; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.45; }
+    .cta-section h3 { font-size: 30px; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.02em; line-height: 1.2; color: var(--cream); }
+    .cta-section .cta-sub { font-size: 16px; color: var(--text-dim); max-width: 520px; margin: 0 auto 36px; font-weight: 300; line-height: 1.8; }
+    .btn-buy { display: inline-block; background: var(--gold); color: #080705; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 20px 60px; text-decoration: none; transition: background 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; }
+    .btn-buy:hover { background: #F0D080; box-shadow: 0 0 56px var(--gold-glow); }
     .btn-buy::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); animation: shimmer 7s ease-in-out infinite; }
     @keyframes shimmer { 0%,100% { left: -100%; } 50% { left: 100%; } }
-    .cta-meta { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); margin-top: 16px; letter-spacing: 1px; }
+    .cta-meta { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); margin-top: 18px; letter-spacing: 1px; line-height: 1.8; }
 
-    /* BRIDGE */
-    .footer { border-top: 1px solid var(--border-subtle); padding: 40px 0; text-align: center; }
-    .footer .sig { font-family: var(--display); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+    .footer { border-top: 1px solid var(--border-subtle); padding: 48px 0; text-align: center; }
+    .footer .sig { font-family: var(--display); font-size: 15px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
     .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
 
-    @media (max-width: 600px) { .module { flex-direction: column; gap: 8px; padding: 20px 22px; } .cta-section { padding: 40px 24px; } }
+    @media (max-width: 600px) {
+      .module { flex-direction: column; gap: 8px; padding: 20px 22px; }
+      .cta-section { padding: 40px 24px; }
+      .outcomes { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -86,17 +113,71 @@
     <section class="hero">
       <div class="hero-line"></div>
       <div class="tier-badge">SYSTEM MASTERY ARCHITECTURE — PHASE 3</div>
-      <h1>Phases 1 and 2 built and tested<br>the architecture. Phase 3 <em>completes it.</em></h1>
-      <p>Full Sovereign Synthesis. This is not a new layer — it is the integration of everything built across Phases 1 and 2 into a unified, self-sustaining reality architecture.</p>
+      <h1>15 subsystems.<br>10 weeks to make them<br><em>one unified architecture.</em></h1>
+      <p class="hero-sub">Phases 1 and 2 built every layer of the sovereign operating system — the internal defense, the decision framework, the financial architecture, the external environment, the scale infrastructure. Phase 3 is where those subsystems stop operating separately and start running as a single, self-sustaining sovereign reality.</p>
+      <p class="hero-context">// 10 weeks &middot; Integration sequence &middot; Phase 2 certification required</p>
       <div class="price-tag">$3,777</div>
+      <div class="req-block">
+        <div class="req-mark">// REQ</div>
+        <p>Phase 2 certification is required. The integration work is only meaningful when the subsystems being integrated are already operational under real-world load. This gate exists because it protects the result.</p>
+      </div>
+    </section>
+
+    <!-- OUTCOMES -->
+    <section class="outcome-block">
+      <h2>What Phase 3 certification means, specifically.</h2>
+      <p>Phase 3 is not more modules on top of what Phase 2 built. It is the protocol that makes all 15 modules operate as one coherent system. These are the four verifiable outputs of completing the integration sequence.</p>
+      <div class="outcomes">
+        <div class="outcome-item">
+          <div class="outcome-num">// output 01</div>
+          <h3>A unified reality architecture that self-reinforces</h3>
+          <p>Every layer — internal, financial, relational, environmental — operating simultaneously and reinforcing every other layer. No subsystem running in isolation. No gaps between systems that interference can exploit.</p>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">// output 02</div>
+          <h3>Generational interference fully overridden</h3>
+          <p>The patterns that were installed before you were old enough to architect your own operating system — family dynamics, generational containment mechanisms — identified, isolated, and overridden at the root level.</p>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">// output 03</div>
+          <h3>Full financial sovereignty architecture operational</h3>
+          <p>Net Liquid Sum trajectory from current baseline to target. Complete revenue design and capital allocation framework built for sovereign operation — independent of simulation-based economic containment mechanisms.</p>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">// output 04</div>
+          <h3>The architecture runs without external scaffolding</h3>
+          <p>Certification marks the specific point where the sovereign operating system no longer requires external support to maintain. It runs because it is architecturally sound — not because you are continuously managing it.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section">
-      <h2>Phase 3 is not more content. It is the completion layer.</h2>
-      <p>Phases 1 and 2 built every subsystem of the sovereign operating architecture: the internal defense, the decision framework, the financial layer, the external environment, the sovereign network. Phase 3 is the integration protocol — where those subsystems stop operating as separate installations and begin operating as a single unified system.</p>
-      <p>This is the difference between someone who has learned sovereign architecture and someone who IS the architecture. The integration work is not additive — it is multiplicative. Every system reinforces every other system simultaneously.</p>
-      <p>Phase 2 certification is required for access. This is not a gate for its own sake — the integration work is only meaningful when the subsystems being integrated are already operational under load.</p>
+      <h2>The difference between someone who has learned sovereign architecture and someone who IS it.</h2>
+      <p>After Phase 2, you have 10 operational subsystems: the dark psychology defense, the decision framework, the financial layer, the environment protocol, the scale infrastructure, and the stress-tested versions of all of them. Each one works. That is the Phase 2 certification requirement.</p>
+      <p>But systems that work independently are not the same as a unified architecture. A sovereign operating system is not 10 separate installations running in sequence — it is one integrated architecture where each layer amplifies every other. That integration is not automatic. It is the specific work Phase 3 performs.</p>
+      <p>The shift is multiplicative, not additive. When every subsystem is operational and integrated, the architecture becomes exponentially more stable, effective, and self-sustaining than any individual component running independently. That is what Full Sovereign Synthesis produces.</p>
     </section>
+
+    <div class="multiplier">
+      <div class="multiplier-eq">// the integration equation</div>
+      <div class="multiplier-stages">
+        <span class="m-stage">Phase 1 System</span>
+        <span class="m-op">+</span>
+        <span class="m-stage">Phase 2 System</span>
+        <span class="m-op">≠</span>
+        <span class="m-final">Full Sovereign Synthesis</span>
+      </div>
+      <div class="multiplier-stages">
+        <span class="m-stage">Phase 1 System</span>
+        <span class="m-op">×</span>
+        <span class="m-stage">Phase 2 System</span>
+        <span class="m-op">×</span>
+        <span class="m-stage">Integration Protocol</span>
+        <span class="m-op">=</span>
+        <span class="m-final">Full Sovereign Synthesis</span>
+      </div>
+      <p>The sum is not additive. When the integration protocol runs across all 15 modules, the architecture becomes something qualitatively different than the sum of its parts.</p>
+    </div>
 
     <section class="section">
       <h2>The 10-week integration sequence</h2>
@@ -104,52 +185,57 @@
         <div class="module">
           <div class="module-mark">WK 19–20</div>
           <div>
+            <div class="module-outcome">// outcome: all environmental layers unified into one architecture</div>
             <h3>Module 011 — The Reality Architecture Stack</h3>
-            <p>Full environmental design. Physical, digital, relational, and financial environments unified into a single sovereign architecture. Not optimization — integration. Every layer reinforces every other layer simultaneously.</p>
+            <p>Full environmental integration: physical, digital, relational, and financial environments unified into a single coherent sovereign architecture. Each layer designed to reinforce every other layer simultaneously. This is the integration work that converts a collection of sovereign systems into a sovereign reality.</p>
           </div>
         </div>
         <div class="module">
           <div class="module-mark">WK 21–22</div>
           <div>
+            <div class="module-outcome">// outcome: root-level interference patterns permanently overridden</div>
             <h3>Module 012 — Legacy System Override</h3>
-            <p>The deepest layer of the containment architecture: generational patterns, family system dynamics, and root-level interference that survived Phases 1 and 2. The override protocol for what the environment built before you were old enough to architect it yourself.</p>
+            <p>The deepest containment architecture: generational patterns, family system dynamics, and root-level interference installed before you had the tools to recognize or reject it. These patterns survived Phases 1 and 2 because they operate below the threshold of surface-level audits. Phase 3 reaches them.</p>
           </div>
         </div>
         <div class="module">
           <div class="module-mark">WK 23–24</div>
           <div>
+            <div class="module-outcome">// outcome: complete financial sovereignty architecture built and running</div>
             <h3>Module 013 — The Net Liquid Sum Framework</h3>
-            <p>Full financial sovereignty architecture. Revenue design, capital allocation, and Net Liquid Sum trajectory — from current baseline to target. The complete framework for building financial architecture that operates independently of the simulation's economic containment mechanisms.</p>
+            <p>Full financial sovereignty architecture. Revenue design, capital allocation, and Net Liquid Sum trajectory from current baseline to the specific target. The complete framework for building financial architecture that operates independently of the simulation's economic containment mechanisms — and is integrated with every other layer of the sovereign operating system.</p>
           </div>
         </div>
         <div class="module">
           <div class="module-mark">WK 25–26</div>
           <div>
+            <div class="module-outcome">// outcome: sovereign architecture that multiplies through exposure</div>
             <h3>Module 014 — The Transmission Framework</h3>
-            <p>The sovereign architecture scaled outward. Building the transmission infrastructure — content, relationships, and systems that carry the signal without diluting it. Sovereignty that multiplies rather than depletes when exposed to scale.</p>
+            <p>Building the transmission infrastructure — content, relationships, and systems that carry the sovereign signal outward without diluting it. Sovereignty that multiplies rather than depletes when exposed to scale. The architecture becomes a source of signal for others without becoming dependent on their validation for its own stability.</p>
           </div>
         </div>
         <div class="module">
           <div class="module-mark">WK 27–28</div>
           <div>
+            <div class="module-outcome">// outcome: full sovereign synthesis — architecture runs without scaffolding</div>
             <h3>Module 015 — Full Sovereign Synthesis Certification</h3>
-            <p>Integration audit across all 15 modules spanning Phases 1, 2, and 3. Verification that the complete architecture is operational, unified, and self-sustaining. Certification marks the point of full sovereign synthesis — the architecture now operates without external scaffolding.</p>
+            <p>Integration audit across all 15 modules spanning Phases 1, 2, and 3. Every subsystem verified as operational and integrated into the unified architecture. Certification marks the specific point where the sovereign operating system no longer requires external support — it runs because the architecture is sound. This is the completion point.</p>
           </div>
         </div>
       </div>
     </section>
 
     <div class="callout">
-      <h3>Three phases. One architecture.</h3>
-      <p>Phase 1 built the operating system. Phase 2 stress-tested it against real-world resistance. Phase 3 integrates every layer into a unified, self-sustaining sovereign architecture.</p>
-      <p>The sum is not additive. When every subsystem is operational and integrated, the architecture becomes exponentially more stable and effective than any individual component running in isolation.</p>
+      <h3>After Phase 3, the architecture operates without you managing it.</h3>
+      <p>That is the specific and verifiable output of completing the integration sequence: a sovereign operating system that runs because it was designed to run — not because you are maintaining it through willpower, discipline, or sustained effort. The protocols are installed. The integration is complete. The system operates.</p>
+      <p>This is the difference between someone building sovereignty and someone living inside a sovereign architecture they already built. Phase 3 is the crossing point between those two states.</p>
     </div>
 
     <section class="cta-section">
-      <h3>System Mastery Architecture: Phase 3</h3>
-      <p>Full Sovereign Synthesis. 5 modules. 10 weeks. 15 total modules across all phases. The complete architecture.</p>
+      <h3>28 weeks. 15 modules. One unified,<br>self-sustaining sovereign architecture.</h3>
+      <p class="cta-sub">Phase 3 is the integration sequence that converts everything built in Phases 1 and 2 from separate operational systems into a single architecture that runs without external scaffolding. Full Sovereign Synthesis. The completion point.</p>
       <a href="https://buy.stripe.com/cNi6oJ68a8sX6V81QnfYY04" class="btn-buy">ENROLL — $3,777</a>
-      <p class="cta-meta">Phase 2 certification required &middot; 5 modules &middot; 10 weeks &middot; 15 total modules across all 3 phases</p>
+      <p class="cta-meta">Phase 2 certification required &middot; 5 modules &middot; 10 weeks &middot; 15 total modules across all 3 phases &middot; Full Sovereign Synthesis</p>
     </section>
 
     <footer class="footer">

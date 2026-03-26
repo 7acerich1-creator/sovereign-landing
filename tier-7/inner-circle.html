@@ -3,73 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>The Inner Circle — Sovereign Synthesis | Direct Access</title>
-  <meta name="description" content="Not a program. A direct access arrangement. Application required.">
+  <title>The Inner Circle — Direct Access to the Architect | Sovereign Synthesis</title>
+  <meta name="description" content="Not a program. Not a mastermind. A direct bilateral access arrangement with the architect who built the system you just completed. Application required.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      /* ── TIER 7: FULL SOVEREIGN LUMINOSITY ──
-         The architecture is complete. The signal is clear.
-         No performance needed. Stillness and earned authority.
-         A vault that's already open, waiting for someone who was expected. */
       --bg: #0A0805; --bg-card: #110e08; --bg-elevated: #16120c;
       --text: #F5F0E8; --text-dim: #A09080; --text-ghost: #6A6050;
       --gold: #E8C56A; --gold-primary: #C9A84C; --gold-glow: rgba(232,197,106,0.3); --gold-border: rgba(232,197,106,0.25);
       --cream: #FAF6EE;
+      --cyan: #3EF7E8;
       --border: rgba(232,197,106,0.12); --border-subtle: rgba(255,240,200,0.05);
       --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
     }
     body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
 
-    /* Single soft gold breath — barely visible */
     body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 80% 30% at 50% -10%, rgba(232,197,106,0.05) 0%, transparent 60%); pointer-events: none; z-index: 0; }
 
     .container { max-width: 680px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
     /* HERO */
-    .hero { padding: 96px 0 64px; text-align: center; position: relative; }
+    .hero { padding: 96px 0 72px; text-align: center; position: relative; }
     .main-badge {
       font-family: var(--mono); font-size: 10px; letter-spacing: 4px; color: var(--gold);
-      border: 1px solid var(--gold-border); padding: 8px 20px; display: inline-block; margin-bottom: 32px;
+      border: 1px solid var(--gold-border); padding: 8px 20px; display: inline-block; margin-bottom: 36px;
       text-transform: uppercase; position: relative;
       animation: goldBreathe 6s ease-in-out infinite;
     }
-    @keyframes goldBreathe { 0%,100% { box-shadow: 0 0 0 0 rgba(232,197,106,0); } 50% { box-shadow: 0 0 20px rgba(232,197,106,0.12); } }
-    .hero h1 { font-size: clamp(26px, 5vw, 44px); font-weight: 700; line-height: 1.12; margin-bottom: 20px; letter-spacing: -0.02em; color: var(--cream); }
+    @keyframes goldBreathe { 0%,100% { box-shadow: 0 0 0 0 rgba(232,197,106,0); } 50% { box-shadow: 0 0 24px rgba(232,197,106,0.14); } }
+    .hero h1 { font-size: clamp(28px, 5vw, 46px); font-weight: 700; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.02em; color: var(--cream); }
     .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
-    .hero p { font-size: 17px; color: var(--text-dim); max-width: 480px; margin: 0 auto; font-weight: 300; line-height: 1.85; }
+    .hero-sub { font-size: 17px; color: var(--text-dim); max-width: 500px; margin: 0 auto 12px; font-weight: 300; line-height: 1.85; }
+    .hero-context { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--text-ghost); text-transform: uppercase; }
 
     /* IS NOT BLOCK */
     .is-not { padding: 56px 0; text-align: center; border-top: 1px solid var(--border-subtle); }
-    .is-not-items { display: flex; flex-direction: column; align-items: center; gap: 0; max-width: 320px; margin: 0 auto; }
-    .is-not-line { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--text-dim); padding: 14px 0; width: 100%; border-bottom: 1px solid rgba(232,197,106,0.06); text-transform: uppercase; }
+    .is-not-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; color: var(--text-ghost); text-transform: uppercase; margin-bottom: 24px; }
+    .is-not-items { display: flex; flex-direction: column; align-items: center; gap: 0; max-width: 360px; margin: 0 auto; }
+    .is-not-line { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--text-dim); padding: 16px 0; width: 100%; border-bottom: 1px solid rgba(232,197,106,0.06); text-transform: uppercase; }
     .is-not-line:last-child { border-bottom: none; }
 
     /* SECTIONS */
-    .section { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
-    .section h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; color: var(--cream); }
-    .section p { font-size: 16px; color: var(--text-dim); margin-bottom: 16px; font-weight: 300; line-height: 1.8; }
+    .section { padding: 60px 0; border-top: 1px solid var(--border-subtle); }
+    .section h2 { font-size: 24px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; color: var(--cream); line-height: 1.3; }
+    .section p { font-size: 16px; color: var(--text-dim); margin-bottom: 16px; font-weight: 300; line-height: 1.85; }
     .section p:last-child { margin-bottom: 0; }
 
+    /* ACCESS ITEMS */
+    .access-items { display: flex; flex-direction: column; gap: 2px; margin: 28px 0; }
+    .access-item { background: var(--bg-card); border: 1px solid var(--border); padding: 24px 28px; position: relative; display: flex; gap: 20px; }
+    .access-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.3; }
+    .access-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--gold-primary); flex-shrink: 0; padding-top: 2px; }
+    .access-item h3 { font-size: 15px; font-weight: 600; color: var(--cream); margin-bottom: 6px; line-height: 1.3; }
+    .access-item p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.7; margin: 0; }
+
     /* QUALIFICATION CALLOUT */
-    .qual-block { background: var(--bg-elevated); border: 1px solid var(--gold-border); padding: 28px 32px; margin: 28px 0 0; position: relative; }
+    .qual-block { background: var(--bg-elevated); border: 1px solid var(--gold-border); padding: 32px; margin: 32px 0 0; position: relative; }
     .qual-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.4; }
-    .qual-block p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.75; margin: 0; font-style: italic; }
+    .qual-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--gold-primary); margin-bottom: 12px; text-transform: uppercase; }
+    .qual-block p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.8; margin: 0; font-style: italic; }
+
+    /* WHAT CHANGES */
+    .shift-block { padding: 60px 0; border-top: 1px solid var(--border-subtle); }
+    .shift-block h2 { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: var(--cream); line-height: 1.3; letter-spacing: -0.01em; }
+    .shift-items { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+    .shift-item { display: flex; gap: 16px; align-items: flex-start; }
+    .shift-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; opacity: 0.5; }
+    .shift-item p { font-size: 15px; color: var(--text-dim); font-weight: 300; line-height: 1.75; margin: 0; }
+    .shift-item strong { color: var(--cream); font-weight: 500; }
 
     /* APPLICATION SECTION */
-    .application { padding: 56px 0 0; border-top: 1px solid var(--border-subtle); }
-    .application h2 { font-size: 22px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em; color: var(--cream); }
-    .application .pre-form { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .application { padding: 60px 0 0; border-top: 1px solid var(--border-subtle); }
+    .application h2 { font-size: 24px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em; color: var(--cream); line-height: 1.3; }
+    .application .app-sub { font-size: 16px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; line-height: 1.8; }
+    .application .pre-form { font-family: var(--mono); font-size: 10px; color: var(--text-ghost); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
     .form-wrap { background: var(--bg-card); border: 1px solid var(--border); padding: 32px; }
     .form-wrap iframe { display: block; }
 
-    .footer { border-top: 1px solid var(--border-subtle); padding: 48px 0; text-align: center; margin-top: 64px; }
+    .footer { border-top: 1px solid var(--border-subtle); padding: 56px 0; text-align: center; margin-top: 72px; }
     .footer .sig { font-family: var(--display); font-size: 15px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
     .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
 
-    @media (max-width: 520px) { .form-wrap { padding: 20px 16px; } .qual-block { padding: 20px 22px; } }
+    @media (max-width: 520px) { .form-wrap { padding: 20px 16px; } .qual-block { padding: 22px 24px; } .access-item { flex-direction: column; gap: 8px; } }
   </style>
 </head>
 <body>
@@ -78,40 +95,98 @@
     <!-- HERO -->
     <section class="hero">
       <div class="main-badge">SOVEREIGN SYNTHESIS — INNER CIRCLE</div>
-      <h1>This is not a program.<br>It is a <em>direct access arrangement.</em></h1>
-      <p>The Inner Circle is reserved for those who have completed the full three-phase Sovereign Synthesis architecture and are ready for bilateral engagement with the architect.</p>
+      <h1>The architecture is built.<br>Now you work directly<br>with the <em>architect.</em></h1>
+      <p class="hero-sub">The Inner Circle is not a higher tier of content. It is a direct access arrangement with the person who designed the system you just completed — for architects who are ready to move from running the system to expanding the reality it operates within.</p>
+      <p class="hero-context">// Phase 3 certification required &middot; Application reviewed by Ace Richie &middot; Response within 72 hours</p>
     </section>
 
     <!-- WHAT IT IS NOT -->
     <section class="is-not">
+      <div class="is-not-label">// This is not</div>
       <div class="is-not-items">
-        <div class="is-not-line">// This is not coaching.</div>
-        <div class="is-not-line">// This is not a mastermind.</div>
-        <div class="is-not-line">// This is not a course.</div>
+        <div class="is-not-line">A coaching program</div>
+        <div class="is-not-line">A mastermind group</div>
+        <div class="is-not-line">A course or curriculum</div>
+        <div class="is-not-line">A community membership</div>
+        <div class="is-not-line">A support system</div>
       </div>
     </section>
 
     <!-- WHAT IT IS -->
     <section class="section">
-      <h2>What the Inner Circle is</h2>
-      <p>Direct bilateral access to Ace Richie. Not mediated by a team, a support system, or a curriculum. When architecture decisions need to be made in real time, the access is there.</p>
-      <p>Quarterly intensive reviews of the complete sovereign architecture across financial, environmental, relational, and operational layers. Not theory. Live architectural review of what is actually running.</p>
-      <p>Lifetime access to all future phases and protocols as they are developed. The Inner Circle is the access tier that does not have a ceiling.</p>
+      <h2>What the Inner Circle is, specifically.</h2>
+      <p>The Inner Circle is a direct bilateral access arrangement. Not mediated by a team, a curriculum, or a support system. When you are making a real-time architecture decision — a financial commitment, a scale choice, a relational restructuring, a high-stakes strategic move — the access is direct. The architect who built and runs this system is available to work through it with you.</p>
+      <div class="access-items">
+        <div class="access-item">
+          <div class="access-num">// 01</div>
+          <div>
+            <h3>Direct bilateral access to Ace Richie</h3>
+            <p>Real-time access for architecture decisions as they arise. Not scheduled calls with a 48-hour turnaround. When the decision needs to be made, the access is there. This is not coaching — it is architect-to-architect consultation on live situations.</p>
+          </div>
+        </div>
+        <div class="access-item">
+          <div class="access-num">// 02</div>
+          <div>
+            <h3>Quarterly sovereign architecture reviews</h3>
+            <p>Live review of the complete sovereign architecture across financial, environmental, relational, and operational layers. Not a check-in. Not a strategy session. A full architectural audit — what is running, what has drifted, what is being left on the table, and what the next expansion phase requires.</p>
+          </div>
+        </div>
+        <div class="access-item">
+          <div class="access-num">// 03</div>
+          <div>
+            <h3>Lifetime access to all future phases and protocols</h3>
+            <p>As the Sovereign Synthesis architecture expands, Inner Circle members receive access to every new phase, protocol, and framework as it is developed. The Inner Circle is the tier that does not have a ceiling — because the architecture it supports is not designed to have one either.</p>
+          </div>
+        </div>
+        <div class="access-item">
+          <div class="access-num">// 04</div>
+          <div>
+            <h3>Priority access to emerging transmission infrastructure</h3>
+            <p>First access to new tools, methodologies, and sovereign architecture developments before they are released at other tiers. The Inner Circle is where the architecture evolves — in real time, with the architects who are running it at the highest level.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT CHANGES -->
+    <section class="shift-block">
+      <h2>What changes for Inner Circle architects.</h2>
+      <div class="shift-items">
+        <div class="shift-item">
+          <div class="shift-dot"></div>
+          <p><strong>Architecture decisions stop being isolated events.</strong> You have a second mind — trained on the same system you run — available to pressure-test every significant choice before it becomes a commitment.</p>
+        </div>
+        <div class="shift-item">
+          <div class="shift-dot"></div>
+          <p><strong>Your sovereign architecture becomes a living system.</strong> Quarterly reviews ensure the architecture doesn't drift — and identify every expansion opportunity the daily operating view misses by being inside the system.</p>
+        </div>
+        <div class="shift-item">
+          <div class="shift-dot"></div>
+          <p><strong>The ceiling you've been operating under disappears.</strong> Not because you've been given new tools — but because you now have real-time access to someone who has already solved the problems that are ahead of you.</p>
+        </div>
+        <div class="shift-item">
+          <div class="shift-dot"></div>
+          <p><strong>The architecture compounds instead of plateauing.</strong> The difference between the Inner Circle and completing Phase 3 is the difference between having a complete system and having a complete system that continues evolving with direct architectural support.</p>
+        </div>
+      </div>
     </section>
 
     <!-- SELECTION -->
     <section class="section">
-      <h2>Who this is for</h2>
-      <p>Applicants who have completed System Mastery Architecture Phases 1, 2, and 3. The application is designed to verify the architecture is operational — not to evaluate potential. If the architecture is not built, the access arrangement would not be useful.</p>
+      <h2>Who this is for — and who it isn't.</h2>
+      <p>The Inner Circle is for architects who have completed System Mastery Architecture through Phase 3 certification and are operating the architecture in live conditions. The application is designed to verify that the architecture is operational — not to evaluate potential or assess readiness to start.</p>
+      <p>The bilateral access arrangement only produces results when both parties are operating from built sovereign architecture. An architect who is still in the construction phase would find the access useful in theory and not in practice. This is why the Phase 3 certification requirement is not negotiable.</p>
       <div class="qual-block">
-        <p>The application is not a pitch. Do not apply to convince anyone of anything. Apply only if the architecture is complete and the access would be immediately deployable.</p>
+        <div class="qual-label">// on the application</div>
+        <p>The application is not a pitch. You are not being evaluated for potential or trying to convince anyone of your readiness. Apply only if the architecture is complete, operational, and the direct access would be immediately deployable to live situations you are already navigating.</p>
       </div>
     </section>
 
     <!-- APPLICATION FORM -->
     <section class="application">
-      <h2>Submit your application</h2>
-      <p class="pre-form">// Reviewed directly by Ace Richie &middot; Response within 72 hours</p>
+      <h2>Submit your application.</h2>
+      <p class="app-sub">Reviewed directly by Ace Richie. No team. No funnel. The application goes to the person who built the system.</p>
+      <p class="pre-form">// Response within 72 hours &middot; Phase 3 certification required</p>
       <div class="form-wrap">
         <iframe data-tally-src="https://tally.so/embed/wz7X7V?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" title="Inner Circle Application"></iframe>
         <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>

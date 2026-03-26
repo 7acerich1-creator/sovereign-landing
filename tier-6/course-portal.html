@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Mastery Architecture — Phase 3: The Deployment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --amber:#E8921A;--amber-dim:rgba(232,146,26,0.12);--amber-glow:rgba(232,146,26,0.35);--amber-faint:rgba(232,146,26,0.06);
+  --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.08);--cyan-glow:rgba(62,247,232,0.35);--cyan-border:rgba(62,247,232,0.25);
+  --gold:#C9A84C;--gold-dim:rgba(201,168,76,0.12);--gold-glow:rgba(201,168,76,0.4);--gold-border:rgba(201,168,76,0.3);
+  --bg:#060504;--bg-card:#0b0906;--bg-card2:#100d08;
+  --text:#E8E2D8;--dim:rgba(232,226,216,0.5);--dim2:rgba(232,226,216,0.25);
+  --sidebar-w:270px;--mono:'Space Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+/* ── BOOT ── */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+#boot.hidden{display:none}
+#bscan{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--gold),var(--amber),var(--cyan),transparent);box-shadow:0 0 18px var(--gold-glow);transform:translateY(-4px)}
+.boot-logo{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:4px;text-align:center;opacity:0;transition:opacity .4s}
+.boot-logo.show{opacity:1}
+.boot-bar{width:240px;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--gold),var(--cyan));border-radius:2px;transition:width 1.4s ease}
+.boot-fill.go{width:100%}
+.boot-txt{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;opacity:0;transition:opacity .3s .6s}
+.boot-txt.show{opacity:1}
+
+/* ── FLASH LAYERS ── */
+#sflash{position:fixed;inset:0;pointer-events:none;z-index:8888;opacity:0}
+#sflash.fire{animation:sfire .45s ease forwards}
+@keyframes sfire{
+  0%{opacity:0;background:linear-gradient(180deg,transparent 0%,var(--gold) 50%,transparent 100%);background-size:100% 6px;background-position:0 -6px}
+  40%{opacity:.6}100%{opacity:0;background-position:0 100vh}
+}
+#sealf{position:fixed;inset:0;pointer-events:none;z-index:8887;opacity:0}
+#sealf.fire{animation:sealfire .7s ease forwards}
+@keyframes sealfire{
+  0%{opacity:0;background:radial-gradient(circle at center,rgba(62,247,232,0.3) 0%,rgba(201,168,76,0.15) 45%,transparent 70%)}
+  35%{opacity:1}100%{opacity:0}
+}
+
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;overflow:hidden}
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;
+  background:transparent;border-right:1px solid rgba(201,168,76,0.2);
+  display:flex;flex-direction:column;overflow:hidden;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  position:relative;z-index:10;transition:transform .3s ease
+}
+.sb-header{padding:20px 18px 14px;border-bottom:1px solid var(--gold-dim)}
+.sb-brand{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+.sb-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.sb-phase{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+
+.sb-progress{padding:14px 18px;border-bottom:1px solid var(--gold-dim);display:flex;align-items:center;gap:12px}
+.pring-wrap{position:relative;width:44px;height:44px;flex-shrink:0}
+.pring-wrap svg{transform:rotate(-90deg)}
+.pring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:3}
+.pring-fill{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;stroke-dasharray:120;stroke-dashoffset:120;transition:stroke-dashoffset .6s ease}
+.pring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--cyan)}
+.sb-prog-text{font-size:11px;color:var(--dim);line-height:1.5}
+.sb-prog-text strong{display:block;color:var(--text);font-size:12px}
+
+.sb-nav{flex:1;overflow-y:auto;padding:10px 0}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+.sb-section{padding:8px 18px 4px;font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;transition:background .2s,border-left .2s;border-left:2px solid transparent;position:relative}
+.sb-item:hover{background:var(--gold-dim)}
+.sb-item.active{background:rgba(201,168,76,0.1);border-left-color:var(--gold)}
+.sb-item.active .si-label{color:var(--gold)}
+.sb-item.done .si-dot{background:var(--cyan);box-shadow:0 0 6px var(--cyan-glow)}
+.sb-item.flagged .si-dot{background:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
+.sb-item.done .si-label{color:var(--dim2);text-decoration:line-through;text-decoration-color:rgba(201,168,76,0.3)}
+.si-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .3s}
+.si-label{font-size:11px;color:var(--dim);transition:color .2s;line-height:1.3}
+.si-badge{margin-left:auto;font-family:var(--mono);font-size:7px;padding:2px 5px;border-radius:2px;letter-spacing:1px}
+.si-badge.cf{background:rgba(62,247,232,0.10);color:var(--cyan);border:1px solid var(--cyan-border)}
+.si-badge.fl{background:var(--amber-dim);color:var(--amber)}
+
+.sb-footer{padding:12px 18px;border-top:1px solid var(--gold-dim)}
+.sb-footer-btn{width:100%;padding:8px;border:1px solid var(--gold-border);background:var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .2s}
+.sb-footer-btn:hover{background:rgba(201,168,76,0.25);box-shadow:0 0 12px var(--gold-glow)}
+
+/* ── MAIN ── */
+#main{flex:1;height:100vh;overflow-y:auto;position:relative}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+.screen{display:none;padding:40px 48px;max-width:860px;margin:0 auto;min-height:100vh}
+.screen.active{display:block;animation:screenin .35s ease}
+@keyframes screenin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CANVAS ── */
+#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+#main,#sidebar{position:relative;z-index:1}
+
+/* ── TYPE ── */
+.scr-tag{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.scr-title{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--text)}
+.scr-title .cy{color:var(--cyan)}
+.scr-title .go{color:var(--gold)}
+.scr-title .am{color:var(--amber)}
+.scr-sub{font-size:15px;color:var(--dim);line-height:1.6;margin-bottom:32px}
+.divider{height:1px;background:linear-gradient(90deg,var(--gold-dim),transparent);margin:28px 0}
+p{font-size:14px;line-height:1.75;color:var(--dim);margin-bottom:14px}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:24px 0 10px}
+h4{font-size:13px;font-weight:600;color:var(--gold);font-family:var(--mono);letter-spacing:1px;margin:18px 0 8px}
+
+.card{background:var(--bg-card);border:1px solid var(--gold-dim);border-radius:6px;padding:20px;margin-bottom:16px}
+.card-cyan{background:var(--bg-card);border:1px solid var(--cyan-border);border-radius:6px;padding:20px;margin-bottom:16px}
+.card-amber{background:var(--bg-card);border:1px solid var(--amber-dim);border-radius:6px;padding:20px;margin-bottom:16px}
+
+/* ── OFFER ARCHITECTURE BUILDER ── */
+.offer-builder{margin:16px 0}
+.ob-stage{
+  display:grid;grid-template-columns:40px 1fr;gap:0;margin-bottom:2px;
+  cursor:pointer;position:relative
+}
+.ob-connector{
+  display:flex;flex-direction:column;align-items:center;padding-top:14px
+}
+.ob-dot{
+  width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);flex-shrink:0;transition:all .3s;z-index:1
+}
+.ob-line{flex:1;width:1px;background:rgba(255,255,255,.07);margin:4px 0;min-height:20px}
+.ob-stage:last-child .ob-line{display:none}
+.ob-stage.active .ob-dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.ob-stage.active .ob-line{background:rgba(201,168,76,0.3)}
+.ob-body{
+  padding:12px 16px;border:1px solid rgba(255,255,255,.05);border-radius:4px;
+  background:var(--bg-card);transition:all .25s;margin-left:4px
+}
+.ob-stage:hover .ob-body{border-color:var(--gold)}
+.ob-stage.active .ob-body{border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.ob-label{font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:2px;margin-bottom:4px}
+.ob-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.ob-desc{font-size:11px;color:var(--dim);line-height:1.4;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.ob-stage.active .ob-desc{max-height:160px}
+.ob-price{font-family:var(--mono);font-size:10px;color:var(--amber);margin-top:6px;opacity:0;transition:opacity .2s}
+.ob-stage.active .ob-price{opacity:1}
+
+/* ── CONTENT SYSTEM MATRIX ── */
+.csm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.csm-cell{
+  padding:16px;border:1px solid rgba(255,255,255,.05);border-radius:4px;
+  background:var(--bg-card);cursor:pointer;transition:all .25s;text-align:center
+}
+.csm-cell:hover{border-color:var(--amber);background:var(--amber-faint)}
+.csm-cell.active{border-color:var(--gold);background:var(--gold-dim)}
+.csm-cell.active .csm-name{color:var(--gold)}
+.csm-cell.active .csm-icon{filter:drop-shadow(0 0 6px var(--gold-glow))}
+.csm-icon{font-size:22px;margin-bottom:8px;transition:filter .2s}
+.csm-name{font-size:11px;font-weight:600;color:var(--text);transition:color .2s;margin-bottom:4px}
+.csm-desc{font-size:10px;color:var(--dim);line-height:1.4}
+.csm-selected-count{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;margin-top:12px;opacity:0;transition:opacity .3s;text-align:center}
+.csm-selected-count.show{opacity:1}
+
+/* ── REVENUE TIMELINE ── */
+.rev-timeline{margin:16px 0;position:relative}
+.rev-axis{display:flex;justify-content:space-between;margin-bottom:6px}
+.rev-axis-label{font-family:var(--mono);font-size:8px;color:var(--dim2);letter-spacing:1px}
+.rev-bar-wrap{position:relative;height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;margin-bottom:14px}
+.rev-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--amber),var(--gold),var(--cyan));width:0;transition:width 1.2s ease;box-shadow:0 0 8px var(--gold-glow)}
+.rev-milestones{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.rev-ms{
+  padding:12px;border:1px solid rgba(255,255,255,.05);border-radius:4px;
+  background:var(--bg-card);text-align:center;cursor:pointer;transition:all .25s
+}
+.rev-ms:hover{border-color:var(--gold)}
+.rev-ms.hit{border-color:var(--cyan);background:var(--cyan-dim)}
+.rev-ms.hit .rev-ms-val{color:var(--cyan)}
+.rev-ms-val{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--gold);margin-bottom:4px;transition:color .2s}
+.rev-ms-label{font-size:10px;color:var(--dim);line-height:1.3}
+
+/* ── DEPLOYMENT CHECKLIST ── */
+.deploy-check{margin:16px 0}
+.dc-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+  border:1px solid rgba(255,255,255,.05);border-radius:4px;
+  margin-bottom:6px;cursor:pointer;background:var(--bg-card);transition:all .2s
+}
+.dc-item:hover{border-color:var(--gold)}
+.dc-item.checked{border-color:var(--cyan);background:var(--cyan-dim)}
+.dc-item.checked .dc-box{background:var(--cyan);border-color:var(--cyan);color:var(--bg)}
+.dc-item.checked .dc-label{color:var(--dim2);text-decoration:line-through;text-decoration-color:rgba(62,247,232,0.4)}
+.dc-box{
+  width:16px;height:16px;border-radius:2px;border:1px solid rgba(255,255,255,.2);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all .2s;color:transparent
+}
+.dc-content{flex:1}
+.dc-label{font-size:12px;font-weight:600;color:var(--text);transition:all .2s;margin-bottom:3px}
+.dc-desc{font-size:11px;color:var(--dim);line-height:1.4}
+.dc-progress{font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:2px;margin-top:10px;opacity:0;transition:opacity .3s}
+.dc-progress.show{opacity:1}
+
+/* ── BRAND SIGNAL BUILDER ── */
+.bsb-wrap{margin:16px 0}
+.bsb-element{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;
+  border:1px solid rgba(255,255,255,.05);border-radius:4px;margin-bottom:6px;
+  background:var(--bg-card);cursor:pointer;transition:all .2s
+}
+.bsb-element:hover{border-color:var(--amber)}
+.bsb-element.active{border-color:var(--gold);background:var(--gold-dim)}
+.bsb-element.active .bse-name{color:var(--gold)}
+.bsb-element.active .bse-status{color:var(--gold)}
+.bse-indicator{
+  width:6px;height:36px;border-radius:3px;background:rgba(255,255,255,.06);
+  flex-shrink:0;transition:background .25s,box-shadow .25s
+}
+.bsb-element.active .bse-indicator{background:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.bse-content{flex:1}
+.bse-name{font-size:12px;font-weight:600;color:var(--text);transition:color .2s;margin-bottom:3px}
+.bse-desc{font-size:11px;color:var(--dim);line-height:1.4}
+.bse-status{font-family:var(--mono);font-size:8px;color:var(--dim2);letter-spacing:1px;margin-left:auto;transition:color .2s;flex-shrink:0}
+
+/* ── SCALING ARCHITECTURE MAP ── */
+.scale-map{display:grid;grid-template-columns:1fr;gap:0;margin:16px 0}
+.scale-row{
+  display:flex;align-items:stretch;gap:0;position:relative;
+  margin-bottom:6px
+}
+.scale-level{
+  width:80px;flex-shrink:0;padding:12px 10px;
+  background:var(--bg-card);border:1px solid rgba(255,255,255,.05);
+  border-right:none;border-radius:4px 0 0 4px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--mono);font-size:8px;color:var(--dim2);letter-spacing:1px;
+  line-height:1.3;cursor:pointer;transition:all .2s
+}
+.scale-body{
+  flex:1;padding:12px 16px;border:1px solid rgba(255,255,255,.05);
+  border-radius:0 4px 4px 0;background:var(--bg-card);
+  cursor:pointer;transition:all .2s
+}
+.scale-row:hover .scale-level,.scale-row:hover .scale-body{border-color:var(--gold)}
+.scale-row.active .scale-level{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold)}
+.scale-row.active .scale-body{background:rgba(201,168,76,0.06);border-color:var(--gold)}
+.scale-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;transition:color .2s}
+.scale-row.active .scale-title{color:var(--gold)}
+.scale-detail{font-size:11px;color:var(--dim);line-height:1.4;max-height:0;overflow:hidden;transition:max-height .3s}
+.scale-row.active .scale-detail{max-height:120px}
+.scale-revenue{font-family:var(--mono);font-size:9px;color:var(--amber);margin-top:5px;opacity:0;transition:opacity .2s}
+.scale-row.active .scale-revenue{opacity:1}
+
+/* ── FIELD NOTES ── */
+.fn-wrap{margin-top:24px;border:1px solid var(--gold-border);border-radius:6px;overflow:hidden}
+.fn-header{padding:10px 16px;background:var(--gold-dim);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gold-border)}
+.fn-icon{color:var(--gold);font-size:14px}
+.fn-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold)}
+.fn-body{padding:14px}
+.fn-prev{display:none;margin-bottom:12px;padding:10px 14px;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px}
+.fn-prev.show{display:block}
+.fn-prev-label{font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:2px;margin-bottom:6px}
+.fn-prev-text{font-size:12px;color:var(--dim);line-height:1.5}
+.fn-edit-link{font-family:var(--mono);font-size:8px;color:var(--amber);letter-spacing:1px;cursor:pointer;border:none;background:none;padding:4px 0;display:block;margin-top:6px}
+textarea.fn-ta{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.6;resize:none;min-height:80px;}
+textarea.fn-ta::placeholder{color:var(--dim2)}
+.fn-actions{display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04)}
+.fn-save-btn{padding:7px 16px;background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .2s}
+.fn-save-btn:hover{background:rgba(201,168,76,0.25);box-shadow:0 0 10px var(--gold-glow)}
+.fn-status{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:1px;opacity:0;transition:opacity .3s}
+.fn-status.show{opacity:1}
+
+/* ── ACTIVATION GATE ── */
+.act-gate{margin-top:28px;padding:22px;border:1px solid var(--gold-dim);border-radius:6px;background:rgba(201,168,76,0.03)}
+.act-header{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.act-question{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:18px}
+.act-btns{display:flex;gap:12px;flex-wrap:wrap}
+.act-confirm{padding:10px 24px;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .25s}
+.act-confirm:hover{background:rgba(201,168,76,0.28);box-shadow:0 0 16px var(--gold-glow)}
+.act-flag{padding:10px 24px;background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .25s}
+.act-flag:hover{border-color:var(--amber);color:var(--text)}
+.act-result{display:none;margin-top:16px;padding:12px 16px;border-radius:4px}
+.act-result.cf{display:block;background:rgba(62,247,232,0.07);border:1px solid var(--cyan-border)}
+.act-result.fl{display:block;background:var(--amber-faint);border:1px solid rgba(232,146,26,0.3)}
+.act-result-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;margin-bottom:4px}
+.act-result.cf .act-result-label{color:var(--cyan)}
+.act-result.fl .act-result-label{color:var(--amber)}
+.act-result-text{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── NEXT BUTTON ── */
+.bnext{display:none;margin-top:24px;padding:12px 32px;background:linear-gradient(135deg,var(--cyan-dim),var(--gold-dim));border:1px solid var(--cyan-border);color:var(--cyan);font-family:var(--mono);font-size:11px;letter-spacing:3px;cursor:pointer;border-radius:4px;width:fit-content;transition:all .25s}
+.bnext.show{display:block;animation:bnextappear .5s ease forwards}
+@keyframes bnextappear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bnext:hover{box-shadow:0 0 22px var(--cyan-glow),0 0 8px var(--gold-glow)}
+
+/* ── WELCOME ── */
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.wg-card{padding:18px;border:1px solid var(--gold-dim);border-radius:6px;background:var(--bg-card);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.wg-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-dim),transparent);opacity:0;transition:opacity .2s}
+.wg-card:hover::before{opacity:1}
+.wg-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.wg-num{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.wg-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.wg-desc{font-size:11px;color:var(--dim);line-height:1.4}
+
+/* system journey */
+.sj-tier{display:flex;align-items:center;gap:16px;padding:14px 18px;border-left:2px solid rgba(255,255,255,.06);margin-bottom:4px;transition:all .2s;border-radius:0 4px 4px 0}
+.sj-tier.active{border-left-color:var(--gold);background:var(--gold-dim)}
+.sj-tier.active .sj-label{color:var(--gold)}
+.sj-tier.complete{border-left-color:var(--cyan)}
+.sj-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0}
+.sj-tier.active .sj-dot{background:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.sj-tier.complete .sj-dot{background:var(--cyan)}
+.sj-label{font-size:13px;color:var(--dim)}
+.sj-tag{margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:2px 8px;border-radius:2px}
+.sj-tag.here{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border)}
+.sj-tag.done{background:rgba(62,247,232,0.1);color:var(--cyan)}
+
+/* done screen */
+.done-ring{display:flex;justify-content:center;margin:24px 0}
+.done-ring svg{filter:drop-shadow(0 0 16px rgba(62,247,232,0.5)) drop-shadow(0 0 32px rgba(201,168,76,0.3))}
+.done-ring circle.dr-fill{stroke:var(--cyan);stroke-width:4;fill:none;stroke-dasharray:283;stroke-dashoffset:0;stroke-linecap:round;animation:dring 1.4s ease forwards}
+@keyframes dring{from{stroke-dashoffset:283}to{stroke-dashoffset:0}}
+
+/* hamburger */
+#hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--bg-card);border:1px solid var(--gold-dim);padding:8px 10px;cursor:pointer;border-radius:3px;flex-direction:column;gap:4px}
+.hb-line{width:20px;height:1.5px;background:var(--gold);border-radius:1px}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9}
+
+@media(max-width:768px){
+  #hamburger{display:flex}
+  #sidebar{position:fixed;left:0;top:0;z-index:100;transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #sb-overlay.show{display:block}
+  .screen{padding:24px 20px}
+  .welcome-grid,.csm-grid,.rev-milestones{grid-template-columns:1fr 1fr}
+}
+
+/* ═══ FIELD WORKBOOK ═══ */
+@keyframes wbZoomEnter{
+  0%{transform:perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px);opacity:0;filter:blur(18px);}
+  25%{transform:perspective(1400px) scale(0.42) rotateX(10deg) translateY(48px);opacity:0.2;filter:blur(12px);}
+  55%{transform:perspective(1400px) scale(0.72) rotateX(4deg) translateY(18px);opacity:0.55;filter:blur(5px);}
+  78%{transform:perspective(1400px) scale(0.96) rotateX(0.8deg) translateY(4px);opacity:0.9;filter:blur(0.8px);}
+  91%{transform:perspective(1400px) scale(1.025) rotateX(-0.3deg) translateY(-2px);opacity:1;filter:blur(0);}
+  100%{transform:perspective(1400px) scale(1) rotateX(0) translateY(0);opacity:1;filter:blur(0);}
+}
+@keyframes wbGroupReveal{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.wb-active{animation:wbZoomEnter 1.15s cubic-bezier(0.12,0.8,0.28,1) forwards;}
+#wb-flash{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:0;transition:opacity 0.55s;
+  background:radial-gradient(ellipse at 50% 40%,rgba(62,247,232,0.18) 0%,rgba(201,168,76,0.1) 28%,transparent 60%);}
+.wb-phase-grp{margin-bottom:28px;opacity:0;animation:wbGroupReveal 0.45s ease forwards;}
+.wb-phase-grp:nth-child(2){animation-delay:0.1s;}
+.wb-phase-grp:nth-child(3){animation-delay:0.2s;}
+.wb-phase-hdr{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--cyan);
+  border-bottom:1px solid rgba(62,247,232,0.18);padding-bottom:8px;margin-bottom:12px;}
+.wb-entry{border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:14px 16px;margin-bottom:8px;
+  background:rgba(255,255,255,0.02);transition:border-color 0.2s;cursor:pointer;}
+.wb-entry:hover{border-color:rgba(255,255,255,0.15);}
+.wb-entry.wb-cf{border-left:2px solid var(--cyan);}
+.wb-entry.wb-fl{border-left:2px solid rgba(201,168,76,0.8);}
+.wb-entry.wb-pd{border-left:2px solid rgba(255,255,255,0.12);}
+.wb-etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;}
+.wb-elbl{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.75);}
+.wb-ebadge{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;padding:3px 8px;border-radius:2px;}
+.wb-ebadge.cf{color:var(--cyan);border:1px solid rgba(62,247,232,0.2);background:rgba(62,247,232,0.05);}
+.wb-ebadge.fl{color:rgba(201,168,76,1);border:1px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.05);}
+.wb-ebadge.pd{color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);}
+.wb-enote{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;}
+.wb-empty{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:0.08em;}
+.wb-stats{display:flex;gap:20px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);margin-bottom:20px;flex-wrap:wrap;}
+.wb-stats b{color:var(--cyan);}
+.wb-strat{margin-top:28px;border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;}
+.wb-slbl{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:8px;}
+.wb-ssub{font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:14px;line-height:1.65;}
+.wb-btn{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.14em;
+  padding:10px 20px;border:1px solid rgba(255,255,255,0.12);background:transparent;
+  color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;border-radius:2px;margin-top:16px;}
+.wb-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.wb-coach-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.wb-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(62,247,232,0.25);
+  background:rgba(62,247,232,0.05);padding:5px 12px;border-radius:2px;
+  font-family:var(--mono);font-size:8px;letter-spacing:0.16em;color:var(--cyan);}
+
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div id="sflash"></div>
+<div id="sealf"></div>
+
+<div id="boot">
+  <div id="bscan"></div>
+  <div class="boot-logo" id="boot-logo">SOVEREIGN SYNTHESIS</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-txt" id="boot-txt">INITIALIZING SMA PHASE 3 // DEPLOYMENT PROTOCOL</div>
+</div>
+
+<button id="hamburger" onclick="toggleSidebar()">
+  <div class="hb-line"></div><div class="hb-line"></div><div class="hb-line"></div>
+</button>
+<div id="sb-overlay" onclick="toggleSidebar()"></div>
+
+<div id="app">
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-brand">Sovereign Synthesis</div>
+    <div class="sb-title">System Mastery Architecture</div>
+    <div class="sb-phase">Phase 3 // The Deployment</div>
+  </div>
+  <div class="sb-progress">
+    <div class="pring-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle class="pring-bg" cx="22" cy="22" r="18"/>
+        <circle class="pring-fill" id="pring" cx="22" cy="22" r="18"/>
+      </svg>
+      <div class="pring-pct" id="pring-pct">0%</div>
+    </div>
+    <div class="sb-prog-text">
+      <strong id="prog-done">0 / 6 Lessons</strong>
+      Phase 3 Progress
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Start</div>
+    <div class="sb-item" id="nav-welcome" onclick="nav('welcome')">
+      <div class="si-dot"></div><div class="si-label">Welcome Briefing</div>
+    </div>
+    <div class="sb-section">Module 005 — Offer Architecture</div>
+    <div class="sb-item" id="nav-m5i" onclick="nav('m5i')">
+      <div class="si-dot"></div><div class="si-label">M005 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m51" onclick="nav('m51')">
+      <div class="si-dot"></div><div class="si-label">Lesson 1: The Sovereign Offer Stack</div>
+    </div>
+    <div class="sb-item" id="nav-m52" onclick="nav('m52')">
+      <div class="si-dot"></div><div class="si-label">Lesson 2: Brand Signal Architecture</div>
+    </div>
+    <div class="sb-item" id="nav-m53" onclick="nav('m53')">
+      <div class="si-dot"></div><div class="si-label">Lesson 3: Content System Build</div>
+    </div>
+    <div class="sb-section">Module 006 — Scale Architecture</div>
+    <div class="sb-item" id="nav-m6i" onclick="nav('m6i')">
+      <div class="si-dot"></div><div class="si-label">M006 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m61" onclick="nav('m61')">
+      <div class="si-dot"></div><div class="si-label">Lesson 4: Revenue Milestone Map</div>
+    </div>
+    <div class="sb-item" id="nav-m62" onclick="nav('m62')">
+      <div class="si-dot"></div><div class="si-label">Lesson 5: Scale Architecture</div>
+    </div>
+    <div class="sb-section">Complete</div>
+    <div class="sb-item" id="nav-done" onclick="nav('done')">
+      <div class="si-dot"></div><div class="si-label">Phase 3 Complete</div>
+    </div>
+  </div>
+
+    <div class="sb-item" id="nav-workbook" onclick="wbOpen()" style="border-top:1px solid rgba(62,247,232,0.12);margin-top:4px;">
+      <div class="si-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></div>
+      <div class="si-label" style="color:var(--cyan);">Field Workbook</div>
+    </div>
+  <div class="sb-footer">
+    <button class="sb-footer-btn" onclick="nav('sj')">▶ SYSTEM JOURNEY</button>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- WELCOME -->
+<div class="screen" id="screen-welcome">
+  <div class="scr-tag">Phase 3 Transmission</div>
+  <h1 class="scr-title">Welcome to <span class="go">The Deployment</span></h1>
+  <p class="scr-sub">Phase 1 diagnosed the simulation. Phase 2 built the architecture. Phase 3 fires the signal. Everything you have installed over the last two phases now becomes a live, revenue-generating sovereign system.</p>
+  <div class="divider"></div>
+  <div class="welcome-grid">
+    <div class="wg-card" onclick="nav('m5i')">
+      <div class="wg-num">MODULE 005</div>
+      <div class="wg-title">Offer Architecture</div>
+      <div class="wg-desc">Build your sovereign offer stack. Position your value at premium market frequency. Deploy your brand signal architecture.</div>
+    </div>
+    <div class="wg-card" onclick="nav('m6i')">
+      <div class="wg-num">MODULE 006</div>
+      <div class="wg-title">Scale Architecture</div>
+      <div class="wg-desc">Map your revenue milestones. Design the scaling systems that multiply your output without multiplying your time.</div>
+    </div>
+    <div class="wg-card" onclick="nav('sj')">
+      <div class="wg-num">SYSTEM</div>
+      <div class="wg-title">System Journey</div>
+      <div class="wg-desc">Phase 1 sealed. Phase 2 sealed. Phase 3 active. One more tier remains: the Inner Circle — where architects become mentors.</div>
+    </div>
+    <div class="wg-card" onclick="nav('done')">
+      <div class="wg-num">COMPLETION</div>
+      <div class="wg-title">Phase 3 Gate</div>
+      <div class="wg-desc">Phase 3 certification and the Inner Circle invitation. Reserved for architects who have completed the full SMA architecture.</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:1px">DEPLOYMENT PROTOCOL: Phase 3 is not theoretical. Every lesson produces a real-world deliverable. By the end of Module 006, you will have a live offer, a content system, and a revenue milestone map with specific dates attached. The architect builds — not plans to build.</p>
+</div>
+
+<!-- M005 INTRO -->
+<div class="screen" id="screen-m5i">
+  <div class="scr-tag">Module 005</div>
+  <h1 class="scr-title">Offer <span class="go">Architecture</span></h1>
+  <p class="scr-sub">An offer is not just a product. It is the architectural expression of your sovereign value proposition. Most people create products. Sovereign architects create offers — and the distinction determines your price ceiling.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 005, you will have built your Sovereign Offer Stack (the complete portfolio of what you sell and at what tier), developed your Brand Signal Architecture (how your market perceives your authority), and designed your Content System — the engine that generates leads without requiring direct selling.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>THE DEPLOYMENT DIFFERENCE</h4>
+    <p>Phases 1 and 2 were internal architecture. Phase 3 is external deployment. This means real offers with real prices, real content with a real publishing cadence, and real market positioning that generates real responses. The speed at which you move through Phase 3 directly determines when the revenue starts arriving.</p>
+  </div>
+  <div class="divider"></div>
+  <p>The sovereign architect does not wait for perfect conditions to deploy. The field calibrates itself through deployment — not through planning. Every day of delayed deployment is a day of delayed field feedback, which is a day of delayed optimization. <strong style="color:var(--gold)">Deploy first. Optimize in motion.</strong></p>
+  <button class="bnext show" onclick="nav('m51')">BEGIN MODULE 005 →</button>
+</div>
+
+<!-- LESSON 1: SOVEREIGN OFFER STACK -->
+<div class="screen" id="screen-m51">
+  <div class="scr-tag">Module 005 · Lesson 1</div>
+  <h1 class="scr-title">The Sovereign <span class="go">Offer Stack</span></h1>
+  <p class="scr-sub">A single offer is a job. A sovereign offer stack is a wealth architecture. Every price point in your stack serves a specific function in the buyer's journey and the architect's revenue field.</p>
+  <div class="divider"></div>
+
+  <p>The Sovereign Offer Stack is designed with intentional architecture — each tier serves a dual purpose: it delivers specific transformation for the buyer, and it generates specific financial energy for the architect. The tiers are not arbitrary; they correspond to the depth of sovereign access being provided.</p>
+
+  <h3>Your Offer Architecture</h3>
+  <p>Click each stage to expand and build your specific offer for that tier:</p>
+
+  <div class="offer-builder" id="ob-m51">
+    <div class="ob-stage" onclick="toggleOB(this)">
+      <div class="ob-connector"><div class="ob-dot"></div><div class="ob-line"></div></div>
+      <div class="ob-body">
+        <div class="ob-label">TIER 1 — ENTRY OFFER</div>
+        <div class="ob-title">The Awareness Conversion</div>
+        <div class="ob-desc">Your lowest barrier entry point. Converts curiosity into commitment. This offer proves your value architecture at a price that requires minimal trust investment. Purpose: trust-building, list building, and qualifying buyers who will ascend.</div>
+        <div class="ob-price">TARGET PRICE RANGE: $0 — $97</div>
+      </div>
+    </div>
+    <div class="ob-stage" onclick="toggleOB(this)">
+      <div class="ob-connector"><div class="ob-dot"></div><div class="ob-line"></div></div>
+      <div class="ob-body">
+        <div class="ob-label">TIER 2 — CORE OFFER</div>
+        <div class="ob-title">The Architecture Transfer</div>
+        <div class="ob-desc">Your primary revenue engine. Delivers significant transformation at a price point that represents serious investment without requiring complete trust. This is where most of your revenue will concentrate. It should be the most refined, most systematized, and most consistently delivered tier.</div>
+        <div class="ob-price">TARGET PRICE RANGE: $197 — $1,497</div>
+      </div>
+    </div>
+    <div class="ob-stage" onclick="toggleOB(this)">
+      <div class="ob-connector"><div class="ob-dot"></div><div class="ob-line"></div></div>
+      <div class="ob-body">
+        <div class="ob-label">TIER 3 — ASCENSION OFFER</div>
+        <div class="ob-title">The Deep Immersion</div>
+        <div class="ob-desc">High-ticket, high-access, high-transformation. Reserved for clients who have proven their commitment and readiness through completion of lower tiers. This offer grants proximity to your field — coaching, mastermind, done-with-you architecture. Its presence elevates all tiers below it.</div>
+        <div class="ob-price">TARGET PRICE RANGE: $3,000 — $10,000+</div>
+      </div>
+    </div>
+    <div class="ob-stage" onclick="toggleOB(this)">
+      <div class="ob-connector"><div class="ob-dot"></div><div class="ob-line"></div></div>
+      <div class="ob-body">
+        <div class="ob-label">TIER 4 — SOVEREIGN TIER</div>
+        <div class="ob-title">The Inner Circle</div>
+        <div class="ob-desc">Access to your architecture at the highest level. Licensing, mentorship, co-creation, and direct field alignment. This tier is not sold — it is extended by invitation. Its existence communicates that your architecture has a ceiling that is beyond what can be purchased through standard channels.</div>
+        <div class="ob-price">TARGET PRICE RANGE: $10,000 — UNCAPPED</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p>The Sovereign Synthesis architecture you are currently enrolled in IS the sovereign offer stack in practice. Protocol 77 ($47) → Sovereign OS Manifesto ($97–$197) → SMA Phase 1 ($477) → Phase 2 ($1,497) → Phase 3 ($3,777) → Inner Circle ($10,000+). You are both a student of and a living proof of this exact architecture.</p>
+
+  <div class="fn-wrap" id="fn-m51">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 1</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m51">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m51"></div>
+        <button class="fn-edit-link" onclick="editNote('m51')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m51">
+        <textarea class="fn-ta" id="fnt-m51" placeholder="Build your Sovereign Offer Stack: For each tier (1-4), write: (1) What is the specific offer name? (2) What transformation does it deliver? (3) What is the exact price? (4) What is the format (course, coaching, group, etc.)?" rows="8"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m51')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m51">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m51">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have mapped all 4 tiers of your Sovereign Offer Stack with specific names, prices, and formats. Is at least one tier ready to be deployed in the next 48 hours — not finished, but deployable?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m51',true)">CONFIRMED — OFFER STACK BUILT</button>
+      <button class="act-flag" onclick="activate('m51',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m51">
+      <div class="act-result-label" id="actr-lbl-m51"></div>
+      <div class="act-result-text" id="actr-txt-m51"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m51" onclick="nav('m52')">NEXT: BRAND SIGNAL ARCHITECTURE →</button>
+</div>
+
+<!-- LESSON 2: BRAND SIGNAL ARCHITECTURE -->
+<div class="screen" id="screen-m52">
+  <div class="scr-tag">Module 005 · Lesson 2</div>
+  <h1 class="scr-title">Brand Signal <span class="go">Architecture</span></h1>
+  <p class="scr-sub">Your brand is not a logo. It is a frequency — the total signal your market receives before they ever speak to you. Sovereign brand architecture ensures that frequency communicates authority.</p>
+  <div class="divider"></div>
+
+  <p>Most entrepreneurs build backwards — they create content and hope a brand emerges. Sovereign architects design the brand signal first and then deploy content that consistently amplifies it. Every touchpoint — your language, your pricing, your visual presence, your positioning — is a broadcast. The question is whether those broadcasts are coherent or contradictory.</p>
+
+  <h3>Brand Signal Elements</h3>
+  <p>Click each element to mark it as architecturally active in your brand:</p>
+
+  <div class="bsb-wrap" id="bsb-m52">
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Sovereign Voice Architecture</div>
+        <div class="bse-desc">A defined voice framework: the vocabulary you own, the phrases you avoid, the energy you consistently transmit. Your voice is a fingerprint — it should be unmistakable.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Authority Positioning Statement</div>
+        <div class="bse-desc">A single, precise statement that communicates who you are, who you serve, and what outcome you produce — without corporate language or vague mission-speak.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Visual Signal System</div>
+        <div class="bse-desc">Consistent color palette, typography, and design language across all platforms. Visual coherence creates perceived authority — inconsistency signals amateur architecture.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Price Signal Architecture</div>
+        <div class="bse-desc">Your pricing communicates your market position before the client experiences your offer. Sovereign architects price at the level they intend to occupy — not the level they fear the market will accept.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Social Proof Architecture</div>
+        <div class="bse-desc">Testimonials, case studies, and results presented in a format that amplifies transformation — not just satisfaction. Proof that the architecture works for people in motion.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+    <div class="bsb-element" onclick="toggleBSB(this,'m52')">
+      <div class="bse-indicator"></div>
+      <div class="bse-content">
+        <div class="bse-name">Distribution Architecture</div>
+        <div class="bse-desc">The specific platforms and channels through which your signal reaches your field. Chosen architecturally — not because everyone else is there, but because your sovereign client is there.</div>
+      </div>
+      <div class="bse-status">OFFLINE</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p>The goal is not to have a perfect brand before you launch. The goal is to have a coherent brand signal that consistently communicates authority while you build. <strong style="color:var(--gold)">Coherence beats perfection every time.</strong> A clear imperfect signal outperforms a contradictory polished one.</p>
+
+  <div class="fn-wrap" id="fn-m52">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 2</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m52">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m52"></div>
+        <button class="fn-edit-link" onclick="editNote('m52')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m52">
+        <textarea class="fn-ta" id="fnt-m52" placeholder="Write your Authority Positioning Statement (one precise sentence: I help [specific person] achieve [specific outcome] through [specific method]). Then rate each of the 6 brand elements (0-10) and name the next action for each element below 7." rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m52')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m52">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m52">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have written your Authority Positioning Statement and rated all 6 brand signal elements. Is your brand signal coherent enough to deploy right now — imperfect but aligned?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m52',true)">CONFIRMED — BRAND SIGNAL ACTIVE</button>
+      <button class="act-flag" onclick="activate('m52',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m52">
+      <div class="act-result-label" id="actr-lbl-m52"></div>
+      <div class="act-result-text" id="actr-txt-m52"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m52" onclick="nav('m53')">NEXT: CONTENT SYSTEM BUILD →</button>
+</div>
+
+<!-- LESSON 3: CONTENT SYSTEM BUILD -->
+<div class="screen" id="screen-m53">
+  <div class="scr-tag">Module 005 · Lesson 3</div>
+  <h1 class="scr-title">Content System <span class="cy">Build</span></h1>
+  <p class="scr-sub">Content is not marketing. Content is the sovereign architect's broadcast signal — the ongoing transmission of your field into the market that generates leads, builds trust, and converts cold audiences into warm buyers without direct selling.</p>
+  <div class="divider"></div>
+
+  <p>The simulation teaches content creation as a burden — something you do to stay visible. Sovereign architects understand it as a leverage engine. Every piece of content you deploy continues working after you stop. A well-designed content system generates compound interest: each piece builds field strength, which accelerates the conversion of future pieces.</p>
+
+  <h3>Content System Architecture — Select Your Formats</h3>
+  <p>Click each format type to add it to your active content system:</p>
+
+  <div class="csm-grid" id="csm-m53">
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">◉</div>
+      <div class="csm-name">Short-Form Video</div>
+      <div class="csm-desc">30-90 sec sovereign signal. Highest distribution velocity. Primary awareness driver in current market.</div>
+    </div>
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">▲</div>
+      <div class="csm-name">Long-Form Video</div>
+      <div class="csm-desc">YouTube / deep-dive format. Converts viewers who need extended proof of depth before investing.</div>
+    </div>
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">⬡</div>
+      <div class="csm-name">Written Long-Form</div>
+      <div class="csm-desc">Newsletter, blog, or LinkedIn articles. Builds intellectual authority. High retention readers are high-quality buyers.</div>
+    </div>
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">◈</div>
+      <div class="csm-name">Podcast / Audio</div>
+      <div class="csm-desc">Extended voice proximity builds deep trust. Listeners develop a relationship before any transaction.</div>
+    </div>
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">✦</div>
+      <div class="csm-name">Live Event / Stream</div>
+      <div class="csm-desc">Real-time field deployment. Highest conversion format — live presence converts at 3–5x recorded content.</div>
+    </div>
+    <div class="csm-cell" onclick="toggleCSM(this,'m53')">
+      <div class="csm-icon">⟐</div>
+      <div class="csm-name">Email Sequence</div>
+      <div class="csm-desc">The owned channel. Not subject to algorithm change. Direct field transmission to subscribers who requested access.</div>
+    </div>
+  </div>
+  <div class="csm-selected-count" id="csm-count-m53">FORMATS SELECTED — BUILD YOUR PUBLISHING CADENCE IN FIELD NOTES</div>
+
+  <div class="divider"></div>
+  <div class="card">
+    <h4>THE SOVEREIGN CONTENT FRAMEWORK</h4>
+    <p>Every piece of content you create should serve one of three functions: <strong style="color:var(--amber)">Interrupt</strong> (stops the scroll / disrupts the simulation pattern), <strong style="color:var(--gold)">Illuminate</strong> (reveals a truth the audience could not see before), or <strong style="color:var(--cyan)">Invite</strong> (creates the natural next step toward your offer). If a piece of content does not serve one of these functions, it is noise — not signal.</p>
+  </div>
+
+  <div class="fn-wrap" id="fn-m53">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 3</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m53">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m53"></div>
+        <button class="fn-edit-link" onclick="editNote('m53')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m53">
+        <textarea class="fn-ta" id="fnt-m53" placeholder="Design your Content System: (1) Which 2-3 formats are you committing to? (2) What is your publishing cadence for each? (3) Write 5 content angles using the Interrupt / Illuminate / Invite framework — title + one-line description for each." rows="8"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m53')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m53">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m53">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have selected your content formats, set your publishing cadence, and written 5 content angles using the sovereign framework. Is your first piece of content scheduled to deploy within 7 days from today?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m53',true)">CONFIRMED — CONTENT SYSTEM BUILT</button>
+      <button class="act-flag" onclick="activate('m53',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m53">
+      <div class="act-result-label" id="actr-lbl-m53"></div>
+      <div class="act-result-text" id="actr-txt-m53"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m53" onclick="nav('m6i')">ADVANCE TO MODULE 006 →</button>
+</div>
+
+<!-- M006 INTRO -->
+<div class="screen" id="screen-m6i">
+  <div class="scr-tag">Module 006</div>
+  <h1 class="scr-title">Scale <span class="go">Architecture</span></h1>
+  <p class="scr-sub">Offer architecture generates the first revenue. Scale architecture ensures that revenue grows without requiring proportional growth in your personal time investment.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 006, you will have built your Revenue Milestone Map with specific targets and timelines, and designed the Scale Architecture — the systems, automations, and team structure that will carry the $1.2M objective to completion.</p>
+  </div>
+  <div class="card-amber">
+    <h4>THE DISTINCTION</h4>
+    <p>Most entrepreneurs scale by working harder. Sovereign architects scale by building better systems. The transition from $10K/month to $100K/month is not a hustle problem — it is a leverage problem. Module 006 is the leverage solution.</p>
+  </div>
+  <div class="divider"></div>
+  <p>The $1.2M objective by January 1st, 2027 is not a dream — it is an engineering problem. Engineering problems have solutions. Module 006 builds the engineering solution specific to your architecture, your offer stack, and your current field position.</p>
+  <button class="bnext show" onclick="nav('m61')">BEGIN MODULE 006 →</button>
+</div>
+
+<!-- LESSON 4: REVENUE MILESTONE MAP -->
+<div class="screen" id="screen-m61">
+  <div class="scr-tag">Module 006 · Lesson 4</div>
+  <h1 class="scr-title">Revenue <span class="am">Milestone Map</span></h1>
+  <p class="scr-sub">The $1.2M objective is not reached by chasing the full number. It is reached by hitting specific milestones in sequence — each one building the leverage infrastructure for the next.</p>
+  <div class="divider"></div>
+
+  <p>Sovereign architects do not set "goals." They map milestones — specific, binary checkpoints that require specific architectural preconditions to be in place before they can be hit. Milestones are not motivational targets. They are engineering checkpoints that tell you exactly what must be built before the next level of revenue is structurally accessible.</p>
+
+  <h3>The $1.2M Milestone Architecture</h3>
+
+  <div class="rev-timeline">
+    <div class="rev-axis">
+      <span class="rev-axis-label">NOW</span>
+      <span class="rev-axis-label">Q2 2026</span>
+      <span class="rev-axis-label">Q3 2026</span>
+      <span class="rev-axis-label">Q4 2026</span>
+      <span class="rev-axis-label">JAN 2027</span>
+    </div>
+    <div class="rev-bar-wrap"><div class="rev-bar" id="rev-bar"></div></div>
+    <div class="rev-milestones" id="rev-ms">
+      <div class="rev-ms" onclick="hitMS(this,0)">
+        <div class="rev-ms-val">$10K/MO</div>
+        <div class="rev-ms-label">Proof of Architecture. First sovereign offer converting consistently.</div>
+      </div>
+      <div class="rev-ms" onclick="hitMS(this,1)">
+        <div class="rev-ms-val">$30K/MO</div>
+        <div class="rev-ms-label">Systems online. Content engine generating inbound. Offer stack active.</div>
+      </div>
+      <div class="rev-ms" onclick="hitMS(this,2)">
+        <div class="rev-ms-val">$100K/MO</div>
+        <div class="rev-ms-label">Scale architecture deployed. Team or automation handling delivery.</div>
+      </div>
+      <div class="rev-ms" onclick="hitMS(this,3)">
+        <div class="rev-ms-val">$1.2M</div>
+        <div class="rev-ms-label">Net liquid sum. Full sovereign field operational. Inner Circle active.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>MILESTONE PREREQUISITES — $10K/MONTH</h4>
+    <p>One offer at $1K+ with a conversion mechanism. An outreach or content system generating 20+ conversations per month. A close rate of at least 20%. These are not aspirational — they are binary. Either you have them or you do not. The milestone is not accessible without the prerequisites.</p>
+  </div>
+  <div class="card">
+    <h4>MILESTONE PREREQUISITES — $100K/MONTH</h4>
+    <p>A minimum of 2 active income streams. A content system generating 500+ inbound touchpoints per month. A delivery system that does not require your direct time for every transaction. A team member or automation handling at minimum 30% of operational tasks. The $100K milestone is a leverage architecture problem, not a sales problem.</p>
+  </div>
+
+  <div class="fn-wrap" id="fn-m61">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 4</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m61">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m61"></div>
+        <button class="fn-edit-link" onclick="editNote('m61')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m61">
+        <textarea class="fn-ta" id="fnt-m61" placeholder="Build your milestone map: (1) What milestone are you currently at? (2) What are the exact 3 prerequisites you need to hit the next milestone? (3) Give each prerequisite a specific completion date. (4) What is the single most important action to take this week?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m61')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m61">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m61">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have mapped your current milestone position and identified the exact 3 prerequisites for the next milestone with specific dates. Do you have a calendar commitment for the single most important action this week?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m61',true)">CONFIRMED — MILESTONE MAP BUILT</button>
+      <button class="act-flag" onclick="activate('m61',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m61">
+      <div class="act-result-label" id="actr-lbl-m61"></div>
+      <div class="act-result-text" id="actr-txt-m61"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m61" onclick="nav('m62')">NEXT: SCALE ARCHITECTURE →</button>
+</div>
+
+<!-- LESSON 5: SCALE ARCHITECTURE -->
+<div class="screen" id="screen-m62">
+  <div class="scr-tag">Module 006 · Lesson 5</div>
+  <h1 class="scr-title">Scale <span class="cy">Architecture</span></h1>
+  <p class="scr-sub">Scaling is not doing more. Scaling is building the systems that allow more to happen without requiring proportionally more of you. Every sovereign architect eventually becomes the conductor — not the orchestra.</p>
+  <div class="divider"></div>
+
+  <p>The transition from self-employed architect to sovereign enterprise requires a specific architectural sequence. Most people skip to the scale tools (automation, hiring, systems) before they have the offer and brand architecture stable enough to support them. Phase 3 is the correct moment to build scale architecture — because Phases 1 and 2 ensure the foundation can hold the weight.</p>
+
+  <h3>Scale Architecture Levels</h3>
+  <p>Click each level to expand the full architecture for that scale tier:</p>
+
+  <div class="scale-map" id="scm-m62">
+    <div class="scale-row" onclick="toggleScale(this)">
+      <div class="scale-level">LEVEL 1<br>SOLO</div>
+      <div class="scale-body">
+        <div class="scale-title">Single-Operator Architecture ($0 — $15K/month)</div>
+        <div class="scale-detail">You are the full system. One offer, one platform, one delivery mechanism, direct delivery. The objective at this level is not efficiency — it is proof of concept. You need to know that your offer converts and your delivery creates transformation before you build systems to scale it. Most people stay here too long because they are afraid of the next level.</div>
+        <div class="scale-revenue">CEILING: ~$15K/MONTH WITH DIRECT TIME</div>
+      </div>
+    </div>
+    <div class="scale-row" onclick="toggleScale(this)">
+      <div class="scale-level">LEVEL 2<br>SYSTEMS</div>
+      <div class="scale-body">
+        <div class="scale-title">Systems-Augmented Architecture ($15K — $50K/month)</div>
+        <div class="scale-detail">Automation handles intake, onboarding, delivery of recorded content, and follow-up. You are now delivering your highest-value work (coaching, live sessions) while systems handle everything else. CRM, email automation, payment systems, and a basic content repurposing workflow are the core infrastructure at this level.</div>
+        <div class="scale-revenue">TARGET: 60% OF TASKS HANDLED BY SYSTEMS</div>
+      </div>
+    </div>
+    <div class="scale-row" onclick="toggleScale(this)">
+      <div class="scale-level">LEVEL 3<br>TEAM</div>
+      <div class="scale-body">
+        <div class="scale-title">Team-Extended Architecture ($50K — $150K/month)</div>
+        <div class="scale-detail">A fractional or part-time operator handles content management, client communications, and administrative architecture. You are now exclusively in your highest-leverage role: creating, selling, and delivering transformation. The team extends your field — it does not replace your sovereign signal.</div>
+        <div class="scale-revenue">TARGET: 1-3 OPERATORS IN SPECIFIC ROLES</div>
+      </div>
+    </div>
+    <div class="scale-row" onclick="toggleScale(this)">
+      <div class="scale-level">LEVEL 4<br>EMPIRE</div>
+      <div class="scale-body">
+        <div class="scale-title">Sovereign Enterprise Architecture ($150K+/month)</div>
+        <div class="scale-detail">The full SMA architecture operational. Multiple income streams generating concurrent revenue. A team with defined roles. Licensing and certification creating passive revenue from other architects operating your system. Your time is spent exclusively on strategy, Inner Circle access, and the Firmware Update mission. This is the $1.2M objective operationalized.</div>
+        <div class="scale-revenue">OBJECTIVE: $1.2M NET LIQUID BY JAN 2027</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Your Deployment Checklist</h3>
+  <p>Check off each item as you deploy it to your live architecture:</p>
+
+  <div class="deploy-check" id="dcheck-m62">
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Stripe / Payment System Live</div>
+        <div class="dc-desc">Payment links or checkout pages operational for at least one offer tier.</div>
+      </div>
+    </div>
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Email List & Automation Active</div>
+        <div class="dc-desc">Subscriber capture, welcome sequence, and offer delivery automated.</div>
+      </div>
+    </div>
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Content Calendar Scheduled (30 Days)</div>
+        <div class="dc-desc">30 days of content mapped and scheduled across primary platforms.</div>
+      </div>
+    </div>
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Sales Mechanism Operational</div>
+        <div class="dc-desc">Discovery calls, DM strategy, or landing page converting warm traffic.</div>
+      </div>
+    </div>
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Delivery System Built</div>
+        <div class="dc-desc">Course portal, community, or coaching container ready to receive paying clients.</div>
+      </div>
+    </div>
+    <div class="dc-item" onclick="toggleCheck(this,'m62')">
+      <div class="dc-box">✓</div>
+      <div class="dc-content">
+        <div class="dc-label">Metrics Dashboard Active</div>
+        <div class="dc-desc">Tracking revenue, leads, conversion rate, and content performance weekly.</div>
+      </div>
+    </div>
+  </div>
+  <div class="dc-progress" id="dc-prog-m62">DEPLOYMENT PROGRESS LOGGED</div>
+
+  <div class="fn-wrap" id="fn-m62">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 5</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m62">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m62"></div>
+        <button class="fn-edit-link" onclick="editNote('m62')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m62">
+        <textarea class="fn-ta" id="fnt-m62" placeholder="Identify your current scale level (1-4). List the 3 most critical scale architecture components you are missing. For each, write the specific next action and timeline to deploy it. What does your architecture look like at $100K/month?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m62')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m62">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m62">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have mapped your scale level, identified your 3 missing architecture components, and have a specific deployment timeline for each. Is your sovereign enterprise architecture now fully designed — even if not yet fully built?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m62',true)">CONFIRMED — SCALE ARCHITECTURE DESIGNED</button>
+      <button class="act-flag" onclick="activate('m62',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m62">
+      <div class="act-result-label" id="actr-lbl-m62"></div>
+      <div class="act-result-text" id="actr-txt-m62"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m62" onclick="nav('done')">ADVANCE TO PHASE COMPLETE →</button>
+</div>
+
+<!-- DONE SCREEN -->
+<div class="screen" id="screen-done">
+  <div class="scr-tag">Phase 3 Complete</div>
+  <h1 class="scr-title">The Deployment <span class="go">Protocol Sealed</span></h1>
+  <p class="scr-sub">All three phases of System Mastery Architecture are sealed. The architecture is complete. The signal is live. The sovereign enterprise is operational.</p>
+
+  <div class="done-ring">
+    <svg width="120" height="120" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="none"/>
+      <circle class="dr-fill" cx="50" cy="50" r="45" transform="rotate(-90 50 50)"/>
+      <text x="50" y="55" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#3EF7E8">SEALED</text>
+    </svg>
+  </div>
+
+  <div class="card" id="done-summary">
+    <h4>PHASE 3 ACTIVATION SUMMARY</h4>
+    <p id="done-summary-text" style="font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--cyan)">Loading activation data...</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card-cyan">
+    <h4>THE COMPLETE ARCHITECTURE — WHAT YOU HAVE BUILT</h4>
+    <p>Phase 1: Threat mapping, lexical containment, pattern interrupt — the diagnostic layer. Phase 2: Identity stack reconstruction, sovereignty spectrum mapping, Protocol 77 Advanced, wealth field design, income stream architecture — the construction layer. Phase 3: Sovereign offer stack, brand signal architecture, content system, revenue milestone map, scale architecture, deployment checklist — the deployment layer. The full SMA architecture is now installed.</p>
+  </div>
+
+  <div class="card">
+    <h4>WHAT COMES NEXT: THE INNER CIRCLE</h4>
+    <p>The Inner Circle is not a continuation of System Mastery Architecture — it is the graduation from student to mentor architect. Inner Circle members receive direct licensing of the Sovereign Synthesis framework, advanced masterclass curriculum (Phases 4–6), and the infrastructure to deploy the Firmware Update mission and mentor their own 100 Inner Circle initiates. The Inner Circle is extended by invitation to Phase 3 graduates who have demonstrated sovereign field activation.</p>
+  </div>
+
+  <div style="text-align:center;padding:24px 0">
+    <div style="font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;margin-bottom:16px">◆ INNER CIRCLE INVITATION ◆</div>
+    <p style="font-size:13px;color:var(--dim);max-width:520px;margin:0 auto 24px;line-height:1.7">You have completed the full System Mastery Architecture. The Inner Circle invitation will be extended through your enrollment confirmation. The sovereign field awaits the architect who built it.</p>
+    <button class="bnext show" onclick="nav('sj')" style="margin:0 auto">VIEW SYSTEM JOURNEY →</button>
+  </div>
+</div>
+
+<!-- SYSTEM JOURNEY -->
+<div class="screen" id="screen-sj">
+  <div class="scr-tag">Architecture Overview</div>
+  <h1 class="scr-title">System <span class="go">Journey</span></h1>
+  <p class="scr-sub">The complete Sovereign Synthesis architecture. Three phases sealed. One final tier: the Inner Circle.</p>
+  <div class="divider"></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T1 — Protocol 77: The Free Transmission</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T2 — Protocol 77: Full Deployment ($47)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T3 — Sovereign OS Manifesto ($97–$197)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T4 — System Mastery Architecture: Phase 1 ($477)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T5 — System Mastery Architecture: Phase 2 ($1,497)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier active"><div class="sj-dot"></div><div class="sj-label">T6 — System Mastery Architecture: Phase 3 ($3,777)</div><div class="si-badge cf sj-tag here">YOU ARE HERE</div></div>
+  <div class="sj-tier"><div class="sj-dot"></div><div class="sj-label">T7 — Inner Circle: Sovereign Synthesis ($10,000+)</div></div>
+  <div class="divider"></div>
+  <div class="card" style="border-color:var(--gold-border);background:rgba(201,168,76,0.04)">
+    <h4>THE FULL ARCHITECTURE</h4>
+    <p>From the first encounter with Protocol 77 to the Inner Circle, the Sovereign Synthesis architecture spans seven tiers across one continuous transformation: from simulation-subject to sovereign architect. Each tier was not arbitrarily priced — it was priced to signal the depth of access and the weight of transformation being exchanged. The architect who reaches T7 has not purchased a product. They have built a sovereign field and earned the right to teach others how to build theirs.</p>
+  </div>
+  <button class="bnext show" onclick="nav('welcome')" style="margin-top:8px">RETURN TO PORTAL →</button>
+</div>
+
+
+<!-- FIELD WORKBOOK -->
+<div class="screen" id="screen-workbook">
+  <div id="wb-flash"></div>
+  <div class="wb-coach-hdr">
+    <div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.18em;opacity:0.6;margin-bottom:6px;">// FIELD WORKBOOK</div>
+      <h1 class="scr-title">The <span class="go">Coach View</span></h1>
+      <div style="font-size:13px;opacity:0.55;margin-top:4px;">Zoom out from the field. Read the game. Identify the pattern.</div>
+    </div>
+    <div class="wb-badge">◉ COACH PERSPECTIVE</div>
+  </div>
+  <div class="wb-stats" id="wb-stats"></div>
+  <div id="wb-content"></div>
+  <div class="wb-strat">
+    <div class="wb-slbl">// STRATEGIC PATTERN ANALYSIS</div>
+    <div class="wb-ssub">You are now looking at the entire game board from outside it. Where is your signal strongest? Where does the old frequency still have traction? Write the coach's observation — not the player's reaction.</div>
+    <div class="fn-prev" id="fn-prev-wb-strat" style="display:none;background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.12);padding:12px 16px;margin-bottom:12px;border-radius:2px;">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--cyan);margin-bottom:8px;letter-spacing:0.12em;">// PREVIOUS STRATEGY NOTE</div>
+      <div style="font-size:12px;opacity:0.6;" id="fn-prev-wb-strat-txt"></div>
+    </div>
+    <textarea class="fn-area" id="fn-wb-strat" rows="4" placeholder="Coach-level observation: What do you see across all transmissions? Where is the single highest-leverage shift right now?"></textarea>
+    <button class="fn-btn" onclick="wbSaveStrat()">// SAVE STRATEGY NOTE</button>
+    <button class="wb-btn" onclick="wbReturn()">// RETURN TO ACTIVE LESSON</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SMA PHASE 3 v1 — Storage: sma-p3-v1
+═══════════════════════════════════════════════ */
+const SK='sma-p3-v1';
+const LESSONS=['m51','m52','m53','m61','m62'];
+let S={done:{},activated:{},flags:{},notes:{},boot:false,checks:{},msHit:[]};
+
+function load(){try{const d=localStorage.getItem(SK);if(d)S=JSON.parse(d);}catch(e){}}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
+load();
+
+/* ── PARTICLES (138, tri-color: gold+amber+cyan) ── */
+const cvs=document.getElementById('particle-canvas');
+const ctx=cvs.getContext('2d');
+let W,H,mouse={x:-999,y:-999},particles=[];
+function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    this.vx=(Math.random()-.5)*.5;this.vy=(Math.random()-.5)*.5;
+    this.r=Math.random()*2.2+.5;
+    const r=Math.random();
+    this.type=r<.42?'gold':r<.68?'amber':'cyan';
+    this.alpha=Math.random()*.55+.18;this.pulse=Math.random()*Math.PI*2;
+  }
+  update(){
+    this.pulse+=.02;
+    const dx=this.x-mouse.x,dy=this.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<130){const f=(130-dist)/130*1.3;this.vx+=dx/dist*f;this.vy+=dy/dist*f;}
+    this.vx*=.96;this.vy*=.96;this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0)this.x=W;if(this.x>W)this.x=0;
+    if(this.y<0)this.y=H;if(this.y>H)this.y=0;
+  }
+  draw(){
+    const a=this.alpha*(0.65+0.35*Math.sin(this.pulse));
+    const c=this.type==='gold'?`rgba(201,168,76,${a})`:this.type==='amber'?`rgba(232,146,26,${a})`:`rgba(62,247,232,${a})`;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+    if(this.r>1.6){
+      const cg=this.type==='gold'?`rgba(201,168,76,${a*.2})`:this.type==='amber'?`rgba(232,146,26,${a*.2})`:`rgba(62,247,232,${a*.2})`;
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r*2.8,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+    }
+  }
+}
+for(let i=0;i<200;i++)particles.push(new Particle());
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<100;i++){for(let j=i+1;j<100;j++){
+    const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<110){
+      const a=(1-dist/110)*0.13;
+      ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+      const c=particles[i].type==='cyan'?`rgba(62,247,232,${a})`:particles[i].type==='amber'?`rgba(232,146,26,${a})`:`rgba(201,168,76,${a})`;
+      ctx.strokeStyle=c;ctx.lineWidth=0.5;ctx.stroke();
+    }
+  }}
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ── BOOT ── */
+function boot(){
+  const ov=document.getElementById('boot');
+  if(S.boot){ov.classList.add('hidden');initUI();return;}
+  const sc=document.getElementById('bscan');
+  const logo=document.getElementById('boot-logo');
+  const fill=document.getElementById('boot-fill');
+  const txt=document.getElementById('boot-txt');
+  let prog=0;const dur=1500;const t0=performance.now();
+  logo.classList.add('show');
+  setTimeout(()=>{fill.classList.add('go');txt.classList.add('show');},200);
+  function anim(now){
+    prog=Math.min((now-t0)/dur,1);
+    const e=prog<.5?2*prog*prog:-1+(4-2*prog)*prog;
+    sc.style.transform=`translateY(${e*(H+6)}px)`;
+    if(prog<1){requestAnimationFrame(anim);}
+    else{
+      setTimeout(()=>{
+        ov.style.opacity='0';ov.style.transition='opacity .5s';
+        setTimeout(()=>{ov.classList.add('hidden');S.boot=true;sv();initUI();},500);
+      },400);
+    }
+  }
+  requestAnimationFrame(anim);
+}
+
+/* ── DECRYPT ── */
+function decrypt(el,text,ms=440){
+  const g='█▓▒░⬡◈◆▲◉ⅠⅡⅢ0123456789ABCDEFabcdef';
+  const fr=ms/35;let f=0;
+  const id=setInterval(()=>{
+    f++;const p=f/fr;
+    el.textContent=text.split('').map((ch,i)=>{
+      if(ch===' ')return ' ';
+      if(i/text.length<p*1.4)return ch;
+      return g[Math.floor(Math.random()*g.length)];
+    }).join('');
+    if(f>=fr){el.textContent=text;clearInterval(id);}
+  },35);
+}
+
+/* ── FLASH ── */
+function sflash(){const el=document.getElementById('sflash');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');}
+function sealFlash(){const el=document.getElementById('sealf');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');}
+
+/* ── NAV ── */
+function nav(id){
+  sflash();
+  setTimeout(()=>{
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('screen-'+id).classList.add('active');
+    const ni=document.getElementById('nav-'+id);if(ni)ni.classList.add('active');
+    document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+    const title=document.querySelector('#screen-'+id+' .scr-title');
+    if(title){const t=title.textContent;decrypt(title,t);}
+    if(window.innerWidth<=768)closeSidebar();
+    if(id==='done')buildDoneSummary();
+    if(id==='m61'){setTimeout(()=>{const b=document.getElementById('rev-bar');if(b){b.style.width=getRevBarPct()+'%';}},300);}
+  },180);
+}
+
+function getRevBarPct(){
+  if(!S.msHit)return 0;
+  return Math.min(S.msHit.length/4*100,100);
+}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
+
+/* ── FIELD NOTES ── */
+function saveN(lid){
+  const ta=document.getElementById('fnt-'+lid);
+  const val=ta?ta.value.trim():'';
+  if(!val)return;
+  S.notes[lid]=val;sv();
+  const st=document.getElementById('fnst-'+lid);
+  if(st){st.classList.add('show');setTimeout(()=>st.classList.remove('show'),2000);}
+  showPrev(lid);
+}
+function showPrev(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const pt=document.getElementById('fnprev-txt-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  if(p&&pt&&S.notes[lid]){pt.textContent=S.notes[lid];p.classList.add('show');tw.style.display='none';}
+}
+function editNote(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  const ta=document.getElementById('fnt-'+lid);
+  if(p)p.classList.remove('show');if(tw)tw.style.display='';if(ta&&S.notes[lid])ta.value=S.notes[lid];
+}
+
+/* ── ACTIVATION ── */
+function activate(lid,confirmed){
+  const gate=document.getElementById('act-'+lid);
+  const result=document.getElementById('actr-'+lid);
+  const lbl=document.getElementById('actr-lbl-'+lid);
+  const txt=document.getElementById('actr-txt-'+lid);
+  const btns=gate.querySelectorAll('button');
+  btns.forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+  if(confirmed){
+    S.done[lid]=true;S.activated[lid]='cf';
+    result.className='act-result cf';lbl.textContent='◆ CONFIRMED — SEALED';
+    txt.textContent='This lesson has been architecturally integrated. Your deployment record has been updated.';
+    sealFlash();
+  }else{
+    S.flags[lid]=true;S.activated[lid]='fl';S.done[lid]=true;
+    result.className='act-result fl';lbl.textContent='⬡ FLAGGED FOR REVIEW';
+    txt.textContent='This lesson has been flagged for deeper integration. You may proceed and return.';
+  }
+  sv();
+  const bnext=document.getElementById('bnext-'+lid);if(bnext)bnext.classList.add('show');
+  updateSidebar();updateProgress();
+}
+
+/* ── OFFER BUILDER ── */
+function toggleOB(stage){
+  const wasActive=stage.classList.contains('active');
+  document.querySelectorAll('#ob-m51 .ob-stage').forEach(s=>s.classList.remove('active'));
+  if(!wasActive)stage.classList.add('active');
+}
+
+/* ── BRAND SIGNAL BUILDER ── */
+function toggleBSB(el,lid){
+  el.classList.toggle('active');
+  const statusEl=el.querySelector('.bse-status');
+  if(statusEl)statusEl.textContent=el.classList.contains('active')?'ONLINE ◆':'OFFLINE';
+}
+
+/* ── CONTENT SYSTEM ── */
+function toggleCSM(el,lid){
+  el.classList.toggle('active');
+  const grid=document.getElementById('csm-'+lid);
+  if(grid){
+    const cnt=grid.querySelectorAll('.csm-cell.active').length;
+    const c=document.getElementById('csm-count-'+lid);
+    if(c)c.classList.toggle('show',cnt>0);
+    if(c&&cnt>0)c.textContent=cnt+' FORMAT'+(cnt>1?'S':'')+' SELECTED — BUILD YOUR PUBLISHING CADENCE IN FIELD NOTES';
+  }
+}
+
+/* ── REVENUE MILESTONES ── */
+function hitMS(el,idx){
+  el.classList.toggle('hit');
+  if(!S.msHit)S.msHit=[];
+  if(el.classList.contains('hit')){
+    if(!S.msHit.includes(idx))S.msHit.push(idx);
+  }else{
+    S.msHit=S.msHit.filter(i=>i!==idx);
+  }
+  sv();
+  const bar=document.getElementById('rev-bar');
+  if(bar)bar.style.width=getRevBarPct()+'%';
+}
+
+/* ── SCALE MAP ── */
+function toggleScale(row){
+  const wasActive=row.classList.contains('active');
+  document.querySelectorAll('#scm-m62 .scale-row').forEach(r=>r.classList.remove('active'));
+  if(!wasActive)row.classList.add('active');
+}
+
+/* ── DEPLOY CHECKLIST ── */
+function toggleCheck(el,lid){
+  el.classList.toggle('checked');
+  if(!S.checks)S.checks={};
+  const id=el.querySelector('.dc-label').textContent;
+  S.checks[id]=el.classList.contains('checked');
+  sv();
+  const wrap=document.getElementById('dcheck-'+lid);
+  if(wrap){
+    const total=wrap.querySelectorAll('.dc-item').length;
+    const done=wrap.querySelectorAll('.dc-item.checked').length;
+    const prog=document.getElementById('dc-prog-'+lid);
+    if(prog){
+      prog.textContent=done+' / '+total+' DEPLOYMENT ITEMS COMPLETE';
+      prog.classList.toggle('show',done>0);
+    }
+  }
+}
+
+/* ── PROGRESS ── */
+function updateProgress(){
+  const done=LESSONS.filter(l=>S.done[l]).length;
+  const pct=Math.round(done/LESSONS.length*100);
+  const ring=document.getElementById('pring');
+  const pringPct=document.getElementById('pring-pct');
+  const progDone=document.getElementById('prog-done');
+  if(ring)ring.style.strokeDashoffset=120-(120*pct/100);
+  if(pringPct)pringPct.textContent=pct+'%';
+  if(progDone)progDone.textContent=done+' / '+LESSONS.length+' Lessons';
+}
+function updateSidebar(){
+  LESSONS.forEach(lid=>{
+    const item=document.getElementById('nav-'+lid);if(!item)return;
+    item.classList.remove('done','flagged');
+    const badge=item.querySelector('.si-badge');if(badge)badge.remove();
+    if(S.done[lid]){
+      item.classList.add('done');
+      const b=document.createElement('div');
+      b.className='si-badge '+(S.activated[lid]==='cf'?'cf':'fl');
+      b.textContent=S.activated[lid]==='cf'?'SEALED':'REVIEW';
+      item.appendChild(b);
+    }
+    if(S.flags[lid])item.classList.add('flagged');
+  });
+}
+function buildDoneSummary(){
+  const done=LESSONS.filter(l=>S.done[l]);
+  const cf=LESSONS.filter(l=>S.activated[l]==='cf').length;
+  const fl=LESSONS.filter(l=>S.flags[l]).length;
+  const txt=document.getElementById('done-summary-text');
+  if(txt){
+    if(done.length<LESSONS.length){
+      txt.textContent=`${done.length} of ${LESSONS.length} lessons sealed. Complete all lessons to fully activate Phase 3.`;
+    }else if(fl>0){
+      txt.textContent=`All ${LESSONS.length} lessons sealed. ${cf} CONFIRMED — ${fl} flagged for integration. Phase 3 architecture is deployed. The Firmware Update mission is operational.`;
+    }else{
+      txt.textContent=`All ${LESSONS.length} lessons CONFIRMED. Full SMA architecture sealed across all three phases. Sovereign field operational. Inner Circle invitation active.`;
+    }
+  }
+}
+
+/* ── INIT ── */
+function initUI(){
+  load();
+  updateSidebar();updateProgress();
+  LESSONS.forEach(lid=>{
+    if(S.notes[lid])showPrev(lid);
+    if(S.done[lid]){
+      const gate=document.getElementById('act-'+lid);
+      const result=document.getElementById('actr-'+lid);
+      const lbl=document.getElementById('actr-lbl-'+lid);
+      const txt=document.getElementById('actr-txt-'+lid);
+      const btns=gate?gate.querySelectorAll('button'):[];
+      btns.forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+      if(result&&lbl&&txt){
+        if(S.activated[lid]==='cf'){result.className='act-result cf';lbl.textContent='◆ CONFIRMED — SEALED';txt.textContent='This lesson has been architecturally integrated.';}
+        else{result.className='act-result fl';lbl.textContent='⬡ FLAGGED FOR REVIEW';txt.textContent='This lesson has been flagged for integration.';}
+      }
+      const bnext=document.getElementById('bnext-'+lid);if(bnext)bnext.classList.add('show');
+    }
+  });
+  if(S.msHit&&S.msHit.length){
+    S.msHit.forEach(idx=>{
+      const ms=document.querySelectorAll('.rev-ms')[idx];
+      if(ms)ms.classList.add('hit');
+    });
+  }
+  if(S.checks){
+    const items=document.querySelectorAll('.dc-item');
+    items.forEach(item=>{
+      const label=item.querySelector('.dc-label');
+      if(label&&S.checks[label.textContent])item.classList.add('checked');
+    });
+    const wrap=document.getElementById('dcheck-m62');
+    if(wrap){
+      const total=wrap.querySelectorAll('.dc-item').length;
+      const done=wrap.querySelectorAll('.dc-item.checked').length;
+      const prog=document.getElementById('dc-prog-m62');
+      if(prog&&done>0){prog.textContent=done+' / '+total+' DEPLOYMENT ITEMS COMPLETE';prog.classList.add('show');}
+    }
+  }
+  nav('welcome');
+}
+
+window.addEventListener('load',()=>boot());
+
+/* ═══ WORKBOOK ═══ */
+const WBL=[
+  {id:'m51',lbl:'M5.1 — THE SOVEREIGN OFFER STACK',mod:'M005'},
+  {id:'m52',lbl:'M5.2 — BRAND SIGNAL ARCHITECTURE',mod:'M005'},
+  {id:'m53',lbl:'M5.3 — CONTENT SYSTEM BUILD',mod:'M005'},
+  {id:'m61',lbl:'M6.1 — REVENUE MILESTONE MAP',mod:'M006'},
+  {id:'m62',lbl:'M6.2 — SCALE ARCHITECTURE',mod:'M006'},
+];
+const WBMODS=[
+  {id:'M005',lbl:'MODULE 005 // OFFER ARCHITECTURE'},
+  {id:'M006',lbl:'MODULE 006 // SCALE ARCHITECTURE'},
+];
+let wbPrev='welcome';
+function wbOpen(){
+  wbPrev=curScreen||'welcome';
+  const sc=document.getElementById('screen-workbook');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  sc.classList.add('active');
+  document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+  document.getElementById('nav-workbook').classList.add('active');
+  wbTrigger(sc);
+  setTimeout(()=>wbRender(),80);
+  if(window.innerWidth<=768)closeSidebar();
+}
+function wbTrigger(sc){
+  const fl=document.getElementById('wb-flash');
+  fl.style.transition='none';fl.style.opacity='1';void fl.offsetWidth;
+  setTimeout(()=>{fl.style.transition='opacity 0.55s';fl.style.opacity='0';},80);
+  sc.classList.remove('wb-active');
+  sc.style.opacity='0';sc.style.transform='perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px)';sc.style.filter='blur(18px)';
+  void sc.offsetWidth;
+  sc.style.opacity='';sc.style.transform='';sc.style.filter='';
+  sc.classList.add('wb-active');
+}
+function wbRender(){
+  const done=LESSONS.filter(id=>S.done[id]).length;
+  const flagged=LESSONS.filter(id=>S.done[id]&&S.activated[id]==='fl').length;
+  const noted=WBL.filter(l=>S.notes[l.id]&&S.notes[l.id].trim()).length;
+  document.getElementById('wb-stats').innerHTML=`<span>LOCKED: <b>${done}/${LESSONS.length}</b></span><span>FLAGGED: <b>${flagged}</b></span><span>NOTES: <b>${noted}/${WBL.length}</b></span>`;
+  const cont=document.getElementById('wb-content');cont.innerHTML='';
+  WBMODS.forEach((mod,mi)=>{
+    const grp=document.createElement('div');grp.className='wb-phase-grp';
+    grp.style.animationDelay=(0.08+mi*0.12)+'s';
+    let html=`<div class="wb-phase-hdr">// ${mod.lbl}</div>`;
+    WBL.filter(l=>l.mod===mod.id).forEach(l=>{
+      const note=S.notes[l.id]||'';
+      const isCf=S.done[l.id]&&S.activated[l.id]==='cf';
+      const isFl=S.done[l.id]&&S.activated[l.id]==='fl';
+      const cls=isCf?'wb-cf':isFl?'wb-fl':'wb-pd';
+      const badge=isCf?'<span class="wb-ebadge cf">✓ LOCKED</span>':isFl?'<span class="wb-ebadge fl">⚑ FLAGGED</span>':'<span class="wb-ebadge pd">○ PENDING</span>';
+      const noteHtml=note?`<div class="wb-enote">${note.replace(/</g,'&lt;')}</div>`:`<div class="wb-empty">// NO FIELD NOTE RECORDED</div>`;
+      html+=`<div class="wb-entry ${cls}" onclick="wbGoLesson('${l.id}')"><div class="wb-etop"><span class="wb-elbl">${l.lbl}</span>${badge}</div>${noteHtml}</div>`;
+    });
+    grp.innerHTML=html;cont.appendChild(grp);
+  });
+  const strat=S.notes['wb-strat']||'';
+  const pv=document.getElementById('fn-prev-wb-strat');
+  const pt=document.getElementById('fn-prev-wb-strat-txt');
+  const ta=document.getElementById('fn-wb-strat');
+  if(strat&&pv&&pt){pv.style.display='block';pt.textContent=strat;ta.value='';}
+  else if(pv){pv.style.display='none';}
+}
+function wbGoLesson(id){nav(id);}
+function wbReturn(){nav(wbPrev);}
+function wbSaveStrat(){
+  const ta=document.getElementById('fn-wb-strat');if(!ta)return;
+  S.notes['wb-strat']=ta.value;save();
+  const btn=document.querySelector('[onclick="wbSaveStrat()"]');
+  if(btn){btn.textContent='// SAVED ✓';setTimeout(()=>{btn.textContent='// SAVE STRATEGY NOTE';},2000);}
+}
+</script>
+</body>
+</html>

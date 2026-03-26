@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>System Mastery Architecture: Phase 2 — Real-World Implementation Active</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0d0b14;
+      --text: #E8E4F0; --text-dim: #7C7A9A; --text-ghost: #484860;
+      --violet: #7C5CFC; --violet-hover: #9B7EFF; --violet-glow: rgba(124,92,252,0.2); --violet-border: rgba(124,92,252,0.25);
+      --gold: #C9A84C; --gold-hover: #E8C56A; --gold-glow: rgba(201,168,76,0.15);
+      --cyan: #3EF7E8; --cyan-dim: rgba(62,247,232,0.06);
+      --success: #2ECC8F; --success-dim: rgba(46,204,143,0.1);
+      --border: rgba(124,92,252,0.18); --border-subtle: rgba(255,255,255,0.04);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,92,252,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* CONFIRMATION */
+    .confirm { padding: 80px 0 56px; text-align: center; }
+    .arch-badge { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--violet); border: 1px solid var(--violet-border); padding: 10px 20px; display: inline-block; margin-bottom: 28px; text-transform: uppercase; position: relative; }
+    .arch-badge::before { content: ''; position: absolute; inset: -5px; border: 1px solid rgba(124,92,252,0.06); animation: archPulse 4s ease-in-out infinite; }
+    @keyframes archPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0; transform: scale(1.12); } }
+    .status-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .dot-active { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: dotPulse 2.5s ease-in-out infinite; }
+    @keyframes dotPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(46,204,143,0.5); } 50% { box-shadow: 0 0 0 8px rgba(46,204,143,0); } }
+    .status-text { font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--success); text-transform: uppercase; }
+    .confirm h1 { font-size: clamp(26px, 5vw, 44px); font-weight: 700; line-height: 1.12; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .confirm h1 em { font-style: italic; color: var(--violet); font-weight: 400; }
+    .confirm p { font-size: 17px; color: var(--text-dim); max-width: 500px; margin: 0 auto 36px; font-weight: 300; line-height: 1.8; }
+
+    /* ACCESS BUTTONS */
+    .access-grid { display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto 16px; }
+    .btn-primary { display: block; background: var(--violet); color: #fff; font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 17px 32px; text-decoration: none; text-align: center; transition: background 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; }
+    .btn-primary:hover { background: var(--violet-hover); box-shadow: 0 0 40px var(--violet-glow); }
+    .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent); animation: shimmer 6s ease-in-out infinite; }
+    @keyframes shimmer { 0%,100% { left: -100%; } 50% { left: 100%; } }
+    .btn-secondary { display: block; font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); border: 1px solid rgba(62,247,232,0.2); padding: 16px 32px; text-decoration: none; text-align: center; transition: background 0.2s, border-color 0.2s; }
+    .btn-secondary:hover { background: var(--cyan-dim); border-color: rgba(62,247,232,0.4); }
+    .btn-label { font-family: var(--mono); font-size: 10px; color: var(--text-ghost); text-align: center; letter-spacing: 1px; margin-top: 4px; }
+
+    /* ORIENTATION CALLOUT */
+    .onboard { background: var(--bg-elevated); border: 1px solid var(--violet-border); padding: 28px 32px; margin: 40px 0 24px; position: relative; }
+    .onboard::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--violet); opacity: 0.5; }
+    .onboard-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--violet); opacity: 0.7; text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .onboard h3 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .onboard p { font-size: 14px; color: var(--text-dim); font-weight: 300; line-height: 1.7; }
+
+    /* 10-WEEK DEPLOYMENT SEQUENCE */
+    .deploy { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
+    .deploy h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .deploy .intro { font-size: 15px; color: var(--text-dim); font-weight: 300; margin-bottom: 32px; }
+    .modules { display: flex; flex-direction: column; gap: 2px; }
+    .module { background: var(--bg-card); border: 1px solid var(--border); padding: 22px 28px; display: flex; gap: 20px; position: relative; transition: border-color 0.2s; }
+    .module:hover { border-color: var(--violet-border); }
+    .module::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--violet); opacity: 0.25; transition: opacity 0.2s; }
+    .module:hover::before { opacity: 0.55; }
+    .module-mark { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--violet); min-width: 56px; padding-top: 2px; flex-shrink: 0; opacity: 0.8; }
+    .module h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .module p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.65; margin: 0; }
+
+    /* WHAT TO EXPECT */
+    .expect { padding: 56px 0; border-top: 1px solid var(--border-subtle); }
+    .expect h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 28px; letter-spacing: -0.01em; }
+    .expect-items { display: flex; flex-direction: column; gap: 0; }
+    .expect-item { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border-subtle); align-items: flex-start; }
+    .expect-item:last-child { border-bottom: none; }
+    .expect-num { font-family: var(--mono); font-size: 10px; color: var(--violet); min-width: 28px; padding-top: 3px; opacity: 0.7; }
+    .expect-item h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .expect-item p { font-size: 13px; color: var(--text-dim); font-weight: 300; line-height: 1.6; }
+
+    /* BRIDGE TO TIER 6 */
+    .bridge { background: var(--bg-card); border: 1px solid var(--border); padding: 48px; text-align: center; margin: 24px 0 64px; position: relative; }
+    .bridge::before { content: ''; position: absolute; top: -1px; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(232,197,106,0.35), transparent); }
+    .bridge-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: rgba(232,197,106,0.5); text-transform: uppercase; margin-bottom: 16px; display: block; }
+    .bridge h3 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .bridge p { font-size: 15px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .bridge p.price-signal { color: var(--gold); font-family: var(--mono); font-size: 12px; letter-spacing: 1px; margin-bottom: 24px; }
+    .btn-bridge { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 14px 36px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .btn-bridge:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+
+    .footer { border-top: 1px solid var(--border-subtle); padding: 40px 0; text-align: center; }
+    .footer p { font-family: var(--mono); font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+    .footer .sig { font-family: var(--display); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; font-weight: 300; }
+
+    @media (max-width: 560px) { .module { flex-direction: column; gap: 6px; padding: 18px 20px; } .bridge { padding: 32px 24px; } .expect-item { flex-direction: column; gap: 4px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="confirm">
+      <div class="arch-badge">SYSTEM MASTERY ARCHITECTURE — PHASE 2</div>
+      <div class="status-row">
+        <div class="dot-active"></div>
+        <span class="status-text">REAL-WORLD IMPLEMENTATION ACTIVE</span>
+      </div>
+      <h1>Phase 1 built the architecture.<br>Phase 2 confirms <em>how deep it goes.</em></h1>
+      <p>The controlled environment is gone. The 10-week advanced implementation sequence begins now — your sovereign operating system applied to adversarial pressure, financial architecture, and the interference patterns that didn't surface in Phase 1.</p>
+
+      <div class="access-grid">
+        <a href="https://sovereign-synthesis.vercel.app/phase-2" class="btn-primary" target="_blank">ACCESS PHASE 2 PORTAL — MODULE 006</a>
+        <p class="btn-label">5 modules &middot; 10 weeks &middot; Begins immediately</p>
+        <a href="https://t.me/sovereignsynthesis" class="btn-secondary" target="_blank">TELEGRAM CHANNEL — REQUIRED</a>
+        <p class="btn-label">Advanced protocol transmissions &middot; Direct implementation support</p>
+      </div>
+    </section>
+
+    <div class="onboard">
+      <span class="onboard-label">// PHASE 2 ORIENTATION</span>
+      <h3>The conditions change. The architecture doesn't.</h3>
+      <p>Phase 2 removes the optimal conditions Phase 1 operated within. You will encounter higher-stakes pressure, financial complexity, and the deeper interference patterns specifically adapted to resist Phase 1-level protocols. The architecture holds. Module 006 opens with the Adversarial Stress Test — a full advanced dark psychology audit applied to your current field. Do not approach it as a repetition of Phase 1. The vectors it surfaces are different.</p>
+    </div>
+
+    <section class="deploy">
+      <h2>The 10-week advanced implementation sequence</h2>
+      <p class="intro">Each module builds on verified completion of the previous. The sequence is not a content library — it is a progressive implementation protocol.</p>
+      <div class="modules">
+        <div class="module">
+          <div class="module-mark">WK 09–10</div>
+          <div>
+            <h3>Module 006 — The Adversarial Stress Test</h3>
+            <p>Advanced dark psychology audit applied to corporate, institutional, and systemic interference vectors. The patterns that survived Phase 1 surface here. Available now.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 11–12</div>
+          <div>
+            <h3>Module 007 — Financial Architecture</h3>
+            <p>Revenue design, Net Liquid Sum trajectory, capital allocation decision filters. Money as a systems engineering problem — solved with the same architecture-first methodology that rebuilt the internal OS. Unlocks after Module 006.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 13–14</div>
+          <div>
+            <h3>Module 008 — The Sovereign Environment Protocol</h3>
+            <p>Full physical and digital environment redesign for maximum signal clarity. Every friction source, interference vector, and drain node audited and removed. Unlocks after Module 007.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 15–16</div>
+          <div>
+            <h3>Module 009 — Scale Without Contamination</h3>
+            <p>Delegation architecture, team selection criteria, transmission frameworks. Sovereign infrastructure that operates without constant oversight. Unlocks after Module 008.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-mark">WK 17–18</div>
+          <div>
+            <h3>Module 010 — Phase 2 Calibration</h3>
+            <p>Full dual-phase architecture stress test and certification. Every system built across Phases 1 and 2 verified simultaneously under live conditions. The gate to Phase 3.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="expect">
+      <h2>How Phase 2 runs differently from Phase 1</h2>
+      <div class="expect-items">
+        <div class="expect-item">
+          <span class="expect-num">01</span>
+          <div>
+            <h3>The pressure is real and intentional</h3>
+            <p>Phase 2 is designed to engage your sovereign architecture with conditions it was built to handle. Adversarial corporate systems, financial decision points, scale pressure. This is not stress for its own sake — it is verification that the architecture performs under load.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">02</span>
+          <div>
+            <h3>Implementation support remains direct</h3>
+            <p>The Telegram channel is still the operational layer. Direct feedback from Ace on Phase 2-specific implementation questions. The support mechanism that made Phase 1 work is present throughout Phase 2.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">03</span>
+          <div>
+            <h3>Phase 2 certification is the Phase 3 gate</h3>
+            <p>Module 010 certification confirms the dual-phase architecture is verified under real-world load. This is the specific requirement for Phase 3 access — not arbitrary, but architectural. Phase 3's integration work only has meaning when the subsystems being integrated are already operational.</p>
+          </div>
+        </div>
+        <div class="expect-item">
+          <span class="expect-num">04</span>
+          <div>
+            <h3>Receipt and confirmation are on their way</h3>
+            <p>An email confirmation with your receipt is incoming. If it doesn't arrive within 10 minutes, check spam. Your portal access is active now — use the button above to access it directly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bridge">
+      <span class="bridge-label">// NEXT TRANSMISSION</span>
+      <h3>Phase 2 tests what Phase 1 built.<br>Phase 3 integrates it all into one.</h3>
+      <p>System Mastery Architecture Phase 3 is the integration sequence — where every subsystem built across Phases 1 and 2 stops operating separately and begins running as a single unified sovereign architecture. 10 weeks. 5 modules. The completion point.</p>
+      <p class="price-signal">// PHASE 3 — $3,777 &middot; REQUIRES PHASE 2 CERTIFICATION</p>
+      <a href="../tier-6/phase-3.html" class="btn-bridge">SEE PHASE 3 OVERVIEW</a>
+    </section>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

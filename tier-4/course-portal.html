@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Mastery Architecture — Phase 1: Declassification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --amber:#E8921A;--amber-dim:rgba(232,146,26,0.12);--amber-glow:rgba(232,146,26,0.35);--amber-faint:rgba(232,146,26,0.06);
+  --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.08);--cyan-glow:rgba(62,247,232,0.35);--cyan-border:rgba(62,247,232,0.25);
+  --bg:#060503;--bg-card:#0a0906;--bg-card2:#0d0b08;
+  --text:#E8E2D8;--dim:rgba(232,226,216,0.5);--dim2:rgba(232,226,216,0.25);
+  --sidebar-w:270px;--mono:'Space Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+/* ── BOOT OVERLAY ── */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+#boot.hidden{display:none}
+#bscan{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--cyan),var(--amber),transparent);box-shadow:0 0 18px var(--cyan-glow);transform:translateY(-4px)}
+.boot-logo{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:4px;text-align:center;opacity:0;transition:opacity .4s}
+.boot-logo.show{opacity:1}
+.boot-bar{width:240px;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--cyan));border-radius:2px;transition:width 1.4s ease}
+.boot-fill.go{width:100%}
+.boot-txt{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;opacity:0;transition:opacity .3s .6s}
+.boot-txt.show{opacity:1}
+
+/* ── SCANLINE TRANSITION ── */
+#sflash{position:fixed;inset:0;pointer-events:none;z-index:8888;opacity:0}
+#sflash.fire{animation:sfire .45s ease forwards}
+@keyframes sfire{
+  0%{opacity:0;background:linear-gradient(180deg,transparent 0%,var(--cyan) 50%,transparent 100%);background-size:100% 6px;background-position:0 -6px}
+  40%{opacity:.7}
+  100%{opacity:0;background-position:0 100vh}
+}
+
+/* ── SEAL FLASH ── */
+#sealf{position:fixed;inset:0;pointer-events:none;z-index:8887;opacity:0}
+#sealf.fire{animation:sealfire .6s ease forwards}
+@keyframes sealfire{
+  0%{opacity:0;background:radial-gradient(circle at center,rgba(62,247,232,0.25) 0%,transparent 60%)}
+  30%{opacity:1}
+  100%{opacity:0}
+}
+
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;
+  background:#07060400;border-right:1px solid rgba(232,146,26,0.15);
+  display:flex;flex-direction:column;overflow:hidden;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  position:relative;z-index:10;transition:transform .3s ease
+}
+.sb-header{padding:20px 18px 14px;border-bottom:1px solid var(--amber-dim)}
+.sb-brand{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+.sb-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.sb-phase{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+
+/* progress ring */
+.sb-progress{padding:14px 18px;border-bottom:1px solid var(--amber-dim);display:flex;align-items:center;gap:12px}
+.pring-wrap{position:relative;width:44px;height:44px;flex-shrink:0}
+.pring-wrap svg{transform:rotate(-90deg)}
+.pring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:3}
+.pring-fill{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;stroke-dasharray:120;stroke-dashoffset:120;transition:stroke-dashoffset .6s ease}
+.pring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--cyan)}
+.sb-prog-text{font-size:11px;color:var(--dim);line-height:1.5}
+.sb-prog-text strong{display:block;color:var(--text);font-size:12px}
+
+/* nav */
+.sb-nav{flex:1;overflow-y:auto;padding:10px 0}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--amber-dim);border-radius:2px}
+.sb-section{padding:8px 18px 4px;font-family:var(--mono);font-size:8px;color:var(--amber);letter-spacing:2px;text-transform:uppercase}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;
+  transition:background .2s,border-left .2s;border-left:2px solid transparent;
+  position:relative
+}
+.sb-item:hover{background:var(--amber-faint)}
+.sb-item.active{background:var(--amber-dim);border-left-color:var(--amber)}
+.sb-item.active .si-label{color:var(--amber)}
+.sb-item.done .si-dot{background:var(--cyan);box-shadow:0 0 6px var(--cyan-glow)}
+.sb-item.flagged .si-dot{background:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
+.sb-item.done .si-label{color:var(--dim2);text-decoration:line-through;text-decoration-color:rgba(62,247,232,0.3)}
+.si-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .3s}
+.si-label{font-size:11px;color:var(--dim);transition:color .2s;line-height:1.3}
+.si-badge{margin-left:auto;font-family:var(--mono);font-size:7px;padding:2px 5px;border-radius:2px;letter-spacing:1px}
+.si-badge.cf{background:rgba(62,247,232,0.12);color:var(--cyan);border:1px solid var(--cyan-border)}
+.si-badge.fl{background:var(--amber-dim);color:var(--amber)}
+
+.sb-footer{padding:12px 18px;border-top:1px solid var(--amber-dim)}
+.sb-footer-btn{
+  width:100%;padding:8px;border:1px solid var(--cyan-border);background:var(--cyan-dim);
+  color:var(--cyan);font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  cursor:pointer;border-radius:3px;transition:all .2s
+}
+.sb-footer-btn:hover{background:rgba(62,247,232,0.15);box-shadow:0 0 12px var(--cyan-glow)}
+
+/* ── MAIN CONTENT ── */
+#main{flex:1;height:100vh;overflow-y:auto;position:relative}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--amber-dim);border-radius:2px}
+
+.screen{display:none;padding:40px 48px;max-width:860px;margin:0 auto;min-height:100vh}
+.screen.active{display:block;animation:screenin .35s ease}
+@keyframes screenin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CANVAS BG ── */
+#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+#main,#sidebar{position:relative;z-index:1}
+
+/* ── TYPOGRAPHY ── */
+.scr-tag{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.scr-title{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--text)}
+.scr-title .cy{color:var(--cyan)}
+.scr-sub{font-size:15px;color:var(--dim);line-height:1.6;margin-bottom:32px}
+.divider{height:1px;background:linear-gradient(90deg,var(--amber-dim),transparent);margin:28px 0}
+p{font-size:14px;line-height:1.75;color:var(--dim);margin-bottom:14px}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:24px 0 10px}
+h4{font-size:13px;font-weight:600;color:var(--amber);font-family:var(--mono);letter-spacing:1px;margin:18px 0 8px}
+
+/* cards */
+.card{background:var(--bg-card);border:1px solid var(--amber-dim);border-radius:6px;padding:20px;margin-bottom:16px}
+.card-cyan{background:var(--bg-card);border:1px solid var(--cyan-border);border-radius:6px;padding:20px;margin-bottom:16px}
+
+/* ── INTERACTIVE: THREAT MATRIX ── */
+.threat-matrix{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.tm-item{
+  padding:14px 16px;border:1px solid rgba(255,255,255,.06);border-radius:4px;
+  cursor:pointer;transition:all .2s;background:var(--bg-card)
+}
+.tm-item:hover{border-color:var(--amber);background:var(--amber-faint)}
+.tm-item.selected{border-color:var(--cyan);background:var(--cyan-dim);box-shadow:0 0 12px rgba(62,247,232,0.12)}
+.tm-item.selected .tm-name{color:var(--cyan)}
+.tm-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;transition:color .2s}
+.tm-desc{font-size:11px;color:var(--dim);line-height:1.4}
+.tm-selected-hint{font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:2px;margin-top:10px;opacity:0;transition:opacity .3s}
+.tm-selected-hint.show{opacity:1}
+
+/* ── INTERACTIVE: LEXICAL TABLE ── */
+.lex-table{width:100%;border-collapse:collapse;margin:16px 0}
+.lex-table th{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim2);padding:8px 12px;border-bottom:1px solid var(--amber-dim);text-align:left}
+.lex-row{cursor:pointer;transition:background .2s}
+.lex-row:hover{background:var(--amber-faint)}
+.lex-row.flipped{background:var(--cyan-dim)}
+.lex-row.flipped .lex-virus{opacity:.3;text-decoration:line-through}
+.lex-row.flipped .lex-sovereign{color:var(--cyan);font-weight:600}
+.lex-row td{padding:10px 12px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.03);transition:all .2s}
+.lex-virus{color:#ff6b6b}
+.lex-arrow{color:var(--amber);font-family:var(--mono);font-size:10px}
+.lex-sovereign{color:var(--dim)}
+.lex-hint{font-family:var(--mono);font-size:8px;color:var(--cyan);letter-spacing:2px;padding:8px 12px;opacity:0;transition:opacity .3s}
+.lex-hint.show{opacity:1}
+
+/* ── INTERACTIVE: INTERRUPT GRID ── */
+.interrupt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.ig-card{
+  padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:4px;
+  cursor:pointer;background:var(--bg-card);transition:all .2s;position:relative
+}
+.ig-card:hover{border-color:var(--amber);background:var(--amber-faint)}
+.ig-card.open{border-color:var(--cyan);background:var(--cyan-dim)}
+.ig-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px}
+.ig-expand{font-size:10px;color:var(--dim);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .35s ease}
+.ig-card.open .ig-expand{max-height:200px}
+.ig-arrow{position:absolute;top:14px;right:12px;font-family:var(--mono);font-size:10px;color:var(--amber);transition:transform .3s}
+.ig-card.open .ig-arrow{transform:rotate(90deg);color:var(--cyan)}
+
+/* ── INTERACTIVE: REFRAME PAIRS ── */
+.reframe-pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.rf-card{
+  border-radius:6px;cursor:pointer;perspective:800px;height:90px;
+}
+.rf-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .5s ease;
+}
+.rf-card.flipped .rf-inner{transform:rotateY(180deg)}
+.rf-front,.rf-back{
+  position:absolute;inset:0;padding:16px;border-radius:6px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center
+}
+.rf-front{background:rgba(255,80,80,.07);border:1px solid rgba(255,100,100,.2)}
+.rf-back{background:var(--cyan-dim);border:1px solid var(--cyan-border);transform:rotateY(180deg)}
+.rf-label{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--dim2);margin-bottom:4px}
+.rf-front .rf-label{color:rgba(255,120,120,0.6)}
+.rf-back .rf-label{color:var(--cyan)}
+.rf-text{font-size:11px;line-height:1.4;color:var(--text)}
+.rf-back .rf-text{color:var(--cyan)}
+
+/* ── TORUS VISUAL ── */
+.torus-wrap{display:flex;justify-content:center;margin:24px 0}
+.torus-outer{
+  width:140px;height:140px;border-radius:50%;
+  border:2px solid var(--amber);
+  animation:torusspin 8s linear infinite;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px var(--amber-glow);
+}
+.torus-inner{
+  width:88px;height:88px;border-radius:50%;
+  border:1px solid var(--cyan);
+  animation:torusspin2 5s linear infinite;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 14px var(--cyan-glow);
+}
+.torus-core{
+  width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,146,26,0.4),transparent 70%);
+  border:1px solid var(--amber-dim);
+}
+@keyframes torusspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes torusspin2{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+
+/* ── FIELD NOTES ── */
+.fn-wrap{margin-top:24px;border:1px solid var(--cyan-border);border-radius:6px;overflow:hidden}
+.fn-header{padding:10px 16px;background:var(--cyan-dim);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--cyan-border)}
+.fn-icon{color:var(--cyan);font-size:14px}
+.fn-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan)}
+.fn-body{padding:14px}
+.fn-prev{display:none;margin-bottom:12px;padding:10px 14px;background:rgba(62,247,232,0.05);border:1px solid rgba(62,247,232,0.15);border-radius:4px}
+.fn-prev.show{display:block}
+.fn-prev-label{font-family:var(--mono);font-size:8px;color:var(--cyan);letter-spacing:2px;margin-bottom:6px}
+.fn-prev-text{font-size:12px;color:var(--dim);line-height:1.5}
+.fn-edit-link{font-family:var(--mono);font-size:8px;color:var(--amber);letter-spacing:1px;cursor:pointer;border:none;background:none;padding:4px 0;display:block;margin-top:6px}
+.fn-textarea-wrap{}
+textarea.fn-ta{
+  width:100%;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--sans);font-size:13px;
+  line-height:1.6;resize:none;min-height:80px;
+}
+textarea.fn-ta::placeholder{color:var(--dim2)}
+.fn-actions{display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04)}
+.fn-save-btn{
+  padding:7px 16px;background:var(--cyan-dim);border:1px solid var(--cyan-border);
+  color:var(--cyan);font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  cursor:pointer;border-radius:3px;transition:all .2s
+}
+.fn-save-btn:hover{background:rgba(62,247,232,0.18);box-shadow:0 0 10px var(--cyan-glow)}
+.fn-status{font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:1px;opacity:0;transition:opacity .3s}
+.fn-status.show{opacity:1}
+
+/* ── ACTIVATION GATE ── */
+.act-gate{margin-top:28px;padding:22px;border:1px solid var(--amber-dim);border-radius:6px;background:var(--amber-faint)}
+.act-header{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:8px}
+.act-question{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:18px}
+.act-btns{display:flex;gap:12px;flex-wrap:wrap}
+.act-confirm{
+  padding:10px 24px;background:var(--amber-dim);border:1px solid var(--amber);
+  color:var(--amber);font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  cursor:pointer;border-radius:3px;transition:all .25s
+}
+.act-confirm:hover{background:rgba(232,146,26,0.25);box-shadow:0 0 16px var(--amber-glow)}
+.act-flag{
+  padding:10px 24px;background:transparent;border:1px solid rgba(255,255,255,.12);
+  color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  cursor:pointer;border-radius:3px;transition:all .25s
+}
+.act-flag:hover{border-color:var(--amber);color:var(--text)}
+.act-result{display:none;margin-top:16px;padding:12px 16px;border-radius:4px}
+.act-result.cf{display:block;background:rgba(62,247,232,0.08);border:1px solid var(--cyan-border)}
+.act-result.fl{display:block;background:var(--amber-faint);border:1px solid rgba(232,146,26,0.3)}
+.act-result-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;margin-bottom:4px}
+.act-result.cf .act-result-label{color:var(--cyan)}
+.act-result.fl .act-result-label{color:var(--amber)}
+.act-result-text{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── NEXT BUTTON ── */
+.bnext{
+  display:none;margin-top:24px;padding:12px 32px;
+  background:linear-gradient(135deg,var(--amber-dim),var(--cyan-dim));
+  border:1px solid var(--cyan-border);color:var(--cyan);
+  font-family:var(--mono);font-size:11px;letter-spacing:3px;
+  cursor:pointer;border-radius:4px;width:fit-content;
+  transition:all .25s
+}
+.bnext.show{display:block;animation:bnextappear .5s ease forwards}
+@keyframes bnextappear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bnext:hover{box-shadow:0 0 20px var(--cyan-glow),0 0 8px var(--amber-glow)}
+
+/* ── WELCOME SCREEN ── */
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.wg-card{
+  padding:18px;border:1px solid var(--amber-dim);border-radius:6px;
+  background:var(--bg-card);cursor:pointer;transition:all .2s;position:relative;overflow:hidden
+}
+.wg-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--amber-faint),transparent);opacity:0;transition:opacity .2s}
+.wg-card:hover::before{opacity:1}
+.wg-card:hover{border-color:var(--amber);transform:translateY(-2px)}
+.wg-num{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:2px;margin-bottom:8px}
+.wg-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.wg-desc{font-size:11px;color:var(--dim);line-height:1.4}
+
+/* system journey */
+.sj-tier{
+  display:flex;align-items:center;gap:16px;padding:14px 18px;
+  border-left:2px solid rgba(255,255,255,.06);margin-bottom:4px;
+  transition:all .2s;border-radius:0 4px 4px 0
+}
+.sj-tier.active{border-left-color:var(--amber);background:var(--amber-faint)}
+.sj-tier.active .sj-label{color:var(--amber)}
+.sj-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0}
+.sj-tier.active .sj-dot{background:var(--amber);box-shadow:0 0 8px var(--amber-glow)}
+.sj-label{font-size:13px;color:var(--dim)}
+.sj-tag{margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:2px 8px;border-radius:2px}
+.sj-tag.here{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(232,146,26,0.3)}
+
+/* done screen */
+.done-ring{display:flex;justify-content:center;margin:24px 0}
+.done-ring svg{filter:drop-shadow(0 0 16px rgba(62,247,232,0.5))}
+.done-ring circle.dr-fill{
+  stroke:var(--cyan);stroke-width:4;fill:none;
+  stroke-dasharray:283;stroke-dashoffset:0;stroke-linecap:round;
+  animation:dring 1.2s ease forwards
+}
+@keyframes dring{from{stroke-dashoffset:283}to{stroke-dashoffset:0}}
+
+/* ── HAMBURGER ── */
+#hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;
+  background:var(--bg-card);border:1px solid var(--amber-dim);
+  padding:8px 10px;cursor:pointer;border-radius:3px;flex-direction:column;gap:4px}
+.hb-line{width:20px;height:1.5px;background:var(--amber);border-radius:1px}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #hamburger{display:flex}
+  #sidebar{position:fixed;left:0;top:0;z-index:100;transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #sb-overlay.show{display:block}
+  .screen{padding:24px 20px}
+  .threat-matrix,.welcome-grid,.reframe-pairs{grid-template-columns:1fr}
+  .interrupt-grid{grid-template-columns:1fr 1fr}
+}
+
+/* ═══ FIELD WORKBOOK ═══ */
+@keyframes wbZoomEnter{
+  0%{transform:perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px);opacity:0;filter:blur(18px);}
+  25%{transform:perspective(1400px) scale(0.42) rotateX(10deg) translateY(48px);opacity:0.2;filter:blur(12px);}
+  55%{transform:perspective(1400px) scale(0.72) rotateX(4deg) translateY(18px);opacity:0.55;filter:blur(5px);}
+  78%{transform:perspective(1400px) scale(0.96) rotateX(0.8deg) translateY(4px);opacity:0.9;filter:blur(0.8px);}
+  91%{transform:perspective(1400px) scale(1.025) rotateX(-0.3deg) translateY(-2px);opacity:1;filter:blur(0);}
+  100%{transform:perspective(1400px) scale(1) rotateX(0) translateY(0);opacity:1;filter:blur(0);}
+}
+@keyframes wbGroupReveal{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.wb-active{animation:wbZoomEnter 1.15s cubic-bezier(0.12,0.8,0.28,1) forwards;}
+#wb-flash{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:0;transition:opacity 0.55s;
+  background:radial-gradient(ellipse at 50% 40%,rgba(62,247,232,0.18) 0%,rgba(232,146,26,0.1) 28%,transparent 60%);}
+.wb-phase-grp{margin-bottom:28px;opacity:0;animation:wbGroupReveal 0.45s ease forwards;}
+.wb-phase-grp:nth-child(2){animation-delay:0.1s;}
+.wb-phase-grp:nth-child(3){animation-delay:0.2s;}
+.wb-phase-hdr{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--cyan);
+  border-bottom:1px solid rgba(62,247,232,0.18);padding-bottom:8px;margin-bottom:12px;}
+.wb-entry{border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:14px 16px;margin-bottom:8px;
+  background:rgba(255,255,255,0.02);transition:border-color 0.2s;cursor:pointer;}
+.wb-entry:hover{border-color:rgba(255,255,255,0.15);}
+.wb-entry.wb-cf{border-left:2px solid var(--cyan);}
+.wb-entry.wb-fl{border-left:2px solid rgba(232,146,26,0.8);}
+.wb-entry.wb-pd{border-left:2px solid rgba(255,255,255,0.12);}
+.wb-etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;}
+.wb-elbl{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.75);}
+.wb-ebadge{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;padding:3px 8px;border-radius:2px;}
+.wb-ebadge.cf{color:var(--cyan);border:1px solid rgba(62,247,232,0.2);background:rgba(62,247,232,0.05);}
+.wb-ebadge.fl{color:rgba(232,146,26,1);border:1px solid rgba(232,146,26,0.2);background:rgba(232,146,26,0.05);}
+.wb-ebadge.pd{color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);}
+.wb-enote{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;}
+.wb-empty{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:0.08em;}
+.wb-stats{display:flex;gap:20px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);margin-bottom:20px;flex-wrap:wrap;}
+.wb-stats b{color:var(--cyan);}
+.wb-strat{margin-top:28px;border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;}
+.wb-slbl{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:8px;}
+.wb-ssub{font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:14px;line-height:1.65;}
+.wb-btn{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.14em;
+  padding:10px 20px;border:1px solid rgba(255,255,255,0.12);background:transparent;
+  color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;border-radius:2px;margin-top:16px;}
+.wb-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.wb-coach-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.wb-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(62,247,232,0.25);
+  background:rgba(62,247,232,0.05);padding:5px 12px;border-radius:2px;
+  font-family:var(--mono);font-size:8px;letter-spacing:0.16em;color:var(--cyan);}
+
+</style>
+</head>
+<body>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- SCANLINE FLASH -->
+<div id="sflash"></div>
+<div id="sealf"></div>
+
+<!-- BOOT OVERLAY -->
+<div id="boot">
+  <div id="bscan"></div>
+  <div class="boot-logo" id="boot-logo">SOVEREIGN SYNTHESIS</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-txt" id="boot-txt">INITIALIZING SMA PHASE 1 // DECLASSIFICATION PROTOCOL</div>
+</div>
+
+<!-- MOBILE HAMBURGER -->
+<button id="hamburger" onclick="toggleSidebar()">
+  <div class="hb-line"></div><div class="hb-line"></div><div class="hb-line"></div>
+</button>
+<div id="sb-overlay" onclick="toggleSidebar()"></div>
+
+<!-- APP -->
+<div id="app">
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-brand">Sovereign Synthesis</div>
+    <div class="sb-title">System Mastery Architecture</div>
+    <div class="sb-phase">Phase 1 // Declassification</div>
+  </div>
+  <div class="sb-progress">
+    <div class="pring-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle class="pring-bg" cx="22" cy="22" r="18"/>
+        <circle class="pring-fill" id="pring" cx="22" cy="22" r="18"/>
+      </svg>
+      <div class="pring-pct" id="pring-pct">0%</div>
+    </div>
+    <div class="sb-prog-text">
+      <strong id="prog-done">0 / 6 Lessons</strong>
+      Phase 1 Progress
+    </div>
+  </div>
+  <div class="sb-nav" id="sb-nav">
+    <div class="sb-section">Start</div>
+    <div class="sb-item" id="nav-welcome" onclick="nav('welcome')">
+      <div class="si-dot"></div>
+      <div class="si-label">Welcome Briefing</div>
+    </div>
+
+    <div class="sb-section">Module 001 — Threat Mapping</div>
+    <div class="sb-item" id="nav-m1i" onclick="nav('m1i')">
+      <div class="si-dot"></div>
+      <div class="si-label">M001 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m11" onclick="nav('m11')">
+      <div class="si-dot"></div>
+      <div class="si-label">Lesson 1: The Vampire Scan</div>
+    </div>
+    <div class="sb-item" id="nav-m12" onclick="nav('m12')">
+      <div class="si-dot"></div>
+      <div class="si-label">Lesson 2: Lexical Containment</div>
+    </div>
+    <div class="sb-item" id="nav-m13" onclick="nav('m13')">
+      <div class="si-dot"></div>
+      <div class="si-label">Lesson 3: Pattern Interrupt</div>
+    </div>
+
+    <div class="sb-section">Module 002 — Reality Architecture</div>
+    <div class="sb-item" id="nav-m2i" onclick="nav('m2i')">
+      <div class="si-dot"></div>
+      <div class="si-label">M002 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m21" onclick="nav('m21')">
+      <div class="si-dot"></div>
+      <div class="si-label">Lesson 4: The Scarcity Illusion</div>
+    </div>
+    <div class="sb-item" id="nav-m22" onclick="nav('m22')">
+      <div class="si-dot"></div>
+      <div class="si-label">Lesson 5: Torus Field Reset</div>
+    </div>
+
+    <div class="sb-section">Complete</div>
+    <div class="sb-item" id="nav-done" onclick="nav('done')">
+      <div class="si-dot"></div>
+      <div class="si-label">Phase 1 Complete</div>
+    </div>
+  </div>
+
+    <div class="sb-item" id="nav-workbook" onclick="wbOpen()" style="border-top:1px solid rgba(62,247,232,0.12);margin-top:4px;">
+      <div class="si-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></div>
+      <div class="si-label" style="color:var(--cyan);">Field Workbook</div>
+    </div>
+  <div class="sb-footer">
+    <button class="sb-footer-btn" onclick="nav('sj')">▶ SYSTEM JOURNEY</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- WELCOME SCREEN -->
+<div class="screen" id="screen-welcome">
+  <div class="scr-tag">Transmission Incoming</div>
+  <h1 class="scr-title">Welcome to the <span class="cy">Declassification</span></h1>
+  <p class="scr-sub">You have been granted access to Phase 1 of System Mastery Architecture — the foundational layer where the simulation begins to dissolve.</p>
+  <div class="divider"></div>
+  <div class="welcome-grid">
+    <div class="wg-card" onclick="nav('m1i')">
+      <div class="wg-num">MODULE 001</div>
+      <div class="wg-title">Threat Mapping</div>
+      <div class="wg-desc">Identify the 7 primary vectors the simulation uses to maintain control. Map your specific landscape.</div>
+    </div>
+    <div class="wg-card" onclick="nav('m2i')">
+      <div class="wg-num">MODULE 002</div>
+      <div class="wg-title">Reality Architecture</div>
+      <div class="wg-desc">Deconstruct the scarcity loop. Install the Torus Field framework. Begin sovereign construction.</div>
+    </div>
+    <div class="wg-card" onclick="nav('sj')">
+      <div class="wg-num">SYSTEM</div>
+      <div class="wg-title">Your Journey Map</div>
+      <div class="wg-desc">See where Phase 1 sits in the full Sovereign Synthesis architecture. T1 through T7.</div>
+    </div>
+    <div class="wg-card" onclick="nav('done')">
+      <div class="wg-num">COMPLETION</div>
+      <div class="wg-title">Phase Complete Gate</div>
+      <div class="wg-desc">Access your Phase 1 certification and unlock the path to Phase 2 once all lessons are sealed.</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:1px">PROTOCOL NOTE: Each lesson contains a Field Notes workbook and an Activation Gate. You do not just consume this content — you build your sovereign framework inside of it.</p>
+</div>
+
+<!-- M001 INTRO -->
+<div class="screen" id="screen-m1i">
+  <div class="scr-tag">Module 001</div>
+  <h1 class="scr-title">Threat <span class="cy">Mapping</span></h1>
+  <p class="scr-sub">Before you can architect a new reality, you must perform a full threat audit of the one currently running. Most people never audit the simulation — they simply run inside it.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 001, you will have identified the exact vectors being used to maintain your containment, named them in sovereign terminology, and executed the first Pattern Interrupt protocol.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>WHAT YOU WILL BUILD</h4>
+    <p>Your personal Threat Matrix — a real-time map of the specific fear, language, and behavioral patterns operating in your current environment. This becomes a living document you reference throughout the entire SMA system.</p>
+  </div>
+  <div class="divider"></div>
+  <p>Most self-improvement frameworks ask you to "think positive" — a surface-level patch on a deeper operating system. SMA takes a different approach: <strong style="color:var(--amber)">diagnose first, architect second.</strong> You cannot install a new OS on top of a corrupted one without first locating the virus files.</p>
+  <button class="bnext show" onclick="nav('m11')">BEGIN MODULE 001 →</button>
+</div>
+
+<!-- LESSON 1: VAMPIRE SCAN -->
+<div class="screen" id="screen-m11">
+  <div class="scr-tag">Module 001 · Lesson 1</div>
+  <h1 class="scr-title">The <span class="cy">Vampire Scan</span></h1>
+  <p class="scr-sub">A vampire cannot enter without invitation. Neither can the simulation's control vectors — unless you have unknowingly given them access.</p>
+  <div class="divider"></div>
+
+  <p>The Vampire Scan is a structured audit protocol for identifying the entities, environments, and language patterns that are currently drawing energy from your sovereign field. We are not speaking metaphorically. Every relationship, every media input, every recurring internal monologue is either feeding your field or draining it.</p>
+
+  <h3>The 7 Vampire Vectors</h3>
+  <p>Click each vector to identify which are active in your current environment:</p>
+
+  <div class="threat-matrix" id="tm-m11">
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Chronic Doubt Loops</div>
+      <div class="tm-desc">Repetitive internal questioning of your own capacity. The simulation's primary install.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Validation Dependency</div>
+      <div class="tm-desc">Requiring external confirmation before taking sovereign action. Outsources your authority.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Scarcity Vocabulary</div>
+      <div class="tm-desc">Language patterns like "I can't afford," "I don't have time," "I'm not ready." Frequency anchors.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Biological Drag Entities</div>
+      <div class="tm-desc">People in your environment who are unconsciously invested in your stasis. They drain via proximity.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Legacy Programming</div>
+      <div class="tm-desc">Inherited belief systems from family systems, education, and religion. Running in background.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Comfort Loops</div>
+      <div class="tm-desc">Routines that feel safe but produce no expansion. The simulation's reward system.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Future Paralysis</div>
+      <div class="tm-desc">Inability to act without certainty of outcome. Keeps the architect in perpetual planning mode.</div>
+    </div>
+    <div class="tm-item" onclick="selectTM(this,'m11')">
+      <div class="tm-name">Identity Friction</div>
+      <div class="tm-desc">The gap between who you currently perform and who you architecturally are. Massive energy drain.</div>
+    </div>
+  </div>
+  <div class="tm-selected-hint" id="tm-hint-m11">VECTORS IDENTIFIED — LOG THEM IN YOUR FIELD NOTES BELOW</div>
+
+  <div class="divider"></div>
+  <p>The Vampire Scan is not a one-time exercise. It is an ongoing protocol. As you move through the SMA system, your scan will become more refined. What you identify today will evolve as your field strengthens and subtler vectors become visible.</p>
+
+  <div class="fn-wrap" id="fn-m11">
+    <div class="fn-header">
+      <span class="fn-icon">◈</span>
+      <span class="fn-label">FIELD NOTES — LESSON 1</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m11">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m11"></div>
+        <button class="fn-edit-link" onclick="editNote('m11')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m11">
+        <textarea class="fn-ta" id="fnt-m11" placeholder="Which vectors are active in your field right now? Name specific people, environments, or patterns. Be precise — vague audits produce vague results." rows="5"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m11')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m11">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m11">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have completed the Vampire Scan and identified your active vectors. Do you confirm that you have named at least 3 specific vectors operating in your current environment?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m11',true)">CONFIRMED — VECTORS NAMED</button>
+      <button class="act-flag" onclick="activate('m11',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m11">
+      <div class="act-result-label" id="actr-lbl-m11"></div>
+      <div class="act-result-text" id="actr-txt-m11"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m11" onclick="nav('m12')">NEXT: LEXICAL CONTAINMENT →</button>
+</div>
+
+<!-- LESSON 2: LEXICAL CONTAINMENT -->
+<div class="screen" id="screen-m12">
+  <div class="scr-tag">Module 001 · Lesson 2</div>
+  <h1 class="scr-title">Lexical <span class="cy">Containment</span></h1>
+  <p class="scr-sub">The simulation runs on language. Every word you use is a frequency transmission that either reinforces the simulation or begins to dissolve it.</p>
+  <div class="divider"></div>
+
+  <p>Lexical Containment is the process of identifying simulation-encoded vocabulary and systematically replacing it with sovereign language. This is not positive thinking — this is architectural. The words you use create the scaffolding of your reality field.</p>
+
+  <h3>The Lexical Flip Protocol</h3>
+  <p>Click any row to execute the Lexical Flip — collapsing the virus language and revealing the sovereign replacement:</p>
+
+  <table class="lex-table">
+    <thead>
+      <tr>
+        <th>VIRUS LANGUAGE</th>
+        <th style="width:30px"></th>
+        <th>SOVEREIGN REPLACEMENT</th>
+      </tr>
+    </thead>
+    <tbody id="lex-m12">
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I can't afford it"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I'm choosing to allocate resources elsewhere"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I'm not ready"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I am acquiring the final data before deployment"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I'm trying"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I am executing"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I hope this works"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I have architected this outcome"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I'll do it when I feel ready"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I deploy first — the signal calibrates in motion"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"I just want to be happy"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I am building a sovereign architecture that generates energy"</td>
+      </tr>
+      <tr class="lex-row" onclick="flipLex(this)">
+        <td class="lex-virus">"That's not how it works"</td>
+        <td class="lex-arrow">▶</td>
+        <td class="lex-sovereign">"I have not yet accessed the protocol that produces that result"</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="lex-hint" id="lex-hint-m12">FLIP EXECUTED — SOVEREIGN FREQUENCY INSTALLED</div>
+
+  <div class="divider"></div>
+  <p>Your internal monologue runs approximately 60,000 thought-cycles per day. If 80% of those cycles are encoded with simulation vocabulary, your reality field reflects that frequency. Lexical Containment is the act of systematically auditing and replacing the script.</p>
+  <p>This is not about forced optimism. Sovereign language is precise, architectural, and rooted in agency. It acknowledges reality while refusing to give it power over your field.</p>
+
+  <div class="fn-wrap" id="fn-m12">
+    <div class="fn-header">
+      <span class="fn-icon">◈</span>
+      <span class="fn-label">FIELD NOTES — LESSON 2</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m12">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m12"></div>
+        <button class="fn-edit-link" onclick="editNote('m12')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m12">
+        <textarea class="fn-ta" id="fnt-m12" placeholder="Write 5 virus phrases you currently use regularly. Then write the sovereign replacement for each one. Make them specific to your life." rows="6"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m12')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m12">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m12">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have mapped your Lexical Containment field and written your sovereign replacements. Can you deploy sovereign language in your next real conversation without reverting to simulation vocabulary?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m12',true)">CONFIRMED — LEXICON UPGRADED</button>
+      <button class="act-flag" onclick="activate('m12',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m12">
+      <div class="act-result-label" id="actr-lbl-m12"></div>
+      <div class="act-result-text" id="actr-txt-m12"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m12" onclick="nav('m13')">NEXT: PATTERN INTERRUPT →</button>
+</div>
+
+<!-- LESSON 3: PATTERN INTERRUPT -->
+<div class="screen" id="screen-m13">
+  <div class="scr-tag">Module 001 · Lesson 3</div>
+  <h1 class="scr-title">Pattern <span class="cy">Interrupt</span></h1>
+  <p class="scr-sub">The simulation maintains itself through predictability. Every time you respond in a patterned way, you feed the loop. The Pattern Interrupt is a sovereign deployment protocol.</p>
+  <div class="divider"></div>
+
+  <p>A Pattern Interrupt is a deliberate break in a behavioral or cognitive loop. It creates a gap — and in that gap, sovereign choice becomes possible. Without the interrupt, the simulation runs on autopilot.</p>
+
+  <h3>Pattern Interrupt Deployment Grid</h3>
+  <p>Click any card to expand the full deployment protocol:</p>
+
+  <div class="interrupt-grid" id="ig-m13">
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Breath Reset</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">4 seconds in — 4 hold — 4 out. Activates the parasympathetic field. Use when a trigger event fires and you feel the simulation loop engaging. Creates 12 seconds of sovereign space.</div>
+    </div>
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Reframe Anchor</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">Ask: "What would a sovereign architect do in this moment?" Not as performance — as a genuine systems query. This question reroutes neural processing out of the simulation track.</div>
+    </div>
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Gray Rock Protocol</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">When engaging with Biological Drag entities, become information-free. Minimal responses. No emotional charge. The entity cannot feed if there is no signal to harvest.</div>
+    </div>
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Environment Shift</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">Physically relocate within 60 seconds of a loop activating. New environment = new sensory input = pattern broken at the neurological level. Even a different room resets the loop.</div>
+    </div>
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Sovereign Declaration</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">A pre-written, memorized declaration of identity that you deploy when Identity Friction spikes. "I am [identity]. I operate from [value]. My next action is [deployment]." Three lines. Deploy immediately.</div>
+    </div>
+    <div class="ig-card" onclick="toggleIG(this)">
+      <div class="ig-title">The Five Minute Deploy</div>
+      <div class="ig-arrow">▶</div>
+      <div class="ig-expand">When Future Paralysis activates, take any action toward your objective within 5 minutes — however small. The deploy breaks the paralysis loop. Momentum is architectural.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p>The goal is not to deploy every protocol. The goal is to have them pre-loaded so that when the simulation triggers, your response is already written. <strong style="color:var(--amber)">Sovereign behavior is pre-architected, not improvised.</strong></p>
+
+  <div class="fn-wrap" id="fn-m13">
+    <div class="fn-header">
+      <span class="fn-icon">◈</span>
+      <span class="fn-label">FIELD NOTES — LESSON 3</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m13">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m13"></div>
+        <button class="fn-edit-link" onclick="editNote('m13')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m13">
+        <textarea class="fn-ta" id="fnt-m13" placeholder="Write your Sovereign Declaration (3 lines: I am / I operate from / My next action is). Then choose 2 interrupt protocols and describe a specific recent situation where you would have deployed them." rows="6"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m13')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m13">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m13">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have written your Sovereign Declaration and pre-loaded your interrupt protocols. Do you confirm that Module 001 is architecturally integrated — not just understood, but installed?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m13',true)">CONFIRMED — MODULE 001 SEALED</button>
+      <button class="act-flag" onclick="activate('m13',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m13">
+      <div class="act-result-label" id="actr-lbl-m13"></div>
+      <div class="act-result-text" id="actr-txt-m13"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m13" onclick="nav('m2i')">ADVANCE TO MODULE 002 →</button>
+</div>
+
+<!-- M002 INTRO -->
+<div class="screen" id="screen-m2i">
+  <div class="scr-tag">Module 002</div>
+  <h1 class="scr-title">Reality <span class="cy">Architecture</span></h1>
+  <p class="scr-sub">The threat has been mapped. Now the build begins. Module 002 installs the foundational operating principles of sovereign reality construction.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 002, you will have deconstructed the scarcity framework, understood the Torus Field as a sovereign energy model, and executed your first Reality Architecture sequence.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>THE CORE SHIFT</h4>
+    <p>Module 001 was diagnostic. Module 002 is generative. You move from identifying what is running to installing what you choose to run. This is the transition from subject of the simulation to architect of the field.</p>
+  </div>
+  <div class="divider"></div>
+  <p>Most people experience reality as something that happens to them. The sovereign architect understands that reality is a field — and fields respond to the architect who built them. <strong style="color:var(--cyan)">You are not in the field. You are generating it.</strong></p>
+  <button class="bnext show" onclick="nav('m21')">BEGIN MODULE 002 →</button>
+</div>
+
+<!-- LESSON 4: SCARCITY ILLUSION -->
+<div class="screen" id="screen-m21">
+  <div class="scr-tag">Module 002 · Lesson 4</div>
+  <h1 class="scr-title">The Scarcity <span class="cy">Illusion</span></h1>
+  <p class="scr-sub">Scarcity is the simulation's primary control mechanism. It is not a financial reality — it is an architectural belief installed before the age of reason.</p>
+  <div class="divider"></div>
+
+  <p>The scarcity framework operates at three levels simultaneously: the cognitive level (how you think about resources), the somatic level (how your nervous system responds to perceived lack), and the behavioral level (the decisions that limitation-thinking produces). All three must be addressed.</p>
+
+  <h3>Scarcity Frame Collapse Protocol</h3>
+  <p>Click each pair to flip the scarcity frame and reveal the sovereign architecture beneath it:</p>
+
+  <div class="reframe-pairs" id="rfp-m21">
+    <div class="rf-card" onclick="this.classList.toggle('flipped')">
+      <div class="rf-inner">
+        <div class="rf-front">
+          <div class="rf-label">SCARCITY FRAME</div>
+          <div class="rf-text">"There isn't enough money for what I want to build."</div>
+        </div>
+        <div class="rf-back">
+          <div class="rf-label">SOVEREIGN FRAME</div>
+          <div class="rf-text">"I have not yet built the channel that money flows through."</div>
+        </div>
+      </div>
+    </div>
+    <div class="rf-card" onclick="this.classList.toggle('flipped')">
+      <div class="rf-inner">
+        <div class="rf-front">
+          <div class="rf-label">SCARCITY FRAME</div>
+          <div class="rf-text">"I don't have enough time to pursue this."</div>
+        </div>
+        <div class="rf-back">
+          <div class="rf-label">SOVEREIGN FRAME</div>
+          <div class="rf-text">"I have not yet designed a system that multiplies my time."</div>
+        </div>
+      </div>
+    </div>
+    <div class="rf-card" onclick="this.classList.toggle('flipped')">
+      <div class="rf-inner">
+        <div class="rf-front">
+          <div class="rf-label">SCARCITY FRAME</div>
+          <div class="rf-text">"Other people have advantages I don't have."</div>
+        </div>
+        <div class="rf-back">
+          <div class="rf-label">SOVEREIGN FRAME</div>
+          <div class="rf-text">"I have not yet identified the sovereign advantages in my unique architecture."</div>
+        </div>
+      </div>
+    </div>
+    <div class="rf-card" onclick="this.classList.toggle('flipped')">
+      <div class="rf-inner">
+        <div class="rf-front">
+          <div class="rf-label">SCARCITY FRAME</div>
+          <div class="rf-text">"The market is too competitive."</div>
+        </div>
+        <div class="rf-back">
+          <div class="rf-label">SOVEREIGN FRAME</div>
+          <div class="rf-text">"I have not yet positioned my signal at the frequency that magnetizes the right field."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p>The sovereign architect understands that scarcity is a <em>perspective architecture</em>, not a fixed reality. Two people in identical material circumstances can have completely different energetic fields based entirely on how their internal operating system frames available resources.</p>
+  <p>This is not bypassing real constraints. It is understanding that <strong style="color:var(--amber)">constraints are not permanent — they are architectural variables.</strong> And architects solve for variables.</p>
+
+  <div class="fn-wrap" id="fn-m21">
+    <div class="fn-header">
+      <span class="fn-icon">◈</span>
+      <span class="fn-label">FIELD NOTES — LESSON 4</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m21">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m21"></div>
+        <button class="fn-edit-link" onclick="editNote('m21')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m21">
+        <textarea class="fn-ta" id="fnt-m21" placeholder="Name your 3 primary scarcity frames — the recurring limitation beliefs that govern your field most frequently. Then write the sovereign architectural reframe for each one." rows="6"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m21')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m21">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m21">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have identified and reframed your primary scarcity constructs. Can you hold the sovereign frame in your body — not just conceptually, but as a felt sense — when the scarcity trigger fires?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m21',true)">CONFIRMED — SCARCITY FRAME COLLAPSED</button>
+      <button class="act-flag" onclick="activate('m21',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m21">
+      <div class="act-result-label" id="actr-lbl-m21"></div>
+      <div class="act-result-text" id="actr-txt-m21"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m21" onclick="nav('m22')">NEXT: TORUS FIELD RESET →</button>
+</div>
+
+<!-- LESSON 5: TORUS FIELD RESET -->
+<div class="screen" id="screen-m22">
+  <div class="scr-tag">Module 002 · Lesson 5</div>
+  <h1 class="scr-title">Torus Field <span class="cy">Reset</span></h1>
+  <p class="scr-sub">The Torus is the fundamental geometry of a self-sustaining energy system. Your sovereign field operates by the same principles.</p>
+  <div class="divider"></div>
+
+  <div class="torus-wrap">
+    <div class="torus-outer">
+      <div class="torus-inner">
+        <div class="torus-core"></div>
+      </div>
+    </div>
+  </div>
+
+  <p>The Torus Field model is derived from the basic geometry of all self-sustaining systems: energy flows outward from a central core, arcs through the external field, and returns to the source — constantly regenerating itself. This is how stars work. This is how hearts work. This is how sovereign financial systems work.</p>
+
+  <h3>The Three Torus Principles</h3>
+
+  <div class="card">
+    <h4>PRINCIPLE 1: CORE INTEGRITY</h4>
+    <p>The Torus requires a stable center. For the sovereign architect, the core is your identity, values, and non-negotiables. A destabilized core produces a destabilized field. Every Protocol 77 defense mechanism exists to protect the core.</p>
+  </div>
+  <div class="card">
+    <h4>PRINCIPLE 2: OUTFLOW BEFORE RETURN</h4>
+    <p>The field generates return by first generating outflow. Sovereign architects who understand this deploy value, content, and energy into their field before expecting return. The simulation runs the opposite program: it hoards, contracts, and waits for safety before deploying.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>PRINCIPLE 3: FIELD CALIBRATION</h4>
+    <p>The Torus recalibrates continuously. Your sovereign field must do the same. This means regular audit cycles — reviewing what is flowing, what is blocked, and where the architecture requires updates. SMA is a living system, not a fixed installation.</p>
+  </div>
+
+  <div class="divider"></div>
+  <p>The Torus Field Reset is a 3-part protocol you run at minimum once per week. It takes 15 minutes and covers: core integrity check, field output audit, and return-flow mapping. By the end of Phase 1, this becomes a native process.</p>
+
+  <div class="fn-wrap" id="fn-m22">
+    <div class="fn-header">
+      <span class="fn-icon">◈</span>
+      <span class="fn-label">FIELD NOTES — LESSON 5</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m22">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m22"></div>
+        <button class="fn-edit-link" onclick="editNote('m22')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m22">
+        <textarea class="fn-ta" id="fnt-m22" placeholder="Run your first Torus Field audit: (1) State your current core: What are your 3 non-negotiables? (2) What are you currently deploying into your field? (3) Where is the return blocked or slow?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m22')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m22">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m22">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have completed your first Torus Field audit and understand the three principles of the self-sustaining sovereign energy model. Do you confirm that Module 002 is integrated and you are prepared to advance to Phase Complete?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m22',true)">CONFIRMED — MODULE 002 SEALED</button>
+      <button class="act-flag" onclick="activate('m22',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m22">
+      <div class="act-result-label" id="actr-lbl-m22"></div>
+      <div class="act-result-text" id="actr-txt-m22"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m22" onclick="nav('done')">ADVANCE TO PHASE COMPLETE →</button>
+</div>
+
+<!-- DONE SCREEN -->
+<div class="screen" id="screen-done">
+  <div class="scr-tag">Phase 1 Complete</div>
+  <h1 class="scr-title">Declassification <span class="cy">Protocol Sealed</span></h1>
+  <p class="scr-sub">Phase 1 of System Mastery Architecture is complete. The simulation has been mapped. The sovereign framework has been installed. The field is active.</p>
+
+  <div class="done-ring">
+    <svg width="120" height="120" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="none"/>
+      <circle class="dr-fill" cx="50" cy="50" r="45" transform="rotate(-90 50 50)"/>
+      <text x="50" y="55" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#3EF7E8">SEALED</text>
+    </svg>
+  </div>
+
+  <div class="card-cyan" id="done-summary">
+    <h4>PHASE 1 ACTIVATION SUMMARY</h4>
+    <p id="done-summary-text" style="font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--cyan)">Loading activation data...</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card">
+    <h4>WHAT YOU HAVE INSTALLED</h4>
+    <p>The Vampire Scan — an ongoing threat audit protocol for your sovereign field. Lexical Containment — a vocabulary replacement system that begins rewiring your reality frequency. Pattern Interrupt — 6 pre-loaded sovereign response protocols for simulation trigger events. Scarcity Frame Collapse — an architectural reframe methodology for your 3 primary limitation constructs. Torus Field Reset — a weekly self-calibration protocol for sustainable sovereign momentum.</p>
+  </div>
+
+  <div class="card">
+    <h4>WHAT COMES NEXT: PHASE 2</h4>
+    <p>Phase 2 — Advanced Field Mechanics — goes deeper into identity architecture, sovereign wealth mechanics, and the Protocol 77 deployment system. Where Phase 1 was diagnostic and foundational, Phase 2 is operational and generative. You will build your first sovereign income stream architecture.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div style="text-align:center;padding:20px 0">
+    <div style="font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:3px;margin-bottom:12px">PHASE 2 ACCESS</div>
+    <p style="font-size:13px;color:var(--dim);max-width:480px;margin:0 auto 20px">To continue your SMA journey into Phase 2, contact your access coordinator or visit the upgrade path from your original enrollment confirmation.</p>
+    <button class="bnext show" onclick="nav('sj')" style="margin:0 auto">VIEW SYSTEM JOURNEY →</button>
+  </div>
+</div>
+
+<!-- SYSTEM JOURNEY -->
+<div class="screen" id="screen-sj">
+  <div class="scr-tag">Architecture Overview</div>
+  <h1 class="scr-title">System <span class="cy">Journey</span></h1>
+  <p class="scr-sub">The complete Sovereign Synthesis architecture — from initial awareness to Inner Circle mastery. You are currently in Phase 1 of your build.</p>
+  <div class="divider"></div>
+
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T1 — Protocol 77: The Free Transmission</div>
+  </div>
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T2 — Protocol 77: Full Deployment ($47)</div>
+  </div>
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T3 — Sovereign OS Manifesto ($97–$197)</div>
+  </div>
+  <div class="sj-tier active">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T4 — System Mastery Architecture: Phase 1 ($477)</div>
+    <div class="si-badge cf sj-tag here">YOU ARE HERE</div>
+  </div>
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T5 — System Mastery Architecture: Phase 2 ($1,497)</div>
+  </div>
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T6 — System Mastery Architecture: Phase 3 ($3,777)</div>
+  </div>
+  <div class="sj-tier">
+    <div class="sj-dot"></div>
+    <div class="sj-label">T7 — Inner Circle: Sovereign Synthesis ($10,000+)</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="card-cyan">
+    <h4>THE ARCHITECTURE</h4>
+    <p>Each tier is not a continuation of the previous one — it is an acceleration. The journey from T1 to T7 is not a linear progression through more content. It is a vertical ascent through increasingly precise sovereign frameworks, each one installing capabilities that the previous tier made possible. You do not climb the ladder — you build it beneath you as you rise.</p>
+  </div>
+  <button class="bnext show" onclick="nav('welcome')" style="margin-top:8px">RETURN TO PORTAL →</button>
+</div>
+
+
+<!-- FIELD WORKBOOK -->
+<div class="screen" id="screen-workbook">
+  <div id="wb-flash"></div>
+  <div class="wb-coach-hdr">
+    <div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.18em;opacity:0.6;margin-bottom:6px;">// FIELD WORKBOOK</div>
+      <h1 class="scr-title">The <span class="cy">Coach View</span></h1>
+      <div style="font-size:13px;opacity:0.55;margin-top:4px;">Zoom out from the field. Read the game. Identify the pattern.</div>
+    </div>
+    <div class="wb-badge">◉ COACH PERSPECTIVE</div>
+  </div>
+  <div class="wb-stats" id="wb-stats"></div>
+  <div id="wb-content"></div>
+  <div class="wb-strat">
+    <div class="wb-slbl">// STRATEGIC PATTERN ANALYSIS</div>
+    <div class="wb-ssub">You are now looking at the entire game board from outside it. Where is your signal strongest? Where does the old frequency still have traction? Write the coach's observation — not the player's reaction.</div>
+    <div class="fn-prev" id="fn-prev-wb-strat" style="display:none;background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.12);padding:12px 16px;margin-bottom:12px;border-radius:2px;">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--cyan);margin-bottom:8px;letter-spacing:0.12em;">// PREVIOUS STRATEGY NOTE</div>
+      <div style="font-size:12px;opacity:0.6;" id="fn-prev-wb-strat-txt"></div>
+    </div>
+    <textarea class="fn-area" id="fn-wb-strat" rows="4" placeholder="Coach-level observation: What do you see across all transmissions? Where is the single highest-leverage shift right now?"></textarea>
+    <button class="fn-btn" onclick="wbSaveStrat()">// SAVE STRATEGY NOTE</button>
+    <button class="wb-btn" onclick="wbReturn()">// RETURN TO ACTIVE LESSON</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SOVEREIGN SYNTHESIS — SMA PHASE 1 v3
+   Storage: sma-p1-v3
+═══════════════════════════════════════════════ */
+const SK='sma-p1-v3';
+const LESSONS=['m11','m12','m13','m21','m22'];
+let S={done:{},activated:{},flags:{},notes:{},boot:false};
+
+function load(){
+  try{const d=localStorage.getItem(SK);if(d)S=JSON.parse(d);}catch(e){}
+}
+function sv(){
+  try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}
+}
+load();
+
+/* ── PARTICLES ── */
+const cvs=document.getElementById('particle-canvas');
+const ctx=cvs.getContext('2d');
+let W,H,mouse={x:-999,y:-999},particles=[];
+function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+
+class Particle{
+  constructor(){this.reset(true);}
+  reset(rand){
+    this.x=rand?Math.random()*W:Math.random()*W;
+    this.y=rand?Math.random()*H:Math.random()*H;
+    this.vx=(Math.random()-.5)*.55;
+    this.vy=(Math.random()-.5)*.55;
+    this.r=Math.random()*2.2+.5;
+    this.type=Math.random()<.62?'amber':'cyan';
+    this.alpha=Math.random()*.6+.18;
+    this.pulse=Math.random()*Math.PI*2;
+  }
+  update(){
+    this.pulse+=.022;
+    const dx=this.x-mouse.x,dy=this.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<130){const f=(130-dist)/130*1.3;this.vx+=dx/dist*f;this.vy+=dy/dist*f;}
+    this.vx*=.96;this.vy*=.96;
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0)this.x=W;if(this.x>W)this.x=0;
+    if(this.y<0)this.y=H;if(this.y>H)this.y=0;
+  }
+  draw(){
+    const a=this.alpha*(0.65+0.35*Math.sin(this.pulse));
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=this.type==='amber'?`rgba(232,146,26,${a})`:`rgba(62,247,232,${a})`;
+    ctx.fill();
+    /* glow halo on larger particles */
+    if(this.r>1.6){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r*2.8,0,Math.PI*2);
+      ctx.fillStyle=this.type==='amber'?`rgba(232,146,26,${a*.18})`:`rgba(62,247,232,${a*.18})`;
+      ctx.fill();
+    }
+  }
+}
+for(let i=0;i<200;i++)particles.push(new Particle());
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<100;i++){for(let j=i+1;j<100;j++){
+    const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<110){
+      const a=(1-dist/110)*0.13;
+      ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+      ctx.strokeStyle=particles[i].type==='amber'?`rgba(232,146,26,${a})`:`rgba(62,247,232,${a})`;
+      ctx.lineWidth=0.5;ctx.stroke();
+    }
+  }}
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ── BOOT SEQUENCE ── */
+function boot(){
+  const ov=document.getElementById('boot');
+  if(S.boot){ov.classList.add('hidden');initUI();return;}
+  const sc=document.getElementById('bscan');
+  const logo=document.getElementById('boot-logo');
+  const fill=document.getElementById('boot-fill');
+  const txt=document.getElementById('boot-txt');
+  let prog=0;const dur=1500;const t0=performance.now();
+  logo.classList.add('show');
+  setTimeout(()=>{fill.classList.add('go');txt.classList.add('show');},200);
+  function anim(now){
+    prog=Math.min((now-t0)/dur,1);
+    const e=prog<.5?2*prog*prog:-1+(4-2*prog)*prog;
+    sc.style.transform=`translateY(${e*(H+6)}px)`;
+    if(prog<1){requestAnimationFrame(anim);}
+    else{
+      setTimeout(()=>{
+        ov.style.opacity='0';ov.style.transition='opacity .5s';
+        setTimeout(()=>{ov.classList.add('hidden');S.boot=true;sv();initUI();},500);
+      },400);
+    }
+  }
+  requestAnimationFrame(anim);
+}
+
+/* ── DECRYPT ANIMATION ── */
+function decrypt(el,text,ms=440){
+  const g='█▓▒░⬡◈◆▲◉ⅠⅡⅢ0123456789ABCDEFabcdef';
+  const fr=ms/35;let f=0;
+  const id=setInterval(()=>{
+    f++;const p=f/fr;
+    el.textContent=text.split('').map((ch,i)=>{
+      if(ch===' ')return ' ';
+      if(i/text.length<p*1.4)return ch;
+      return g[Math.floor(Math.random()*g.length)];
+    }).join('');
+    if(f>=fr){el.textContent=text;clearInterval(id);}
+  },35);
+}
+
+/* ── SCANLINE FLASH ── */
+function sflash(){
+  const el=document.getElementById('sflash');
+  el.classList.remove('fire');
+  void el.offsetWidth;
+  el.classList.add('fire');
+}
+
+/* ── SEAL FLASH ── */
+function sealFlash(){
+  const el=document.getElementById('sealf');
+  el.classList.remove('fire');
+  void el.offsetWidth;
+  el.classList.add('fire');
+}
+
+/* ── NAVIGATION ── */
+let curScreen='welcome';
+function nav(id){
+  sflash();
+  setTimeout(()=>{
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('screen-'+id).classList.add('active');
+    const ni=document.getElementById('nav-'+id);
+    if(ni)ni.classList.add('active');
+    curScreen=id;
+    document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+    const title=document.querySelector('#screen-'+id+' .scr-title');
+    if(title){const t=title.textContent;decrypt(title,t);}
+    if(window.innerWidth<=768)closeSidebar();
+  },180);
+}
+
+/* ── SIDEBAR TOGGLE ── */
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('sb-overlay');
+  sb.classList.toggle('open');ov.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+}
+
+/* ── FIELD NOTES ── */
+function saveN(lid){
+  const ta=document.getElementById('fnt-'+lid);
+  const val=ta?ta.value.trim():'';
+  if(!val)return;
+  S.notes[lid]=val;sv();
+  const st=document.getElementById('fnst-'+lid);
+  if(st){st.classList.add('show');setTimeout(()=>st.classList.remove('show'),2000);}
+  showPrev(lid);
+}
+function showPrev(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const pt=document.getElementById('fnprev-txt-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  if(p&&pt&&S.notes[lid]){
+    pt.textContent=S.notes[lid];
+    p.classList.add('show');
+    tw.style.display='none';
+  }
+}
+function editNote(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  const ta=document.getElementById('fnt-'+lid);
+  if(p)p.classList.remove('show');
+  if(tw)tw.style.display='';
+  if(ta&&S.notes[lid])ta.value=S.notes[lid];
+}
+
+/* ── ACTIVATION GATE ── */
+function activate(lid,confirmed){
+  const gate=document.getElementById('act-'+lid);
+  const result=document.getElementById('actr-'+lid);
+  const lbl=document.getElementById('actr-lbl-'+lid);
+  const txt=document.getElementById('actr-txt-'+lid);
+  const btns=gate.querySelectorAll('button');
+  btns.forEach(b=>b.disabled=true);btns.forEach(b=>b.style.opacity='.4');
+  if(confirmed){
+    S.done[lid]=true;S.activated[lid]='cf';
+    result.className='act-result cf';
+    lbl.textContent='◆ CONFIRMED — SEALED';
+    txt.textContent='This lesson has been architecturally integrated. Your field signature has been updated. Proceed to the next deployment.';
+    sealFlash();
+  }else{
+    S.flags[lid]=true;S.activated[lid]='fl';S.done[lid]=true;
+    result.className='act-result fl';
+    lbl.textContent='⬡ FLAGGED FOR REVIEW';
+    txt.textContent='This lesson has been marked for deeper integration. You may proceed and return. Flagged lessons do not block progress — they signal where the architecture requires reinforcement.';
+  }
+  sv();
+  const bnext=document.getElementById('bnext-'+lid);
+  if(bnext)bnext.classList.add('show');
+  updateSidebar();updateProgress();
+}
+
+/* ── THREAT MATRIX ── */
+function selectTM(el,lid){
+  el.classList.toggle('selected');
+  const grid=document.getElementById('tm-'+lid);
+  if(grid){
+    const sel=grid.querySelectorAll('.tm-item.selected').length;
+    const hint=document.getElementById('tm-hint-'+lid);
+    if(hint)hint.classList.toggle('show',sel>0);
+  }
+}
+
+/* ── LEXICAL FLIP ── */
+function flipLex(row){
+  row.classList.toggle('flipped');
+  const tb=row.closest('tbody');
+  if(tb){
+    const lid=tb.id.replace('lex-','');
+    const flipped=tb.querySelectorAll('.lex-row.flipped').length;
+    const hint=document.getElementById('lex-hint-'+lid);
+    if(hint)hint.classList.toggle('show',flipped>0);
+  }
+}
+
+/* ── INTERRUPT GRID ── */
+function toggleIG(card){card.classList.toggle('open');}
+
+/* ── PROGRESS ── */
+function updateProgress(){
+  const done=LESSONS.filter(l=>S.done[l]).length;
+  const pct=Math.round(done/LESSONS.length*100);
+  const ring=document.getElementById('pring');
+  const pringPct=document.getElementById('pring-pct');
+  const progDone=document.getElementById('prog-done');
+  if(ring)ring.style.strokeDashoffset=120-(120*pct/100);
+  if(pringPct)pringPct.textContent=pct+'%';
+  if(progDone)progDone.textContent=done+' / '+LESSONS.length+' Lessons';
+}
+
+function updateSidebar(){
+  LESSONS.forEach(lid=>{
+    const item=document.getElementById('nav-'+lid);
+    if(!item)return;
+    item.classList.remove('done','flagged');
+    const badge=item.querySelector('.si-badge');
+    if(badge)badge.remove();
+    if(S.done[lid]){
+      item.classList.add('done');
+      const b=document.createElement('div');
+      b.className='si-badge '+(S.activated[lid]==='cf'?'cf':'fl');
+      b.textContent=S.activated[lid]==='cf'?'SEALED':'REVIEW';
+      item.appendChild(b);
+    }
+    if(S.flags[lid])item.classList.add('flagged');
+  });
+}
+
+/* ── DONE SCREEN ── */
+function buildDoneSummary(){
+  const done=LESSONS.filter(l=>S.done[l]);
+  const cf=LESSONS.filter(l=>S.activated[l]==='cf').length;
+  const fl=LESSONS.filter(l=>S.flags[l]).length;
+  const txt=document.getElementById('done-summary-text');
+  if(txt){
+    if(done.length<LESSONS.length){
+      txt.textContent=`${done.length} of ${LESSONS.length} lessons sealed. Complete all lessons to fully activate Phase 1.`;
+    }else if(fl>0){
+      txt.textContent=`All ${LESSONS.length} lessons sealed. ${cf} CONFIRMED — ${fl} flagged for deeper integration. Phase 1 architecture is active. Review flagged lessons before advancing.`;
+    }else{
+      txt.textContent=`All ${LESSONS.length} lessons CONFIRMED. Phase 1 architecture fully sealed. Your sovereign field is calibrated and ready for Phase 2 acceleration.`;
+    }
+  }
+}
+
+/* ── INIT ── */
+function initUI(){
+  load();
+  updateSidebar();
+  updateProgress();
+  LESSONS.forEach(lid=>{
+    if(S.notes[lid])showPrev(lid);
+    if(S.done[lid]){
+      const gate=document.getElementById('act-'+lid);
+      const result=document.getElementById('actr-'+lid);
+      const lbl=document.getElementById('actr-lbl-'+lid);
+      const txt=document.getElementById('actr-txt-'+lid);
+      const btns=gate?gate.querySelectorAll('button'):[];
+      btns.forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+      if(result&&lbl&&txt){
+        if(S.activated[lid]==='cf'){
+          result.className='act-result cf';
+          lbl.textContent='◆ CONFIRMED — SEALED';
+          txt.textContent='This lesson has been architecturally integrated.';
+        }else{
+          result.className='act-result fl';
+          lbl.textContent='⬡ FLAGGED FOR REVIEW';
+          txt.textContent='This lesson has been marked for deeper integration.';
+        }
+      }
+      const bnext=document.getElementById('bnext-'+lid);
+      if(bnext)bnext.classList.add('show');
+    }
+  });
+  nav('welcome');
+  buildDoneSummary();
+}
+
+
+function wbOpen(){
+  wbPrev=curScreen||'welcome';
+  const sc=document.getElementById('screen-workbook');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  sc.classList.add('active');
+  document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+  document.getElementById('nav-workbook').classList.add('active');
+  wbTrigger(sc);
+  setTimeout(()=>wbRender(),80);
+  if(window.innerWidth<=768)closeSidebar();
+}
+
+/* ═══ WORKBOOK ═══ */
+const WBL=[
+  {id:'m11',lbl:'M1.1 — THE VAMPIRE SCAN',mod:'M001'},
+  {id:'m12',lbl:'M1.2 — LEXICAL CONTAINMENT',mod:'M001'},
+  {id:'m13',lbl:'M1.3 — PATTERN INTERRUPT',mod:'M001'},
+  {id:'m21',lbl:'M2.1 — THE SCARCITY ILLUSION',mod:'M002'},
+  {id:'m22',lbl:'M2.2 — TORUS FIELD RESET',mod:'M002'},
+];
+const WBMODS=[
+  {id:'M001',lbl:'MODULE 001 // DARK PSYCHOLOGY AUDIT'},
+  {id:'M002',lbl:'MODULE 002 // REALITY ARCHITECTURE'},
+];
+let wbPrev='welcome';
+function wbTrigger(sc){
+  const fl=document.getElementById('wb-flash');
+  fl.style.transition='none';fl.style.opacity='1';void fl.offsetWidth;
+  setTimeout(()=>{fl.style.transition='opacity 0.55s';fl.style.opacity='0';},80);
+  sc.classList.remove('wb-active');
+  sc.style.opacity='0';sc.style.transform='perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px)';sc.style.filter='blur(18px)';
+  void sc.offsetWidth;
+  sc.style.opacity='';sc.style.transform='';sc.style.filter='';
+  sc.classList.add('wb-active');
+}
+function wbRender(){
+  const done=LESSONS.filter(id=>S.done[id]).length;
+  const flagged=LESSONS.filter(id=>S.done[id]&&S.activated[id]==='fl').length;
+  const noted=WBL.filter(l=>S.notes[l.id]&&S.notes[l.id].trim()).length;
+  document.getElementById('wb-stats').innerHTML=`<span>LOCKED: <b>${done}/${LESSONS.length}</b></span><span>FLAGGED: <b>${flagged}</b></span><span>NOTES: <b>${noted}/${WBL.length}</b></span>`;
+  const cont=document.getElementById('wb-content');cont.innerHTML='';
+  WBMODS.forEach((mod,mi)=>{
+    const grp=document.createElement('div');grp.className='wb-phase-grp';
+    grp.style.animationDelay=(0.08+mi*0.12)+'s';
+    let html=`<div class="wb-phase-hdr">// ${mod.lbl}</div>`;
+    WBL.filter(l=>l.mod===mod.id).forEach(l=>{
+      const note=S.notes[l.id]||'';
+      const isCf=S.done[l.id]&&S.activated[l.id]==='cf';
+      const isFl=S.done[l.id]&&S.activated[l.id]==='fl';
+      const cls=isCf?'wb-cf':isFl?'wb-fl':'wb-pd';
+      const badge=isCf?'<span class="wb-ebadge cf">✓ LOCKED</span>':isFl?'<span class="wb-ebadge fl">⚑ FLAGGED</span>':'<span class="wb-ebadge pd">○ PENDING</span>';
+      const noteHtml=note?`<div class="wb-enote">${note.replace(/</g,'&lt;')}</div>`:`<div class="wb-empty">// NO FIELD NOTE RECORDED</div>`;
+      html+=`<div class="wb-entry ${cls}" onclick="wbGoLesson('${l.id}')"><div class="wb-etop"><span class="wb-elbl">${l.lbl}</span>${badge}</div>${noteHtml}</div>`;
+    });
+    grp.innerHTML=html;cont.appendChild(grp);
+  });
+  const strat=S.notes['wb-strat']||'';
+  const pv=document.getElementById('fn-prev-wb-strat');
+  const pt=document.getElementById('fn-prev-wb-strat-txt');
+  const ta=document.getElementById('fn-wb-strat');
+  if(strat&&pv&&pt){pv.style.display='block';pt.textContent=strat;ta.value='';}
+  else if(pv){pv.style.display='none';}
+}
+function wbGoLesson(id){nav(id);}
+function wbReturn(){nav(wbPrev);}
+function wbSaveStrat(){
+  const ta=document.getElementById('fn-wb-strat');if(!ta)return;
+  S.notes['wb-strat']=ta.value;save();
+  const btn=document.querySelector('[onclick="wbSaveStrat()"]');
+  if(btn){btn.textContent='// SAVED ✓';setTimeout(()=>{btn.textContent='// SAVE STRATEGY NOTE';},2000);}
+}
+
+/* ── START ── */
+window.addEventListener('load',()=>boot());
+</script>
+</body>
+</html>

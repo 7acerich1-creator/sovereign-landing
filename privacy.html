@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Sovereign Synthesis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0d0b14;
+      --text: #E8E4F0; --dim: #7C7A9A; --ghost: #484860;
+      --cyan: #3EF7E8; --cyan-border: rgba(62,247,232,0.15);
+      --gold: #C9A84C;
+      --border: rgba(255,255,255,0.06); --subtle: rgba(255,255,255,0.03);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 700px; margin: 0 auto; padding: 0 24px 96px; }
+
+    header { padding: 64px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+    .back { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ghost); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px; text-transform: uppercase; transition: color .2s; }
+    .back:hover { color: var(--cyan); }
+    .doc-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; display: block; opacity: 0.7; }
+    header h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .effective { font-family: var(--mono); font-size: 11px; color: var(--ghost); letter-spacing: 1px; }
+
+    section { margin-bottom: 48px; }
+    h2 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 14px; letter-spacing: -0.01em; padding-top: 8px; }
+    p { font-size: 16px; color: var(--dim); margin-bottom: 14px; font-weight: 300; line-height: 1.85; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 500; }
+
+    .data-block { background: var(--bg-card); border: 1px solid var(--border); padding: 24px 28px; margin: 20px 0; position: relative; }
+    .data-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cyan); opacity: 0.25; }
+    .data-block p { font-size: 14px; margin-bottom: 10px; }
+    .data-block p:last-child { margin-bottom: 0; }
+    .data-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--cyan); opacity: 0.7; text-transform: uppercase; margin-bottom: 12px; display: block; }
+
+    .contact-block { background: var(--bg-elevated); border: 1px solid var(--border); padding: 28px 32px; margin-top: 20px; }
+    .contact-block p { font-size: 15px; }
+    .contact-block a { color: var(--cyan); text-decoration: none; }
+    .contact-block a:hover { text-decoration: underline; }
+
+    hr { border: none; border-top: 1px solid var(--subtle); margin: 40px 0; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0 0; text-align: center; margin-top: 64px; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--ghost); letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <a href="./tier-1/index.html" class="back">← Sovereign Synthesis</a>
+      <span class="doc-label">// Legal Document</span>
+      <h1>Privacy Policy</h1>
+      <p class="effective">Effective Date: March 26, 2026 &nbsp;·&nbsp; Last Updated: March 26, 2026</p>
+    </header>
+
+    <section>
+      <p>This Privacy Policy describes how Sovereign Synthesis ("we," "us," or "our") collects, uses, and protects information you provide when you visit our website or purchase our products. We are committed to handling your information with care and transparency.</p>
+      <p>By using our website or submitting your information, you agree to the practices described in this policy.</p>
+    </section>
+
+    <section>
+      <h2>Information We Collect</h2>
+      <p>We collect the following categories of information:</p>
+
+      <div class="data-block">
+        <span class="data-label">// Email & Identity</span>
+        <p>When you opt in to receive our free resources, your <strong>email address</strong> is collected and stored. You may also provide your name voluntarily. This is the primary data point we collect.</p>
+      </div>
+
+      <div class="data-block">
+        <span class="data-label">// Payment Information</span>
+        <p>When you purchase a product, payment is processed through <strong>Stripe</strong>, a third-party payment processor. We do not collect or store your credit card number, billing address, or full payment details. Stripe handles all payment data in accordance with their own Privacy Policy and PCI-DSS compliance standards.</p>
+      </div>
+
+      <div class="data-block">
+        <span class="data-label">// Usage Data</span>
+        <p>We may collect basic analytics data such as page views and general geographic region through our hosting provider (Vercel). This data is aggregated and not linked to individual identities.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>How We Use Your Information</h2>
+      <p>Your email address is used for the following purposes:</p>
+      <p>To deliver the free resources you requested. To send the email sequence you subscribed to — a series of educational transmissions introducing our products. To send transactional communications related to your purchases, including receipts and access information. To provide ongoing product updates or announcements if you are a paying customer.</p>
+      <p>We do not sell your email address or personal information to third parties. We do not share your information with advertising networks or data brokers.</p>
+    </section>
+
+    <section>
+      <h2>Email Communications</h2>
+      <p>By submitting your email address on our site, you consent to receiving the email sequence associated with that opt-in. You may unsubscribe at any time by clicking the unsubscribe link included in every email, or by contacting us directly at the address below.</p>
+      <p>After unsubscribing from marketing communications, you will continue to receive transactional emails related to any active purchases (receipts, access credentials, product updates). These cannot be opted out of while your product access is active.</p>
+    </section>
+
+    <section>
+      <h2>Third-Party Services</h2>
+      <p>We use the following third-party services to operate our platform. Each operates under its own privacy policy and terms:</p>
+      <p><strong>Stripe</strong> — Payment processing. Your payment data is held and processed by Stripe.</p>
+      <p><strong>Supabase</strong> — Database infrastructure. Your email and subscription data is stored in our Supabase project, hosted in the United States.</p>
+      <p><strong>Vercel</strong> — Website hosting. Our website is hosted on Vercel's infrastructure.</p>
+      <p><strong>Google</strong> — Email delivery (Gmail). Transactional and marketing emails are delivered via Google's email infrastructure.</p>
+      <p>We select services that maintain reasonable security standards. We do not allow these providers to use your data for their own marketing purposes.</p>
+    </section>
+
+    <section>
+      <h2>Data Retention</h2>
+      <p>We retain your email address and purchase records for as long as is necessary to provide our services and comply with applicable law. If you request deletion of your data, we will remove your email from our active marketing lists within 10 business days. Purchase records may be retained for accounting and legal compliance purposes.</p>
+    </section>
+
+    <section>
+      <h2>Your Rights</h2>
+      <p>You have the right to request access to the personal data we hold about you. You have the right to request correction of inaccurate data. You have the right to request deletion of your data, subject to retention requirements noted above. You have the right to opt out of marketing communications at any time.</p>
+      <p>To exercise any of these rights, contact us at the address below. We will respond within 30 days.</p>
+    </section>
+
+    <section>
+      <h2>Cookies</h2>
+      <p>Our website uses minimal cookies. We use localStorage in some interactive features (such as the diagnostic tool) to save your progress on your own device. This data is stored locally in your browser and is not transmitted to our servers. We do not use third-party tracking cookies or advertising pixels.</p>
+    </section>
+
+    <section>
+      <h2>Children's Privacy</h2>
+      <p>Our products and services are intended for adults aged 18 and older. We do not knowingly collect information from anyone under the age of 18. If you believe a minor has submitted information through our site, please contact us immediately and we will remove it.</p>
+    </section>
+
+    <section>
+      <h2>Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. When we do, the "Last Updated" date at the top of this page will be revised. Continued use of our site after changes constitutes acceptance of the updated policy. We will not make material changes to how we use existing customer data without direct notification.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <div class="contact-block">
+        <p>For any privacy-related questions, data requests, or concerns, contact us directly:</p>
+        <p style="margin-top: 14px;"><strong>Sovereign Synthesis</strong><br>
+        Email: <a href="mailto:empoweredservices2013@gmail.com">empoweredservices2013@gmail.com</a><br>
+        Operated by: Ace Richie</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Sovereign Synthesis &copy; 2026 &nbsp;·&nbsp; <a href="./terms.html" style="color: var(--ghost); text-decoration: none;">Terms of Service</a></p>
+    </footer>
+  </div>
+</body>
+</html>

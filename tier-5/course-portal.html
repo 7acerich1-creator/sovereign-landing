@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Mastery Architecture — Phase 2: Neutralization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --amber:#E8921A;--amber-dim:rgba(232,146,26,0.12);--amber-glow:rgba(232,146,26,0.35);--amber-faint:rgba(232,146,26,0.06);
+  --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.08);--cyan-glow:rgba(62,247,232,0.35);--cyan-border:rgba(62,247,232,0.25);
+  --violet:#A855F7;--violet-dim:rgba(168,85,247,0.10);--violet-border:rgba(168,85,247,0.25);--violet-glow:rgba(168,85,247,0.35);
+  --bg:#060407;--bg-card:#0a0809;--bg-card2:#0e0b0f;
+  --text:#E8E2D8;--dim:rgba(232,226,216,0.5);--dim2:rgba(232,226,216,0.25);
+  --sidebar-w:270px;--mono:'Space Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+/* ── BOOT ── */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+#boot.hidden{display:none}
+#bscan{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--violet),var(--cyan),transparent);box-shadow:0 0 18px var(--violet-glow);transform:translateY(-4px)}
+.boot-logo{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:4px;text-align:center;opacity:0;transition:opacity .4s}
+.boot-logo.show{opacity:1}
+.boot-bar{width:240px;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:2px;transition:width 1.4s ease}
+.boot-fill.go{width:100%}
+.boot-txt{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;opacity:0;transition:opacity .3s .6s}
+.boot-txt.show{opacity:1}
+
+/* ── FLASH LAYERS ── */
+#sflash{position:fixed;inset:0;pointer-events:none;z-index:8888;opacity:0}
+#sflash.fire{animation:sfire .45s ease forwards}
+@keyframes sfire{
+  0%{opacity:0;background:linear-gradient(180deg,transparent 0%,var(--cyan) 50%,transparent 100%);background-size:100% 6px;background-position:0 -6px}
+  40%{opacity:.7}100%{opacity:0;background-position:0 100vh}
+}
+#sealf{position:fixed;inset:0;pointer-events:none;z-index:8887;opacity:0}
+#sealf.fire{animation:sealfire .6s ease forwards}
+@keyframes sealfire{
+  0%{opacity:0;background:radial-gradient(circle at center,rgba(168,85,247,0.3) 0%,transparent 60%)}
+  30%{opacity:1}100%{opacity:0}
+}
+
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;overflow:hidden}
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;
+  background:transparent;border-right:1px solid rgba(168,85,247,0.15);
+  display:flex;flex-direction:column;overflow:hidden;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  position:relative;z-index:10;transition:transform .3s ease
+}
+.sb-header{padding:20px 18px 14px;border-bottom:1px solid var(--violet-dim)}
+.sb-brand{font-family:var(--mono);font-size:9px;color:var(--violet);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+.sb-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.sb-phase{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+
+.sb-progress{padding:14px 18px;border-bottom:1px solid var(--violet-dim);display:flex;align-items:center;gap:12px}
+.pring-wrap{position:relative;width:44px;height:44px;flex-shrink:0}
+.pring-wrap svg{transform:rotate(-90deg)}
+.pring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:3}
+.pring-fill{fill:none;stroke:var(--violet);stroke-width:3;stroke-linecap:round;stroke-dasharray:120;stroke-dashoffset:120;transition:stroke-dashoffset .6s ease}
+.pring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--violet)}
+.sb-prog-text{font-size:11px;color:var(--dim);line-height:1.5}
+.sb-prog-text strong{display:block;color:var(--text);font-size:12px}
+
+.sb-nav{flex:1;overflow-y:auto;padding:10px 0}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--violet-dim);border-radius:2px}
+.sb-section{padding:8px 18px 4px;font-family:var(--mono);font-size:8px;color:var(--violet);letter-spacing:2px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;transition:background .2s,border-left .2s;border-left:2px solid transparent;position:relative}
+.sb-item:hover{background:var(--violet-dim)}
+.sb-item.active{background:rgba(168,85,247,0.12);border-left-color:var(--violet)}
+.sb-item.active .si-label{color:var(--violet)}
+.sb-item.done .si-dot{background:var(--cyan);box-shadow:0 0 6px var(--cyan-glow)}
+.sb-item.flagged .si-dot{background:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
+.sb-item.done .si-label{color:var(--dim2);text-decoration:line-through;text-decoration-color:rgba(168,85,247,0.3)}
+.si-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .3s}
+.si-label{font-size:11px;color:var(--dim);transition:color .2s;line-height:1.3}
+.si-badge{margin-left:auto;font-family:var(--mono);font-size:7px;padding:2px 5px;border-radius:2px;letter-spacing:1px}
+.si-badge.cf{background:rgba(168,85,247,0.12);color:var(--violet);border:1px solid var(--violet-border)}
+.si-badge.fl{background:var(--amber-dim);color:var(--amber)}
+
+.sb-footer{padding:12px 18px;border-top:1px solid var(--violet-dim)}
+.sb-footer-btn{width:100%;padding:8px;border:1px solid var(--violet-border);background:var(--violet-dim);color:var(--violet);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .2s}
+.sb-footer-btn:hover{background:rgba(168,85,247,0.2);box-shadow:0 0 12px var(--violet-glow)}
+
+/* ── MAIN ── */
+#main{flex:1;height:100vh;overflow-y:auto;position:relative}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--violet-dim);border-radius:2px}
+.screen{display:none;padding:40px 48px;max-width:860px;margin:0 auto;min-height:100vh}
+.screen.active{display:block;animation:screenin .35s ease}
+@keyframes screenin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CANVAS ── */
+#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+#main,#sidebar{position:relative;z-index:1}
+
+/* ── TYPE ── */
+.scr-tag{font-family:var(--mono);font-size:9px;color:var(--violet);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.scr-title{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--text)}
+.scr-title .cy{color:var(--cyan)}
+.scr-title .vi{color:var(--violet)}
+.scr-sub{font-size:15px;color:var(--dim);line-height:1.6;margin-bottom:32px}
+.divider{height:1px;background:linear-gradient(90deg,var(--violet-dim),transparent);margin:28px 0}
+p{font-size:14px;line-height:1.75;color:var(--dim);margin-bottom:14px}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:24px 0 10px}
+h4{font-size:13px;font-weight:600;color:var(--violet);font-family:var(--mono);letter-spacing:1px;margin:18px 0 8px}
+
+.card{background:var(--bg-card);border:1px solid var(--violet-dim);border-radius:6px;padding:20px;margin-bottom:16px}
+.card-cyan{background:var(--bg-card);border:1px solid var(--cyan-border);border-radius:6px;padding:20px;margin-bottom:16px}
+.card-amber{background:var(--bg-card);border:1px solid var(--amber-dim);border-radius:6px;padding:20px;margin-bottom:16px}
+
+/* ── IDENTITY ARCHITECTURE MAP ── */
+.id-map{display:grid;grid-template-columns:1fr;gap:8px;margin:16px 0}
+.id-layer{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border:1px solid rgba(255,255,255,.05);border-radius:4px;
+  background:var(--bg-card);cursor:pointer;transition:all .25s;position:relative
+}
+.id-layer:hover{border-color:var(--violet);background:var(--violet-dim)}
+.id-layer.active{border-color:var(--violet);background:rgba(168,85,247,0.12)}
+.id-layer.active .idl-name{color:var(--violet)}
+.id-layer.active .idl-dot{background:var(--violet);box-shadow:0 0 8px var(--violet-glow)}
+.idl-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);flex-shrink:0;transition:all .25s}
+.idl-content{flex:1}
+.idl-name{font-size:12px;font-weight:600;color:var(--text);transition:color .2s;margin-bottom:3px}
+.idl-desc{font-size:11px;color:var(--dim);line-height:1.4;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.id-layer.active .idl-desc{max-height:120px}
+.idl-level{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--dim2);margin-left:auto;flex-shrink:0}
+.id-layer.active .idl-level{color:var(--violet)}
+
+/* ── SOVEREIGNTY SPECTRUM ── */
+.spectrum-wrap{margin:20px 0}
+.spectrum-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(255,80,80,0.5),rgba(232,146,26,0.7),var(--cyan),var(--violet));position:relative;margin-bottom:8px;box-shadow:0 0 12px rgba(168,85,247,0.2)}
+.spectrum-nodes{display:flex;justify-content:space-between}
+.sn-item{text-align:center;width:20%}
+.sn-label{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--dim2);line-height:1.4}
+.sn-item.active .sn-label{color:var(--violet)}
+.spectrum-marker{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--violet);box-shadow:0 0 10px var(--violet-glow);border:2px solid var(--bg);transition:left .4s ease;cursor:pointer}
+
+/* ── WEALTH FIELD GRID ── */
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.wf-cell{
+  padding:18px;border:1px solid rgba(255,255,255,.06);border-radius:4px;
+  background:var(--bg-card);cursor:pointer;transition:all .25s;position:relative;overflow:hidden
+}
+.wf-cell::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--violet-dim),transparent);
+  opacity:0;transition:opacity .2s
+}
+.wf-cell:hover::after{opacity:1}
+.wf-cell.unlocked{border-color:var(--cyan);background:var(--cyan-dim)}
+.wf-cell.unlocked .wfc-icon{color:var(--cyan)}
+.wf-cell.unlocked .wfc-status{color:var(--cyan)}
+.wfc-icon{font-size:22px;margin-bottom:8px;color:var(--dim2);transition:color .2s}
+.wfc-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.wfc-desc{font-size:11px;color:var(--dim);line-height:1.4;margin-bottom:8px}
+.wfc-status{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--dim2);transition:color .2s}
+.wf-unlock-hint{font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:2px;margin-top:12px;opacity:0;transition:opacity .3s;text-align:center}
+.wf-unlock-hint.show{opacity:1}
+
+/* ── PROTOCOL 77 DEPLOYMENT ── */
+.p77-phases{margin:16px 0}
+.p77-phase{
+  border:1px solid rgba(255,255,255,.06);border-radius:4px;margin-bottom:8px;
+  overflow:hidden;cursor:pointer;transition:border-color .2s
+}
+.p77-phase:hover{border-color:var(--amber)}
+.p77-phase.deployed{border-color:var(--violet)}
+.p77-phase-header{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;
+  background:var(--bg-card);transition:background .2s
+}
+.p77-phase.deployed .p77-phase-header{background:rgba(168,85,247,0.08)}
+.p77-num{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:2px;width:60px;flex-shrink:0}
+.p77-phase.deployed .p77-num{color:var(--violet)}
+.p77-title{font-size:12px;font-weight:600;color:var(--text)}
+.p77-arrow{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--amber);transition:transform .3s}
+.p77-phase.open .p77-arrow{transform:rotate(90deg)}
+.p77-phase.deployed .p77-arrow{color:var(--violet)}
+.p77-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.p77-phase.open .p77-body{max-height:300px}
+.p77-body-inner{padding:14px 16px;border-top:1px solid rgba(255,255,255,.04)}
+.p77-deploy-btn{
+  margin-top:12px;padding:7px 18px;background:var(--violet-dim);
+  border:1px solid var(--violet-border);color:var(--violet);
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  cursor:pointer;border-radius:3px;transition:all .2s
+}
+.p77-deploy-btn:hover{background:rgba(168,85,247,0.2);box-shadow:0 0 10px var(--violet-glow)}
+.p77-deploy-btn:disabled{opacity:.4;cursor:default}
+
+/* ── INCOME STREAM ARCHITECT ── */
+.isa-wrap{margin:16px 0}
+.isa-stream{
+  display:flex;align-items:flex-start;gap:14px;padding:16px;
+  border:1px solid rgba(255,255,255,.06);border-radius:4px;
+  margin-bottom:8px;background:var(--bg-card);cursor:pointer;transition:all .2s
+}
+.isa-stream:hover{border-color:var(--violet)}
+.isa-stream.selected{border-color:var(--cyan);background:var(--cyan-dim)}
+.isa-stream.selected .isa-name{color:var(--cyan)}
+.isa-stream.selected .isa-check{opacity:1;color:var(--cyan)}
+.isa-check{font-size:16px;opacity:0;transition:opacity .2s;flex-shrink:0;margin-top:2px}
+.isa-content{flex:1}
+.isa-name{font-size:13px;font-weight:600;color:var(--text);transition:color .2s;margin-bottom:4px}
+.isa-desc{font-size:11px;color:var(--dim);line-height:1.5}
+.isa-tag{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:2px;background:var(--amber-dim);color:var(--amber);margin-top:6px;display:inline-block}
+.isa-selected-cta{font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:2px;margin-top:12px;opacity:0;transition:opacity .3s}
+.isa-selected-cta.show{opacity:1}
+
+/* ── FIELD NOTES ── */
+.fn-wrap{margin-top:24px;border:1px solid var(--violet-border);border-radius:6px;overflow:hidden}
+.fn-header{padding:10px 16px;background:var(--violet-dim);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--violet-border)}
+.fn-icon{color:var(--violet);font-size:14px}
+.fn-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--violet)}
+.fn-body{padding:14px}
+.fn-prev{display:none;margin-bottom:12px;padding:10px 14px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);border-radius:4px}
+.fn-prev.show{display:block}
+.fn-prev-label{font-family:var(--mono);font-size:8px;color:var(--violet);letter-spacing:2px;margin-bottom:6px}
+.fn-prev-text{font-size:12px;color:var(--dim);line-height:1.5}
+.fn-edit-link{font-family:var(--mono);font-size:8px;color:var(--amber);letter-spacing:1px;cursor:pointer;border:none;background:none;padding:4px 0;display:block;margin-top:6px}
+textarea.fn-ta{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.6;resize:none;min-height:80px;}
+textarea.fn-ta::placeholder{color:var(--dim2)}
+.fn-actions{display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04)}
+.fn-save-btn{padding:7px 16px;background:var(--violet-dim);border:1px solid var(--violet-border);color:var(--violet);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .2s}
+.fn-save-btn:hover{background:rgba(168,85,247,0.2);box-shadow:0 0 10px var(--violet-glow)}
+.fn-status{font-family:var(--mono);font-size:9px;color:var(--violet);letter-spacing:1px;opacity:0;transition:opacity .3s}
+.fn-status.show{opacity:1}
+
+/* ── ACTIVATION GATE ── */
+.act-gate{margin-top:28px;padding:22px;border:1px solid var(--violet-dim);border-radius:6px;background:rgba(168,85,247,0.04)}
+.act-header{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--violet);text-transform:uppercase;margin-bottom:8px}
+.act-question{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:18px}
+.act-btns{display:flex;gap:12px;flex-wrap:wrap}
+.act-confirm{padding:10px 24px;background:var(--violet-dim);border:1px solid var(--violet);color:var(--violet);font-family:var(--mono);font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .25s}
+.act-confirm:hover{background:rgba(168,85,247,0.25);box-shadow:0 0 16px var(--violet-glow)}
+.act-flag{padding:10px 24px;background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:3px;transition:all .25s}
+.act-flag:hover{border-color:var(--amber);color:var(--text)}
+.act-result{display:none;margin-top:16px;padding:12px 16px;border-radius:4px}
+.act-result.cf{display:block;background:rgba(168,85,247,0.08);border:1px solid var(--violet-border)}
+.act-result.fl{display:block;background:var(--amber-faint);border:1px solid rgba(232,146,26,0.3)}
+.act-result-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;margin-bottom:4px}
+.act-result.cf .act-result-label{color:var(--violet)}
+.act-result.fl .act-result-label{color:var(--amber)}
+.act-result-text{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── NEXT BUTTON ── */
+.bnext{display:none;margin-top:24px;padding:12px 32px;background:linear-gradient(135deg,var(--violet-dim),var(--cyan-dim));border:1px solid var(--violet-border);color:var(--violet);font-family:var(--mono);font-size:11px;letter-spacing:3px;cursor:pointer;border-radius:4px;width:fit-content;transition:all .25s}
+.bnext.show{display:block;animation:bnextappear .5s ease forwards}
+@keyframes bnextappear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bnext:hover{box-shadow:0 0 20px var(--violet-glow),0 0 8px var(--cyan-glow)}
+
+/* ── WELCOME ── */
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.wg-card{padding:18px;border:1px solid var(--violet-dim);border-radius:6px;background:var(--bg-card);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.wg-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--violet-dim),transparent);opacity:0;transition:opacity .2s}
+.wg-card:hover::before{opacity:1}
+.wg-card:hover{border-color:var(--violet);transform:translateY(-2px)}
+.wg-num{font-family:var(--mono);font-size:9px;color:var(--violet);letter-spacing:2px;margin-bottom:8px}
+.wg-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.wg-desc{font-size:11px;color:var(--dim);line-height:1.4}
+
+/* system journey */
+.sj-tier{display:flex;align-items:center;gap:16px;padding:14px 18px;border-left:2px solid rgba(255,255,255,.06);margin-bottom:4px;transition:all .2s;border-radius:0 4px 4px 0}
+.sj-tier.active{border-left-color:var(--violet);background:var(--violet-dim)}
+.sj-tier.active .sj-label{color:var(--violet)}
+.sj-tier.complete{border-left-color:var(--cyan)}
+.sj-tier.complete .sj-label{color:var(--dim)}
+.sj-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0}
+.sj-tier.active .sj-dot{background:var(--violet);box-shadow:0 0 8px var(--violet-glow)}
+.sj-tier.complete .sj-dot{background:var(--cyan)}
+.sj-label{font-size:13px;color:var(--dim)}
+.sj-tag{margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:2px 8px;border-radius:2px}
+.sj-tag.here{background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet-border)}
+.sj-tag.done{background:rgba(62,247,232,0.1);color:var(--cyan)}
+
+/* done screen */
+.done-ring{display:flex;justify-content:center;margin:24px 0}
+.done-ring svg{filter:drop-shadow(0 0 16px rgba(168,85,247,0.5))}
+.done-ring circle.dr-fill{stroke:var(--violet);stroke-width:4;fill:none;stroke-dasharray:283;stroke-dashoffset:0;stroke-linecap:round;animation:dring 1.2s ease forwards}
+@keyframes dring{from{stroke-dashoffset:283}to{stroke-dashoffset:0}}
+
+/* hamburger */
+#hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--bg-card);border:1px solid var(--violet-dim);padding:8px 10px;cursor:pointer;border-radius:3px;flex-direction:column;gap:4px}
+.hb-line{width:20px;height:1.5px;background:var(--violet);border-radius:1px}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9}
+
+@media(max-width:768px){
+  #hamburger{display:flex}
+  #sidebar{position:fixed;left:0;top:0;z-index:100;transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #sb-overlay.show{display:block}
+  .screen{padding:24px 20px}
+  .welcome-grid,.wf-grid{grid-template-columns:1fr}
+}
+
+/* ═══ FIELD WORKBOOK ═══ */
+@keyframes wbZoomEnter{
+  0%{transform:perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px);opacity:0;filter:blur(18px);}
+  25%{transform:perspective(1400px) scale(0.42) rotateX(10deg) translateY(48px);opacity:0.2;filter:blur(12px);}
+  55%{transform:perspective(1400px) scale(0.72) rotateX(4deg) translateY(18px);opacity:0.55;filter:blur(5px);}
+  78%{transform:perspective(1400px) scale(0.96) rotateX(0.8deg) translateY(4px);opacity:0.9;filter:blur(0.8px);}
+  91%{transform:perspective(1400px) scale(1.025) rotateX(-0.3deg) translateY(-2px);opacity:1;filter:blur(0);}
+  100%{transform:perspective(1400px) scale(1) rotateX(0) translateY(0);opacity:1;filter:blur(0);}
+}
+@keyframes wbGroupReveal{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.wb-active{animation:wbZoomEnter 1.15s cubic-bezier(0.12,0.8,0.28,1) forwards;}
+#wb-flash{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:0;transition:opacity 0.55s;
+  background:radial-gradient(ellipse at 50% 40%,rgba(62,247,232,0.18) 0%,rgba(124,92,252,0.1) 28%,transparent 60%);}
+.wb-phase-grp{margin-bottom:28px;opacity:0;animation:wbGroupReveal 0.45s ease forwards;}
+.wb-phase-grp:nth-child(2){animation-delay:0.1s;}
+.wb-phase-grp:nth-child(3){animation-delay:0.2s;}
+.wb-phase-hdr{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--cyan);
+  border-bottom:1px solid rgba(62,247,232,0.18);padding-bottom:8px;margin-bottom:12px;}
+.wb-entry{border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:14px 16px;margin-bottom:8px;
+  background:rgba(255,255,255,0.02);transition:border-color 0.2s;cursor:pointer;}
+.wb-entry:hover{border-color:rgba(255,255,255,0.15);}
+.wb-entry.wb-cf{border-left:2px solid var(--cyan);}
+.wb-entry.wb-fl{border-left:2px solid rgba(124,92,252,0.8);}
+.wb-entry.wb-pd{border-left:2px solid rgba(255,255,255,0.12);}
+.wb-etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;}
+.wb-elbl{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.75);}
+.wb-ebadge{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;padding:3px 8px;border-radius:2px;}
+.wb-ebadge.cf{color:var(--cyan);border:1px solid rgba(62,247,232,0.2);background:rgba(62,247,232,0.05);}
+.wb-ebadge.fl{color:rgba(124,92,252,1);border:1px solid rgba(124,92,252,0.2);background:rgba(124,92,252,0.05);}
+.wb-ebadge.pd{color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);}
+.wb-enote{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;}
+.wb-empty{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:0.08em;}
+.wb-stats{display:flex;gap:20px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);margin-bottom:20px;flex-wrap:wrap;}
+.wb-stats b{color:var(--cyan);}
+.wb-strat{margin-top:28px;border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;}
+.wb-slbl{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:8px;}
+.wb-ssub{font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:14px;line-height:1.65;}
+.wb-btn{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.14em;
+  padding:10px 20px;border:1px solid rgba(255,255,255,0.12);background:transparent;
+  color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;border-radius:2px;margin-top:16px;}
+.wb-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.wb-coach-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.wb-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(62,247,232,0.25);
+  background:rgba(62,247,232,0.05);padding:5px 12px;border-radius:2px;
+  font-family:var(--mono);font-size:8px;letter-spacing:0.16em;color:var(--cyan);}
+
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div id="sflash"></div>
+<div id="sealf"></div>
+
+<div id="boot">
+  <div id="bscan"></div>
+  <div class="boot-logo" id="boot-logo">SOVEREIGN SYNTHESIS</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-txt" id="boot-txt">INITIALIZING SMA PHASE 2 // NEUTRALIZATION PROTOCOL</div>
+</div>
+
+<button id="hamburger" onclick="toggleSidebar()">
+  <div class="hb-line"></div><div class="hb-line"></div><div class="hb-line"></div>
+</button>
+<div id="sb-overlay" onclick="toggleSidebar()"></div>
+
+<div id="app">
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-brand">Sovereign Synthesis</div>
+    <div class="sb-title">System Mastery Architecture</div>
+    <div class="sb-phase">Phase 2 // Neutralization</div>
+  </div>
+  <div class="sb-progress">
+    <div class="pring-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle class="pring-bg" cx="22" cy="22" r="18"/>
+        <circle class="pring-fill" id="pring" cx="22" cy="22" r="18"/>
+      </svg>
+      <div class="pring-pct" id="pring-pct">0%</div>
+    </div>
+    <div class="sb-prog-text">
+      <strong id="prog-done">0 / 6 Lessons</strong>
+      Phase 2 Progress
+    </div>
+  </div>
+  <div class="sb-nav" id="sb-nav">
+    <div class="sb-section">Start</div>
+    <div class="sb-item" id="nav-welcome" onclick="nav('welcome')">
+      <div class="si-dot"></div><div class="si-label">Welcome Briefing</div>
+    </div>
+    <div class="sb-section">Module 003 — Identity Architecture</div>
+    <div class="sb-item" id="nav-m3i" onclick="nav('m3i')">
+      <div class="si-dot"></div><div class="si-label">M003 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m31" onclick="nav('m31')">
+      <div class="si-dot"></div><div class="si-label">Lesson 1: The Identity Stack</div>
+    </div>
+    <div class="sb-item" id="nav-m32" onclick="nav('m32')">
+      <div class="si-dot"></div><div class="si-label">Lesson 2: Sovereignty Spectrum</div>
+    </div>
+    <div class="sb-item" id="nav-m33" onclick="nav('m33')">
+      <div class="si-dot"></div><div class="si-label">Lesson 3: Protocol 77 Advanced</div>
+    </div>
+    <div class="sb-section">Module 004 — Wealth Field Mechanics</div>
+    <div class="sb-item" id="nav-m4i" onclick="nav('m4i')">
+      <div class="si-dot"></div><div class="si-label">M004 — Introduction</div>
+    </div>
+    <div class="sb-item" id="nav-m41" onclick="nav('m41')">
+      <div class="si-dot"></div><div class="si-label">Lesson 4: Wealth Field Design</div>
+    </div>
+    <div class="sb-item" id="nav-m42" onclick="nav('m42')">
+      <div class="si-dot"></div><div class="si-label">Lesson 5: Income Stream Architect</div>
+    </div>
+    <div class="sb-section">Complete</div>
+    <div class="sb-item" id="nav-done" onclick="nav('done')">
+      <div class="si-dot"></div><div class="si-label">Phase 2 Complete</div>
+    </div>
+  </div>
+
+    <div class="sb-item" id="nav-workbook" onclick="wbOpen()" style="border-top:1px solid rgba(62,247,232,0.12);margin-top:4px;">
+      <div class="si-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></div>
+      <div class="si-label" style="color:var(--cyan);">Field Workbook</div>
+    </div>
+  <div class="sb-footer">
+    <button class="sb-footer-btn" onclick="nav('sj')">▶ SYSTEM JOURNEY</button>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- WELCOME -->
+<div class="screen" id="screen-welcome">
+  <div class="scr-tag">Phase 2 Transmission</div>
+  <h1 class="scr-title">Welcome to <span class="vi">Neutralization</span></h1>
+  <p class="scr-sub">Phase 1 installed your diagnostic framework. Phase 2 is where the actual architecture gets built. You move from mapping the simulation to overwriting it.</p>
+  <div class="divider"></div>
+  <div class="welcome-grid">
+    <div class="wg-card" onclick="nav('m3i')">
+      <div class="wg-num">MODULE 003</div>
+      <div class="wg-title">Identity Architecture</div>
+      <div class="wg-desc">Reconstruct the identity layer from the foundation. Install a sovereign self-concept that generates — not drains — your field.</div>
+    </div>
+    <div class="wg-card" onclick="nav('m4i')">
+      <div class="wg-num">MODULE 004</div>
+      <div class="wg-title">Wealth Field Mechanics</div>
+      <div class="wg-desc">Understand wealth as a sovereign field — not a lottery. Design the income streams and channels appropriate to your architecture.</div>
+    </div>
+    <div class="wg-card" onclick="nav('sj')">
+      <div class="wg-num">SYSTEM</div>
+      <div class="wg-title">Your Journey Map</div>
+      <div class="wg-desc">See where Phase 2 sits in the full Sovereign Synthesis architecture. Phase 1 complete. Phase 2 active.</div>
+    </div>
+    <div class="wg-card" onclick="nav('done')">
+      <div class="wg-num">COMPLETION</div>
+      <div class="wg-title">Phase 2 Gate</div>
+      <div class="wg-desc">Phase 2 certification and the pathway to Phase 3 — The Deployment. For those who have built the architecture and are ready to scale it.</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <p style="font-family:var(--mono);font-size:11px;color:var(--violet);letter-spacing:1px">PHASE 2 PROTOCOL: Identity and wealth are not separate subjects. They are the same field viewed from two angles. You cannot architect a sovereign wealth field on a subordinate identity layer. Module 003 is the prerequisite for everything in Module 004.</p>
+</div>
+
+<!-- M003 INTRO -->
+<div class="screen" id="screen-m3i">
+  <div class="scr-tag">Module 003</div>
+  <h1 class="scr-title">Identity <span class="vi">Architecture</span></h1>
+  <p class="scr-sub">Most people have an identity that was installed by others. Module 003 is the process of auditing that installation and replacing it with a sovereign architect's self-construct.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 003, you will have mapped your Identity Stack, located your current position on the Sovereignty Spectrum, and deployed the advanced Protocol 77 framework as a continuous operating system — not a reactive protocol.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>THE CORE DISTINCTION</h4>
+    <p>Phase 1 used Protocol 77 as a defense mechanism — something you deploy when triggered. Phase 2 re-engineers it as a generative architecture — something that runs continuously and produces sovereign outcomes without requiring crisis as a catalyst.</p>
+  </div>
+  <div class="divider"></div>
+  <p>Identity is not personality. Personality is behavioral output. Identity is the architectural blueprint that generates personality. Most people try to change their behavior without touching the blueprint. SMA works at the blueprint level — which is why the results are permanent.</p>
+  <button class="bnext show" onclick="nav('m31')">BEGIN MODULE 003 →</button>
+</div>
+
+<!-- LESSON 1: IDENTITY STACK -->
+<div class="screen" id="screen-m31">
+  <div class="scr-tag">Module 003 · Lesson 1</div>
+  <h1 class="scr-title">The <span class="vi">Identity Stack</span></h1>
+  <p class="scr-sub">Your identity is not monolithic — it is a layered architecture. Understanding each layer is the prerequisite for sovereign reconstruction.</p>
+  <div class="divider"></div>
+
+  <p>The Identity Stack is a 5-layer architecture model. Each layer either supports or undermines the layer above it. The simulation operates primarily on Layers 1 and 2 — the surface layers most people mistake for their "real" identity. Sovereign architects operate from Layer 5 down.</p>
+
+  <h3>The 5 Identity Layers</h3>
+  <p>Click each layer to expand its sovereign architecture protocol:</p>
+
+  <div class="id-map" id="idmap-m31">
+    <div class="id-layer" onclick="toggleID(this)">
+      <div class="idl-dot"></div>
+      <div class="idl-content">
+        <div class="idl-name">Layer 1 — Behavioral Output</div>
+        <div class="idl-desc">What you visibly do. The most malleable layer — but also the most frequently confused for identity itself. Changing behavior at this layer without addressing deeper layers produces temporary results. The simulation loves behavior-only change programs because they never resolve the root architecture.</div>
+      </div>
+      <div class="idl-level">SURFACE</div>
+    </div>
+    <div class="id-layer" onclick="toggleID(this)">
+      <div class="idl-dot"></div>
+      <div class="idl-content">
+        <div class="idl-name">Layer 2 — Emotional Pattern</div>
+        <div class="idl-desc">The emotional signature your nervous system defaults to. Fear, scarcity, excitement, trust. Most people's emotional patterns were installed before age 7 through observed behavior in their primary environment. This layer is mutable but requires architectural work — not affirmations or positive thinking.</div>
+      </div>
+      <div class="idl-level">CONDITIONED</div>
+    </div>
+    <div class="id-layer" onclick="toggleID(this)">
+      <div class="idl-dot"></div>
+      <div class="idl-content">
+        <div class="idl-name">Layer 3 — Narrative Framework</div>
+        <div class="idl-desc">The story you tell about who you are, where you came from, and what is possible for you. This narrative runs continuously in background — filtering incoming information to match its existing conclusions. Sovereign architects audit their narrative and replace simulation-authored chapters with architect-authored ones.</div>
+      </div>
+      <div class="idl-level">NARRATIVE</div>
+    </div>
+    <div class="id-layer" onclick="toggleID(this)">
+      <div class="idl-dot"></div>
+      <div class="idl-content">
+        <div class="idl-name">Layer 4 — Core Beliefs</div>
+        <div class="idl-desc">The foundational propositions about reality that you treat as self-evident. "Hard work is required for success." "I am not the type of person who..." "People like me don't..." These operate below conscious awareness most of the time and function as architectural constraints on what you will allow yourself to build.</div>
+      </div>
+      <div class="idl-level">FOUNDATIONAL</div>
+    </div>
+    <div class="id-layer" onclick="toggleID(this)">
+      <div class="idl-dot"></div>
+      <div class="idl-content">
+        <div class="idl-name">Layer 5 — Sovereign Identity Core</div>
+        <div class="idl-desc">Who you are at the architecturally irreducible level — beneath programming, narrative, emotion, and behavior. This is the Architect's seat. Operating from Layer 5 means your actions are generated from an unconditional sense of self that does not require external validation, environmental stability, or past performance to function.</div>
+      </div>
+      <div class="idl-level">SOVEREIGN CORE</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p>The goal of Module 003 is not to destroy your existing identity architecture — it is to identify which layers were installed by the simulation and which were chosen by the architect. You keep what is sovereign. You rebuild what was imposed.</p>
+
+  <div class="fn-wrap" id="fn-m31">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 1</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m31">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m31"></div>
+        <button class="fn-edit-link" onclick="editNote('m31')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m31">
+        <textarea class="fn-ta" id="fnt-m31" placeholder="Map your Identity Stack. For each layer (1-5), write: What is currently running? Was it chosen by you or installed by the simulation? What would the sovereign architect version of this layer look like?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m31')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m31">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m31">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have mapped all 5 layers of your Identity Stack and identified which were architect-chosen vs. simulation-installed. Can you state, in one sentence per layer, what the sovereign rebuilt version of each layer is?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m31',true)">CONFIRMED — STACK MAPPED</button>
+      <button class="act-flag" onclick="activate('m31',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m31">
+      <div class="act-result-label" id="actr-lbl-m31"></div>
+      <div class="act-result-text" id="actr-txt-m31"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m31" onclick="nav('m32')">NEXT: SOVEREIGNTY SPECTRUM →</button>
+</div>
+
+<!-- LESSON 2: SOVEREIGNTY SPECTRUM -->
+<div class="screen" id="screen-m32">
+  <div class="scr-tag">Module 003 · Lesson 2</div>
+  <h1 class="scr-title">Sovereignty <span class="vi">Spectrum</span></h1>
+  <p class="scr-sub">Sovereignty is not a binary state. It is a spectrum — and you occupy different positions on that spectrum in different domains of your life simultaneously.</p>
+  <div class="divider"></div>
+
+  <p>Most frameworks present sovereignty as something you either have or don't. This is a simulation construct — it keeps people waiting for a permission slip that never arrives. The Sovereignty Spectrum is an architectural diagnostic: it tells you precisely where you are operating in any given domain, and what the exact next move is to advance.</p>
+
+  <h3>The 5 Spectrum Positions</h3>
+
+  <div class="spectrum-wrap">
+    <div class="spectrum-bar"><div class="spectrum-marker" id="spectrum-marker" style="left:calc(10% - 8px)"></div></div>
+    <div class="spectrum-nodes">
+      <div class="sn-item" id="sn-0">
+        <div class="sn-label">REACTIVE<br>Fully simulation-governed</div>
+      </div>
+      <div class="sn-item" id="sn-1">
+        <div class="sn-label">AWARE<br>Sees the loop, still in it</div>
+      </div>
+      <div class="sn-item" id="sn-2">
+        <div class="sn-label">INTERRUPT<br>Breaks patterns with effort</div>
+      </div>
+      <div class="sn-item" id="sn-3">
+        <div class="sn-label">ARCHITECT<br>Builds from intent</div>
+      </div>
+      <div class="sn-item" id="sn-4">
+        <div class="sn-label">SOVEREIGN<br>Field-generative</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>POSITION 1 — REACTIVE</h4>
+    <p>The simulation is running fully on autopilot. Behavior is determined by triggers, habit, and inherited programming. There is no gap between stimulus and response. Most people spend most of their lives here most of the time — not because they lack intelligence, but because they lack the architectural map to locate themselves.</p>
+  </div>
+  <div class="card">
+    <h4>POSITION 3 — INTERRUPT (Where Phase 1 Brought You)</h4>
+    <p>The pattern is visible. The interrupt protocols are pre-loaded. There is a functional gap between trigger and response. Sovereignty is accessible but requires active effort and is not yet the default mode. This is where most SMA Phase 1 graduates operate — and it is a significant advancement over Reactive.</p>
+  </div>
+  <div class="card-cyan">
+    <h4>POSITION 5 — SOVEREIGN (Phase 2 Target State)</h4>
+    <p>The simulation no longer has automatic claim on your field. Sovereign behavior is the path of least resistance — not the result of effort. Your architecture generates its own momentum. You are not responding to the field; you are creating it. Phase 2 is the bridge from Position 3 to Position 5.</p>
+  </div>
+
+  <div class="divider"></div>
+  <p>Click the spectrum positions above to mark where you currently operate in the domains of: identity, financial decisions, relationships, creative output, and physical health. Different domains will show different positions — this is normal and expected. The architect's objective is to raise the floor across all domains to Position 4 minimum.</p>
+
+  <div class="fn-wrap" id="fn-m32">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 2</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m32">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m32"></div>
+        <button class="fn-edit-link" onclick="editNote('m32')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m32">
+        <textarea class="fn-ta" id="fnt-m32" placeholder="For each of the 5 domains (identity, financial, relationships, creative, physical), rate your current spectrum position (1-5) and name the specific belief or behavior that is holding you at that position." rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m32')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m32">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m32">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have located your current spectrum position across all 5 domains and identified the specific constraints holding each domain at its current level. Is your lowest-rated domain now mapped with a specific architectural next step to advance it?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m32',true)">CONFIRMED — SPECTRUM MAPPED</button>
+      <button class="act-flag" onclick="activate('m32',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m32">
+      <div class="act-result-label" id="actr-lbl-m32"></div>
+      <div class="act-result-text" id="actr-txt-m32"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m32" onclick="nav('m33')">NEXT: PROTOCOL 77 ADVANCED →</button>
+</div>
+
+<!-- LESSON 3: PROTOCOL 77 ADVANCED -->
+<div class="screen" id="screen-m33">
+  <div class="scr-tag">Module 003 · Lesson 3</div>
+  <h1 class="scr-title">Protocol 77 <span class="vi">Advanced</span></h1>
+  <p class="scr-sub">Phase 1 gave you Protocol 77 as a shield. Phase 2 re-engineers it as a generative architecture — the operating system that runs continuously beneath all sovereign output.</p>
+  <div class="divider"></div>
+
+  <p>Protocol 77 in its basic form is a defensive framework — something you deploy when the simulation activates. The advanced configuration transforms it from reactive defense to proactive generation. You stop waiting for the trigger to deploy the protocol and instead run the protocol as your base frequency.</p>
+
+  <h3>Advanced Protocol 77 — Phase Deployment</h3>
+  <p>Click each phase to expand, then deploy it to your architecture:</p>
+
+  <div class="p77-phases" id="p77-m33">
+    <div class="p77-phase" id="p77-0">
+      <div class="p77-phase-header" onclick="toggleP77(0)">
+        <div class="p77-num">PHASE 01</div>
+        <div class="p77-title">THE LIGHTHOUSE STANCE — Continuous Identity Broadcast</div>
+        <div class="p77-arrow">▶</div>
+      </div>
+      <div class="p77-body">
+        <div class="p77-body-inner">
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">The basic Protocol 77 teaches you to hold your position when the simulation pushes. The advanced version turns that into a continuous broadcast. A lighthouse doesn't wait for a ship to be in danger before turning on. It runs constantly. Your sovereign signal should be on at all times — in how you speak, how you enter rooms, how you price your work, how you respond to "no."</p>
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">The Lighthouse Stance is a full-body identity posture. It means your sovereign frequency is always the dominant signal in your field — not turned on reactively, but running as your baseline frequency.</p>
+          <button class="p77-deploy-btn" onclick="deployP77(0)">DEPLOY TO ARCHITECTURE →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="p77-phase" id="p77-1">
+      <div class="p77-phase-header" onclick="toggleP77(1)">
+        <div class="p77-num">PHASE 02</div>
+        <div class="p77-title">THE FARADAY CAGE — Environment Architecture</div>
+        <div class="p77-arrow">▶</div>
+      </div>
+      <div class="p77-body">
+        <div class="p77-body-inner">
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">A Faraday cage blocks external electromagnetic interference from disrupting the signal inside. The advanced Protocol 77 requires you to architect your physical and social environment to block simulation frequencies at the perimeter — before they reach your field.</p>
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">This means intentional curation of who has direct access to your field. It means physical spaces that amplify your sovereign frequency. It means media and information inputs that generate signal, not noise. The Faraday Cage is not isolation — it is selective permeability. Sovereign signals in; simulation noise filtered.</p>
+          <button class="p77-deploy-btn" onclick="deployP77(1)">DEPLOY TO ARCHITECTURE →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="p77-phase" id="p77-2">
+      <div class="p77-phase-header" onclick="toggleP77(2)">
+        <div class="p77-num">PHASE 03</div>
+        <div class="p77-title">THE CONTAINMENT FIELD — Gray Rock Advanced</div>
+        <div class="p77-arrow">▶</div>
+      </div>
+      <div class="p77-body">
+        <div class="p77-body-inner">
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">Basic Gray Rock is information neutrality — you stop feeding emotional signal to entities that harvest it. Advanced Containment Field operates at a higher level: you learn to maintain full sovereign warmth and presence with people you choose to connect with, while simultaneously becoming energetically inaccessible to entities that require your subordination to function.</p>
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">This is a sophisticated distinction. The goal is not coldness — it is precise calibration. You remain fully alive and expressive with those who are aligned, and informationally neutral with those who are not. This takes conscious practice and becomes native.</p>
+          <button class="p77-deploy-btn" onclick="deployP77(2)">DEPLOY TO ARCHITECTURE →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="p77-phase" id="p77-3">
+      <div class="p77-phase-header" onclick="toggleP77(3)">
+        <div class="p77-num">PHASE 04</div>
+        <div class="p77-title">THE CREATIVE PLANE — Generative Sovereign Output</div>
+        <div class="p77-arrow">▶</div>
+      </div>
+      <div class="p77-body">
+        <div class="p77-body-inner">
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">The most advanced Protocol 77 deployment is not defense at all — it is the continuous generation of sovereign signal that is so strong, so clear, and so consistent that simulation frequencies cannot find purchase in your field. You become a source, not a responder.</p>
+          <p style="font-size:12px;color:var(--dim);line-height:1.6">The Creative Plane is where architects produce. Content, systems, relationships, financial structures — all are sovereign architecture deployed from a generative field. Phase 2 of SMA trains you to operate from the Creative Plane as your home base, not as an occasional peak state.</p>
+          <button class="p77-deploy-btn" onclick="deployP77(3)">DEPLOY TO ARCHITECTURE →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fn-wrap" id="fn-m33">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 3</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m33">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m33"></div>
+        <button class="fn-edit-link" onclick="editNote('m33')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m33">
+        <textarea class="fn-ta" id="fnt-m33" placeholder="Deploy all 4 phases to your architecture. For each phase, write: (1) What specific action installs this in your daily operating environment? (2) What is the biggest obstacle to running this phase continuously?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m33')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m33">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m33">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have deployed all 4 phases of the advanced Protocol 77 and written specific implementation actions for each. Can you run all 4 phases simultaneously for 72 continuous hours as a real-world test before advancing?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m33',true)">CONFIRMED — PROTOCOL 77 ADVANCED SEALED</button>
+      <button class="act-flag" onclick="activate('m33',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m33">
+      <div class="act-result-label" id="actr-lbl-m33"></div>
+      <div class="act-result-text" id="actr-txt-m33"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m33" onclick="nav('m4i')">ADVANCE TO MODULE 004 →</button>
+</div>
+
+<!-- M004 INTRO -->
+<div class="screen" id="screen-m4i">
+  <div class="scr-tag">Module 004</div>
+  <h1 class="scr-title">Wealth Field <span class="vi">Mechanics</span></h1>
+  <p class="scr-sub">Identity has been restructured. Now the architecture turns to the domain where sovereign identity most visibly produces results: the wealth field.</p>
+  <div class="card">
+    <h4>MODULE OBJECTIVE</h4>
+    <p>By the end of Module 004, you will understand wealth as an energetic field that responds to the architect who built it, have designed your personal Wealth Field architecture, and have mapped your first sovereign income stream deployment plan.</p>
+  </div>
+  <div class="card-amber">
+    <h4>THE PREREQUISITE</h4>
+    <p>Module 004 requires a stable identity layer from Module 003. Wealth field mechanics applied to a subordinate identity architecture produces temporary financial results that cannot be sustained. The sequence is non-negotiable: identity architecture first, wealth field design second.</p>
+  </div>
+  <div class="divider"></div>
+  <p>Wealth is not money. Money is the physical representation of value exchange in the simulation's accounting system. <strong style="color:var(--violet)">Wealth is the field that generates money consistently.</strong> Building wealth means building the field — the systems, relationships, positioning, and output patterns that produce financial energy as a natural byproduct.</p>
+  <button class="bnext show" onclick="nav('m41')">BEGIN MODULE 004 →</button>
+</div>
+
+<!-- LESSON 4: WEALTH FIELD DESIGN -->
+<div class="screen" id="screen-m41">
+  <div class="scr-tag">Module 004 · Lesson 4</div>
+  <h1 class="scr-title">Wealth Field <span class="cy">Design</span></h1>
+  <p class="scr-sub">You do not chase money. You design a field that generates it. The distinction is architectural — and it changes everything about how you operate.</p>
+  <div class="divider"></div>
+
+  <p>The simulation teaches wealth acquisition as a linear process: work → get paid → save → accumulate. This model produces capped results because it is built on a scarcity architecture — time is finite, so wealth is capped by time. Sovereign wealth field design replaces this with a leverage architecture: you build systems, not just exchange time.</p>
+
+  <h3>The 6 Wealth Field Components</h3>
+  <p>Click any component to mark it as active in your current architecture:</p>
+
+  <div class="wf-grid" id="wfg-m41">
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">⬡</div>
+      <div class="wfc-name">Sovereign Positioning</div>
+      <div class="wfc-desc">How the market perceives your value relative to alternatives. Position determines your price ceiling.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">◈</div>
+      <div class="wfc-name">Value Architecture</div>
+      <div class="wfc-desc">The systems you have built that generate value independent of your direct time investment.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">▲</div>
+      <div class="wfc-name">Outflow Channels</div>
+      <div class="wfc-desc">The specific mechanisms through which your value reaches the market. Content, offers, relationships, platforms.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">◉</div>
+      <div class="wfc-name">Return Architecture</div>
+      <div class="wfc-desc">How financial energy flows back to you. Pricing, payment structures, recurring revenue, and asset appreciation.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">✦</div>
+      <div class="wfc-name">Field Amplifiers</div>
+      <div class="wfc-desc">People, platforms, and systems that extend your field's reach without requiring proportional time investment.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+    <div class="wf-cell" onclick="unlockWF(this,'m41')">
+      <div class="wfc-icon">⟐</div>
+      <div class="wfc-name">Sovereign Reserve</div>
+      <div class="wfc-desc">The financial buffer that decouples your decision-making from survival pressure. Changes every negotiation you enter.</div>
+      <div class="wfc-status">CLICK TO ACTIVATE</div>
+    </div>
+  </div>
+  <div class="wf-unlock-hint" id="wf-hint-m41">COMPONENT ACTIVE — MAP ITS SPECIFIC ARCHITECTURE IN YOUR FIELD NOTES</div>
+
+  <div class="divider"></div>
+  <p>Most people have 1-2 of these components partially developed. A fully operational sovereign wealth field requires all 6 to be consciously designed and actively maintained. Your Phase 2 objective is to have a clear architectural plan for each component — even if the build-out extends into Phase 3.</p>
+
+  <div class="fn-wrap" id="fn-m41">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 4</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m41">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m41"></div>
+        <button class="fn-edit-link" onclick="editNote('m41')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m41">
+        <textarea class="fn-ta" id="fnt-m41" placeholder="Rate each of the 6 Wealth Field components (0-10) based on how fully they are currently built in your architecture. For any component below 7, write the specific next action to advance it." rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m41')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m41">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m41">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have designed your Wealth Field architecture and rated all 6 components. Do you have a concrete action step for each component that you are prepared to deploy in the next 30 days?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m41',true)">CONFIRMED — WEALTH FIELD DESIGNED</button>
+      <button class="act-flag" onclick="activate('m41',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m41">
+      <div class="act-result-label" id="actr-lbl-m41"></div>
+      <div class="act-result-text" id="actr-txt-m41"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m41" onclick="nav('m42')">NEXT: INCOME STREAM ARCHITECT →</button>
+</div>
+
+<!-- LESSON 5: INCOME STREAM ARCHITECT -->
+<div class="screen" id="screen-m42">
+  <div class="scr-tag">Module 004 · Lesson 5</div>
+  <h1 class="scr-title">Income Stream <span class="cy">Architect</span></h1>
+  <p class="scr-sub">One income stream is a job. Two is a business. Three or more is a sovereign wealth field. This lesson maps the specific income architectures available to you.</p>
+  <div class="divider"></div>
+
+  <p>The Sovereign Synthesis framework is built on a multi-stream architecture. Not because diversification reduces risk (though it does), but because each income stream type carries different leverage ratios, different time-to-income profiles, and different identity requirements. Sovereign architects choose their streams architecturally — not reactively.</p>
+
+  <h3>Income Stream Architecture Map</h3>
+  <p>Select the streams you are ready to deploy or actively building:</p>
+
+  <div class="isa-wrap" id="isa-m42">
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">Intellectual Property Licensing</div>
+        <div class="isa-desc">Courses, frameworks, methodologies, and systems that generate revenue independent of your direct delivery time. The highest leverage stream — built once, sold repeatedly.</div>
+        <div class="isa-tag">HIGH LEVERAGE</div>
+      </div>
+    </div>
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">High-Ticket Coaching / Mentorship</div>
+        <div class="isa-desc">Direct access to your architecture and transformation process at premium price points. Requires sovereign positioning — cannot be built on a subordinate identity layer.</div>
+        <div class="isa-tag">HIGH VALUE</div>
+      </div>
+    </div>
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">Membership / Recurring Revenue</div>
+        <div class="isa-desc">Community, ongoing content, or software that generates predictable monthly income. Creates financial field stability — removes survival pressure from decision-making.</div>
+        <div class="isa-tag">FIELD STABILITY</div>
+      </div>
+    </div>
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">Affiliate / Partnership Architecture</div>
+        <div class="isa-desc">Revenue generated from aligned referrals and partnerships. Requires a distribution field (audience, network) but no product creation time.</div>
+        <div class="isa-tag">LEVERAGE</div>
+      </div>
+    </div>
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">Consulting / Done-For-You</div>
+        <div class="isa-desc">High-rate direct engagement. Time-bound but premium priced. Most accessible entry point for monetizing existing expertise at sovereign rates.</div>
+        <div class="isa-tag">IMMEDIATE DEPLOY</div>
+      </div>
+    </div>
+    <div class="isa-stream" onclick="selectISA(this,'m42')">
+      <div class="isa-check">◆</div>
+      <div class="isa-content">
+        <div class="isa-name">Content / Audience Monetization</div>
+        <div class="isa-desc">Revenue derived from an owned audience. Slow to build, highly leveraged once established. The content you create for the Firmware Update mission becomes a wealth field asset.</div>
+        <div class="isa-tag">COMPOUND</div>
+      </div>
+    </div>
+  </div>
+  <div class="isa-selected-cta" id="isa-cta-m42">STREAM SELECTED — MAP YOUR 90-DAY DEPLOYMENT PLAN IN FIELD NOTES</div>
+
+  <div class="divider"></div>
+  <p>The objective for Phase 2 graduates is to have at minimum 2 income streams either active or with a concrete 90-day activation plan. Phase 3 — The Deployment — will build out the actual infrastructure, systems, and marketing architecture for each stream you have selected here.</p>
+
+  <div class="fn-wrap" id="fn-m42">
+    <div class="fn-header"><span class="fn-icon">◈</span><span class="fn-label">FIELD NOTES — LESSON 5</span></div>
+    <div class="fn-body">
+      <div class="fn-prev" id="fnprev-m42">
+        <div class="fn-prev-label">PREVIOUS ENTRY</div>
+        <div class="fn-prev-text" id="fnprev-txt-m42"></div>
+        <button class="fn-edit-link" onclick="editNote('m42')">EDIT NOTE ↗</button>
+      </div>
+      <div class="fn-textarea-wrap" id="fnta-wrap-m42">
+        <textarea class="fn-ta" id="fnt-m42" placeholder="Choose your primary 2 income streams and write a 90-day activation sequence for each: (1) What is the first deliverable? (2) What is your price point and why? (3) Who are the first 5 people you will offer this to?" rows="7"></textarea>
+        <div class="fn-actions">
+          <button class="fn-save-btn" onclick="saveN('m42')">FILE NOTE ◆</button>
+          <span class="fn-status" id="fnst-m42">FILED ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-gate" id="act-m42">
+    <div class="act-header">◆ Activation Gate</div>
+    <div class="act-question">You have selected your 2 primary income streams and written a 90-day activation sequence for each. Do you confirm that Module 004 is architecturally integrated and you are ready to advance to Phase Complete?</div>
+    <div class="act-btns">
+      <button class="act-confirm" onclick="activate('m42',true)">CONFIRMED — MODULE 004 SEALED</button>
+      <button class="act-flag" onclick="activate('m42',false)">FLAG FOR REVIEW</button>
+    </div>
+    <div class="act-result" id="actr-m42">
+      <div class="act-result-label" id="actr-lbl-m42"></div>
+      <div class="act-result-text" id="actr-txt-m42"></div>
+    </div>
+  </div>
+  <button class="bnext" id="bnext-m42" onclick="nav('done')">ADVANCE TO PHASE COMPLETE →</button>
+</div>
+
+<!-- DONE SCREEN -->
+<div class="screen" id="screen-done">
+  <div class="scr-tag">Phase 2 Complete</div>
+  <h1 class="scr-title">Neutralization <span class="vi">Protocol Sealed</span></h1>
+  <p class="scr-sub">Phase 2 of System Mastery Architecture is sealed. The identity architecture has been reconstructed. The wealth field has been designed. The sovereign field is now generative.</p>
+
+  <div class="done-ring">
+    <svg width="120" height="120" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="none"/>
+      <circle class="dr-fill" cx="50" cy="50" r="45" transform="rotate(-90 50 50)"/>
+      <text x="50" y="55" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#A855F7">SEALED</text>
+    </svg>
+  </div>
+
+  <div class="card" id="done-summary">
+    <h4>PHASE 2 ACTIVATION SUMMARY</h4>
+    <p id="done-summary-text" style="font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--violet)">Loading activation data...</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="card">
+    <h4>WHAT YOU HAVE INSTALLED</h4>
+    <p>The Identity Stack audit — a 5-layer architectural map of your sovereign self-construct. The Sovereignty Spectrum — a precision diagnostic for locating your operational position across all life domains. Protocol 77 Advanced — the full 4-phase deployment of sovereign architecture as continuous operating system. Wealth Field Design — all 6 components mapped and actioned. Income Stream Architect — your primary 2 streams selected with 90-day deployment plans.</p>
+  </div>
+  <div class="card-amber">
+    <h4>WHAT COMES NEXT: PHASE 3 — THE DEPLOYMENT</h4>
+    <p>Phase 3 is where the architecture becomes a business. Where the identity becomes a brand. Where the income stream plans become live offers. Phase 3 is the most operationally dense phase of SMA — it includes full marketing architecture, offer buildout, content system design, and the live deployment of the Sovereign Synthesis framework as your primary wealth-generating vehicle.</p>
+  </div>
+  <div style="text-align:center;padding:20px 0">
+    <div style="font-family:var(--mono);font-size:9px;color:var(--violet);letter-spacing:3px;margin-bottom:12px">PHASE 3 ACCESS</div>
+    <p style="font-size:13px;color:var(--dim);max-width:480px;margin:0 auto 20px">To access Phase 3 — The Deployment ($3,777), contact your access coordinator or visit the upgrade path from your Phase 2 enrollment confirmation.</p>
+    <button class="bnext show" onclick="nav('sj')" style="margin:0 auto">VIEW SYSTEM JOURNEY →</button>
+  </div>
+</div>
+
+<!-- SYSTEM JOURNEY -->
+<div class="screen" id="screen-sj">
+  <div class="scr-tag">Architecture Overview</div>
+  <h1 class="scr-title">System <span class="vi">Journey</span></h1>
+  <p class="scr-sub">The complete Sovereign Synthesis architecture. Phase 1 sealed. Phase 2 sealed. Phase 3 awaits.</p>
+  <div class="divider"></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T1 — Protocol 77: The Free Transmission</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T2 — Protocol 77: Full Deployment ($47)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T3 — Sovereign OS Manifesto ($97–$197)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier complete"><div class="sj-dot"></div><div class="sj-label">T4 — System Mastery Architecture: Phase 1 ($477)</div><div class="si-badge cf sj-tag done">COMPLETE</div></div>
+  <div class="sj-tier active"><div class="sj-dot"></div><div class="sj-label">T5 — System Mastery Architecture: Phase 2 ($1,497)</div><div class="si-badge cf sj-tag here">YOU ARE HERE</div></div>
+  <div class="sj-tier"><div class="sj-dot"></div><div class="sj-label">T6 — System Mastery Architecture: Phase 3 ($3,777)</div></div>
+  <div class="sj-tier"><div class="sj-dot"></div><div class="sj-label">T7 — Inner Circle: Sovereign Synthesis ($10,000+)</div></div>
+  <div class="divider"></div>
+  <div class="card-cyan">
+    <h4>THE ASCENT</h4>
+    <p>Phase 1 was the diagnostic. Phase 2 is the architecture. Phase 3 is the deployment. By the time you complete Phase 3, you will not be the same architect who started Phase 1 — not because the content changed you, but because you used the content to change your architecture. The content is a mirror. The architect does the work.</p>
+  </div>
+  <button class="bnext show" onclick="nav('welcome')" style="margin-top:8px">RETURN TO PORTAL →</button>
+</div>
+
+
+<!-- FIELD WORKBOOK -->
+<div class="screen" id="screen-workbook">
+  <div id="wb-flash"></div>
+  <div class="wb-coach-hdr">
+    <div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.18em;opacity:0.6;margin-bottom:6px;">// FIELD WORKBOOK</div>
+      <h1 class="scr-title">The <span class="vi">Coach View</span></h1>
+      <div style="font-size:13px;opacity:0.55;margin-top:4px;">Zoom out from the field. Read the game. Identify the pattern.</div>
+    </div>
+    <div class="wb-badge">◉ COACH PERSPECTIVE</div>
+  </div>
+  <div class="wb-stats" id="wb-stats"></div>
+  <div id="wb-content"></div>
+  <div class="wb-strat">
+    <div class="wb-slbl">// STRATEGIC PATTERN ANALYSIS</div>
+    <div class="wb-ssub">You are now looking at the entire game board from outside it. Where is your signal strongest? Where does the old frequency still have traction? Write the coach's observation — not the player's reaction.</div>
+    <div class="fn-prev" id="fn-prev-wb-strat" style="display:none;background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.12);padding:12px 16px;margin-bottom:12px;border-radius:2px;">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--cyan);margin-bottom:8px;letter-spacing:0.12em;">// PREVIOUS STRATEGY NOTE</div>
+      <div style="font-size:12px;opacity:0.6;" id="fn-prev-wb-strat-txt"></div>
+    </div>
+    <textarea class="fn-area" id="fn-wb-strat" rows="4" placeholder="Coach-level observation: What do you see across all transmissions? Where is the single highest-leverage shift right now?"></textarea>
+    <button class="fn-btn" onclick="wbSaveStrat()">// SAVE STRATEGY NOTE</button>
+    <button class="wb-btn" onclick="wbReturn()">// RETURN TO ACTIVE LESSON</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SMA PHASE 2 v1 — Storage: sma-p2-v1
+═══════════════════════════════════════════════ */
+const SK='sma-p2-v1';
+const LESSONS=['m31','m32','m33','m41','m42'];
+let S={done:{},activated:{},flags:{},notes:{},boot:false,p77deployed:[]};
+
+function load(){try{const d=localStorage.getItem(SK);if(d)S=JSON.parse(d);}catch(e){}}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
+load();
+
+/* ── PARTICLES ── */
+const cvs=document.getElementById('particle-canvas');
+const ctx=cvs.getContext('2d');
+let W,H,mouse={x:-999,y:-999},particles=[];
+function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+
+class Particle{
+  constructor(){this.reset(true);}
+  reset(rand){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    this.vx=(Math.random()-.5)*.5;this.vy=(Math.random()-.5)*.5;
+    this.r=Math.random()*2.2+.5;
+    this.type=Math.random()<.5?'violet':Math.random()<.6?'cyan':'amber';
+    this.alpha=Math.random()*.55+.18;this.pulse=Math.random()*Math.PI*2;
+  }
+  update(){
+    this.pulse+=.02;
+    const dx=this.x-mouse.x,dy=this.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<130){const f=(130-dist)/130*1.3;this.vx+=dx/dist*f;this.vy+=dy/dist*f;}
+    this.vx*=.96;this.vy*=.96;this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0)this.x=W;if(this.x>W)this.x=0;
+    if(this.y<0)this.y=H;if(this.y>H)this.y=0;
+  }
+  draw(){
+    const a=this.alpha*(0.65+0.35*Math.sin(this.pulse));
+    const c=this.type==='violet'?`rgba(168,85,247,${a})`:this.type==='cyan'?`rgba(62,247,232,${a})`:`rgba(232,146,26,${a})`;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+    if(this.r>1.6){
+      const cg=this.type==='violet'?`rgba(168,85,247,${a*.18})`:this.type==='cyan'?`rgba(62,247,232,${a*.18})`:`rgba(232,146,26,${a*.18})`;
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r*2.8,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+    }
+  }
+}
+for(let i=0;i<200;i++)particles.push(new Particle());
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<100;i++){for(let j=i+1;j<100;j++){
+    const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<110){
+      const a=(1-dist/110)*0.13;
+      ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+      const c=particles[i].type==='violet'?`rgba(168,85,247,${a})`:particles[i].type==='cyan'?`rgba(62,247,232,${a})`:`rgba(232,146,26,${a})`;
+      ctx.strokeStyle=c;ctx.lineWidth=0.5;ctx.stroke();
+    }
+  }}
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ── BOOT ── */
+function boot(){
+  const ov=document.getElementById('boot');
+  if(S.boot){ov.classList.add('hidden');initUI();return;}
+  const sc=document.getElementById('bscan');
+  const logo=document.getElementById('boot-logo');
+  const fill=document.getElementById('boot-fill');
+  const txt=document.getElementById('boot-txt');
+  let prog=0;const dur=1500;const t0=performance.now();
+  logo.classList.add('show');
+  setTimeout(()=>{fill.classList.add('go');txt.classList.add('show');},200);
+  function anim(now){
+    prog=Math.min((now-t0)/dur,1);
+    const e=prog<.5?2*prog*prog:-1+(4-2*prog)*prog;
+    sc.style.transform=`translateY(${e*(H+6)}px)`;
+    if(prog<1){requestAnimationFrame(anim);}
+    else{
+      setTimeout(()=>{
+        ov.style.opacity='0';ov.style.transition='opacity .5s';
+        setTimeout(()=>{ov.classList.add('hidden');S.boot=true;sv();initUI();},500);
+      },400);
+    }
+  }
+  requestAnimationFrame(anim);
+}
+
+/* ── DECRYPT ── */
+function decrypt(el,text,ms=440){
+  const g='█▓▒░⬡◈◆▲◉ⅠⅡⅢ0123456789ABCDEFabcdef';
+  const fr=ms/35;let f=0;
+  const id=setInterval(()=>{
+    f++;const p=f/fr;
+    el.textContent=text.split('').map((ch,i)=>{
+      if(ch===' ')return ' ';
+      if(i/text.length<p*1.4)return ch;
+      return g[Math.floor(Math.random()*g.length)];
+    }).join('');
+    if(f>=fr){el.textContent=text;clearInterval(id);}
+  },35);
+}
+
+/* ── FLASH ── */
+function sflash(){
+  const el=document.getElementById('sflash');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');
+}
+function sealFlash(){
+  const el=document.getElementById('sealf');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');
+}
+
+/* ── NAV ── */
+let curScreen='welcome';
+function nav(id){
+  sflash();
+  setTimeout(()=>{
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('screen-'+id).classList.add('active');
+    const ni=document.getElementById('nav-'+id);if(ni)ni.classList.add('active');
+    curScreen=id;
+    document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+    const title=document.querySelector('#screen-'+id+' .scr-title');
+    if(title){const t=title.textContent;decrypt(title,t);}
+    if(window.innerWidth<=768)closeSidebar();
+    if(id==='done')buildDoneSummary();
+  },180);
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+}
+
+/* ── FIELD NOTES ── */
+function saveN(lid){
+  const ta=document.getElementById('fnt-'+lid);
+  const val=ta?ta.value.trim():'';
+  if(!val)return;
+  S.notes[lid]=val;sv();
+  const st=document.getElementById('fnst-'+lid);
+  if(st){st.classList.add('show');setTimeout(()=>st.classList.remove('show'),2000);}
+  showPrev(lid);
+}
+function showPrev(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const pt=document.getElementById('fnprev-txt-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  if(p&&pt&&S.notes[lid]){pt.textContent=S.notes[lid];p.classList.add('show');tw.style.display='none';}
+}
+function editNote(lid){
+  const p=document.getElementById('fnprev-'+lid);
+  const tw=document.getElementById('fnta-wrap-'+lid);
+  const ta=document.getElementById('fnt-'+lid);
+  if(p)p.classList.remove('show');if(tw)tw.style.display='';if(ta&&S.notes[lid])ta.value=S.notes[lid];
+}
+
+/* ── ACTIVATION ── */
+function activate(lid,confirmed){
+  const gate=document.getElementById('act-'+lid);
+  const result=document.getElementById('actr-'+lid);
+  const lbl=document.getElementById('actr-lbl-'+lid);
+  const txt=document.getElementById('actr-txt-'+lid);
+  const btns=gate.querySelectorAll('button');
+  btns.forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+  if(confirmed){
+    S.done[lid]=true;S.activated[lid]='cf';
+    result.className='act-result cf';lbl.textContent='◆ CONFIRMED — SEALED';
+    txt.textContent='This lesson has been architecturally integrated. Your field signature has been updated.';
+    sealFlash();
+  }else{
+    S.flags[lid]=true;S.activated[lid]='fl';S.done[lid]=true;
+    result.className='act-result fl';lbl.textContent='⬡ FLAGGED FOR REVIEW';
+    txt.textContent='This lesson has been marked for deeper integration. You may proceed and return.';
+  }
+  sv();
+  const bnext=document.getElementById('bnext-'+lid);if(bnext)bnext.classList.add('show');
+  updateSidebar();updateProgress();
+}
+
+/* ── IDENTITY LAYERS ── */
+function toggleID(el){el.classList.toggle('active');}
+
+/* ── P77 DEPLOYMENT ── */
+function toggleP77(idx){
+  const ph=document.getElementById('p77-'+idx);
+  if(!ph)return;
+  const isOpen=ph.classList.contains('open');
+  document.querySelectorAll('.p77-phase').forEach(p=>p.classList.remove('open'));
+  if(!isOpen)ph.classList.add('open');
+}
+function deployP77(idx){
+  const ph=document.getElementById('p77-'+idx);
+  if(!ph)return;
+  ph.classList.add('deployed');
+  const btn=ph.querySelector('.p77-deploy-btn');
+  if(btn){btn.textContent='DEPLOYED ◆';btn.disabled=true;}
+  if(!S.p77deployed)S.p77deployed=[];
+  if(!S.p77deployed.includes(idx))S.p77deployed.push(idx);
+  sv();
+}
+
+/* ── WEALTH FIELD ── */
+function unlockWF(el,lid){
+  el.classList.toggle('unlocked');
+  const grid=document.getElementById('wfg-'+lid);
+  if(grid){
+    const active=grid.querySelectorAll('.wf-cell.unlocked').length;
+    const hint=document.getElementById('wf-hint-'+lid);
+    if(hint)hint.classList.toggle('show',active>0);
+    el.querySelector('.wfc-status').textContent=el.classList.contains('unlocked')?'ACTIVE ◆':'CLICK TO ACTIVATE';
+  }
+}
+
+/* ── INCOME STREAM ── */
+function selectISA(el,lid){
+  el.classList.toggle('selected');
+  const wrap=document.getElementById('isa-'+lid);
+  if(wrap){
+    const sel=wrap.querySelectorAll('.isa-stream.selected').length;
+    const cta=document.getElementById('isa-cta-'+lid);
+    if(cta)cta.classList.toggle('show',sel>0);
+  }
+}
+
+/* ── PROGRESS ── */
+function updateProgress(){
+  const done=LESSONS.filter(l=>S.done[l]).length;
+  const pct=Math.round(done/LESSONS.length*100);
+  const ring=document.getElementById('pring');
+  const pringPct=document.getElementById('pring-pct');
+  const progDone=document.getElementById('prog-done');
+  if(ring)ring.style.strokeDashoffset=120-(120*pct/100);
+  if(pringPct)pringPct.textContent=pct+'%';
+  if(progDone)progDone.textContent=done+' / '+LESSONS.length+' Lessons';
+}
+function updateSidebar(){
+  LESSONS.forEach(lid=>{
+    const item=document.getElementById('nav-'+lid);if(!item)return;
+    item.classList.remove('done','flagged');
+    const badge=item.querySelector('.si-badge');if(badge)badge.remove();
+    if(S.done[lid]){
+      item.classList.add('done');
+      const b=document.createElement('div');
+      b.className='si-badge '+(S.activated[lid]==='cf'?'cf':'fl');
+      b.textContent=S.activated[lid]==='cf'?'SEALED':'REVIEW';
+      item.appendChild(b);
+    }
+    if(S.flags[lid])item.classList.add('flagged');
+  });
+}
+function buildDoneSummary(){
+  const done=LESSONS.filter(l=>S.done[l]);
+  const cf=LESSONS.filter(l=>S.activated[l]==='cf').length;
+  const fl=LESSONS.filter(l=>S.flags[l]).length;
+  const txt=document.getElementById('done-summary-text');
+  if(txt){
+    if(done.length<LESSONS.length){
+      txt.textContent=`${done.length} of ${LESSONS.length} lessons sealed. Complete all lessons to fully activate Phase 2.`;
+    }else if(fl>0){
+      txt.textContent=`All ${LESSONS.length} lessons sealed. ${cf} CONFIRMED — ${fl} flagged for deeper integration. Phase 2 architecture is active.`;
+    }else{
+      txt.textContent=`All ${LESSONS.length} lessons CONFIRMED. Phase 2 architecture fully sealed. Identity reconstructed. Wealth field designed. Ready for Phase 3 deployment.`;
+    }
+  }
+}
+
+/* ── INIT ── */
+function initUI(){
+  load();
+  updateSidebar();updateProgress();
+  LESSONS.forEach(lid=>{
+    if(S.notes[lid])showPrev(lid);
+    if(S.done[lid]){
+      const gate=document.getElementById('act-'+lid);
+      const result=document.getElementById('actr-'+lid);
+      const lbl=document.getElementById('actr-lbl-'+lid);
+      const txt=document.getElementById('actr-txt-'+lid);
+      const btns=gate?gate.querySelectorAll('button'):[];
+      btns.forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+      if(result&&lbl&&txt){
+        if(S.activated[lid]==='cf'){result.className='act-result cf';lbl.textContent='◆ CONFIRMED — SEALED';txt.textContent='This lesson has been architecturally integrated.';}
+        else{result.className='act-result fl';lbl.textContent='⬡ FLAGGED FOR REVIEW';txt.textContent='This lesson has been marked for deeper integration.';}
+      }
+      const bnext=document.getElementById('bnext-'+lid);if(bnext)bnext.classList.add('show');
+    }
+  });
+  if(S.p77deployed&&S.p77deployed.length){
+    S.p77deployed.forEach(idx=>{
+      const ph=document.getElementById('p77-'+idx);if(!ph)return;
+      ph.classList.add('deployed');
+      const btn=ph.querySelector('.p77-deploy-btn');if(btn){btn.textContent='DEPLOYED ◆';btn.disabled=true;}
+    });
+  }
+  nav('welcome');
+}
+
+window.addEventListener('load',()=>boot());
+
+/* ═══ WORKBOOK ═══ */
+const WBL=[
+  {id:'m31',lbl:'M3.1 — THE IDENTITY STACK',mod:'M003'},
+  {id:'m32',lbl:'M3.2 — SOVEREIGNTY SPECTRUM',mod:'M003'},
+  {id:'m33',lbl:'M3.3 — PROTOCOL 77 ADVANCED',mod:'M003'},
+  {id:'m41',lbl:'M4.1 — WEALTH FIELD DESIGN',mod:'M004'},
+  {id:'m42',lbl:'M4.2 — INCOME STREAM ARCHITECT',mod:'M004'},
+];
+const WBMODS=[
+  {id:'M003',lbl:'MODULE 003 // IDENTITY ARCHITECTURE'},
+  {id:'M004',lbl:'MODULE 004 // WEALTH FIELD MECHANICS'},
+];
+let wbPrev='welcome';
+function wbOpen(){
+  wbPrev=curScreen||'welcome';
+  const sc=document.getElementById('screen-workbook');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  sc.classList.add('active');
+  document.getElementById('main').scrollTo({top:0,behavior:'instant'});
+  document.getElementById('nav-workbook').classList.add('active');
+  wbTrigger(sc);
+  setTimeout(()=>wbRender(),80);
+  if(window.innerWidth<=768)closeSidebar();
+}
+function wbTrigger(sc){
+  const fl=document.getElementById('wb-flash');
+  fl.style.transition='none';fl.style.opacity='1';void fl.offsetWidth;
+  setTimeout(()=>{fl.style.transition='opacity 0.55s';fl.style.opacity='0';},80);
+  sc.classList.remove('wb-active');
+  sc.style.opacity='0';sc.style.transform='perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px)';sc.style.filter='blur(18px)';
+  void sc.offsetWidth;
+  sc.style.opacity='';sc.style.transform='';sc.style.filter='';
+  sc.classList.add('wb-active');
+}
+function wbRender(){
+  const done=LESSONS.filter(id=>S.done[id]).length;
+  const flagged=LESSONS.filter(id=>S.done[id]&&S.activated[id]==='fl').length;
+  const noted=WBL.filter(l=>S.notes[l.id]&&S.notes[l.id].trim()).length;
+  document.getElementById('wb-stats').innerHTML=`<span>LOCKED: <b>${done}/${LESSONS.length}</b></span><span>FLAGGED: <b>${flagged}</b></span><span>NOTES: <b>${noted}/${WBL.length}</b></span>`;
+  const cont=document.getElementById('wb-content');cont.innerHTML='';
+  WBMODS.forEach((mod,mi)=>{
+    const grp=document.createElement('div');grp.className='wb-phase-grp';
+    grp.style.animationDelay=(0.08+mi*0.12)+'s';
+    let html=`<div class="wb-phase-hdr">// ${mod.lbl}</div>`;
+    WBL.filter(l=>l.mod===mod.id).forEach(l=>{
+      const note=S.notes[l.id]||'';
+      const isCf=S.done[l.id]&&S.activated[l.id]==='cf';
+      const isFl=S.done[l.id]&&S.activated[l.id]==='fl';
+      const cls=isCf?'wb-cf':isFl?'wb-fl':'wb-pd';
+      const badge=isCf?'<span class="wb-ebadge cf">✓ LOCKED</span>':isFl?'<span class="wb-ebadge fl">⚑ FLAGGED</span>':'<span class="wb-ebadge pd">○ PENDING</span>';
+      const noteHtml=note?`<div class="wb-enote">${note.replace(/</g,'&lt;')}</div>`:`<div class="wb-empty">// NO FIELD NOTE RECORDED</div>`;
+      html+=`<div class="wb-entry ${cls}" onclick="wbGoLesson('${l.id}')"><div class="wb-etop"><span class="wb-elbl">${l.lbl}</span>${badge}</div>${noteHtml}</div>`;
+    });
+    grp.innerHTML=html;cont.appendChild(grp);
+  });
+  const strat=S.notes['wb-strat']||'';
+  const pv=document.getElementById('fn-prev-wb-strat');
+  const pt=document.getElementById('fn-prev-wb-strat-txt');
+  const ta=document.getElementById('fn-wb-strat');
+  if(strat&&pv&&pt){pv.style.display='block';pt.textContent=strat;ta.value='';}
+  else if(pv){pv.style.display='none';}
+}
+function wbGoLesson(id){nav(id);}
+function wbReturn(){nav(wbPrev);}
+function wbSaveStrat(){
+  const ta=document.getElementById('fn-wb-strat');if(!ta)return;
+  S.notes['wb-strat']=ta.value;save();
+  const btn=document.querySelector('[onclick="wbSaveStrat()"]');
+  if(btn){btn.textContent='// SAVED ✓';setTimeout(()=>{btn.textContent='// SAVE STRATEGY NOTE';},2000);}
+}
+</script>
+</body>
+</html>

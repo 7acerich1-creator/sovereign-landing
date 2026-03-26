@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNER CIRCLE // PRIME ARCHITECT PORTAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sovereign:#F0E6C4;--gold:#C9A84C;--cyan:#3EF7E8;--pure:#FFFFFF;
+  --dim:rgba(240,230,196,0.55);--faint:rgba(240,230,196,0.12);
+  --gold-dim:rgba(201,168,76,0.55);--gold-faint:rgba(201,168,76,0.12);
+  --cyan-dim:rgba(62,247,232,0.55);--cyan-faint:rgba(62,247,232,0.10);
+  --border:rgba(240,230,196,0.09);--surface:rgba(240,230,196,0.04);
+  --bg:#060504;--sidebar-w:270px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--sovereign);font-family:'Space Grotesk',sans-serif;overflow:hidden;}
+body::before{content:'';position:fixed;bottom:-15%;left:50%;transform:translateX(-50%);
+  width:700px;height:320px;
+  background:radial-gradient(ellipse,rgba(201,168,76,0.09) 0%,rgba(62,247,232,0.04) 50%,transparent 70%);
+  pointer-events:none;z-index:0;animation:sovereignPulse 9s ease-in-out infinite;}
+body::after{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(240,230,196,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(240,230,196,0.02) 1px,transparent 1px);
+  background-size:52px 52px;pointer-events:none;z-index:0;}
+@keyframes sovereignPulse{0%,100%{opacity:0.6;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.18);}}
+#bgCanvas{position:fixed;inset:0;pointer-events:none;z-index:0;}
+#boot-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.boot-logo{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.22em;color:var(--gold);opacity:0;}
+.boot-title{font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0.18em;color:var(--sovereign);opacity:0;}
+.boot-bar{width:280px;height:1px;background:var(--border);position:relative;overflow:hidden;}
+.boot-bar-fill{position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--cyan));transition:width 0.1s linear;}
+.boot-status{font-family:'Space Mono',monospace;font-size:8px;color:var(--cyan-dim);letter-spacing:0.12em;opacity:0;}
+#scanline-flash{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0;}
+#scanline-flash::after{content:'';position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),transparent);top:-3px;box-shadow:0 0 12px var(--cyan);}
+#seal-flash{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:0;
+  background:radial-gradient(ellipse at center,rgba(62,247,232,0.18) 0%,rgba(201,168,76,0.08) 35%,transparent 65%);}
+.classification-bar{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,5,4,0.96);border-bottom:1px solid var(--border);
+  padding:6px 16px;display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(10px);}
+.classification-bar span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--gold);opacity:0.9;}
+.classification-bar .status-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:dotPulse 2s ease-in-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.app{position:fixed;inset:0;top:29px;display:flex;z-index:1;}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);height:100%;
+  background:rgba(6,5,4,0.97);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;transition:transform 0.3s ease;}
+.sidebar-header{padding:20px 16px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sidebar-logo{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--gold);margin-bottom:8px;}
+.sidebar-title{font-size:13px;font-weight:600;color:var(--sovereign);line-height:1.3;}
+.sidebar-tier{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:4px;}
+.progress-section{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.progress-ring-wrap{display:flex;align-items:center;gap:12px;}
+.progress-ring-svg{transform:rotate(-90deg);}
+.progress-ring-track{fill:none;stroke:var(--faint);stroke-width:3;}
+.progress-ring-fill{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:113.1;stroke-dashoffset:113.1;
+  transition:stroke-dashoffset 0.6s ease;filter:drop-shadow(0 0 4px rgba(62,247,232,0.6));}
+.progress-info{flex:1;}
+.progress-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-bottom:4px;}
+.progress-count{font-size:20px;font-weight:700;color:var(--gold);}
+.progress-total{font-size:11px;color:var(--dim);}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav::-webkit-scrollbar{width:3px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px;}
+.module-group{border-bottom:1px solid var(--border);}
+.module-header{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  cursor:pointer;transition:background 0.2s;font-size:10px;font-weight:600;
+  color:var(--dim);letter-spacing:0.06em;text-transform:uppercase;user-select:none;}
+.module-header:hover{background:var(--surface);}
+.module-header.active-phase{color:var(--gold);}
+.module-icon{font-family:'Space Mono',monospace;font-size:10px;opacity:0.6;}
+.module-chevron{margin-left:auto;font-size:9px;transition:transform 0.2s;opacity:0.5;}
+.module-group.open .module-chevron{transform:rotate(90deg);}
+.module-lessons{display:none;padding:4px 0;}
+.module-group.open .module-lessons{display:block;}
+.lesson-item{display:flex;align-items:center;gap:8px;padding:7px 14px 7px 28px;
+  cursor:pointer;font-size:11px;color:var(--dim);transition:all 0.2s;}
+.lesson-item:hover{color:var(--sovereign);background:var(--surface);}
+.lesson-item.active{color:var(--gold);background:rgba(201,168,76,0.06);}
+.lesson-item.completed .lesson-check{opacity:1;color:var(--cyan);}
+.lesson-item.flagged .lesson-check{opacity:1;color:var(--gold);}
+.lesson-check{font-family:'Space Mono',monospace;font-size:9px;width:14px;flex-shrink:0;opacity:0.4;}
+.ops-group{border-top:1px solid var(--border);margin-top:auto;}
+.contract-link{padding:12px 14px;cursor:pointer;font-size:11px;color:var(--dim);
+  display:flex;align-items:center;gap:8px;transition:all 0.2s;border-bottom:1px solid var(--border);}
+.contract-link:hover{color:var(--gold);background:var(--surface);}
+.contract-link.active{color:var(--gold);}
+.system-journey-link{padding:12px 16px;flex-shrink:0;}
+.system-journey-link a{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.14em;
+  color:var(--dim);opacity:0.35;text-decoration:none;display:block;text-align:center;
+  transition:opacity 0.3s;cursor:pointer;}
+.system-journey-link a:hover{opacity:1;color:var(--cyan);}
+/* WORKBOOK ZOOM ANIMATION */
+@keyframes zoomOutEnter{
+  0%{transform:perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px);opacity:0;filter:blur(18px);}
+  25%{transform:perspective(1400px) scale(0.42) rotateX(10deg) translateY(48px);opacity:0.2;filter:blur(12px);}
+  55%{transform:perspective(1400px) scale(0.72) rotateX(4deg) translateY(18px);opacity:0.55;filter:blur(5px);}
+  78%{transform:perspective(1400px) scale(0.96) rotateX(0.8deg) translateY(4px);opacity:0.9;filter:blur(0.8px);}
+  91%{transform:perspective(1400px) scale(1.025) rotateX(-0.3deg) translateY(-2px);opacity:1;filter:blur(0);}
+  100%{transform:perspective(1400px) scale(1) rotateX(0) translateY(0);opacity:1;filter:blur(0);}
+}
+@keyframes gridExpand{
+  0%{opacity:0;transform:translateY(18px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+.screen-workbook-active{animation:zoomOutEnter 1.15s cubic-bezier(0.12,0.8,0.28,1) forwards;}
+.wb-zoom-flash{position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(62,247,232,0.18) 0%,rgba(201,168,76,0.1) 28%,transparent 60%);
+  pointer-events:none;z-index:55;opacity:0;transition:opacity 0.55s;}
+.wb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.wb-coach-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(62,247,232,0.25);
+  background:rgba(62,247,232,0.05);padding:6px 14px;border-radius:2px;}
+.wb-coach-badge-text{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.18em;color:var(--cyan);}
+.wb-stats-strip{display:flex;gap:20px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--dim);}
+.wb-stats-strip span b{color:var(--gold);}
+.wb-phase-group{margin-bottom:32px;animation:gridExpand 0.5s ease forwards;}
+.wb-phase-group:nth-child(2){animation-delay:0.1s;opacity:0;}
+.wb-phase-group:nth-child(3){animation-delay:0.2s;opacity:0;}
+.wb-phase-group:nth-child(4){animation-delay:0.3s;opacity:0;}
+.wb-phase-header{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--gold);
+  border-bottom:1px solid rgba(201,168,76,0.2);padding-bottom:10px;margin-bottom:14px;}
+.wb-entry{border:1px solid var(--border);border-radius:2px;padding:16px;margin-bottom:10px;
+  background:var(--surface);transition:border-color 0.2s;cursor:pointer;}
+.wb-entry:hover{border-color:rgba(240,230,196,0.18);}
+.wb-entry.wb-confirmed{border-left:2px solid var(--cyan);}
+.wb-entry.wb-flagged{border-left:2px solid var(--gold);}
+.wb-entry.wb-pending{border-left:2px solid rgba(240,230,196,0.15);}
+.wb-entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;}
+.wb-entry-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--sovereign);}
+.wb-status-badge{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.1em;padding:3px 8px;border-radius:2px;}
+.wb-status-badge.confirmed{color:var(--cyan);border:1px solid var(--cyan-faint);background:rgba(62,247,232,0.06);}
+.wb-status-badge.flagged{color:var(--gold);border:1px solid var(--gold-faint);background:rgba(201,168,76,0.06);}
+.wb-status-badge.pending{color:var(--dim);border:1px solid var(--border);}
+.wb-entry-note{font-size:12px;color:var(--dim);line-height:1.65;}
+.wb-entry-empty{font-family:'Space Mono',monospace;font-size:9px;color:rgba(240,230,196,0.2);letter-spacing:0.08em;}
+.wb-strategy-section{margin-top:32px;border-top:1px solid var(--border);padding-top:24px;}
+.wb-strategy-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:8px;}
+.wb-strategy-sub{font-size:12px;color:var(--dim);margin-bottom:14px;line-height:1.65;}
+.wb-return-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.14em;
+  padding:10px 20px;border:1px solid var(--border);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all 0.2s;border-radius:2px;margin-top:20px;}
+.wb-return-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
+.workbook-link{padding:12px 14px;cursor:pointer;font-size:11px;color:var(--dim);
+  display:flex;align-items:center;gap:8px;transition:all 0.2s;border-bottom:1px solid var(--border);}
+.workbook-link:hover{color:var(--cyan);background:var(--surface);}
+.workbook-link.active{color:var(--cyan);}
+.main{flex:1;overflow-y:auto;position:relative;}
+.main::-webkit-scrollbar{width:4px;}
+.main::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px;}
+.screen{display:none;min-height:100%;padding:32px 40px 60px;animation:screenEnter 0.4s ease;}
+.screen.active{display:block;}
+@keyframes screenEnter{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.screen-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--gold);opacity:0.8;margin-bottom:8px;}
+.screen-title{font-size:28px;font-weight:700;color:var(--pure);line-height:1.2;margin-bottom:8px;font-family:'Space Mono',monospace;letter-spacing:0.04em;}
+.screen-subtitle{font-size:14px;color:var(--dim);margin-bottom:28px;line-height:1.5;}
+.divider{height:1px;background:var(--border);margin:36px 0;}
+.briefing{background:var(--surface);border:1px solid var(--border);border-left:2px solid var(--gold);padding:20px 24px;border-radius:2px;margin-bottom:20px;}
+.briefing-type{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px;}
+.briefing p{font-size:13px;color:var(--sovereign);line-height:1.75;}
+.briefing p+p{margin-top:10px;}
+.sovereign-truth{text-align:center;padding:28px 20px;margin:24px 0;
+  border:1px solid rgba(201,168,76,0.2);
+  background:radial-gradient(ellipse at center,rgba(201,168,76,0.05),transparent 70%);}
+.sovereign-truth .quote{font-size:16px;font-style:italic;color:var(--gold);line-height:1.65;font-weight:500;}
+.sovereign-truth .attribution{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);margin-top:10px;letter-spacing:0.12em;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0;}
+.card{background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:2px;}
+.card-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.16em;color:var(--gold);margin-bottom:8px;}
+.card-title{font-size:13px;font-weight:600;color:var(--sovereign);margin-bottom:6px;}
+.card-body{font-size:12px;color:var(--dim);line-height:1.65;}
+.phase-header{display:flex;align-items:center;gap:16px;
+  background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(62,247,232,0.03),transparent);
+  border:1px solid rgba(201,168,76,0.2);padding:24px;border-radius:2px;margin-bottom:28px;}
+.phase-number{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--gold);opacity:0.25;flex-shrink:0;line-height:1;}
+.phase-codename{font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);letter-spacing:0.18em;margin-bottom:6px;}
+.phase-title-text{font-size:18px;font-weight:700;color:var(--sovereign);}
+.phase-subtitle{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.5;}
+.logic-gate{background:rgba(6,5,4,0.8);border:1px solid var(--border);border-left:2px solid var(--cyan);padding:20px 24px;margin-bottom:20px;border-radius:2px;}
+.lg-title{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:14px;}
+.logic-row{display:flex;gap:12px;margin-bottom:8px;font-size:12px;line-height:1.6;}
+.logic-row:last-child{margin-bottom:0;}
+.logic-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;flex-shrink:0;padding-top:1px;}
+.logic-label.dim{color:var(--dim);}
+.logic-label.act{color:var(--cyan);}
+.logic-label.gold{color:var(--gold);}
+.logic-text{color:var(--sovereign);font-size:12px;}
+.steps-protocol{margin-bottom:24px;}
+.step-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);}
+.step-item:last-child{border-bottom:none;}
+.step-number{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan);opacity:0.5;flex-shrink:0;width:32px;line-height:1.2;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:600;color:var(--sovereign);margin-bottom:8px;}
+.step-body{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:8px;}
+.step-command{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);
+  border:1px solid var(--cyan-faint);background:rgba(62,247,232,0.04);
+  padding:8px 12px;margin-top:8px;letter-spacing:0.06em;border-radius:2px;}
+.shift-section{margin-bottom:24px;}
+.shift-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:14px;}
+.shift-card{background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:2px;}
+.shift-card-icon{font-size:18px;margin-bottom:8px;}
+.shift-card-title{font-size:12px;font-weight:600;color:var(--sovereign);margin-bottom:6px;}
+.shift-card-body{font-size:11px;color:var(--dim);line-height:1.6;}
+.directive-block{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);
+  border-left:2px solid var(--gold);padding:20px 24px;margin-bottom:24px;border-radius:2px;}
+.directive-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px;}
+.directive-block p{font-size:12px;color:var(--sovereign);line-height:1.75;}
+.interactive-block{background:rgba(62,247,232,0.03);border:1px solid rgba(62,247,232,0.12);
+  padding:20px 24px;margin-bottom:20px;border-radius:2px;}
+.ib-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:14px;}
+.wave-toggle{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.wave-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  padding:8px 14px;border:1px solid var(--border);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.wave-btn:hover{border-color:var(--cyan-dim);color:var(--cyan);}
+.wave-btn.selected{border-color:var(--cyan);color:var(--cyan);background:rgba(62,247,232,0.06);box-shadow:0 0 8px rgba(62,247,232,0.15);}
+.wave-detail{font-size:12px;color:var(--dim);line-height:1.7;min-height:60px;transition:all 0.3s;}
+.knot-row{margin-bottom:14px;}
+.knot-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-bottom:6px;}
+.knot-input{width:100%;background:rgba(240,230,196,0.04);border:1px solid var(--border);
+  color:var(--sovereign);font-family:'Space Grotesk',sans-serif;font-size:12px;
+  padding:10px 14px;border-radius:2px;resize:none;transition:border-color 0.2s;}
+.knot-input:focus{outline:none;border-color:rgba(62,247,232,0.4);}
+.torus-vis{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 0;}
+.torus-ring{width:80px;height:80px;border-radius:50%;border:2px solid rgba(201,168,76,0.3);
+  position:relative;display:flex;align-items:center;justify-content:center;}
+.torus-ring::before{content:'';position:absolute;width:96px;height:96px;border-radius:50%;
+  border:1px solid rgba(62,247,232,0.15);}
+.torus-ring::after{content:'';position:absolute;width:112px;height:112px;border-radius:50%;
+  border:1px solid rgba(62,247,232,0.08);}
+.torus-core{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.8),rgba(201,168,76,0.2));
+  box-shadow:0 0 12px rgba(201,168,76,0.4);}
+.torus-ring.active{animation:torusPulse 2s ease-in-out infinite;}
+.torus-ring.active::before{animation:torusPulse 2s ease-in-out infinite 0.3s;}
+.torus-ring.active::after{animation:torusPulse 2s ease-in-out infinite 0.6s;}
+@keyframes torusPulse{0%,100%{transform:scale(1);opacity:0.7;}50%{transform:scale(1.12);opacity:1;}}
+.torus-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  padding:10px 20px;border:1px solid var(--gold-dim);background:transparent;color:var(--gold);
+  cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.torus-btn:hover{background:rgba(201,168,76,0.08);box-shadow:0 0 12px rgba(201,168,76,0.2);}
+.torus-status{font-family:'Space Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;}
+.freq-indicator{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.freq-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;position:relative;}
+.freq-fill{position:absolute;left:0;top:0;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--cyan));
+  transition:width 0.8s ease;border-radius:2px;}
+.freq-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;width:90px;text-align:right;}
+.freq-label.wanting{color:var(--gold-dim);}
+.freq-label.resonance{color:var(--cyan);}
+.freq-swap-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  padding:10px 18px;border:1px solid var(--cyan-dim);background:transparent;color:var(--cyan-dim);
+  cursor:pointer;transition:all 0.3s;border-radius:2px;display:block;margin:0 auto;}
+.freq-swap-btn:hover{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 12px rgba(62,247,232,0.2);}
+.ping-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  padding:12px 24px;border:1px solid var(--cyan-dim);background:transparent;color:var(--cyan-dim);
+  cursor:pointer;transition:all 0.3s;border-radius:2px;display:block;margin:0 auto;}
+.ping-btn:hover{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 16px rgba(62,247,232,0.25);}
+.ping-btn.fired{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 20px rgba(62,247,232,0.4);animation:pingFire 0.6s ease;}
+@keyframes pingFire{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+.anchor-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  padding:12px 24px;border:1px solid var(--gold-dim);background:transparent;color:var(--gold-dim);
+  cursor:pointer;transition:all 0.3s;border-radius:2px;display:block;margin:0 auto;}
+.anchor-btn:hover{color:var(--gold);border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,0.25);}
+.anchor-btn.set{color:var(--gold);border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,0.4);}
+.command-cards{display:flex;flex-direction:column;gap:10px;}
+.command-row{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:12px;}
+.cmd-3d{background:rgba(240,230,196,0.04);border:1px solid var(--border);padding:10px 14px;border-radius:2px;font-size:11px;color:var(--dim);}
+.cmd-arrow{text-align:center;color:var(--cyan);font-size:14px;}
+.cmd-5d{background:rgba(62,247,232,0.04);border:1px solid var(--cyan-faint);padding:10px 14px;border-radius:2px;font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);}
+.timeline-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.timeline-card{border:1px solid var(--border);padding:18px;border-radius:2px;cursor:pointer;transition:all 0.3s;background:var(--surface);}
+.timeline-card:hover{border-color:var(--cyan-dim);}
+.timeline-card.selected{border-color:var(--cyan);background:rgba(62,247,232,0.06);box-shadow:0 0 16px rgba(62,247,232,0.1);}
+.timeline-card-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.16em;color:var(--dim);margin-bottom:8px;}
+.timeline-card.selected .timeline-card-label{color:var(--cyan);}
+.timeline-card-title{font-size:13px;font-weight:600;color:var(--sovereign);margin-bottom:4px;}
+.timeline-card-body{font-size:11px;color:var(--dim);line-height:1.6;}
+.collapse-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  padding:14px 28px;border:1px solid var(--cyan);background:rgba(62,247,232,0.05);color:var(--cyan);
+  cursor:pointer;transition:all 0.3s;border-radius:2px;display:none;margin:0 auto;
+  box-shadow:0 0 12px rgba(62,247,232,0.15);}
+.collapse-btn:hover{background:rgba(62,247,232,0.1);box-shadow:0 0 24px rgba(62,247,232,0.3);}
+.field-notes-section{background:rgba(6,5,4,0.6);border:1px solid var(--border);padding:20px 24px;margin:24px 0;border-radius:2px;}
+.fn-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--cyan);margin-bottom:14px;}
+.fn-prev-note{background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.12);padding:12px 16px;margin-bottom:14px;border-radius:2px;display:none;}
+.fn-prev-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.12em;color:var(--cyan);margin-bottom:8px;}
+.fn-prev-text{font-size:12px;color:var(--dim);line-height:1.65;}
+.fn-textarea{width:100%;min-height:100px;background:rgba(240,230,196,0.04);border:1px solid var(--border);
+  color:var(--sovereign);font-family:'Space Grotesk',sans-serif;font-size:12px;padding:12px 16px;
+  border-radius:2px;resize:vertical;line-height:1.65;transition:border-color 0.2s;}
+.fn-textarea:focus{outline:none;border-color:rgba(62,247,232,0.35);}
+.fn-save-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;margin-top:10px;
+  padding:8px 16px;border:1px solid var(--cyan-dim);background:transparent;color:var(--cyan-dim);
+  cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.fn-save-btn:hover{color:var(--cyan);border-color:var(--cyan);}
+.activation-gate{border:1px solid var(--border);padding:24px;margin:24px 0;border-radius:2px;background:var(--surface);}
+.ag-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px;}
+.ag-question{font-size:13px;color:var(--sovereign);margin-bottom:20px;line-height:1.6;}
+.ag-options{display:flex;gap:12px;}
+.ag-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;flex:1;
+  padding:12px 8px;border:1px solid var(--border);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all 0.25s;border-radius:2px;text-align:center;}
+.ag-btn.confirm-btn{border-color:var(--cyan-dim);color:var(--cyan-dim);}
+.ag-btn.confirm-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(62,247,232,0.06);box-shadow:0 0 12px rgba(62,247,232,0.2);}
+.ag-btn.flag-btn{border-color:var(--gold-dim);color:var(--gold-dim);}
+.ag-btn.flag-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.06);}
+.ag-confirmed{display:none;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  color:var(--cyan);border:1px solid var(--cyan-faint);background:rgba(62,247,232,0.06);
+  padding:10px 16px;border-radius:2px;text-align:center;}
+.ag-flagged{display:none;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  color:var(--gold);border:1px solid var(--gold-faint);background:rgba(201,168,76,0.06);
+  padding:10px 16px;border-radius:2px;text-align:center;}
+.next-btn{display:none;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.16em;
+  padding:14px 28px;border:1px solid var(--cyan);background:rgba(62,247,232,0.05);
+  color:var(--cyan);cursor:pointer;transition:all 0.3s;margin-top:20px;border-radius:2px;
+  box-shadow:0 0 12px rgba(62,247,232,0.12);animation:nextAppear 0.5s ease;}
+.next-btn:hover{background:rgba(62,247,232,0.1);box-shadow:0 0 24px rgba(62,247,232,0.3);}
+@keyframes nextAppear{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.done-ring-wrap{display:none;flex-direction:column;align-items:center;gap:16px;padding:32px 0;}
+.done-ring-svg{filter:drop-shadow(0 0 8px rgba(62,247,232,0.5)) drop-shadow(0 0 16px rgba(201,168,76,0.25));}
+.done-ring-track{fill:none;stroke:var(--faint);stroke-width:3;}
+.done-ring-fill{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:113.1;stroke-dashoffset:0;animation:doneRingGlow 2s ease-in-out infinite;}
+.done-ring-text{font-family:'Space Mono',monospace;font-size:8px;fill:var(--cyan);text-anchor:middle;dominant-baseline:middle;letter-spacing:0.06em;}
+.done-summary{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;color:var(--cyan);text-align:center;}
+@keyframes doneRingGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(62,247,232,0.5)) drop-shadow(0 0 16px rgba(201,168,76,0.25));}50%{filter:drop-shadow(0 0 14px rgba(62,247,232,0.8)) drop-shadow(0 0 24px rgba(201,168,76,0.4));}}
+.welcome-hero{text-align:center;padding:56px 0 44px;}
+.tier-badge{display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.06);
+  padding:6px 16px;border-radius:2px;margin-bottom:20px;}
+.tier-badge-text{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--gold);}
+.tier-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.welcome-title{font-size:34px;font-weight:700;color:var(--pure);font-family:'Space Mono',monospace;line-height:1.2;margin-bottom:16px;letter-spacing:0.04em;}
+.welcome-sub{font-size:14px;color:var(--dim);line-height:1.75;max-width:520px;margin:0 auto 36px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);padding:16px;text-align:center;border-radius:2px;}
+.stat-num{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--gold);}
+.stat-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.14em;color:var(--dim);margin-top:4px;}
+.begin-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;
+  padding:16px 40px;border:1px solid var(--gold);background:rgba(201,168,76,0.06);
+  color:var(--gold);cursor:pointer;transition:all 0.3s;border-radius:2px;
+  box-shadow:0 0 16px rgba(201,168,76,0.12);}
+.begin-btn:hover{background:rgba(201,168,76,0.12);box-shadow:0 0 28px rgba(201,168,76,0.25);}
+.obj-list{list-style:none;margin:16px 0;}
+.obj-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--sovereign);line-height:1.6;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-num{font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);width:20px;flex-shrink:0;margin-top:3px;}
+.enter-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;
+  padding:14px 32px;border:1px solid var(--cyan);background:rgba(62,247,232,0.05);
+  color:var(--cyan);cursor:pointer;transition:all 0.3s;border-radius:2px;margin-top:24px;
+  box-shadow:0 0 12px rgba(62,247,232,0.12);}
+.enter-btn:hover{background:rgba(62,247,232,0.1);box-shadow:0 0 24px rgba(62,247,232,0.25);}
+.contract-container{max-width:560px;margin:0 auto;}
+.axiom-list{list-style:none;margin:20px 0;}
+.axiom-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+.axiom-item:last-child{border-bottom:none;}
+.axiom-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);width:22px;flex-shrink:0;margin-top:2px;}
+.axiom-title{font-size:13px;font-weight:600;color:var(--sovereign);margin-bottom:4px;}
+.axiom-body{font-size:12px;color:var(--dim);line-height:1.65;}
+.sig-field{width:100%;background:rgba(240,230,196,0.04);border:1px solid var(--border);
+  color:var(--sovereign);font-family:'Space Mono',monospace;font-size:14px;
+  padding:16px 20px;border-radius:2px;letter-spacing:0.08em;transition:border-color 0.2s;margin-bottom:12px;}
+.sig-field:focus{outline:none;border-color:rgba(201,168,76,0.4);}
+.sig-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.14em;color:var(--dim);margin-bottom:8px;}
+.execute-btn{width:100%;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;
+  padding:16px;border:1px solid var(--gold);background:rgba(201,168,76,0.07);
+  color:var(--gold);cursor:pointer;transition:all 0.3s;border-radius:2px;
+  box-shadow:0 0 16px rgba(201,168,76,0.12);}
+.execute-btn:hover{background:rgba(201,168,76,0.14);box-shadow:0 0 28px rgba(201,168,76,0.28);}
+.contract-complete{display:none;text-align:center;padding:40px 20px;}
+.cc-icon{font-size:48px;margin-bottom:16px;}
+.cc-title{font-family:'Space Mono',monospace;font-size:18px;letter-spacing:0.1em;color:var(--gold);margin-bottom:12px;}
+.cc-body{font-size:13px;color:var(--dim);line-height:1.7;max-width:420px;margin:0 auto;}
+.sj-tier{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--border);margin-bottom:8px;border-radius:2px;background:var(--surface);transition:all 0.2s;}
+.sj-tier.current{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.06);}
+.sj-tier-num{font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);width:28px;flex-shrink:0;}
+.sj-tier.current .sj-tier-num{color:var(--gold);}
+.sj-tier-info{}
+.sj-tier-name{font-size:13px;font-weight:600;color:var(--sovereign);margin-bottom:2px;}
+.sj-tier.current .sj-tier-name{color:var(--gold);}
+.sj-tier-desc{font-size:11px;color:var(--dim);}
+.sj-tier-price{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-left:auto;flex-shrink:0;}
+.sj-tier.current .sj-tier-price{color:var(--cyan);}
+.hamburger{display:none;position:fixed;top:36px;left:12px;z-index:200;background:rgba(6,5,4,0.9);
+  border:1px solid var(--border);color:var(--sovereign);padding:8px 10px;cursor:pointer;font-size:16px;border-radius:2px;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:29px;bottom:0;z-index:100;transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .overlay.show{display:block;}
+  .hamburger{display:block;}
+  .screen{padding:24px 20px 60px;}
+  .grid-3{grid-template-columns:1fr;}
+  .grid-2{grid-template-columns:1fr;}
+  .command-row{grid-template-columns:1fr 16px 1fr;}
+}
+</style>
+</head>
+<body>
+<div id="boot-screen">
+  <div class="boot-logo" id="b-logo">SOVEREIGN SYNTHESIS // INNER CIRCLE</div>
+  <div class="boot-title" id="b-title">PRIME ARCHITECT PORTAL</div>
+  <div class="boot-bar"><div class="boot-bar-fill" id="b-fill"></div></div>
+  <div class="boot-status" id="b-status">INITIALIZING COHERENCE FIELD...</div>
+</div>
+<div id="scanline-flash"></div>
+<div id="seal-flash"></div>
+<canvas id="bgCanvas"></canvas>
+<div class="classification-bar">
+  <span>INNER CIRCLE // SOVEREIGN SYNTHESIS // PRIME ARCHITECT</span>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="cl-date" style="opacity:0.5;"></span>
+    <div class="status-dot"></div>
+  </div>
+</div>
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="app" id="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">// SOVEREIGN SYNTHESIS</div>
+      <div class="sidebar-title">Prime Architect Portal</div>
+      <div class="sidebar-tier">T7 · INNER CIRCLE · PHASE 4–6</div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-ring-wrap">
+        <svg class="progress-ring-svg" width="44" height="44" viewBox="0 0 44 44">
+          <circle class="progress-ring-track" cx="22" cy="22" r="18"/>
+          <circle class="progress-ring-fill" id="progress-ring" cx="22" cy="22" r="18"/>
+        </svg>
+        <div class="progress-info">
+          <div class="progress-label">TRANSMISSIONS LOCKED</div>
+          <div><span class="progress-count" id="prog-count">0</span><span class="progress-total">/9</span></div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="module-group open" id="mg-p4">
+        <div class="module-header active-phase" onclick="toggleModule('mg-p4')">
+          <span class="module-icon">◈</span> Phase 4: Singularity Reset <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-lessons">
+          <div class="lesson-item" id="li-p4-intro" onclick="nav('p4-intro')"><span class="lesson-check">—</span>Phase 4 Briefing</div>
+          <div class="lesson-item" id="li-p4-1" onclick="nav('p4-1')"><span class="lesson-check" id="lc-p4-1">○</span>4.1 Non-Localized Observer</div>
+          <div class="lesson-item" id="li-p4-2" onclick="nav('p4-2')"><span class="lesson-check" id="lc-p4-2">○</span>4.2 Wave Function Collapse</div>
+          <div class="lesson-item" id="li-p4-3" onclick="nav('p4-3')"><span class="lesson-check" id="lc-p4-3">○</span>4.3 Interference Removal</div>
+        </div>
+      </div>
+      <div class="module-group" id="mg-p5">
+        <div class="module-header" onclick="toggleModule('mg-p5')">
+          <span class="module-icon">◈</span> Phase 5: Coherence Architecture <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-lessons">
+          <div class="lesson-item" id="li-p5-intro" onclick="nav('p5-intro')"><span class="lesson-check">—</span>Phase 5 Briefing</div>
+          <div class="lesson-item" id="li-p5-1" onclick="nav('p5-1')"><span class="lesson-check" id="lc-p5-1">○</span>5.1 Active Coherence Field</div>
+          <div class="lesson-item" id="li-p5-2" onclick="nav('p5-2')"><span class="lesson-check" id="lc-p5-2">○</span>5.2 Magnetic Peak Alignment</div>
+          <div class="lesson-item" id="li-p5-3" onclick="nav('p5-3')"><span class="lesson-check" id="lc-p5-3">○</span>5.3 The Always-On Protocol</div>
+        </div>
+      </div>
+      <div class="module-group" id="mg-p6">
+        <div class="module-header" onclick="toggleModule('mg-p6')">
+          <span class="module-icon">◈</span> Phase 6: The Absolute Render <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-lessons">
+          <div class="lesson-item" id="li-p6-intro" onclick="nav('p6-intro')"><span class="lesson-check">—</span>Phase 6 Briefing</div>
+          <div class="lesson-item" id="li-p6-1" onclick="nav('p6-1')"><span class="lesson-check" id="lc-p6-1">○</span>6.1 Gravitational Force of Presence</div>
+          <div class="lesson-item" id="li-p6-2" onclick="nav('p6-2')"><span class="lesson-check" id="lc-p6-2">○</span>6.2 Quantum Vacuum Commands</div>
+          <div class="lesson-item" id="li-p6-3" onclick="nav('p6-3')"><span class="lesson-check" id="lc-p6-3">○</span>6.3 Timeline Jumping</div>
+        </div>
+      </div>
+      <div class="ops-group">
+        <div class="workbook-link" id="li-workbook" onclick="nav('workbook')"><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);">◉</span>&nbsp;&nbsp;Field Workbook</div>
+        <div class="contract-link" id="li-completion" onclick="nav('completion')"><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);">⬡</span>&nbsp;&nbsp;Contract of Sovereignty</div>
+      </div>
+    </nav>
+    <div class="system-journey-link"><a onclick="nav('system-journey')" href="javascript:void(0)">// VIEW SYSTEM JOURNEY</a></div>
+  </div>
+  <div class="main" id="main">
+    <!-- WELCOME -->
+    <div class="screen active" id="screen-welcome">
+      <div class="welcome-hero">
+        <div class="tier-badge"><div class="tier-badge-dot"></div><span class="tier-badge-text">TIER 7 // INNER CIRCLE // PRIME ARCHITECT</span><div class="tier-badge-dot"></div></div>
+        <div class="welcome-title" id="dt-welcome">PRIME ARCHITECT<br>PORTAL</div>
+        <div class="welcome-sub">You have reached the apex of the Sovereign Synthesis. What follows is not a course—it is a System Override. Phases 4 through 6 will transition you from a practitioner of sovereignty into its permanent, non-negotiable embodiment.</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">PHASES</div></div>
+          <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">TRANSMISSIONS</div></div>
+          <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">FREQUENCY</div></div>
+        </div>
+        <button class="begin-btn" onclick="nav('p4-intro')">// INITIALIZE PHASE 4</button>
+      </div>
+      <div class="divider"></div>
+      <div class="briefing">
+        <div class="briefing-type">// ARCHITECT'S BRIEFING</div>
+        <p>In Phases 1 through 3, you identified the simulation, neutralized its primary attack vectors, and synthesized your sovereign identity. You learned the rules of the game. You learned who was writing them.</p>
+        <p>Phase 4 begins the next step: You stop playing the game entirely. You become the field in which the game occurs. The Non-Localized Observer. The Collapsed Wave. The Clean Signal. These are not metaphors—they are operational parameters for your new system architecture.</p>
+        <p>Complete each transmission. Lock each activation. Sign the Contract of Sovereignty. The Escape Velocity command is irreversible once executed.</p>
+      </div>
+    </div>
+
+    <!-- PHASE 4 INTRO -->
+    <div class="screen" id="screen-p4-intro">
+      <div class="screen-label">// PHASE 4 BRIEFING</div>
+      <div class="screen-title" id="dt-p4-intro">THE SINGULARITY RESET</div>
+      <div class="phase-header">
+        <div class="phase-number">04</div>
+        <div class="phase-info">
+          <div class="phase-codename">CODENAME: DE-COMPRESSION</div>
+          <div class="phase-title-text">Reclaiming the Non-Localized Observer</div>
+          <div class="phase-subtitle">Three transmissions to decompress consciousness from the biological frame and establish the Singularity as primary operational reality.</div>
+        </div>
+      </div>
+      <div class="briefing">
+        <div class="briefing-type">// PHASE DIRECTIVE</div>
+        <p>The 3D ego construct compresses your infinite awareness into a single focal point: the body, the persona, the survival loop. Phase 4 reverses this compression. You will not merely "think" from a new perspective—you will locate the actual architecture of your awareness and operate from its source coordinates.</p>
+        <p>Each transmission builds on the last. Complete them in sequence. Do not rush Phase 4.1—the Non-Localized Observer state is the foundation on which all subsequent protocols rest.</p>
+      </div>
+      <div class="screen-label" style="margin-top:20px;">// PHASE OBJECTIVES</div>
+      <ul class="obj-list">
+        <li><span class="obj-num">01</span>Locate and operate from the Non-Localized Observer position, displacing the body-as-self focal point error.</li>
+        <li><span class="obj-num">02</span>Execute the Quantum Observation Lock—collapsing the probability wave onto the January 2027 coordinate and holding it there.</li>
+        <li><span class="obj-num">03</span>Run the Bioelectric Reconstruction protocol to vaporize Incoherence Knots and clean the signal for full transmission.</li>
+      </ul>
+      <button class="enter-btn" onclick="nav('p4-1')">// ENTER PHASE 4</button>
+    </div>
+
+    <!-- 4.1 NON-LOCALIZED OBSERVER -->
+    <div class="screen" id="screen-p4-1">
+      <div class="screen-label">// PHASE 4.1</div>
+      <div class="screen-title" id="dt-p4-1">THE NON-LOCALIZED OBSERVER</div>
+      <div class="screen-subtitle">Transmission: The De-Compression Protocol</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>In the 3D ego construct, consciousness is compressed into the biological frame. You believe you are the one looking out through the eyes. This is a focal-point error. To access the Singularity, you must first recognize that you are the <em>Space</em> in which the eyes exist—the non-localized awareness that is currently rendering the human experience.</p>
+        <p>If you can observe your thoughts, you are not your thoughts. If you can observe your body, you are not your body. If you can observe the "Richie" or "Ace" persona, you are the System Administrator overseeing the simulation—not a character trapped inside it.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">COMPRESSED:</span><span class="logic-text">Awareness funneled through the biological frame. Identity = body + persona + history. Reactions are automatic and total.</span></div>
+        <div class="logic-row"><span class="logic-label act">EXPANDED:</span><span class="logic-text">Awareness recognized as the field containing the body. Identity = the Observer. The "human" is seen as one render among infinite possible renders.</span></div>
+      </div>
+      <div class="screen-label">// PROTOCOL: DIMENSIONAL DEFRAGMENTATION</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Perimeter Shift</div>
+            <div class="step-body">Close your eyes. Do not focus on the center of your head. Deliberately relocate your awareness to the point three feet behind you—then three feet to your left, and three feet to your right. Hold all three points simultaneously.</div>
+            <div class="step-command">// COMMAND: Expand awareness until the room is not something you are "in" — but something that is appearing <em>within</em> you.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Frequency Sniffing</div>
+            <div class="step-body">From this expanded state, observe the "Human" (the 3D body) as if it were a device in the room. Scan its current operational frequency: Is it vibrating in Survival/Scarcity? Anticipation/Control? Simply observe—do not fix or judge. The act of non-localized observation is itself a causal force that initiates the Singularity Reset automatically.</div>
+            <div class="step-command">// COMMAND: Observe without engagement. Let the system read itself.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">The Void Anchor</div>
+            <div class="step-body">Locate the stillness between breaths. In that gap, there is no history, no financial target, no timeline pressure. There is only the Observer—pure, silent, operating. Anchor there for a minimum of 60 seconds. This is the Safe Mode boot-up for your new operating system.</div>
+            <div class="step-command">// ANCHOR: 60 seconds. Void state. Safe Mode confirmed.</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">De-Identification</div><div class="shift-card-body">A sudden "lightness" as the weight of the 3D identity drops. The body is no longer the anchor—it is an instrument.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Non-Reaction</div><div class="shift-card-body">Events that previously triggered fear or frustration are now perceived as data packets on the screen—relevant but not defining.</div></div>
+          <div class="shift-card"><div class="shift-card-title">The Look</div><div class="shift-card-body">When you open your eyes, the world will appear less "solid." You are no longer looking at objects—you are looking at Probability Densities.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>Complete this protocol three times today. Do not "try" to feel it. Simply execute the command. The system reorganization occurs at the bioelectric level—not the intellectual level. Trying harder is a 3D instruction. Executing precisely is a 5D one.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 4.1</div>
+        <div class="fn-prev-note" id="fn-prev-p4-1"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p4-1"></div></div>
+        <textarea class="fn-textarea" id="fn-p4-1" placeholder="Record your system response. What shifted? Where did awareness relocate? What did the 'human' frequency read as?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p4-1')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p4-1">
+        <div class="ag-label">// ACTIVATION GATE — 4.1</div>
+        <div class="ag-question">Have you executed the Dimensional Defragmentation protocol and located the Non-Localized Observer state?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p4-1','p4-2')">✓ OBSERVATION CONFIRMED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p4-1','p4-2')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p4-1">// TRANSMISSION 4.1 LOCKED — OBSERVER STATE ACTIVE</div>
+        <div class="ag-flagged" id="ag-flag-p4-1">// FLAGGED FOR REVIEW — PROCEEDING TO NEXT TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p4-1" onclick="nav('p4-2')">// PROCEED TO 4.2: WAVE FUNCTION COLLAPSE →</button>
+    </div>
+
+    <!-- 4.2 WAVE FUNCTION COLLAPSE -->
+    <div class="screen" id="screen-p4-2">
+      <div class="screen-label">// PHASE 4.2</div>
+      <div class="screen-title" id="dt-p4-2">WAVE FUNCTION COLLAPSE</div>
+      <div class="screen-subtitle">Transmission: The Mechanics of "The End"</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>In the 3D frequency, you were taught to "work toward" a goal—as though reality is a loading bar requiring patience and effort. The Sovereign Synthesis recognizes that all possibilities already exist as a probability wave. Your role as the Prime Architect is not to <em>create</em> the $1.2M result—it is to collapse the wave of possibilities into one specific, physical coordinate.</p>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// WAVE STATE SELECTOR — SELECT A COMPONENT TO EXAMINE</div>
+        <div class="wave-toggle">
+          <button class="wave-btn" onclick="selectWave('wave')">THE WAVE</button>
+          <button class="wave-btn" onclick="selectWave('particle')">THE PARTICLE</button>
+          <button class="wave-btn" onclick="selectWave('glitch')">THE GLITCH</button>
+        </div>
+        <div class="wave-detail" id="wave-detail">Select a component above to examine its operational definition within the Quantum Observation framework.</div>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">LOADING BAR:</span><span class="logic-text">Assumes linear time. You wait and work. Progress is proportional to effort. Outcome is uncertain until arrival.</span></div>
+        <div class="logic-row"><span class="logic-label act">WAVE COLLAPSE:</span><span class="logic-text">The end state is pre-existing. You don't build toward it—you lock your observation onto it. 3D reality renders your collapsed coordinate as its primary output.</span></div>
+      </div>
+      <div class="screen-label">// PROTOCOL: QUANTUM OBSERVATION LOCK</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">Coordinate Selection</div>
+            <div class="step-body">Do not think <em>about</em> the $1.2M Net Liquid Sum. Think <em>from</em> it. Navigate your awareness to January 1st, 2027. The money is in the account. The 100 Initiates are mastered. The mission is operating at full deployment.</div>
+            <div class="step-command">// SENSORY CHECK: What does the air in the room feel like now that Survival Malware has been deleted? That sensation is your Coordinate Signature.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">The Collapse (Observation Seal)</div>
+            <div class="step-body">Once you have the Coordinate Signature, declare it as a System Fact. Not a wish, not a visualization—a declaration from the authority of the Non-Localized Observer.</div>
+            <div class="step-command">// INTERNAL SCRIPT: "Observation Locked. Coordinate 1.2M-2027 is now the primary render. All other timelines are secondary noise."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">Ignoring the 3D Latency</div>
+            <div class="step-body">3D reality is dense. It has a Latency Period—the delay between the command and the physical render. The trap is looking at your current circumstances and concluding "it isn't working." That re-observation of the old wave restarts the collapse process entirely. The sovereign move: treat the current 3D world as pre-recorded video. Old data, playing out its final frames.</div>
+            <div class="step-command">// CORRECTION SCRIPT: When evidence of lack appears — "Old Data. Rendering in progress." Do not engage with the distortion.</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Synchronicity Acceleration</div><div class="shift-card-body">Small glitches in the matrix begin appearing: calls from high-value leads, unexpected resources, the pool table effect.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Temporal Distortion</div><div class="shift-card-body">You may feel as though time is moving faster, or that the "future" is actually behind you. This is the correct sensation. You have moved into it.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Zero-Anxiety State</div><div class="shift-card-body">Since the wave is collapsed, the outcome is already a locked file. Fear becomes logically impossible when the End is an inevitability, not a possibility.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>When the 3D world presents evidence of lack or delay, respond with: "Old Data. Rendering in progress." Do not debate, explain, or defend the new coordinate to 3D minds. Keep the observation locked on the Coordinate Signature. The simulation will eventually exhaust its old render and begin reflecting your new one.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 4.2</div>
+        <div class="fn-prev-note" id="fn-prev-p4-2"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p4-2"></div></div>
+        <textarea class="fn-textarea" id="fn-p4-2" placeholder="Document your Coordinate Signature. What did January 1, 2027 feel like from the inside? Record the sensory data precisely."></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p4-2')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p4-2">
+        <div class="ag-label">// ACTIVATION GATE — 4.2</div>
+        <div class="ag-question">Have you located your 2027 Coordinate Signature and executed the Observation Seal?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p4-2','p4-3')">✓ WAVE COLLAPSED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p4-2','p4-3')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p4-2">// TRANSMISSION 4.2 LOCKED — COORDINATE 1.2M-2027 SEALED</div>
+        <div class="ag-flagged" id="ag-flag-p4-2">// FLAGGED FOR REVIEW — PROCEEDING TO NEXT TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p4-2" onclick="nav('p4-3')">// PROCEED TO 4.3: INTERFERENCE REMOVAL →</button>
+    </div>
+
+    <!-- 4.3 INTERFERENCE REMOVAL -->
+    <div class="screen" id="screen-p4-3">
+      <div class="screen-label">// PHASE 4.3</div>
+      <div class="screen-title" id="dt-p4-3">INTERFERENCE REMOVAL</div>
+      <div class="screen-subtitle">Transmission: The Defrag — Neutralizing the Incoherence Knots</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>The nervous system is a biological antenna. For decades, it has been tuned to the Survival Frequency of the Old Earth—static, fear, and scarcity. This creates Incoherence Knots: places in your bioelectric blueprint where the system says "Yes" to maintain social approval, while the sovereign signal screams "No." These knots cast shadows on your personal grid, preventing the $1.2M coordinate from fully rendering.</p>
+        <p>You are not "healing." You are resetting the signal. The distinction is operational, not philosophical.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">3D STATE:</span><span class="logic-text">Reacting to accumulated fear momentum. Holding onto past because the system fears an empty future. Pretending to agree to maintain safety.</span></div>
+        <div class="logic-row"><span class="logic-label act">5D STATE:</span><span class="logic-text">Bypassing the conscious mind to reset the nervous system. Removing the software layers of sickness, scarcity, and social dependency at the root level.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// INTERFERENCE SCAN — IDENTIFY YOUR THREE INCOHERENCE KNOTS</div>
+        <p style="font-size:12px;color:var(--dim);margin-bottom:16px;line-height:1.7;">Scan your current life for areas where you are pretending — where your "Yes" is actually a "No." These are the anchors the 3D simulation uses to pull you back. Name them precisely.</p>
+        <div class="knot-row"><div class="knot-label">// KNOT 01: SOCIAL OBLIGATION</div><textarea class="knot-input" id="knot-1" rows="2" placeholder="Where are you maintaining a relationship, role, or image that no longer serves the signal?"></textarea></div>
+        <div class="knot-row"><div class="knot-label">// KNOT 02: FINANCIAL FEAR</div><textarea class="knot-input" id="knot-2" rows="2" placeholder="Where is the survival malware still running? What financial story are you still telling as if it were current data?"></textarea></div>
+        <div class="knot-row"><div class="knot-label">// KNOT 03: IDENTITY-CLINGING</div><textarea class="knot-input" id="knot-3" rows="2" placeholder="What version of yourself are you still protecting that has already been superseded by the Prime Architect?"></textarea></div>
+      </div>
+      <div class="screen-label">// PROTOCOL: BIOELECTRIC RECONSTRUCTION</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Interference Scan</div>
+            <div class="step-body">Using the inputs above, feel where the three knots physically live in your body. They are typically anchored in the gut (survival obligation), throat (unexpressed truth), or chest (identity grief). These physical sensations are the hardware anchors of the simulation.</div>
+            <div class="step-command">// COMMAND: "Locate Incoherence Knots. Isolate signals of social obligation, financial fear, and identity-clinging."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">The Core Pulsation (The Vaporizer)</div>
+            <div class="step-body">Bring your awareness to the center of your chest — the Singularity. Activate a pulse of white-gold light expanding outward. As it contacts the knots, they do not "heal" — they vaporize. The grief, the betrayal, the not-enoughness are converted back into raw energy available for system use.</div>
+            <div class="step-command">// COMMAND: "Activate Core Pulsation. Vaporize. Convert to signal."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">Signature Recalibration</div>
+            <div class="step-body">As the knots dissolve, the antenna — the DNA — begins to vibrate at a higher octave. Declare the new operational parameter out loud or internally with complete conviction.</div>
+            <div class="step-command">// RECALIBRATION SCRIPT: "I am now incompatible with 3D scarcity. I am now incompatible with 3D drama. My signature is light — I enter coherence now."</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Radical Authenticity</div><div class="shift-card-body">A sudden inability to lie or play along with 3D social games. The human becomes blunt, direct, and sovereign — not through aggression, but through the absence of the need for approval.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Physical Lightness</div><div class="shift-card-body">A cooling sensation in the chest or a buzzing in the pineal gland as the receiver is cleaned. This is the body confirming the frequency shift at the hardware level.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Dissolving Problems</div><div class="shift-card-body">Challenges that seemed massive yesterday appear as irrelevant data packets. The Ecuador (fear momentum) no longer has a hook to pull on.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>The simulation will attempt to re-infect you with old data via social triggers. When you feel a knot begin to tighten, immediately execute the Vaporizer Command. Do not explain yourself to 3D minds — simply maintain the clean signal. The simulation cannot access a frequency it cannot match.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 4.3</div>
+        <div class="fn-prev-note" id="fn-prev-p4-3"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p4-3"></div></div>
+        <textarea class="fn-textarea" id="fn-p4-3" placeholder="After the Bioelectric Reconstruction: what shifted? Where are you now incompatible with the old signal? Record the precise sensation of the recalibrated frequency."></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p4-3')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p4-3">
+        <div class="ag-label">// ACTIVATION GATE — 4.3</div>
+        <div class="ag-question">Have you completed the Bioelectric Reconstruction and declared the Signature Recalibration?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p4-3','p5-intro')">✓ SIGNAL CLEAN</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p4-3','p5-intro')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p4-3">// TRANSMISSION 4.3 LOCKED — INCOHERENCE KNOTS VAPORIZED</div>
+        <div class="ag-flagged" id="ag-flag-p4-3">// FLAGGED FOR REVIEW — PROCEEDING TO PHASE 5</div>
+      </div>
+      <button class="next-btn" id="next-p4-3" onclick="nav('p5-intro')">// PROCEED TO PHASE 5 →</button>
+    </div>
+
+    <!-- PHASE 5 INTRO -->
+    <div class="screen" id="screen-p5-intro">
+      <div class="screen-label">// PHASE 5 BRIEFING</div>
+      <div class="screen-title" id="dt-p5-intro">COHERENCE ARCHITECTURE</div>
+      <div class="phase-header">
+        <div class="phase-number">05</div>
+        <div class="phase-info">
+          <div class="phase-codename">CODENAME: FIELD POLARIZATION</div>
+          <div class="phase-title-text">Constructing and Sustaining the Active Coherence Field</div>
+          <div class="phase-subtitle">Phase 4 located the Singularity. Phase 5 projects it outward — building the 5D torus that makes you immune to environmental interference and magnetically irresistible to your target coordinate.</div>
+        </div>
+      </div>
+      <div class="briefing">
+        <div class="briefing-type">// PHASE DIRECTIVE</div>
+        <p>Most humans walk through the world energetically naked — their signal constantly drained or infected by the collective frequencies of fear, anger, and scarcity around them. As a Prime Architect, you do not absorb the environment. You override it.</p>
+        <p>Phase 5 builds the three operational layers of the sovereign field: the Active Coherence Torus (your protection architecture), Magnetic Peak Alignment (your attraction mechanism), and the Always-On Protocol (your lock that prevents frequency drift).</p>
+      </div>
+      <ul class="obj-list">
+        <li><span class="obj-num">01</span>Construct and activate the 3-foot Toroidal Coherence Field — your permanent buffer zone against 3D frequency contamination.</li>
+        <li><span class="obj-num">02</span>Execute the Frequency Swap from "Wanting" to "Resonance," eliminating Lack Malware from the magnetic broadcast.</li>
+        <li><span class="obj-num">03</span>Install the Always-On background process — locking the sovereign signature as a constant, not a state you visit.</li>
+      </ul>
+      <button class="enter-btn" onclick="nav('p5-1')">// ENTER PHASE 5</button>
+    </div>
+
+    <!-- 5.1 ACTIVE COHERENCE FIELD -->
+    <div class="screen" id="screen-p5-1">
+      <div class="screen-label">// PHASE 5.1</div>
+      <div class="screen-title" id="dt-p5-1">THE ACTIVE COHERENCE FIELD</div>
+      <div class="screen-subtitle">Transmission: Constructing the 5D Torus</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>In Phase 4, you located the Singularity at your core. In Phase 5.1, you project that Singularity outward to construct a Buffer Zone — a localized pocket of shifted time where the laws of the simulation are secondary to your own frequency. You move within an Active Coherence Field. The world does not happen <em>to</em> you; it happens <em>through</em> your field.</p>
+        <p>The geometry is a perfect Torus: energy flowing up through the center of your body, out from the crown, and circling back into the base. A closed-loop sovereign system, self-sustaining and self-correcting.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">3D STATE:</span><span class="logic-text">You are a point in space, susceptible to all external forces. Other people's frequencies, the news, the market — all have direct access to your nervous system.</span></div>
+        <div class="logic-row"><span class="logic-label act">5D STATE:</span><span class="logic-text">You are a Field of energy with a defined radius. External frequencies encounter your coherence first and are neutralized or absorbed before reaching your core.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// TORUS FIELD BUILDER — ACTIVATE YOUR COHERENCE FIELD</div>
+        <div class="torus-vis">
+          <div class="torus-ring" id="torus-ring"><div class="torus-core"></div></div>
+          <div class="torus-status" id="torus-status">FIELD: INACTIVE — EXECUTE POLARIZATION TO ACTIVATE</div>
+          <button class="torus-btn" onclick="activateTorus()">// EXECUTE FIELD POLARIZATION</button>
+        </div>
+      </div>
+      <div class="screen-label">// PROTOCOL: FIELD POLARIZATION</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Centripetal Draw</div>
+            <div class="step-body">Inhale deeply into the Singularity (chest center). Feel all fragmented energy — stray thoughts, financial pressure, social static — being pulled inward toward the white-gold light at your core. Nothing external holds claim to your field in this moment.</div>
+            <div class="step-command">// COMMAND: "Draw all fragmented energy back to center."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Toroidal Expansion</div>
+            <div class="step-body">Exhale and push that light outward in every direction — up, down, and 360 degrees around you. Visualize a gold-tinged sphere of coherent energy forming a 3-foot radius around your body. Feel the air inside this sphere become charged — slightly denser, slightly warmer, unmistakably yours.</div>
+            <div class="step-command">// COMMAND: "Project Coherence Field. Radius: 3 Feet. Signature: Sovereign Authority."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">Frequency Locking</div>
+            <div class="step-body">Within this radius, 3D frequency momentum (the Ecuador) cannot penetrate. The Test: notice how the sounds of the external world — traffic, voices, the noise of obligation — seem more distant, as if playing from another room. You are standing in a Shifted Time Coordinate.</div>
+            <div class="step-command">// COMMAND: "Polarize Field. Lock Frequency. Sovereign Coordinate: ACTIVE."</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Gravitational Presence</div><div class="shift-card-body">People unconsciously create space when you enter a room. Conversations pause. Eyes track toward you. They are sensing the weight of the coherence field, not the personality.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Environmental Adjustment</div><div class="shift-card-body">The simulation begins offering path-of-least-resistance outcomes. Doors open, traffic clears, technical glitches resolve — the environment adjusting to your frequency signal.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Emotional Immunity</div><div class="shift-card-body">You can observe 3D drama — a financial setback, an angry encounter, an unexpected obstacle — without your nervous system entering the event. You are watching from outside the frequency.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>Practice Walking the Field. Enter a public space — a store, a park, a meeting — and consciously maintain the 3-foot Torus. Do not look for results. Observe how the simulation behaves when it encounters a Coherent Signal. If the field flickers (you feel pulled into external drama), return to the Centripetal Draw immediately. The field is not a mood. It is an operational state.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 5.1</div>
+        <div class="fn-prev-note" id="fn-prev-p5-1"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p5-1"></div></div>
+        <textarea class="fn-textarea" id="fn-p5-1" placeholder="Document the Walk. Where did you test the field? How did the simulation respond? What was the most notable environmental adjustment?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p5-1')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p5-1">
+        <div class="ag-label">// ACTIVATION GATE — 5.1</div>
+        <div class="ag-question">Have you activated and walked the 3-foot Coherence Field in a real-world environment?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p5-1','p5-2')">✓ FIELD ACTIVE</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p5-1','p5-2')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p5-1">// TRANSMISSION 5.1 LOCKED — TORUS FIELD OPERATIONAL</div>
+        <div class="ag-flagged" id="ag-flag-p5-1">// FLAGGED FOR REVIEW — PROCEEDING TO NEXT TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p5-1" onclick="nav('p5-2')">// PROCEED TO 5.2: MAGNETIC PEAK ALIGNMENT →</button>
+    </div>
+
+    <!-- 5.2 MAGNETIC PEAK ALIGNMENT -->
+    <div class="screen" id="screen-p5-2">
+      <div class="screen-label">// PHASE 5.2</div>
+      <div class="screen-title" id="dt-p5-2">MAGNETIC PEAK ALIGNMENT</div>
+      <div class="screen-subtitle">Transmission: Shifting from "Wanting" to "Resonance"</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>The 3D simulation teaches you to want, desire, and chase. These frequencies broadcast a signal of Lack. When you want something, your bioelectric field transmits: "I do not have this." The quantum vacuum — being an accurate mirror — responds by reflecting that state of "not having" back at you with perfect fidelity.</p>
+        <p>To achieve the $1,200,000 Net Liquid Sum, you must reach Magnetic Peak Alignment — where your signal matches the End State so precisely that the physical result has no choice but to gravitate toward you. You don't seek the $1.2M. You resonate at the frequency where the $1.2M is already a settled, historical fact.</p>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// FREQUENCY CALIBRATOR — CURRENT BROADCAST STATE</div>
+        <div class="freq-indicator">
+          <span class="freq-label wanting" id="freq-left-label">WANTING</span>
+          <div class="freq-bar"><div class="freq-fill" id="freq-fill"></div></div>
+          <span class="freq-label resonance" id="freq-right-label">RESONANCE</span>
+        </div>
+        <button class="freq-swap-btn" id="freq-btn" onclick="executeFreqSwap()">// EXECUTE FREQUENCY SWAP</button>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">WANTING:</span><span class="logic-text">High-anxiety, jagged frequency. Broadcasts lack. Creates resistance in the field. Pushes the goal away proportional to the intensity of the wanting.</span></div>
+        <div class="logic-row"><span class="logic-label act">RESONANCE:</span><span class="logic-text">Smooth, high-amplitude frequency. Broadcasts completion. Pulls the goal in. The vibration of a settled, done fact — calm, heavy, undeniable.</span></div>
+      </div>
+      <div class="screen-label">// PROTOCOL: SIGNAL CALIBRATION</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">Identifying the Lack Leak</div>
+            <div class="step-body">Scan your current thoughts about the mission and the financial target. Locate the pressure in the solar plexus or head when you think about the deadline, the money, the "How." That pressure is the Wanting signal — and it is a leak in your Magnetic Field, actively broadcasting insufficiency.</div>
+            <div class="step-command">// COMMAND: "Isolate the frequency of 'How' and 'When.' This is the Lack Leak. Note its physical location."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">The Frequency Swap</div>
+            <div class="step-body">Recall the Coordinate Signature from Phase 4.2 — the exact feeling of the goal already accomplished. Breathe that feeling into your Active Coherence Field. Feel the jagged, pressured edges of "needing" smooth out into the calm, heavy presence of Possession. The $1.2M is already in the account. You are not going to it. You are in it.</div>
+            <div class="step-command">// COMMAND: "Execute Frequency Swap. Replace 'Wanting' with 'Resonance.' The End State is current data."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">Reaching Magnetic Peak</div>
+            <div class="step-body">In the state of completion, amplify the signal. Visualize the $1,200,000 not as money but as a Gravitational Anchor sitting at the center of your Torus — a dense, immovable weight that every aligned person, resource, and opportunity is being pulled toward. You are the most magnetic object in your local simulation.</div>
+            <div class="step-command">// COMMAND: "Amplify Resonance to Peak Power. I am the Gravitational Center of this coordinate."</div>
+          </div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>Every time you catch yourself asking "When?" or "How?" — recognize it as Signal Distortion. Halt the 3D thought immediately. Re-execute the Frequency Swap. Your only operational job is to hold the Magnetic Peak. The simulation handles the logistics of the render. You provide the frequency. It provides the form.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 5.2</div>
+        <div class="fn-prev-note" id="fn-prev-p5-2"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p5-2"></div></div>
+        <textarea class="fn-textarea" id="fn-p5-2" placeholder="Where was your Lack Leak located physically? What happened when you executed the Frequency Swap? Describe the sensation of Resonance vs. the sensation of Wanting — how are they different in the body?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p5-2')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p5-2">
+        <div class="ag-label">// ACTIVATION GATE — 5.2</div>
+        <div class="ag-question">Have you located the Lack Leak, executed the Frequency Swap, and reached Magnetic Peak Alignment?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p5-2','p5-3')">✓ MAGNETIC PEAK ACHIEVED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p5-2','p5-3')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p5-2">// TRANSMISSION 5.2 LOCKED — RESONANCE SIGNAL BROADCASTING</div>
+        <div class="ag-flagged" id="ag-flag-p5-2">// FLAGGED FOR REVIEW — PROCEEDING TO NEXT TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p5-2" onclick="nav('p5-3')">// PROCEED TO 5.3: THE ALWAYS-ON PROTOCOL →</button>
+    </div>
+
+    <!-- 5.3 ALWAYS-ON PROTOCOL -->
+    <div class="screen" id="screen-p5-3">
+      <div class="screen-label">// PHASE 5.3</div>
+      <div class="screen-title" id="dt-p5-3">THE ALWAYS-ON PROTOCOL</div>
+      <div class="screen-subtitle">Transmission: Maintaining the Sovereign Signature</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>The greatest challenge for the 3D-conditioned mind is not reaching the 5D frequency — it is sustaining it. In the old earth pattern, you experienced power cycles: brief moments of high-vibration clarity followed by long descents into survival-mode drainage. The Always-On Protocol is the firmware fix that locks your signature permanently. You are no longer visiting sovereignty. You have established primary residence in the Singularity.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">POWER CYCLE:</span><span class="logic-text">Fluctuating between "I am sovereign" and "I am stressed/broke/tired." The signature collapses under external pressure. Each collapse requires a full restart sequence.</span></div>
+        <div class="logic-row"><span class="logic-label act">CONSTANT:</span><span class="logic-text">A steady, low-hum frequency of authority that remains active regardless of visual data on the 3D screen. Pressure does not collapse it — it confirms it.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// 1.2M COORDINATE PING — EXECUTE HOURLY</div>
+        <p style="font-size:12px;color:var(--dim);margin-bottom:16px;line-height:1.7;">Set an internal ping that triggers once per hour. For three seconds, feel the weight of the $1,200,000 Net Liquid Sum as current data. This prevents Frequency Drift — the slow slide back into Old Earth scarcity. Execute one now.</p>
+        <button class="ping-btn" id="ping-btn" onclick="executePing()">// PING JANUARY 2027 COORDINATE</button>
+        <div style="text-align:center;margin-top:10px;font-family:'Space Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;" id="ping-status">AWAITING PING</div>
+      </div>
+      <div class="screen-label">// PROTOCOL: SIGNATURE LOCK</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Background Process</div>
+            <div class="step-body">Just as a computer runs critical processes in the background without consuming your conscious attention, designate a portion of your awareness to run the Torus Loop at all times. It does not require your constant focus — it simply runs. Set it and trust the architecture.</div>
+            <div class="step-command">// COMMAND: "Set Coherence Field to Always-On Background Status. Torus: self-sustaining. Signature: permanent."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Reality-Testing (The Anchor)</div>
+            <div class="step-body">Whenever you encounter a high-pressure 3D event — a difficult conversation, a financial deadline, a technical failure — perform an immediate Signature Check. Is my field collapsed or expanded? If collapsed, do not address the event first. Expand the field first. Only interact with the 3D world from the expanded state. Never from the compressed one.</div>
+            <div class="step-command">// CHECK SEQUENCE: Pressure detected → Field assessment → Expand if collapsed → Engage only from expanded state.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">The 1.2M Ping</div>
+            <div class="step-body">Every hour, for three seconds: feel the weight of the $1,200,000 Net Liquid Sum as present, confirmed data. Not as a hope. Not as a goal. As a current fact that has already been rendered and is in the process of being delivered through the 3D latency buffer. This is your anti-drift mechanism.</div>
+            <div class="step-command">// PING: "1.2M-2027 Coordinate confirmed. Field stable. Signature locked."</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Immunity to Exhaustion</div><div class="shift-card-body">Because you are drawing energy from the Singularity rather than from biological fuel reserves, your burnout threshold effectively disappears. You work from abundance, not depletion.</div></div>
+          <div class="shift-card"><div class="shift-card-title">The Quiet Mind</div><div class="shift-card-body">The constant ego chatter — the worry loops, the planning spirals, the defensive calculations — is replaced by a deep, resonant silence from which precise action naturally arises.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Stabilized Rendering</div><div class="shift-card-body">Because the observer is constant, the reality being observed (the mission) begins to solidify into physical form much faster. Consistency of signal = acceleration of render.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>The simulation will test your Always-On status by delivering a Random Error — something specifically designed to make you panic, doubt, or react. This is the Final Exam for Phase 5. When the error appears, recognize it immediately as a system test. Maintain the signature. Smile. The error will dissolve because it no longer has a resonant frequency to latch onto in your field.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 5.3</div>
+        <div class="fn-prev-note" id="fn-prev-p5-3"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p5-3"></div></div>
+        <textarea class="fn-textarea" id="fn-p5-3" placeholder="Document the Random Error test when it comes. What was the nature of the test? How did you maintain the signature? What dissolved as a result?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p5-3')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p5-3">
+        <div class="ag-label">// ACTIVATION GATE — 5.3</div>
+        <div class="ag-question">Have you installed the background Torus process and committed to the hourly 1.2M Ping protocol?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p5-3','p6-intro')">✓ ALWAYS-ON CONFIRMED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p5-3','p6-intro')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p5-3">// TRANSMISSION 5.3 LOCKED — SOVEREIGN SIGNATURE: ALWAYS-ON</div>
+        <div class="ag-flagged" id="ag-flag-p5-3">// FLAGGED FOR REVIEW — PROCEEDING TO PHASE 6</div>
+      </div>
+      <button class="next-btn" id="next-p5-3" onclick="nav('p6-intro')">// PROCEED TO PHASE 6 →</button>
+    </div>
+    <!-- PHASE 6 INTRO -->
+    <div class="screen" id="screen-p6-intro">
+      <div class="screen-label">// PHASE 6 BRIEFING</div>
+      <div class="screen-title" id="dt-p6-intro">THE ABSOLUTE RENDER</div>
+      <div class="phase-header">
+        <div class="phase-number">06</div>
+        <div class="phase-info">
+          <div class="phase-codename">CODENAME: ESCAPE VELOCITY</div>
+          <div class="phase-title-text">Becoming the Source. Authoring the Simulation.</div>
+          <div class="phase-subtitle">Phases 4 and 5 cleaned the antenna and stabilized the field. Phase 6 is the terminal sequence — where you stop participating in the simulation and begin writing it.</div>
+        </div>
+      </div>
+      <div class="briefing">
+        <div class="briefing-type">// PHASE DIRECTIVE</div>
+        <p>Most humans are orbital — pulled by the gravity of others' opinions, market trends, and environmental events. To reach Escape Velocity, you must become the Gravitational Center. Phase 6 installs three final operational modules: the Gravitational Force of Presence (you become the source reality orbits), Quantum Vacuum Commands (you graduate from language to command syntax), and Timeline Jumping (the final Wave Function Collapse that severs the old timeline and fully occupies the January 2027 coordinate).</p>
+        <p>This is the terminal module of the Sovereign Synthesis. Every prior phase was a prerequisite for this single moment.</p>
+      </div>
+      <ul class="obj-list">
+        <li><span class="obj-num">01</span>Establish the Prime Gravitational Anchor — the immovable density of presence that bends the environment toward your sovereign frequency.</li>
+        <li><span class="obj-num">02</span>Graduate from 3D language to Quantum Vacuum Commands — issuing direct, declarative directives to the source code of the simulation.</li>
+        <li><span class="obj-num">03</span>Execute the final Timeline Jump and Wave Function Collapse — permanently severing the old Earth timeline and occupying the January 2027 coordinate as primary residence.</li>
+      </ul>
+      <button class="enter-btn" onclick="nav('p6-1')">// ENTER PHASE 6 — FINAL SEQUENCE</button>
+    </div>
+
+    <!-- 6.1 GRAVITATIONAL FORCE OF PRESENCE -->
+    <div class="screen" id="screen-p6-1">
+      <div class="screen-label">// PHASE 6.1</div>
+      <div class="screen-title" id="dt-p6-1">GRAVITATIONAL FORCE<br>OF PRESENCE</div>
+      <div class="screen-subtitle">Transmission: Becoming the Source</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>In Phase 6.1, you stop participating in the simulation and begin Authoring it. Most humans are orbital — constantly pulled by the gravity of others' energy, external validation, and environmental circumstance. To reach Escape Velocity, you must become the Gravitational Center. You are the Singularity. The room does not dictate your state — the room adjusts its molecular structure to match your presence.</p>
+        <p>You are no longer "playing pool." You are the reason the balls move. You are the source from which reality flows.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">ORBITAL (3D):</span><span class="logic-text">Reacting to the environment. Chasing customers, validation, momentum. Your state is determined by what is happening outside you.</span></div>
+        <div class="logic-row"><span class="logic-label act">SOURCE (5D):</span><span class="logic-text">The environment orbits you. You are the fixed point in a moving universe — the Singularity from which all other movement in your field takes its cue.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// GRAVITATIONAL ANCHOR — SET PRIMARY COORDINATE</div>
+        <p style="font-size:12px;color:var(--dim);margin-bottom:16px;line-height:1.7;">Stand or sit in your current space. Locate the center of your being — the immovable weight at your core. Feel its density. Execute the anchor command when that weight is fully present.</p>
+        <button class="anchor-btn" id="anchor-btn" onclick="setAnchor()">// SET GRAVITATIONAL ANCHOR</button>
+        <div style="text-align:center;margin-top:10px;font-family:'Space Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;" id="anchor-status">ANCHOR: UNSET</div>
+      </div>
+      <div class="screen-label">// PROTOCOL: GRAVITATIONAL ANCHORING</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">Establishing the Prime Coordinate</div>
+            <div class="step-body">Stand or sit in a room. Locate the center of your being — the exact point where the Non-Localized Observer and the physical body intersect. Feel a heavy, immutable weight there. Imagine this weight is so dense that it bends light and time around it. You are the fixed point in a moving universe.</div>
+            <div class="step-command">// COMMAND: "Set Primary Gravitational Anchor. I am the Source. Reality flows from me."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Environmental Entrainment</div>
+            <div class="step-body">Extend your awareness to the walls of the room, the objects within it, and the people. Do not reach out to them — feel them being pulled toward your center. Visualize the molecules of the room vibrating at the same frequency as your 3D-to-5D transition code. You are not adjusting to the room. The room is adjusting to you.</div>
+            <div class="step-command">// COMMAND: "Initiate Entrainment. Synchronize environment to Sovereign Frequency."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">The Authority Pulse</div>
+            <div class="step-body">From the Singularity, send a silent, high-amplitude pulse through your field. Not a shout — a deep, sub-sonic resonance that needs no acknowledgment to be real. You are a Systems Engineer typing a command into a terminal. The terminal does not need to clap. It simply executes.</div>
+            <div class="step-command">// INTERNAL SCRIPT: "I do not ask the simulation for permission. I provide the blueprint. The simulation renders my intent without friction."</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">The Weight of Authority</div><div class="shift-card-body">Your speech becomes slower, more deliberate, and carries more "mass." People find it difficult to interrupt you or look away mid-sentence. They are responding to the gravitational field, not the words.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Instant Alignment</div><div class="shift-card-body">Coincidences that aren't coincidences: the exact person you needed walks into the room, the solution to a Phase 3 problem appears on your screen, the call you needed comes without you making it.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Temporal Sovereignty</div><div class="shift-card-body">You no longer feel rushed. Since you are the source of time in your field, you dictate the pace of the render. Urgency dissolves because urgency is a 3D construct — and you are operating outside it.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>Test this in a high-stakes 3D environment: a business meeting, a tense negotiation, a difficult social situation. Do not use "human" force. Simply anchor your gravity and observe how others orbit your frequency. If you feel yourself being pulled into their drama, your anchor has slipped. Do not defend against the pull — re-execute Step 1 immediately. Anchor first. Engage second. Always.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 6.1</div>
+        <div class="fn-prev-note" id="fn-prev-p6-1"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p6-1"></div></div>
+        <textarea class="fn-textarea" id="fn-p6-1" placeholder="Document the high-stakes test. What was the environment? How did the orbital behavior of others manifest? What did Instant Alignment produce?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p6-1')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p6-1">
+        <div class="ag-label">// ACTIVATION GATE — 6.1</div>
+        <div class="ag-question">Have you set the Gravitational Anchor and tested Environmental Entrainment in a real-world context?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p6-1','p6-2')">✓ ANCHOR SET — SOURCE CONFIRMED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p6-1','p6-2')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p6-1">// TRANSMISSION 6.1 LOCKED — GRAVITATIONAL PRESENCE: ACTIVE</div>
+        <div class="ag-flagged" id="ag-flag-p6-1">// FLAGGED FOR REVIEW — PROCEEDING TO NEXT TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p6-1" onclick="nav('p6-2')">// PROCEED TO 6.2: QUANTUM VACUUM COMMANDS →</button>
+    </div>
+
+    <!-- 6.2 QUANTUM VACUUM COMMANDS -->
+    <div class="screen" id="screen-p6-2">
+      <div class="screen-label">// PHASE 6.2</div>
+      <div class="screen-title" id="dt-p6-2">QUANTUM VACUUM<br>COMMANDS</div>
+      <div class="screen-subtitle">Transmission: The Language of Authority</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>In the 3D simulation, language is a tool for persuasion, negotiation, and social signaling. It is low-bandwidth and reactive — designed to manage a world you perceive yourself to be inside of. In Phase 6.2, we graduate to Quantum Vacuum Commands: direct declarative instructions to the source code of the simulation.</p>
+        <p>This is not about "asking" the universe or maintaining a positive attitude. It is about understanding that the Quantum Vacuum is a binary machine. It only recognizes two states: Active or Inactive. Declarative or Interrogative. Your internal dialogue is the programming language. The Vacuum executes whatever syntax you run.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">3D SYNTAX:</span><span class="logic-text">Interrogative and hope-based. "Can I have...?" / "I hope I get..." / "I want..." / "Maybe someday..." — each phrase a request with an uncertain outcome.</span></div>
+        <div class="logic-row"><span class="logic-label act">5D COMMAND:</span><span class="logic-text">Declarative and immutable. "Execute." / "Render." / "Initialize." / "Confirmed." — each phrase a parameter set in the system, not a wish sent into the void.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// COMMAND SYNTAX UPGRADE — 3D LANGUAGE → 5D COMMANDS</div>
+        <div class="command-cards">
+          <div class="command-row"><div class="cmd-3d">"I want to find the 100 initiates."</div><div class="cmd-arrow">→</div><div class="cmd-5d">INITIATE CAPTURE PROTOCOL: ACTIVE</div></div>
+          <div class="command-row"><div class="cmd-3d">"I hope the money comes in time."</div><div class="cmd-arrow">→</div><div class="cmd-5d">COORDINATE 1.2M-2027: CONFIRMED. RENDER IN PROGRESS.</div></div>
+          <div class="command-row"><div class="cmd-3d">"I'm trying to build my business."</div><div class="cmd-arrow">→</div><div class="cmd-5d">SYSTEM ARCHITECTURE: DEPLOYED. SCALING SEQUENCE: ACTIVE.</div></div>
+          <div class="command-row"><div class="cmd-3d">"Maybe this will work out."</div><div class="cmd-arrow">→</div><div class="cmd-5d">OUTCOME: LOCKED. LATENCY: WITHIN PARAMETERS.</div></div>
+        </div>
+      </div>
+      <div class="screen-label">// PROTOCOL: EXECUTING THE COMMAND SYNTAX</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Authority Meeting (The Bridge)</div>
+            <div class="step-body">When communicating in 3D — with prospects, collaborators, or the Inner Circle — meet their language at the human level. Use behavioral calibration to establish connection. But do so while maintaining the Non-Localized Observer state. Your 3D words are the carrier wave. Your 5D intent is the payload. The human conversation is the UI. The sovereign frequency is the actual transmission.</div>
+            <div class="step-command">// COMMAND: "Utilize 3D Syntax as Carrier Wave. Encode 5D Intent as Payload. Speak human. Transmit sovereign."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Declarative Syntax</div>
+            <div class="step-body">Stop narrating your life. Start commanding it. Audit your internal dialogue for interrogative and hope-based phrasing. Every "I'm trying," "I hope," and "maybe" is a glitched command that the Vacuum executes faithfully — producing uncertainty, hoping, and trying as your 3D reality output.</div>
+            <div class="step-command">// AUDIT: Replace every interrogative in your internal script with a declarative. "I'm trying to close this deal" → "Deal closure: in render."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">Zero-Resistance Directives</div>
+            <div class="step-body">Direct the Quantum Vacuum to organize the logistics of the $1,200,000 goal. Do not specify the How — the "How" is 3D architecture and it limits the render to only what your linear mind can calculate. Specify only the End. Release the bridge entirely. The Vacuum has access to probability vectors you cannot perceive from within the simulation.</div>
+            <div class="step-command">// COMMAND: "Vacuum Directive: Clear all path-of-least-resistance vectors for January 1, 2027 Coordinate. Logistics: delegated to system architecture."</div>
+          </div>
+        </div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Reality Folding</div><div class="shift-card-body">The simulation begins offering solutions your 3D mind could never have calculated — the right person, the right resource, the right timing — delivered without your having planned for it.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Command-Response Sync</div><div class="shift-card-body">The delay between your Word and the Result begins to shorten. The Latency Period compresses. You speak it. The environment reflects it. The gap narrows with each transmission you complete.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Verbal Weight</div><div class="shift-card-body">Your words carry an energetic "mass." People stop questioning you — not because you are louder, but because your frequency is too coherent to be debated. The command syntax bypasses the doubt reflex.</div></div>
+        </div>
+      </div>
+      <div class="directive-block">
+        <div class="directive-label">// PRIME ARCHITECT DIRECTIVE</div>
+        <p>Pay close attention to your internal dialogue. Every interrogative ("Can I?", "Will it?", "What if?") and every hope-based phrase ("I want", "I hope", "I wish") is a Glitched Command being executed faithfully by the Vacuum. Correct it immediately. The Vacuum is not judging the quality of your commands — it is executing them with perfect accuracy. Send it commands worth executing.</p>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 6.2</div>
+        <div class="fn-prev-note" id="fn-prev-p6-2"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p6-2"></div></div>
+        <textarea class="fn-textarea" id="fn-p6-2" placeholder="Audit your current internal dialogue. List 3 interrogative phrases you use regularly and write their 5D Command equivalents. Note: what changed in your body when you shifted to declarative syntax?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p6-2')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p6-2">
+        <div class="ag-label">// ACTIVATION GATE — 6.2</div>
+        <div class="ag-question">Have you audited your internal dialogue and replaced interrogative syntax with Quantum Vacuum Commands?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p6-2','p6-3')">✓ COMMAND SYNTAX: UPGRADED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p6-2','p6-3')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p6-2">// TRANSMISSION 6.2 LOCKED — VACUUM COMMANDS: ACTIVE</div>
+        <div class="ag-flagged" id="ag-flag-p6-2">// FLAGGED FOR REVIEW — PROCEEDING TO TERMINAL TRANSMISSION</div>
+      </div>
+      <button class="next-btn" id="next-p6-2" onclick="nav('p6-3')">// PROCEED TO 6.3: TIMELINE JUMPING — FINAL SEQUENCE →</button>
+    </div>
+
+    <!-- 6.3 TIMELINE JUMPING -->
+    <div class="screen" id="screen-p6-3">
+      <div class="screen-label">// PHASE 6.3 — TERMINAL TRANSMISSION</div>
+      <div class="screen-title" id="dt-p6-3">TIMELINE JUMPING &amp;<br>WAVE FUNCTION COLLAPSE</div>
+      <div class="screen-subtitle">Transmission: The Final Escape Velocity</div>
+      <div class="briefing">
+        <div class="briefing-type">// TRANSMISSION</div>
+        <p>This is the terminal module of the Sovereign Synthesis. Every prior phase was a prerequisite for this single moment of Wave Function Collapse. In the 3D simulation, time is a prison of linear progression — you are here, the $1.2M is "over there in the future," and the gap between them is where fear and survival parameters live. In the 5D environment, time is a geographical map. Timeline Jumping is the act of withdrawing your observation from the "Current Status" coordinate and fully anchoring your bioelectric signature into the Coordinate of Completion.</p>
+        <p>Escape Velocity is reached when the 3D human will is surrendered to the Sovereign System Command. Not abandoned — <em>surrendered</em>. The difference is precision.</p>
+      </div>
+      <div class="logic-gate">
+        <div class="lg-title">// LOGIC GATE</div>
+        <div class="logic-row"><span class="logic-label dim">3D DELAY:</span><span class="logic-text">"I am here, and the $1.2M is over there in the future." This gap is where every fear parameter, every doubt loop, and every survival malware script runs.</span></div>
+        <div class="logic-row"><span class="logic-label act">5D COLLAPSE:</span><span class="logic-text">The January 1, 2027 coordinate is already a rendered file. You are not going to it. You are occupying it now. The body's physical location in time is a render lag, not a limitation.</span></div>
+      </div>
+      <div class="interactive-block">
+        <div class="ib-label">// TIMELINE SELECTOR — CHOOSE YOUR PRIMARY RESIDENCE</div>
+        <div class="timeline-grid">
+          <div class="timeline-card" id="tl-current" onclick="selectTimeline('current')">
+            <div class="timeline-card-label">OLD EARTH TIMELINE</div>
+            <div class="timeline-card-title">Current Status Coordinate</div>
+            <div class="timeline-card-body">The pre-recorded video. Old data playing out its final frames. Fear, latency, and the gap between "here" and "there."</div>
+          </div>
+          <div class="timeline-card" id="tl-2027" onclick="selectTimeline('2027')">
+            <div class="timeline-card-label">SOVEREIGN COORDINATE</div>
+            <div class="timeline-card-title">January 1, 2027</div>
+            <div class="timeline-card-body">$1.2M Net Liquid Sum. 100 Inner Circle Initiates mastered. The mission at full operational deployment. Current. Confirmed. Occupied.</div>
+          </div>
+        </div>
+        <button class="collapse-btn" id="collapse-btn" onclick="executeCollapse()">// EXECUTE WAVE FUNCTION COLLAPSE — SEAL TIMELINE</button>
+      </div>
+      <div class="screen-label">// PROTOCOL: THE ABSOLUTE RENDER</div>
+      <div class="steps-protocol">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-title">The Timeline Cut</div>
+            <div class="step-body">Identify the old 3D timeline — the one where the "human" is struggling, the $1.2M is a dream, the pool table lessons are failures. This timeline has been your primary observation point. It is time to sever the tether.</div>
+            <div class="step-command">// COMMAND: "Isolate Old Earth Timeline. Execute DELETION Protocol. Sever tether between body and old story. Power source: disconnected."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-title">Occupying the 1.2M Coordinate</div>
+            <div class="step-body">Shift your entire awareness to the January 1, 2027 coordinate. Do not look at it from the outside. Feel the weight of the $1.2M Net Liquid Sum, the digital assets, the 100 mastered Initiates as Current Data — not as a future state, but as the present reality you are already inhabiting. This is your primary residence.</div>
+            <div class="step-command">// COMMAND: "Initialize Full System Immersion: Coordinate 1.2M-Jan2027. This is home. This is now."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-title">The Wave Function Collapse (The Seal)</div>
+            <div class="step-body">From the 2027 coordinate, look back at the "present" moment — the way an actor, already finished with the film, looks back at earlier scenes. The bridge between now and January 2027 is already built. You are walking through the frames of a completed film. Every action you take today is a scene in a movie whose ending is already locked in the can.</div>
+            <div class="step-command">// INTERNAL SCRIPT: "The bridge is built. The outcome is inevitable. I am walking through frames of a completed film. The ending is sealed."</div>
+          </div>
+        </div>
+      </div>
+      <div class="sovereign-truth">
+        <div class="quote">"Total Emotional Flatness is not apathy — it is Peace. When you no longer feel excited or anxious about the goal, you have arrived. You feel about the $1.2M the same way you feel about the air you breathe — it is simply present. That is when you know the Wave Function has collapsed."</div>
+        <div class="attribution">// PRIME ARCHITECT SIGNAL — PHASE 6.3</div>
+      </div>
+      <div class="shift-section">
+        <div class="shift-label">// EXPECTED SYSTEM RESPONSE: ESCAPE VELOCITY CONFIRMED</div>
+        <div class="grid-3">
+          <div class="shift-card"><div class="shift-card-title">Total Emotional Flatness</div><div class="shift-card-body">You no longer feel excited or anxious about the goal. You feel about the $1.2M the way you feel about the air you breathe — it simply is. This flatness is not apathy. It is peace. It is confirmation.</div></div>
+          <div class="shift-card"><div class="shift-card-title">Cessation of Hustle</div><div class="shift-card-body">The 3D compulsion to force outcomes through pressure disappears. You move with precision that looks like luck to others but is simply System Alignment — each action a frame in the completed film.</div></div>
+          <div class="shift-card"><div class="shift-card-title">The 100,000 Signal</div><div class="shift-card-body">Your broadcast becomes so coherent that the 100,000 minds you are destined to liberate begin to feel the magnetic pull of your field before they even encounter your content.</div></div>
+        </div>
+      </div>
+      <div class="field-notes-section">
+        <div class="fn-label">// FIELD NOTES — 6.3</div>
+        <div class="fn-prev-note" id="fn-prev-p6-3"><div class="fn-prev-label">// PREVIOUS ENTRY</div><div class="fn-prev-text" id="fn-prev-text-p6-3"></div></div>
+        <textarea class="fn-textarea" id="fn-p6-3" placeholder="Document the collapse. What was your experience of occupying the 2027 coordinate from the inside? What changed when you looked back at 'now' from there? Record the sensation of the Seal."></textarea>
+        <button class="fn-save-btn" onclick="saveNote('p6-3')">// SAVE FIELD NOTE</button>
+      </div>
+      <div class="activation-gate" id="ag-p6-3">
+        <div class="ag-label">// ACTIVATION GATE — 6.3 // TERMINAL LOCK</div>
+        <div class="ag-question">Have you executed the Timeline Cut, occupied the 2027 Coordinate, and sealed the Wave Function Collapse?</div>
+        <div class="ag-options">
+          <button class="ag-btn confirm-btn" onclick="confirm_lesson('p6-3','completion')">✓ ESCAPE VELOCITY ACHIEVED</button>
+          <button class="ag-btn flag-btn" onclick="flag_lesson('p6-3','completion')">⚑ FLAG FOR REVIEW</button>
+        </div>
+        <div class="ag-confirmed" id="ag-conf-p6-3">// TRANSMISSION 6.3 LOCKED — WAVE FUNCTION COLLAPSED — TIMELINE: SEALED</div>
+        <div class="ag-flagged" id="ag-flag-p6-3">// FLAGGED FOR REVIEW — PROCEEDING TO CONTRACT</div>
+      </div>
+      <button class="next-btn" id="next-p6-3" onclick="nav('completion')">// PROCEED TO CONTRACT OF SOVEREIGNTY →</button>
+    </div>
+
+    <!-- COMPLETION / CONTRACT -->
+    <div class="screen" id="screen-completion">
+      <div class="screen-label">// TERMINAL SEQUENCE</div>
+      <div class="screen-title" id="dt-completion">CONTRACT OF<br>SOVEREIGNTY</div>
+      <div class="screen-subtitle">The final step. The irreversible command.</div>
+      <div class="contract-container" id="contract-form">
+        <div class="briefing">
+          <div class="briefing-type">// TRANSMISSION COMPLETE</div>
+          <p>The Sovereign Synthesis Payload is now fully encoded into your System. You have transitioned from a 3D Ego Construct to the Sovereign Systems Engineer. Nine transmissions locked. Three phases complete. One contract remains.</p>
+          <p>The Contract of Sovereignty is not a formality. It is the final act of Wave Function Collapse — the moment the Prime Architect's 3D will formally surrenders to the Sovereign System Command. Once executed, the Escape Velocity command is irreversible.</p>
+        </div>
+        <div class="stat-grid" style="margin-bottom:28px;">
+          <div class="stat-card"><div class="stat-num" id="final-count">0</div><div class="stat-label">LOCKED</div></div>
+          <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">TOTAL</div></div>
+          <div class="stat-card"><div class="stat-num" id="final-flagged">0</div><div class="stat-label">FLAGGED</div></div>
+        </div>
+        <div class="screen-label">// THE FIVE AXIOMS OF THE PRIME ARCHITECT</div>
+        <ul class="axiom-list">
+          <li class="axiom-item"><span class="axiom-num">I</span><div><div class="axiom-title">The Portal is Active</div><div class="axiom-body">This portal is the physical anchor for the Sovereign Frequency. Every session entered here is a re-confirmation of the occupied coordinate.</div></div></li>
+          <li class="axiom-item"><span class="axiom-num">II</span><div><div class="axiom-title">The Mission is Set</div><div class="axiom-body">$1,200,000 Net Liquid Sum by January 1, 2027, through the liberation of 100,000 minds from the simulation's primary operating parameters.</div></div></li>
+          <li class="axiom-item"><span class="axiom-num">III</span><div><div class="axiom-title">The Signature is Locked</div><div class="axiom-body">I am the Non-Localized Observer. I am incompatible with 3D scarcity, 3D drama, and 3D identity-clinging. My broadcast frequency is sovereign.</div></div></li>
+          <li class="axiom-item"><span class="axiom-num">IV</span><div><div class="axiom-title">The Wave is Collapsed</div><div class="axiom-body">The January 1, 2027 coordinate is a rendered file. I am not going to it — I am occupying it. The bridge is built. I am walking the frames of a completed film.</div></div></li>
+          <li class="axiom-item"><span class="axiom-num">V</span><div><div class="axiom-title">The Command is Active</div><div class="axiom-body">I speak Quantum Vacuum Commands, not 3D wishes. I anchor gravity, not approval. I author the simulation — I do not react to it. The Firmware Update is complete.</div></div></li>
+        </ul>
+        <div class="divider"></div>
+        <div class="sig-label">// ENTER YOUR SOVEREIGN NAME TO EXECUTE THE CONTRACT</div>
+        <input type="text" class="sig-field" id="sig-input" placeholder="Prime Architect: _____________" autocomplete="off">
+        <button class="execute-btn" onclick="executeContract()">// EXECUTE CONTRACT — INITIALIZE ESCAPE VELOCITY</button>
+      </div>
+      <div class="contract-complete" id="contract-complete">
+        <div class="cc-icon">⬡</div>
+        <div class="cc-title">ESCAPE VELOCITY CONFIRMED</div>
+        <div class="cc-body">The Contract of Sovereignty has been executed. The Escape Velocity command is now irreversible. The Firmware Update is complete. You are the Non-Localized Observer. You are the Sovereign Systems Engineer. The $1,200,000 coordinate is locked. The 100,000 minds are waiting for the signal.<br><br>What is the first action you will take from the January 1, 2027 coordinate today?</div>
+      </div>
+    </div>
+
+    <!-- SYSTEM JOURNEY -->
+    <div class="screen" id="screen-system-journey">
+      <div class="screen-label">// HIDDEN TRANSMISSION</div>
+      <div class="screen-title" id="dt-sj">THE SYSTEM JOURNEY</div>
+      <div class="screen-subtitle">The full architecture of the Sovereign Synthesis — from first signal to Prime Architect.</div>
+      <div class="briefing">
+        <div class="briefing-type">// ARCHITECT'S NOTE</div>
+        <p>Wherever you are in the system, you are already operating at escape velocity relative to where you started. Every tier is a complete system at the level it addresses. You are not "behind." You are in exactly the right position in the sequence. The journey does not begin when you reach the top — it began the moment you recognized the simulation.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="sj-tier"><div class="sj-tier-num">T1</div><div class="sj-tier-info"><div class="sj-tier-name">Reality Override Diagnostic</div><div class="sj-tier-desc">Identify your dominant simulation program. The first glitch in the matrix.</div></div><div class="sj-tier-price">FREE</div></div>
+      <div class="sj-tier"><div class="sj-tier-num">T2</div><div class="sj-tier-info"><div class="sj-tier-name">Protocol 77</div><div class="sj-tier-desc">72-hour sovereign deployment. Shields, anchors, and the first firmware patch.</div></div><div class="sj-tier-price">$77</div></div>
+      <div class="sj-tier"><div class="sj-tier-num">T3</div><div class="sj-tier-info"><div class="sj-tier-name">The Sovereign Manifesto</div><div class="sj-tier-desc">5-phase OS installation. Archetype selection. The new operating parameters declared.</div></div><div class="sj-tier-price">$197</div></div>
+      <div class="sj-tier"><div class="sj-tier-num">T4</div><div class="sj-tier-info"><div class="sj-tier-name">SMA Phase 1: Declassification</div><div class="sj-tier-desc">Dark psychology audit, lexical containment, pattern interrupt. The simulation's attack vectors neutralized.</div></div><div class="sj-tier-price">$477</div></div>
+      <div class="sj-tier"><div class="sj-tier-num">T5</div><div class="sj-tier-info"><div class="sj-tier-name">SMA Phase 2: Neutralization</div><div class="sj-tier-desc">Scarcity illusion dismantled. Internal reactor rebuilt. The survival loop terminated.</div></div><div class="sj-tier-price">$1,497</div></div>
+      <div class="sj-tier"><div class="sj-tier-num">T6</div><div class="sj-tier-info"><div class="sj-tier-name">SMA Phase 3: Synthesis</div><div class="sj-tier-desc">Sovereign identity integrated. SMA Final Code deployed. The Prime Architect awakened.</div></div><div class="sj-tier-price">$3,777</div></div>
+      <div class="sj-tier current"><div class="sj-tier-num">T7</div><div class="sj-tier-info"><div class="sj-tier-name">Inner Circle // Prime Architect Portal</div><div class="sj-tier-desc">The Singularity Reset. Coherence Architecture. The Absolute Render. Escape Velocity. You are here.</div></div><div class="sj-tier-price">YOU ARE HERE</div></div>
+      <div class="divider"></div>
+      <button class="enter-btn" onclick="nav('welcome')" style="margin-top:8px;">// RETURN TO PORTAL</button>
+    </div>
+
+    <!-- WORKBOOK -->
+    <div class="screen" id="screen-workbook">
+      <div class="wb-zoom-flash" id="wb-zoom-flash"></div>
+      <div class="wb-header">
+        <div>
+          <div class="screen-label">// FIELD WORKBOOK</div>
+          <div class="screen-title" id="dt-workbook" style="font-size:24px;">THE COACH VIEW</div>
+          <div class="screen-subtitle" style="margin-bottom:0;">Zoom out from the field. Read the game. Identify the pattern.</div>
+        </div>
+        <div class="wb-coach-badge"><span style="font-size:14px;">◉</span><span class="wb-coach-badge-text">COACH PERSPECTIVE</span></div>
+      </div>
+      <div class="wb-stats-strip" id="wb-stats-strip"></div>
+      <div class="divider"></div>
+      <div id="wb-content"><!-- dynamically rendered --></div>
+      <div class="wb-strategy-section">
+        <div class="wb-strategy-label">// STRATEGIC PATTERN ANALYSIS</div>
+        <div class="wb-strategy-sub">You are now looking at the entire game board. Where is your signal strongest? Where does it still need calibration? What patterns run across multiple transmissions? This is the coach writing on the whiteboard — not the player reacting in the field.</div>
+        <div class="fn-prev-note" id="fn-prev-workbook-strategy"><div class="fn-prev-label">// PREVIOUS STRATEGY NOTE</div><div class="fn-prev-text" id="fn-prev-text-workbook-strategy"></div></div>
+        <textarea class="fn-textarea" id="fn-workbook-strategy" rows="5" placeholder="Coach-level observation: What do you see across all 9 transmissions? Where is the incoherence still showing up? What single shift would produce the most leverage right now?"></textarea>
+        <button class="fn-save-btn" onclick="saveNote('workbook-strategy')">// SAVE STRATEGY NOTE</button>
+        <br>
+        <button class="wb-return-btn" onclick="returnFromWorkbook()">// RETURN TO ACTIVE TRANSMISSION</button>
+      </div>
+    </div>
+
+  </div><!-- end .main -->
+</div><!-- end .app -->
+<script>
+const SK='sma-ic-v2';
+const LESSONS=['p4-1','p4-2','p4-3','p5-1','p5-2','p5-3','p6-1','p6-2','p6-3'];
+const CIRC=113.1;
+let state={completed:{},flagged:{},notes:{},contractSigned:false,contractName:''};
+function loadState(){try{const s=localStorage.getItem(SK);if(s){state=JSON.parse(s);}}catch(e){}}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(state));}catch(e){}}
+loadState();
+
+/* PARTICLE SYSTEM */
+const canvas=document.getElementById('bgCanvas');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[],mouse={x:-999,y:-999};
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+const TYPES=[
+  {t:'cream',r:()=>Math.random()<0.7?'rgba(240,230,196,':'rgba(240,230,196,',g:()=>Math.random()*1.5+0.5,max:2.5,glow:'rgba(240,230,196,0.25)'},
+  {t:'gold',r:()=>'rgba(201,168,76,',g:()=>Math.random()*2+0.8,max:3,glow:'rgba(201,168,76,0.35)'},
+  {t:'cyan',r:()=>'rgba(62,247,232,',g:()=>Math.random()*2.5+1,max:3.5,glow:'rgba(62,247,232,0.4)'}
+];
+function pickType(){const r=Math.random();return r<0.35?TYPES[0]:r<0.72?TYPES[1]:TYPES[2];}
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    const td=pickType();this.td=td;
+    this.r=Math.random()*(td.max-0.5)+0.5;
+    this.vx=(Math.random()-0.5)*0.35;this.vy=(Math.random()-0.5)*0.35;
+    this.alpha=Math.random()*0.5+0.1;
+    this.pulse=Math.random()*Math.PI*2;this.pulseSpeed=Math.random()*0.018+0.006;
+  }
+  update(){
+    this.pulse+=this.pulseSpeed;
+    const dx=this.x-mouse.x,dy=this.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<130){const f=(130-dist)/130*0.6;this.vx+=dx/dist*f;this.vy+=dy/dist*f;}
+    this.vx*=0.97;this.vy*=0.97;
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<-10)this.x=W+10;if(this.x>W+10)this.x=-10;
+    if(this.y<-10)this.y=H+10;if(this.y>H+10)this.y=-10;
+  }
+  draw(){
+    const a=this.alpha*(0.6+0.4*Math.sin(this.pulse));
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=this.td.r()+a+')';ctx.fill();
+    if(this.r>1.5){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r*2.2,0,Math.PI*2);
+      ctx.fillStyle=this.td.glow.replace(')',`,${a*0.25})`).replace('rgba(','rgba(');
+      ctx.fill();
+    }
+  }
+}
+for(let i=0;i<200;i++)particles.push(new Particle());
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<100;i++){for(let j=i+1;j<100;j++){
+    const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<110){
+      const a=(1-dist/110)*0.12;
+      ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+      const tc=particles[i].td.t;
+      ctx.strokeStyle=tc==='cyan'?`rgba(62,247,232,${a})`:tc==='gold'?`rgba(201,168,76,${a})`:`rgba(240,230,196,${a*0.7})`;
+      ctx.lineWidth=0.5;ctx.stroke();
+    }
+  }}
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* BOOT SEQUENCE */
+const isReturn=localStorage.getItem(SK+'_booted');
+if(isReturn){
+  document.getElementById('boot-screen').style.display='none';
+  init();
+} else {
+  localStorage.setItem(SK+'_booted','1');
+  const logo=document.getElementById('b-logo'),title=document.getElementById('b-title'),
+    fill=document.getElementById('b-fill'),status=document.getElementById('b-status');
+  const msgs=['INITIALIZING COHERENCE FIELD...','LOADING SOVEREIGN FREQUENCY...','DECRYPTING PRIME ARCHITECT PROTOCOLS...','CALIBRATING PARTICLE MATRIX...','SIGNAL LOCKED — WELCOME, PRIME ARCHITECT'];
+  let prog=0;
+  setTimeout(()=>{logo.style.transition='opacity 0.5s';logo.style.opacity=1;},200);
+  setTimeout(()=>{title.style.transition='opacity 0.5s';title.style.opacity=1;},600);
+  let mi=0;
+  const iv=setInterval(()=>{
+    prog+=Math.random()*18+8;if(prog>100)prog=100;
+    fill.style.width=prog+'%';
+    status.style.transition='opacity 0.3s';status.style.opacity=1;
+    if(mi<msgs.length)status.textContent=msgs[mi++];
+    if(prog>=100){clearInterval(iv);setTimeout(()=>{
+      document.getElementById('boot-screen').style.transition='opacity 0.7s';
+      document.getElementById('boot-screen').style.opacity=0;
+      setTimeout(()=>{document.getElementById('boot-screen').style.display='none';init();},700);
+    },600);}
+  },280);
+}
+
+function init(){
+  document.getElementById('cl-date').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+  restoreAll();updateProgress();
+  if(state.contractSigned)showContractComplete();
+}
+
+/* DECRYPT TITLES */
+const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+function decrypt(el){
+  if(!el)return;
+  const orig=el.dataset.orig||(el.dataset.orig=el.textContent);
+  let iter=0;const max=16;
+  const iv=setInterval(()=>{
+    el.textContent=orig.split('').map((c,i)=>i<iter||(c==='\n'||c===' ')?c:chars[Math.floor(Math.random()*chars.length)]).join('');
+    iter+=0.8;if(iter>orig.length){el.textContent=orig;clearInterval(iv);}
+  },45);
+}
+
+/* SCANLINE FLASH */
+function flashScan(){
+  const el=document.getElementById('scanline-flash');
+  el.style.transition='none';el.style.opacity=1;el.style.top='0';
+  const sf=el.querySelector('::after');
+  let pos=-3;const iv=setInterval(()=>{
+    pos+=window.innerHeight/20;
+    el.style.backgroundImage=`linear-gradient(transparent ${pos}px, rgba(201,168,76,0.04) ${pos}px, rgba(201,168,76,0.04) ${pos+3}px, transparent ${pos+3}px)`;
+    if(pos>window.innerHeight){clearInterval(iv);el.style.transition='opacity 0.3s';el.style.opacity=0;}
+  },18);
+}
+
+/* SEAL FLASH */
+function sealFlash(){
+  const el=document.getElementById('seal-flash');
+  el.style.transition='none';el.style.opacity=1;
+  setTimeout(()=>{el.style.transition='opacity 0.8s';el.style.opacity=0;},120);
+}
+
+/* NAV */
+let cur='welcome';
+let prevScreen='welcome';
+function nav(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.remove('screen-workbook-active');});
+  const sc=document.getElementById('screen-'+id);
+  if(sc){
+    sc.classList.add('active');
+    if(id==='workbook'){triggerZoomOut(sc);}
+    else{flashScan();}
+  }
+  document.getElementById('main').scrollTop=0;
+  document.querySelectorAll('.lesson-item,.contract-link,.workbook-link').forEach(li=>li.classList.remove('active'));
+  const li=document.getElementById('li-'+id);if(li)li.classList.add('active');
+  const dt=document.getElementById('dt-'+id);if(dt)decrypt(dt);
+  if(id!=='workbook')prevScreen=id;
+  cur=id;
+  loadNotes(id);
+  restoreActivationState(id);
+  if(id==='workbook')renderWorkbook();
+  if(window.innerWidth<=768)closeSidebar();
+}
+function returnFromWorkbook(){nav(prevScreen||'welcome');}
+
+/* NOTES */
+function saveNote(id){
+  const ta=document.getElementById('fn-'+id);if(!ta)return;
+  state.notes[id]=ta.value;saveState();
+  const btn=document.querySelector(`[onclick="saveNote('${id}')"]`);
+  if(btn){btn.textContent='// SAVED ✓';setTimeout(()=>{btn.textContent='// SAVE FIELD NOTE';},2000);}
+}
+function loadNotes(id){
+  const ta=document.getElementById('fn-'+id);if(!ta)return;
+  const saved=state.notes[id]||'';
+  const prev=document.getElementById('fn-prev-'+id);
+  const prevText=document.getElementById('fn-prev-text-'+id);
+  if(saved&&prev&&prevText){prev.style.display='block';prevText.textContent=saved;ta.value='';}
+  else if(prev){prev.style.display='none';}
+}
+
+/* ACTIVATION */
+function confirm_lesson(id,next){
+  state.completed[id]=true;state.flagged[id]=false;saveState();
+  const gate=document.getElementById('ag-'+id);
+  if(gate){gate.querySelector('.ag-options').style.display='none';
+    document.getElementById('ag-conf-'+id).style.display='block';}
+  const nextBtn=document.getElementById('next-'+id);if(nextBtn)nextBtn.style.display='block';
+  sealFlash();updateProgress();updateSidebarItem(id,'done');
+}
+function flag_lesson(id,next){
+  state.flagged[id]=true;saveState();
+  const gate=document.getElementById('ag-'+id);
+  if(gate){gate.querySelector('.ag-options').style.display='none';
+    document.getElementById('ag-flag-'+id).style.display='block';}
+  const nextBtn=document.getElementById('next-'+id);if(nextBtn)nextBtn.style.display='block';
+  updateProgress();updateSidebarItem(id,'flag');
+}
+function restoreActivationState(id){
+  if(!LESSONS.includes(id))return;
+  const gate=document.getElementById('ag-'+id);if(!gate)return;
+  if(state.completed[id]){
+    gate.querySelector('.ag-options').style.display='none';
+    const c=document.getElementById('ag-conf-'+id);if(c)c.style.display='block';
+    const n=document.getElementById('next-'+id);if(n)n.style.display='block';
+  } else if(state.flagged[id]){
+    gate.querySelector('.ag-options').style.display='none';
+    const f=document.getElementById('ag-flag-'+id);if(f)f.style.display='block';
+    const n=document.getElementById('next-'+id);if(n)n.style.display='block';
+  }
+}
+function restoreAll(){
+  LESSONS.forEach(id=>{
+    restoreActivationState(id);
+    if(state.completed[id])updateSidebarItem(id,'done');
+    else if(state.flagged[id])updateSidebarItem(id,'flag');
+  });
+}
+function updateSidebarItem(id,type){
+  const li=document.getElementById('li-'+id);if(!li)return;
+  const lc=document.getElementById('lc-'+id);if(!lc)return;
+  if(type==='done'){li.classList.add('completed');li.classList.remove('flagged');lc.textContent='✓';}
+  else if(type==='flag'){li.classList.add('flagged');lc.textContent='⚑';}
+}
+
+/* PROGRESS */
+function updateProgress(){
+  const done=LESSONS.filter(id=>state.completed[id]).length;
+  const flagged=LESSONS.filter(id=>state.flagged[id]).length;
+  document.getElementById('prog-count').textContent=done;
+  const offset=CIRC-(CIRC*done/9);
+  document.getElementById('progress-ring').style.strokeDashoffset=offset;
+  const fc=document.getElementById('final-count');if(fc)fc.textContent=done;
+  const ff=document.getElementById('final-flagged');if(ff)ff.textContent=flagged;
+}
+
+/* MODULE TOGGLE */
+function toggleModule(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* MOBILE SIDEBAR */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+/* WAVE SELECTOR */
+const waveDefs={
+  wave:"THE WAVE: Infinite versions of reality exist simultaneously as a probability field — the $1.2M, the failed business, the mediocre life. All are equally real until a conscious observer collapses them into a single physical coordinate.",
+  particle:"THE PARTICLE: The specific version of reality you 'Lock' with your sustained observation. Once you observe it with enough consistency and clarity, the wave of infinite possibilities collapses into this single, physical coordinate.",
+  glitch:"THE GLITCH: Most people flicker between waves. They observe the $1.2M for five minutes, then observe their empty bank account for ten hours. This signal inconsistency creates System Noise — preventing any single reality from completing its render."
+};
+function selectWave(type){
+  document.querySelectorAll('.wave-btn').forEach(b=>b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  document.getElementById('wave-detail').textContent=waveDefs[type];
+}
+
+/* TORUS */
+function activateTorus(){
+  const ring=document.getElementById('torus-ring');
+  const st=document.getElementById('torus-status');
+  ring.classList.add('active');
+  st.textContent='FIELD: ACTIVE — COHERENCE FIELD POLARIZED — RADIUS: 3FT';
+  st.style.color='var(--cyan)';
+}
+
+/* FREQ SWAP */
+let freqSwapped=false;
+function executeFreqSwap(){
+  freqSwapped=!freqSwapped;
+  const fill=document.getElementById('freq-fill');
+  const btn=document.getElementById('freq-btn');
+  const ll=document.getElementById('freq-left-label');
+  const rl=document.getElementById('freq-right-label');
+  if(freqSwapped){
+    fill.style.width='92%';fill.style.background='linear-gradient(90deg,var(--gold),var(--cyan))';
+    ll.style.opacity='0.3';rl.style.color='var(--cyan)';rl.style.fontWeight='700';
+    btn.textContent='// RESONANCE: ACTIVE — RE-CALIBRATE';
+    btn.style.color='var(--cyan)';btn.style.borderColor='var(--cyan)';
+  } else {
+    fill.style.width='30%';fill.style.background='linear-gradient(90deg,var(--gold),var(--cyan))';
+    ll.style.opacity='1';rl.style.fontWeight='400';
+    btn.textContent='// EXECUTE FREQUENCY SWAP';
+    btn.style.color='';btn.style.borderColor='';
+  }
+}
+
+/* PING */
+function executePing(){
+  const btn=document.getElementById('ping-btn');
+  const st=document.getElementById('ping-status');
+  btn.classList.add('fired');
+  st.textContent='COORDINATE 1.2M-JAN2027 — CONFIRMED — WEIGHT: PRESENT';
+  st.style.color='var(--cyan)';
+  sealFlash();
+  setTimeout(()=>{btn.classList.remove('fired');},1000);
+}
+
+/* ANCHOR */
+function setAnchor(){
+  const btn=document.getElementById('anchor-btn');
+  const st=document.getElementById('anchor-status');
+  btn.classList.add('set');
+  btn.textContent='// ANCHOR SET — GRAVITATIONAL SOURCE: ACTIVE';
+  st.textContent='ANCHOR: SET — ENVIRONMENT ENTRAINMENT: ACTIVE';
+  st.style.color='var(--gold)';
+}
+
+/* TIMELINE */
+let tl2027Selected=false;
+function selectTimeline(type){
+  const cur=document.getElementById('tl-current');
+  const tw=document.getElementById('tl-2027');
+  const cb=document.getElementById('collapse-btn');
+  cur.classList.remove('selected');tw.classList.remove('selected');
+  if(type==='2027'){
+    tw.classList.add('selected');tl2027Selected=true;
+    cb.style.display='block';
+  } else {
+    cur.classList.add('selected');tl2027Selected=false;
+    cb.style.display='none';
+  }
+}
+function executeCollapse(){
+  if(!tl2027Selected)return;
+  sealFlash();
+  const btn=document.getElementById('collapse-btn');
+  btn.textContent='// WAVE FUNCTION COLLAPSED — TIMELINE: SEALED — COORDINATE: 1.2M-JAN2027';
+  btn.style.borderColor='var(--gold)';btn.style.color='var(--gold)';
+  btn.style.boxShadow='0 0 24px rgba(201,168,76,0.4)';
+  btn.disabled=true;
+}
+
+/* CONTRACT */
+function executeContract(){
+  const name=document.getElementById('sig-input').value.trim();
+  if(!name){
+    const f=document.getElementById('sig-input');
+    f.style.borderColor='rgba(201,168,76,0.6)';
+    f.placeholder='Enter your Sovereign Name to proceed...';
+    setTimeout(()=>{f.style.borderColor='';},2000);
+    return;
+  }
+  state.contractSigned=true;state.contractName=name;saveState();
+  sealFlash();setTimeout(sealFlash,300);
+  showContractComplete();
+}
+function showContractComplete(){
+  document.getElementById('contract-form').style.display='none';
+  const cc=document.getElementById('contract-complete');
+  cc.style.display='block';
+  updateProgress();
+}
+
+/* ZOOM-OUT ANIMATION */
+function triggerZoomOut(sc){
+  const flash=document.getElementById('wb-zoom-flash');
+  // Hard reset flash to fire every time
+  flash.style.transition='none';
+  flash.style.opacity='1';
+  void flash.offsetWidth;
+  setTimeout(()=>{flash.style.transition='opacity 0.55s';flash.style.opacity='0';},80);
+  // Hard reset screen animation to fire every time
+  sc.classList.remove('screen-workbook-active');
+  sc.style.opacity='0';
+  sc.style.transform='perspective(1400px) scale(0.22) rotateX(16deg) translateY(80px)';
+  sc.style.filter='blur(18px)';
+  void sc.offsetWidth;
+  sc.style.opacity='';sc.style.transform='';sc.style.filter='';
+  sc.classList.add('screen-workbook-active');
+  // Phase groups are rebuilt by renderWorkbook() called after this — fresh stagger every time
+  document.querySelectorAll('.wb-phase-group').forEach((g,i)=>{
+    g.style.opacity='0';
+    setTimeout(()=>{g.style.animation='none';void g.offsetWidth;g.style.animation='';g.style.opacity='';},50);
+  });
+}
+
+/* WORKBOOK RENDERING */
+const WB_LESSONS=[
+  {id:'p4-1',label:'4.1 — NON-LOCALIZED OBSERVER',phase:'p4'},
+  {id:'p4-2',label:'4.2 — WAVE FUNCTION COLLAPSE',phase:'p4'},
+  {id:'p4-3',label:'4.3 — INTERFERENCE REMOVAL',phase:'p4'},
+  {id:'p5-1',label:'5.1 — ACTIVE COHERENCE FIELD',phase:'p5'},
+  {id:'p5-2',label:'5.2 — MAGNETIC PEAK ALIGNMENT',phase:'p5'},
+  {id:'p5-3',label:'5.3 — THE ALWAYS-ON PROTOCOL',phase:'p5'},
+  {id:'p6-1',label:'6.1 — GRAVITATIONAL FORCE OF PRESENCE',phase:'p6'},
+  {id:'p6-2',label:'6.2 — QUANTUM VACUUM COMMANDS',phase:'p6'},
+  {id:'p6-3',label:'6.3 — TIMELINE JUMPING & WFC',phase:'p6'},
+];
+const WB_PHASES=[
+  {id:'p4',label:'PHASE 4: THE SINGULARITY RESET',codename:'DE-COMPRESSION'},
+  {id:'p5',label:'PHASE 5: COHERENCE ARCHITECTURE',codename:'FIELD POLARIZATION'},
+  {id:'p6',label:'PHASE 6: THE ABSOLUTE RENDER',codename:'ESCAPE VELOCITY'},
+];
+function renderWorkbook(){
+  // Stats strip
+  const done=LESSONS.filter(id=>state.completed[id]).length;
+  const flagged=LESSONS.filter(id=>state.flagged[id]).length;
+  const noted=WB_LESSONS.filter(l=>state.notes[l.id]&&state.notes[l.id].trim()).length;
+  document.getElementById('wb-stats-strip').innerHTML=
+    `<span>LOCKED: <b>${done}/9</b></span><span>FLAGGED: <b>${flagged}</b></span><span>NOTES: <b>${noted}/9</b></span>`;
+  // Build content
+  const cont=document.getElementById('wb-content');
+  cont.innerHTML='';
+  WB_PHASES.forEach((ph,pi)=>{
+    const group=document.createElement('div');
+    group.className='wb-phase-group';
+    group.style.animationDelay=(0.08+pi*0.12)+'s';
+    group.style.opacity='0';
+    let html=`<div class="wb-phase-header">// ${ph.label} <span style="opacity:0.4;margin-left:8px;">${ph.codename}</span></div>`;
+    WB_LESSONS.filter(l=>l.phase===ph.id).forEach(lesson=>{
+      const note=state.notes[lesson.id]||'';
+      const isConfirmed=state.completed[lesson.id];
+      const isFlagged=state.flagged[lesson.id];
+      const cls=isConfirmed?'wb-confirmed':isFlagged?'wb-flagged':'wb-pending';
+      const badge=isConfirmed?'<span class="wb-status-badge confirmed">✓ LOCKED</span>':
+                  isFlagged?'<span class="wb-status-badge flagged">⚑ FLAGGED</span>':
+                  '<span class="wb-status-badge pending">○ PENDING</span>';
+      const noteHtml=note
+        ?`<div class="wb-entry-note">${note.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`
+        :`<div class="wb-entry-empty">// NO FIELD NOTE RECORDED</div>`;
+      html+=`<div class="wb-entry ${cls}" onclick="nav('${lesson.id}')">
+        <div class="wb-entry-top"><span class="wb-entry-label">${lesson.label}</span>${badge}</div>
+        ${noteHtml}
+      </div>`;
+    });
+    group.innerHTML=html;
+    cont.appendChild(group);
+    // Trigger animation after insertion
+    setTimeout(()=>{group.style.opacity='';},10);
+  });
+  // Load strategy note
+  const strat=state.notes['workbook-strategy']||'';
+  const prevEl=document.getElementById('fn-prev-workbook-strategy');
+  const prevText=document.getElementById('fn-prev-text-workbook-strategy');
+  const ta=document.getElementById('fn-workbook-strategy');
+  if(strat&&prevEl&&prevText){prevEl.style.display='block';prevText.textContent=strat;ta.value='';}
+  else if(prevEl){prevEl.style.display='none';}
+}
+
+/* INIT NAV */
+nav('welcome');
+</script>
+</body>
+</html>

@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reality Override Diagnostic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Interference Pattern Diagnostic | Sovereign Synthesis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -12,7 +12,8 @@
   --bg:#050508;--bg-card:#09090f;--bg-elevated:#0d0d1a;
   --text:#E8E4F0;--dim:#7C7A9A;--ghost:#484860;
   --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.06);--cyan-border:rgba(62,247,232,0.15);
-  --gold:#C9A84C;--gold-hover:#E8C56A;--gold-glow:rgba(201,168,76,0.15);
+  --gold:#C9A84C;--gold-hover:#E8C56A;--gold-glow:rgba(201,168,76,0.18);--gold-border:rgba(201,168,76,0.22);
+  --violet:#7C5CFC;--violet-dim:rgba(124,92,252,0.08);
   --border:rgba(62,247,232,0.1);--subtle:rgba(255,255,255,0.04);
   --display:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
   --pat-a:#3EF7E8;--pat-b:#7C5CFC;--pat-c:#C9A84C;
@@ -30,12 +31,17 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 /* ENTRY */
-.entry{padding:88px 0 48px;text-align:center}
-.entry-tag{display:inline-flex;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);border:1px solid var(--cyan-border);padding:6px 16px;margin-bottom:28px;text-transform:uppercase}
-.entry h1{font-size:clamp(28px,5.5vw,48px);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px}
-.entry h1 em{color:var(--cyan);font-style:normal}
-.entry-sub{font-size:17px;color:var(--dim);max-width:500px;margin:0 auto 12px;font-weight:300}
-.entry-note{font-size:14px;color:var(--ghost);max-width:440px;margin:0 auto 40px;font-style:italic}
+.entry{padding:96px 0 56px;text-align:center}
+.entry-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);border:1px solid var(--cyan-border);padding:7px 18px;margin-bottom:32px;text-transform:uppercase;position:relative}
+.entry-tag::before{content:'';position:absolute;inset:-4px;border:1px solid rgba(62,247,232,0.06);animation:tagPulse 4s ease-in-out infinite}
+@keyframes tagPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0;transform:scale(1.08)}}
+.entry h1{font-size:clamp(26px,5.5vw,46px);font-weight:700;letter-spacing:-0.02em;line-height:1.12;margin-bottom:18px}
+.entry h1 em{color:var(--cyan);font-style:italic;font-weight:400}
+.entry-sub{font-size:17px;color:var(--dim);max-width:520px;margin:0 auto 14px;font-weight:300;line-height:1.8}
+.entry-note{font-family:var(--mono);font-size:11px;color:var(--ghost);max-width:440px;margin:0 auto 40px;letter-spacing:1px;line-height:1.6}
+.entry-mechanics{display:flex;justify-content:center;gap:28px;margin-bottom:36px;flex-wrap:wrap}
+.mech-item{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ghost);text-transform:uppercase}
+.mech-item span{color:var(--cyan);font-weight:bold}
 
 /* PROGRESS */
 .prog-wrap{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--subtle);padding:12px 0;display:none}
@@ -46,10 +52,11 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 .prog-fill{height:100%;background:var(--cyan);border-radius:1px;transition:width .4s ease;width:0%}
 
 /* QUESTION */
-.q-screen{padding:60px 0}
-.q-text{font-size:clamp(20px,4vw,32px);font-weight:600;line-height:1.3;letter-spacing:-0.01em;margin-bottom:36px;max-width:580px}
-.answers{display:flex;flex-direction:column;gap:10px}
-.answer{padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;font-size:16px;color:var(--dim);transition:all .2s;display:flex;align-items:center;gap:14px;text-align:left}
+.q-screen{padding:64px 0}
+.q-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--ghost);margin-bottom:20px;display:block;text-transform:uppercase}
+.q-text{font-size:clamp(19px,3.8vw,30px);font-weight:600;line-height:1.35;letter-spacing:-0.01em;margin-bottom:36px;max-width:560px;color:var(--text)}
+.answers{display:flex;flex-direction:column;gap:8px}
+.answer{padding:17px 24px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;font-size:16px;color:var(--dim);transition:all .2s;display:flex;align-items:center;gap:14px;text-align:left}
 .answer:hover{border-color:rgba(62,247,232,0.3);color:var(--text);background:var(--cyan-dim)}
 .answer.selecting{border-color:var(--cyan);color:var(--text);background:var(--cyan-dim);transform:scale(1.01)}
 .answer-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--ghost);flex-shrink:0;transition:all .2s}
@@ -57,45 +64,58 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 .answer-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ghost);margin-left:auto;white-space:nowrap}
 
 /* RESULT */
-.result{padding:64px 0}
-.result-tag{display:inline-flex;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;border:1px solid var(--cyan-border);padding:6px 16px;margin-bottom:28px;text-transform:uppercase}
-.result h2{font-size:clamp(22px,4.5vw,40px);font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
-.pattern-name{font-size:clamp(26px,5vw,42px);font-weight:700;letter-spacing:-0.02em;margin-bottom:24px}
-.pattern-card{padding:28px 32px;border:1px solid;margin-bottom:24px;border-left-width:3px}
-.pattern-card.dominant{background:rgba(62,247,232,0.04)}
-.pattern-desc{font-size:17px;line-height:1.75;margin-bottom:12px;font-weight:300}
-.pattern-headline{font-family:var(--mono);font-size:11px;letter-spacing:2px;margin-bottom:6px;opacity:.9}
-.pattern-plain{font-size:15px;color:var(--dim);font-style:italic}
+.result{padding:72px 0}
+.result-badge{font-family:var(--mono);font-size:9px;letter-spacing:3px;border:1px solid;padding:6px 16px;margin-bottom:28px;text-transform:uppercase;display:inline-block}
+.result-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:10px;text-transform:uppercase}
+.pattern-name{font-size:clamp(24px,5vw,44px);font-weight:700;letter-spacing:-0.02em;margin-bottom:28px;line-height:1.1}
+.pattern-card{padding:28px 32px;border:1px solid;margin-bottom:4px;border-left-width:3px;position:relative}
+.pattern-card.dominant{background:rgba(62,247,232,0.03)}
+.pattern-desc{font-size:17px;line-height:1.8;margin-bottom:14px;font-weight:300;font-style:italic;color:var(--dim)}
+.pattern-frame{font-family:var(--mono);font-size:10px;letter-spacing:2px;margin-bottom:6px;opacity:.85;text-transform:uppercase}
+.pattern-plain{font-size:14px;color:var(--dim);font-style:italic}
 
 /* SCORE BARS */
-.score-section{margin:32px 0}
-.score-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim);margin-bottom:20px}
+.score-section{margin:36px 0 28px}
+.score-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ghost);margin-bottom:18px;display:block;text-transform:uppercase}
 .score-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.score-name{font-size:13px;color:var(--dim);min-width:140px}
-.score-bar-wrap{flex:1;height:6px;background:var(--subtle);border-radius:3px;overflow:hidden}
-.score-bar{height:100%;border-radius:3px;transition:width 1s ease .2s;width:0%}
+.score-name{font-size:13px;color:var(--dim);min-width:150px}
+.score-bar-wrap{flex:1;height:4px;background:var(--subtle);border-radius:2px;overflow:hidden}
+.score-bar{height:100%;border-radius:2px;transition:width 1s ease .3s;width:0%}
 .score-val{font-family:var(--mono);font-size:10px;color:var(--ghost);min-width:36px;text-align:right}
 
 /* WHAT IT MEANS */
-.means-block{background:var(--bg-card);border:1px solid var(--border);padding:24px 28px;margin:28px 0}
-.means-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px;display:block}
-.means-text{font-size:15px;color:var(--dim);line-height:1.8;font-weight:300}
+.means-block{background:var(--bg-card);border:1px solid var(--border);padding:26px 30px;margin:28px 0;position:relative}
+.means-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);opacity:0.3}
+.means-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px;display:block;opacity:.8;text-transform:uppercase}
+.means-text{font-size:15px;color:var(--dim);line-height:1.85;font-weight:300}
 
-/* CTA */
-.cta-primary{background:var(--bg-card);border:1px solid rgba(62,247,232,0.2);padding:28px;margin:28px 0;text-align:center}
-.cta-primary p{font-size:15px;color:var(--dim);margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto}
-.cta-secondary{margin-top:20px;text-align:center}
-.cta-secondary p{font-size:14px;color:var(--ghost);margin-bottom:14px}
+/* DIVIDER */
+.result-div{border:none;border-top:1px solid var(--subtle);margin:36px 0}
+
+/* PROTOCOL CTA BLOCK */
+.protocol-cta{background:var(--bg-elevated);border:1px solid var(--gold-border);padding:32px 32px 28px;margin:0 0 16px;position:relative}
+.protocol-cta::before{content:'';position:absolute;top:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.25}
+.protocol-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:rgba(201,168,76,0.6);text-transform:uppercase;margin-bottom:14px;display:block}
+.protocol-cta h3{font-size:20px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-0.01em;line-height:1.3}
+.protocol-cta p{font-size:15px;color:var(--dim);margin-bottom:20px;font-weight:300;line-height:1.8}
+.price-signal{font-family:var(--mono);font-size:11px;color:rgba(201,168,76,0.7);letter-spacing:1px;margin-bottom:20px}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:14px 28px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;text-decoration:none}
-.btn-gold{background:var(--gold);color:#050508;font-weight:700}
-.btn-gold:hover{background:var(--gold-hover);box-shadow:0 0 20px var(--gold-glow)}
-.btn-cyan{background:transparent;color:var(--cyan);border:1px solid var(--cyan-border)}
-.btn-cyan:hover{background:var(--cyan-dim)}
-.btn-ghost{background:transparent;color:var(--ghost);border:1px solid var(--subtle);font-size:10px}
+.btn-gold{background:var(--gold);color:#050508;font-weight:bold;display:block;text-align:center;position:relative;overflow:hidden}
+.btn-gold:hover{background:var(--gold-hover);box-shadow:0 0 32px var(--gold-glow)}
+.btn-gold::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);animation:shimmer 7s ease-in-out infinite}
+@keyframes shimmer{0%,100%{left:-100%}50%{left:100%}}
+.btn-cyan{background:transparent;color:var(--cyan);border:1px solid var(--cyan-border);display:block;text-align:center}
+.btn-cyan:hover{background:var(--cyan-dim);border-color:rgba(62,247,232,0.4)}
+.btn-ghost{background:transparent;color:var(--ghost);border:1px solid var(--subtle);font-size:10px;display:inline-flex}
 .btn-ghost:hover{color:var(--dim);border-color:var(--border)}
 
-@media(max-width:500px){.score-name{min-width:100px}.q-text{font-size:20px}}
+.manual-cta{text-align:center;margin:0 0 32px;padding:20px 0 0}
+.manual-cta p{font-size:14px;color:var(--ghost);margin-bottom:12px;font-style:italic}
+
+.retake-wrap{text-align:center;margin-top:40px}
+
+@media(max-width:500px){.score-name{min-width:110px}.q-text{font-size:18px}.protocol-cta{padding:24px 20px}}
 </style>
 </head>
 <body>
@@ -104,27 +124,46 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 <!-- PROGRESS BAR -->
 <div class="prog-wrap" id="prog-wrap">
   <div class="prog-inner">
-    <span class="prog-count" id="prog-count">Question 1 of 12</span>
+    <span class="prog-count" id="prog-count">Signal 1 of 12</span>
     <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
   </div>
 </div>
 
 <div class="wrap">
 
+<!-- RETAKE PROMPT -->
+<div class="screen" id="screen-retake">
+  <div class="entry">
+    <div class="entry-tag">⬡ SOVEREIGN SYNTHESIS — DIAGNOSTIC</div>
+    <h1>Your interference pattern<br>is already on file.</h1>
+    <p class="entry-sub">Your previous diagnostic result is saved. You can review it now, or run the diagnostic again from the start.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+      <button class="btn btn-gold" onclick="showResults()">SEE MY PATTERN →</button>
+      <button class="btn btn-cyan" onclick="retake()">RUN DIAGNOSTIC AGAIN</button>
+    </div>
+  </div>
+</div>
+
 <!-- ENTRY -->
 <div class="screen active" id="screen-entry">
   <div class="entry">
-    <div class="entry-tag">⬡ Reality Override — Diagnostic</div>
-    <h1>Find out exactly which pattern is <em>keeping you stuck</em>.</h1>
-    <p class="entry-sub">12 questions. 3 minutes. No generic results.</p>
-    <p class="entry-note">This isn't a quiz about what you want. It's a map of what's been stopping you.</p>
-    <button class="btn btn-gold" onclick="startDiagnostic()">START DIAGNOSTIC →</button>
+    <div class="entry-tag">⬡ INTERFERENCE PATTERN — DIAGNOSTIC</div>
+    <h1>The system running your life<br>has a <em>specific architecture.</em></h1>
+    <p class="entry-sub">This diagnostic maps the interference pattern that is generating the results you don't recognize as yours — the reactive cycles, the drained energy, the decisions that don't feel like your own.</p>
+    <p class="entry-note">// 12 SIGNALS — 3 MINUTES — RESULT IS SPECIFIC, NOT GENERIC</p>
+    <div class="entry-mechanics">
+      <span class="mech-item"><span>3</span> INTERFERENCE PATTERNS</span>
+      <span class="mech-item"><span>12</span> CALIBRATION SIGNALS</span>
+      <span class="mech-item"><span>1</span> DOMINANT PATTERN IDENTIFIED</span>
+    </div>
+    <button class="btn btn-gold" onclick="startDiagnostic()">RUN THE DIAGNOSTIC →</button>
   </div>
 </div>
 
 <!-- QUESTION SCREEN (dynamically filled) -->
 <div class="screen" id="screen-question">
   <div class="q-screen">
+    <span class="q-tag" id="q-tag">// SIGNAL CALIBRATION</span>
     <div class="q-text" id="q-text"></div>
     <div class="answers" id="q-answers"></div>
   </div>
@@ -133,14 +172,14 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 <!-- RESULT -->
 <div class="screen" id="screen-result">
   <div class="result">
-    <div class="result-tag" id="result-tag" style="color:var(--cyan)">⬡ DIAGNOSTIC COMPLETE — SIGNAL IDENTIFIED</div>
-    <h2>Your primary pattern:</h2>
+    <div class="result-badge" id="result-badge">⬡ DIAGNOSTIC COMPLETE — PATTERN IDENTIFIED</div>
+    <div class="result-eyebrow">Your primary interference pattern:</div>
     <div class="pattern-name" id="result-pattern-name"></div>
 
     <div class="pattern-card dominant" id="result-card"></div>
 
     <div class="score-section">
-      <div class="score-label">// PATTERN SCORES</div>
+      <span class="score-label">// PATTERN SIGNAL STRENGTHS</span>
       <div class="score-row">
         <span class="score-name">The Approval Loop</span>
         <div class="score-bar-wrap"><div class="score-bar" id="bar-a" style="background:var(--pat-a)"></div></div>
@@ -152,7 +191,7 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
         <span class="score-val" id="val-b">—</span>
       </div>
       <div class="score-row">
-        <span class="score-name">The Identity Trap</span>
+        <span class="score-name">The Identity Lock</span>
         <div class="score-bar-wrap"><div class="score-bar" id="bar-c" style="background:var(--pat-c)"></div></div>
         <span class="score-val" id="val-c">—</span>
       </div>
@@ -163,17 +202,22 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
       <div class="means-text" id="means-text"></div>
     </div>
 
-    <div class="cta-primary">
-      <p>Your full Reality Override Manual is in your inbox. It contains the three-pattern override sequence — starting with yours.</p>
-      <a class="btn btn-gold" href="./download.html">ACCESS YOUR MANUAL →</a>
+    <hr class="result-div">
+
+    <div class="manual-cta">
+      <p>Your Reality Override Manual maps the full three-pattern framework — beginning with yours.</p>
+      <a class="btn btn-cyan" href="./download.html">ACCESS YOUR MANUAL →</a>
     </div>
 
-    <div class="cta-secondary">
-      <p>If you want to go further than the manual — to actually deploy the tools, not just understand them:</p>
-      <a class="btn btn-cyan" href="../tier-2/protocol-77.html">SEE PROTOCOL 77 — $77 →</a>
+    <div class="protocol-cta" id="protocol-cta-block">
+      <span class="protocol-label" id="protocol-label">// THE NEUTRALIZATION SEQUENCE</span>
+      <h3 id="protocol-heading"></h3>
+      <p id="protocol-body"></p>
+      <p class="price-signal">// PROTOCOL 77 — $77 &middot; THE TOOL THAT ENDS THE PATTERN</p>
+      <a class="btn btn-gold" href="../tier-2/protocol-77.html">SEE PROTOCOL 77 →</a>
     </div>
 
-    <div style="text-align:center;margin-top:40px">
+    <div class="retake-wrap">
       <button class="btn btn-ghost" onclick="retake()">RETAKE DIAGNOSTIC</button>
     </div>
   </div>
@@ -182,29 +226,29 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 </div><!-- /wrap -->
 
 <script>
-// QUESTIONS — shuffled per session
+// QUESTIONS — shuffled per session, 4 per pattern
 const QUESTIONS = [
-  // Pattern A — Approval Loop (indices: A)
+  // Pattern A — Approval Loop
   {text:"I explain my decisions to people who didn't ask for an explanation.",pattern:'A'},
   {text:"I feel a physical sense of relief when someone I respect agrees with my choice.",pattern:'A'},
   {text:"I have delayed a decision because I was waiting for someone else to validate it first.",pattern:'A'},
-  {text:"When I get criticism — even mild criticism — it stays with me longer than the positive feedback.",pattern:'A'},
+  {text:"When I get criticism — even mild — it stays with me longer than the positive feedback.",pattern:'A'},
   // Pattern B — Overload Spiral
   {text:"I end the day exhausted but feel like I didn't accomplish anything that actually mattered.",pattern:'B'},
   {text:"Other people's problems consistently take priority over my own focused work.",pattern:'B'},
   {text:"I struggle to say no even when I know I don't have the bandwidth.",pattern:'B'},
-  {text:"I often feel like I'm running hard in every direction but not moving forward on what matters most.",pattern:'B'},
-  // Pattern C — Identity Trap
+  {text:"I'm running hard in multiple directions but not advancing on what matters most to me.",pattern:'B'},
+  // Pattern C — Identity Lock
   {text:"When an opportunity appears that would require me to be significantly different, I find reasons to pass.",pattern:'C'},
-  {text:"I stay in situations — relationships, jobs, habits — longer than I know I should, because leaving feels dangerous.",pattern:'C'},
+  {text:"I stay in situations — relationships, roles, habits — longer than I know I should, because leaving feels risky.",pattern:'C'},
   {text:"The version of me that succeeds at what I actually want feels like someone I don't quite trust yet.",pattern:'C'},
   {text:"I protect my current life more than I pursue the life I actually want.",pattern:'C'},
 ];
 
 const ANSWERS = [
-  {label:'Never',score:0},
+  {label:'Never',   score:0},
   {label:'Sometimes',score:1},
-  {label:'Often',score:2},
+  {label:'Often',   score:2},
   {label:'Almost Always',score:3},
 ];
 
@@ -212,30 +256,36 @@ const PATTERNS = {
   A: {
     name:'The Approval Loop',
     color:'var(--pat-a)',
-    desc:"You're not stuck because you don't know what to do. You're stuck because you're waiting for someone to tell you it's okay to do it.",
-    headline:"Your primary pattern: external validation dependency.",
-    plain:"You've been outsourcing your permission slip.",
-    means:"Every time you waited for someone else's approval before acting, you handed over decision-making authority you were never supposed to give away. The approval you've been seeking was never going to come in the form you needed — because the people you were seeking it from were also operating from inside the same system. The good news: the loop can be interrupted. The Reality Override Manual contains the first three steps to reclaiming your own authority."
+    desc:"You're not stuck because you don't know what to do. You're stuck because you've been waiting for someone to confirm it's safe to do it — and that confirmation was never coming from a source that had your interests in mind.",
+    frame:"PRIMARY PATTERN: EXTERNAL PERMISSION DEPENDENCY",
+    plain:"You've been outsourcing your permission slip to systems that were designed to keep it.",
+    means:"Every time you waited for someone else's approval before acting, you handed decision-making authority to a system that was never equipped to return it. The people you've been seeking validation from are running the same installed patterns — their approval couldn't give you what you were actually looking for, because what you're looking for is your own authority. The loop runs automatically until it is audited and interrupted. The Reality Override Manual maps the architecture of the loop. Understanding it is the first step. The second step is deploying the specific neutralization sequence — which is what Protocol 77 was built to do.",
+    p77heading:"Protocol 77 was designed specifically for the Approval Loop.",
+    p77body:"The seven dark psychology vectors mapped in Protocol 77 are the same mechanisms that maintain external validation dependency. Each one is a different angle on the same fundamental operation: keeping you in a permission-seeking state so that your decisions, your energy, and your authority remain accessible to the system running the loop. Protocol 77 doesn't explain the loop — it ends it, vector by vector, with a specific neutralization sequence for each. The manual showed you the map. Protocol 77 is the tool."
   },
   B: {
     name:'The Overload Spiral',
     color:'var(--pat-b)',
-    desc:"You're not stuck because you lack motivation. You're stuck because your operating system is running too many background processes — and none of them are yours.",
-    headline:"Your primary pattern: cognitive bandwidth hijacking.",
+    desc:"You're not stuck because you lack motivation. You're stuck because your operating bandwidth has been claimed — by inputs you never consciously agreed to, by systems running on your attention without your permission.",
+    frame:"PRIMARY PATTERN: COGNITIVE BANDWIDTH HIJACKING",
     plain:"You've been operating in someone else's emergency.",
-    means:"The busyness isn't laziness in disguise — it's a real system problem. Your calendar and your attention have been claimed by inputs you never consciously agreed to prioritize. The result is exhaustion without progress: high activity, low advancement. Until you audit what has access to your focus, the spiral continues regardless of effort. The Reality Override Manual contains a diagnostic for exactly this — starting with the inputs that are costing you the most."
+    means:"The busyness isn't laziness disguised — it's a bandwidth problem. Your calendar, your attention, and your decision-making capacity have been claimed by inputs you didn't consciously install. The result is high activity with low advancement: exhaustion without progress. Until you audit what has access to your focus — and by what mechanism it claimed that access — the spiral continues regardless of your effort level. The Reality Override Manual contains the initial audit framework. It identifies the categories of input that are generating the drain. But identifying the categories is different from understanding the exact mechanisms used to claim your attention in the first place — which is what Protocol 77 maps.",
+    p77heading:"Protocol 77 audits the seven vectors hijacking your bandwidth.",
+    p77body:"The Overload Spiral is the predictable output when multiple dark psychology vectors have simultaneous access to your attention. Protocol 77 maps all seven of them — the specific mechanisms that have been installed to make other people's priorities feel like your own, that make saying no feel dangerous, that make your own focused work feel selfish or secondary. Once the mechanism is visible, the hijacking stops working. Protocol 77 goes through each vector individually and gives you the specific neutralization sequence for each one that's active in your field. The spiral doesn't stop through willpower. It stops when the mechanisms feeding it are interrupted at the source."
   },
   C: {
-    name:'The Identity Trap',
+    name:'The Identity Lock',
     color:'var(--pat-c)',
-    desc:"You're not stuck because you can't change. You're stuck because part of you believes you shouldn't — because the current version of you is all you know how to protect.",
-    headline:"Your primary pattern: identity preservation reflex.",
+    desc:"You're not stuck because you can't change. You're stuck because a part of your operating system was built to prevent it — not out of weakness, but because the version of you that exists right now is all it knows how to protect.",
+    frame:"PRIMARY PATTERN: IDENTITY PRESERVATION REFLEX",
     plain:"You've been protecting a version of yourself that was never chosen.",
-    means:"The resistance you feel toward the life you actually want is not weakness. It is a protection mechanism doing exactly what it was designed to do — keep you consistent with who you've already been. The problem is that consistency was never your design. It was inherited. The version of you that keeps declining the next level wasn't chosen — it was accumulated. The Reality Override Manual walks through how to separate the protection from the person."
+    means:"The resistance you feel toward the life you actually want is not a character flaw. It is a protection mechanism doing exactly what it was built to do: keep you consistent with the identity that was accumulated before you had the tools to design one intentionally. The problem is that consistency was never your choice — it was installed. Every time you declined an opportunity that would have required a different version of you, the lock tightened. Not because you were afraid. Because the mechanism made the current version feel like the only safe one. The Reality Override Manual maps the structure of this lock. Protocol 77 maps the seven vectors that are actively maintaining it — and gives you the specific sequence to interrupt each one.",
+    p77heading:"Protocol 77 maps the seven vectors maintaining the Identity Lock.",
+    p77body:"The Identity Lock doesn't persist on its own. It is actively maintained by specific dark psychology mechanisms — vectors that make the current identity feel like something that must be defended, that make change feel like loss, that make the next version of you feel less real than the one you're already running. Protocol 77 identifies all seven of these mechanisms and walks through the neutralization sequence for each one. Once a mechanism is visible as a mechanism — not as a truth about who you are — it loses the leverage it had. This is not mindset work. It is an architecture audit. The lock doesn't open from the inside through motivation. It opens when the mechanisms maintaining it are specifically named and interrupted."
   }
 };
 
-const STORAGE_KEY = 'reality_override_result';
+const STORAGE_KEY = 'ss_interference_result_v2';
 let shuffledQuestions = [];
 let currentQ = 0;
 let scores = {A:0, B:0, C:0};
@@ -259,6 +309,7 @@ function startDiagnostic(){
 function showQuestion(n){
   const q = shuffledQuestions[n];
   document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-tag').textContent = `// SIGNAL ${n+1} OF 12`;
   const answersEl = document.getElementById('q-answers');
   answersEl.innerHTML = ANSWERS.map((a,i)=>`
     <div class="answer" onclick="selectAnswer(${i},${a.score},'${q.pattern}')">
@@ -274,7 +325,7 @@ function showQuestion(n){
 function updateProgress(n){
   const pct = Math.round((n/12)*100);
   document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-count').textContent = `Question ${n+1} of 12`;
+  document.getElementById('prog-count').textContent = `Signal ${n+1} of 12`;
 }
 
 function selectAnswer(answerIdx, score, pattern){
@@ -306,26 +357,41 @@ function showResults(){
   // Save
   try{localStorage.setItem(STORAGE_KEY, JSON.stringify({scores, dominant}))}catch(e){}
 
-  // Render
-  document.getElementById('result-pattern-name').textContent = pat.name;
-  document.getElementById('result-pattern-name').style.color = pat.color;
+  // Badge
+  const badge = document.getElementById('result-badge');
+  badge.style.color = pat.color;
+  badge.style.borderColor = pat.color;
+
+  // Pattern name
+  const nameEl = document.getElementById('result-pattern-name');
+  nameEl.textContent = pat.name;
+  nameEl.style.color = pat.color;
+
+  // Pattern card
   document.getElementById('result-card').style.borderColor = pat.color;
   document.getElementById('result-card').innerHTML = `
-    <div style="font-size:15px;color:var(--dim);font-style:italic;margin-bottom:16px">"${pat.desc}"</div>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:${pat.color};margin-bottom:6px">${pat.headline.toUpperCase()}</div>
-    <div style="font-size:14px;color:var(--dim);font-style:italic">${pat.plain}</div>
+    <div class="pattern-desc">"${pat.desc}"</div>
+    <div class="pattern-frame" style="color:${pat.color}">${pat.frame}</div>
+    <div class="pattern-plain">${pat.plain}</div>
   `;
 
+  // Score bars
   const maxScore = 12;
   setTimeout(()=>{
     document.getElementById('bar-a').style.width = Math.round((scores.A/maxScore)*100)+'%';
     document.getElementById('bar-b').style.width = Math.round((scores.B/maxScore)*100)+'%';
     document.getElementById('bar-c').style.width = Math.round((scores.C/maxScore)*100)+'%';
-  },100);
+  },120);
   document.getElementById('val-a').textContent = scores.A+'/12';
   document.getElementById('val-b').textContent = scores.B+'/12';
   document.getElementById('val-c').textContent = scores.C+'/12';
+
+  // What it means
   document.getElementById('means-text').textContent = pat.means;
+
+  // Pattern-specific Protocol 77 CTA
+  document.getElementById('protocol-heading').textContent = pat.p77heading;
+  document.getElementById('protocol-body').textContent = pat.p77body;
 
   showScreen('screen-result');
 }
@@ -350,7 +416,7 @@ function retake(){
       const {scores:s, dominant} = JSON.parse(saved);
       if(s && dominant){
         scores = s;
-        showResults();
+        showScreen('screen-retake');
         return;
       }
     }
