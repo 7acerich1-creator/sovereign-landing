@@ -133,6 +133,16 @@
       font-weight: 300;
     }
 
+
+    .acceptance-prompt {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      text-transform: uppercase;
+      margin: 28px 0 20px;
+      opacity: 0.9;
+    }
     /* ═══ EMAIL CAPTURE ═══ */
     .capture-section {
       background: var(--bg-card);
@@ -323,10 +333,11 @@
       <div class="form-state" id="formState">
         <h3>Get the diagnostic. Free.</h3>
         <p>Enter your email. The PDF arrives instantly.</p>
+        <p class="acceptance-prompt">Will you accept?</p>
         <form id="captureForm">
           <div class="form-row">
             <input type="email" id="emailInput" placeholder="your@email.com" required>
-            <button type="submit" class="btn-submit" id="submitBtn">GET ACCESS</button>
+            <button type="submit" class="btn-submit" id="submitBtn">I ACCEPT</button>
           </div>
         </form>
         <p class="form-note">No spam. No sequence. Just the manual.</p>
