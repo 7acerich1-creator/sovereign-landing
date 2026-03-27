@@ -262,6 +262,31 @@
       padding: 40px 0;
       border-top: 1px solid var(--border);
     }
+
+    /* ── SIGNAL LINK (easter egg) ── */
+    @keyframes signal-pulse {
+      0%   { color: #444; text-shadow: none; }
+      50%  { color: #5a7a78; text-shadow: 0 0 8px rgba(0,229,199,0.18); }
+      100% { color: #444; text-shadow: none; }
+    }
+    .signal-link {
+      color: #444;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 1px;
+      animation: signal-pulse 11s ease-in-out infinite;
+      animation-delay: 4s;
+      cursor: default;
+      display: inline-block;
+    }
+    .signal-link:hover {
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(0,229,199,0.3);
+      cursor: pointer;
+      animation: none;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
   </style>
 </head>
 <body>
@@ -325,7 +350,7 @@
     <!-- FOOTER -->
     <footer class="footer">
       <p class="sig">&mdash; Ace Richie</p>
-      <p>Sovereign Synthesis &copy; 2026</p>
+      <p><a href="/about.html" class="signal-link">Sovereign Synthesis</a> &copy; 2026</p>
     </footer>
   </div>
 
@@ -383,3 +408,4 @@
   </script>
 </body>
 </html>
+
