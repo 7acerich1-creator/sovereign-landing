@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Architecture Manifesto — Interactive Portal</title>
+<meta name="description" content="A live environment built from the Sovereign Architecture Manifesto. Phase 1 and Phase 2 are open. Phase 3 requires access.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050508;
+  --bg-panel: #0a0a12;
+  --bg-surface: #0f0f1a;
+  --bg-deep: #070710;
+  --border: #1a1a2e;
+  --border-dim: #111120;
+  --border-bright: #252540;
+  --cyan: #3EF7E8;
+  --cyan-dim: rgba(62,247,232,0.12);
+  --cyan-glow: rgba(62,247,232,0.06);
+  --cyan-border: rgba(62,247,232,0.3);
+  --gold: #C9A84C;
+  --gold-dim: rgba(201,168,76,0.12);
+  --gold-border: rgba(201,168,76,0.35);
+  --violet: #7B5FDE;
+  --violet-dim: rgba(123,95,222,0.12);
+  --violet-border: rgba(123,95,222,0.3);
+  --text: #E0E0EC;
+  --text-dim: #7070A0;
+  --text-ghost: #404060;
+  --text-dead: #252538;
+  --green-ok: #2DBE6C;
+  --sans: 'Space Grotesk', system-ui, sans-serif;
+  --mono: 'Space Mono', 'Courier New', monospace;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+/* ── SCAN LINE ── */
+.scan-line {
+  position: fixed; left: 0; right: 0; height: 1px;
+  background: rgba(62,247,232,0.04);
+  pointer-events: none; z-index: 1;
+  animation: scanMove 6s linear infinite;
+}
+@keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+
+/* ── LAYOUT ── */
+.shell {
+  position: relative; z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,8,0.9);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 50;
+}
+.header-brand {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  text-transform: uppercase;
+}
+.header-meta {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-ghost);
+  text-transform: uppercase;
+}
+
+/* ── PHASE NAV ── */
+.phase-nav {
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+  background: var(--bg-deep);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.phase-nav::-webkit-scrollbar { display: none; }
+.phase-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-ghost);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  outline: none;
+  text-transform: uppercase;
+}
+.phase-tab.active {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+.phase-tab.done {
+  color: var(--green-ok);
+  border-bottom-color: var(--green-ok);
+}
+.phase-tab.locked {
+  color: var(--text-dead);
+  cursor: not-allowed;
+}
+.phase-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── MAIN ── */
+.main {
+  flex: 1;
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active {
+  display: block;
+  animation: screenIn 0.35s ease;
+}
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── GLASS PANEL ── */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 40px;
+  margin-bottom: 20px;
+}
+.panel-cyan  { border-color: var(--cyan-border); background: linear-gradient(135deg, var(--bg-panel), rgba(62,247,232,0.03)); }
+.panel-gold  { border-color: var(--gold-border); background: linear-gradient(135deg, var(--bg-panel), rgba(201,168,76,0.03)); }
+.panel-violet{ border-color: var(--violet-border); background: linear-gradient(135deg, var(--bg-panel), rgba(123,95,222,0.04)); }
+.panel-lock  { border-color: var(--border-bright); background: var(--bg-deep); opacity: 0.7; }
+
+/* ── LABELS ── */
+.label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.label-cyan   { color: var(--cyan); }
+.label-gold   { color: var(--gold); }
+.label-violet { color: var(--violet); }
+.label-dim    { color: var(--text-ghost); }
+
+h2.screen-title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+.screen-sub {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* ── TOGGLE ROW ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+  user-select: none;
+}
+.toggle-row:hover { border-color: var(--violet-border); background: var(--violet-dim); }
+.toggle-row.on { border-color: var(--violet-border); background: var(--violet-dim); }
+.toggle-label { font-size: 14px; font-weight: 500; color: var(--text-dim); transition: color 0.2s; }
+.toggle-row.on .toggle-label { color: var(--text); }
+.toggle-switch {
+  width: 44px; height: 24px;
+  border-radius: 12px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-bright);
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.toggle-row.on .toggle-switch { background: var(--violet); border-color: var(--violet); }
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s;
+}
+.toggle-row.on .toggle-knob { left: 23px; }
+
+/* ── CHECKBOX ROW ── */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+  user-select: none;
+}
+.check-row:hover { border-color: var(--gold-border); background: var(--gold-dim); }
+.check-row.on { border-color: var(--gold-border); background: var(--gold-dim); }
+.check-box {
+  width: 20px; height: 20px;
+  border: 1px solid var(--text-ghost);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.check-row.on .check-box { border-color: var(--gold); background: var(--gold); }
+.check-mark { color: var(--bg); font-size: 12px; font-weight: 700; display: none; }
+.check-row.on .check-mark { display: block; }
+.check-text { font-size: 14px; font-weight: 500; color: var(--text-dim); transition: color 0.2s; }
+.check-row.on .check-text { color: var(--text); }
+
+/* ── QUESTION CARD ── */
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+.q-counter {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-ghost);
+  letter-spacing: 1px;
+}
+.q-progress-bar {
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+.q-progress-fill {
+  height: 100%;
+  background: var(--cyan);
+  transition: width 0.4s ease;
+}
+.q-type {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-ghost);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.q-text {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+.q-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 8px;
+}
+.q-opt {
+  padding: 14px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.q-opt:hover { border-color: var(--cyan-border); background: var(--cyan-dim); color: var(--cyan); }
+.q-opt-num { font-size: 18px; font-weight: 700; }
+.q-opt-label { font-size: 8px; letter-spacing: 1px; }
+
+/* ── RESULT PANEL ── */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-dim);
+  font-size: 13px;
+}
+.result-row:last-child { border-bottom: none; }
+.result-key { color: var(--text-dim); font-family: var(--mono); font-size: 10px; letter-spacing: 1px; }
+.result-val { font-weight: 600; }
+
+/* ── BTN ── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+.btn-cyan { background: var(--cyan); color: var(--bg); }
+.btn-cyan:hover { filter: brightness(1.1); box-shadow: 0 0 24px rgba(62,247,232,0.3); }
+.btn-gold { background: var(--gold); color: var(--bg); }
+.btn-gold:hover { filter: brightness(1.1); box-shadow: 0 0 24px rgba(201,168,76,0.3); }
+.btn-outline-cyan {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  border: 1px solid var(--cyan-border);
+}
+.btn-outline-cyan:hover { background: rgba(62,247,232,0.2); box-shadow: 0 0 20px rgba(62,247,232,0.2); }
+.btn-outline-gold {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid var(--gold-border);
+}
+.btn-outline-gold:hover { background: rgba(201,168,76,0.2); box-shadow: 0 0 20px rgba(201,168,76,0.2); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; filter: none; box-shadow: none; }
+
+/* ── STATUS ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 5px 12px;
+  text-transform: uppercase;
+}
+.badge-cyan  { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan-border); }
+.badge-gold  { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.badge-green { background: rgba(45,190,108,0.12); color: var(--green-ok); border: 1px solid rgba(45,190,108,0.3); }
+.badge-locked{ background: var(--bg-surface); color: var(--text-ghost); border: 1px solid var(--border); }
+
+/* ── LOCK SCREEN ── */
+.lock-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  opacity: 0.4;
+}
+.lock-phases {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 32px 0;
+}
+.lock-phase {
+  padding: 20px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.lock-phase.open { border-color: var(--cyan-border); background: var(--cyan-glow); }
+.lock-phase.locked-ph { border-color: var(--gold-border); background: var(--gold-dim); }
+.lock-phase-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.lock-phase.open .lock-phase-label { color: var(--cyan); }
+.lock-phase.locked-ph .lock-phase-label { color: var(--gold); }
+.lock-phase-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.lock-phase-status {
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.lock-phase.open .lock-phase-status { color: var(--green-ok); }
+.lock-phase.locked-ph .lock-phase-status { color: var(--gold); }
+
+.offer-block {
+  border: 1px solid var(--gold-border);
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.04), rgba(201,168,76,0.08));
+  margin: 24px 0;
+}
+.offer-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.offer-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.offer-includes {
+  list-style: none;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.offer-includes li {
+  font-size: 13px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.offer-includes li::before {
+  content: '→';
+  color: var(--gold);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+
+/* ── PROGRESS BAR ── */
+.phase-progress {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 40px;
+}
+.phase-bar {
+  height: 3px;
+  border-radius: 1px;
+  transition: background 0.4s;
+}
+.phase-bar.done { background: var(--green-ok); }
+.phase-bar.active { background: var(--cyan); }
+.phase-bar.pending { background: var(--border); }
+
+/* ── INTRO SCREEN ── */
+.intro-stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 28px 0;
+}
+.intro-stat {
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+.intro-stat-val {
+  font-family: var(--mono);
+  font-size: 22px;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+.intro-stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-ghost);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+}
+
+/* ── CONTENT TEXT ── */
+.content-block {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.content-block strong { color: var(--text); }
+.content-block .highlight { color: var(--cyan); }
+.content-block .gold { color: var(--gold); }
+
+.quote-block {
+  border-left: 3px solid var(--cyan);
+  padding: 16px 20px;
+  background: var(--cyan-dim);
+  margin: 20px 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .main { padding: 32px 20px 100px; }
+  .panel { padding: 24px; }
+  .q-options { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 4px; }
+  .q-opt { padding: 10px 4px; }
+  .lock-phases { grid-template-columns: 1fr; }
+  .phase-nav { padding: 0 16px; }
+  .header { padding: 0 20px; }
+  .intro-stat-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<div class="shell">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">Sovereign Architecture // Portal</div>
+  <div class="header-meta" id="headerMeta">PHASE 000 — INITIALIZATION</div>
+</header>
+
+<!-- PHASE NAV -->
+<nav class="phase-nav">
+  <button class="phase-tab active" id="tab-0" onclick="showTab(0)">
+    <span class="phase-dot"></span>INIT
+  </button>
+  <button class="phase-tab" id="tab-1" onclick="showTab(1)">
+    <span class="phase-dot"></span>PHASE 1 — VAMPIRE SCAN
+  </button>
+  <button class="phase-tab" id="tab-2" onclick="showTab(2)">
+    <span class="phase-dot"></span>PHASE 2 — INPUT EMBARGO
+  </button>
+  <button class="phase-tab locked" id="tab-3">
+    <span class="phase-dot"></span>PHASE 3 — SMA ⚿
+  </button>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════
+     SCREEN 0 — INITIALIZATION / PRE-EXECUTION
+══════════════════════════════════════════ -->
+<div class="screen active" id="screen-0">
+
+  <div class="phase-progress">
+    <div class="phase-bar active" id="pb-1"></div>
+    <div class="phase-bar pending" id="pb-2"></div>
+    <div class="phase-bar pending" id="pb-3"></div>
+  </div>
+
+  <div class="label label-gold">PHASE 000 // SYSTEM INITIALIZATION</div>
+  <h2 class="screen-title">Pre-Execution Protocol</h2>
+  <p class="screen-sub">Before entering the manifesto environment, establish the correct operating conditions. These are not suggestions.</p>
+
+  <div class="panel panel-gold" style="margin-bottom:24px;">
+    <div class="label label-gold" style="margin-bottom:20px;">INITIALIZATION CHECKLIST</div>
+
+    <div class="check-row" id="chk-shield" onclick="toggleCheck('chk-shield')">
+      <div class="check-box"><span class="check-mark">✓</span></div>
+      <span class="check-text">Protocol 77 Shield Verified — you operate from sovereignty, not survival</span>
+    </div>
+    <div class="check-row" id="chk-freq" onclick="toggleCheck('chk-freq')">
+      <div class="check-box"><span class="check-mark">✓</span></div>
+      <span class="check-text">Frequency Alignment — 77.00 MHz locked</span>
+    </div>
+    <div class="check-row" id="chk-embargo" onclick="toggleCheck('chk-embargo')">
+      <div class="check-box"><span class="check-mark">✓</span></div>
+      <span class="check-text">Input Embargo Active — all noise channels are offline for this session</span>
+    </div>
+    <div class="check-row" id="chk-presence" onclick="toggleCheck('chk-presence')">
+      <div class="check-box"><span class="check-mark">✓</span></div>
+      <span class="check-text">Architect Presence Confirmed — you are the operator of this system</span>
+    </div>
+  </div>
+
+  <div class="intro-stat-row">
+    <div class="intro-stat">
+      <div class="intro-stat-val">2</div>
+      <div class="intro-stat-label">Open Phases</div>
+    </div>
+    <div class="intro-stat">
+      <div class="intro-stat-val">7</div>
+      <div class="intro-stat-label">Diagnostic Questions</div>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" id="initBtn" onclick="startPhase1()" disabled>
+    ⚡ INITIALIZE MANIFESTO ACCESS
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — PHASE 1: VAMPIRE SCAN
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-1">
+
+  <div class="phase-progress">
+    <div class="phase-bar done"></div>
+    <div class="phase-bar active"></div>
+    <div class="phase-bar pending"></div>
+  </div>
+
+  <div class="label label-cyan">DIAGNOSTIC 01 // PHASE 1</div>
+  <h2 class="screen-title">Vampire Scan</h2>
+  <p class="screen-sub">A clinical audit of your current containment field. Answer from your actual experience — not what you wish was true.</p>
+
+  <div class="panel panel-cyan" id="vampirePanel">
+    <!-- Dynamically rendered questions -->
+    <div id="vampireQ"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — PHASE 2: INPUT EMBARGO
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-2">
+
+  <div class="phase-progress">
+    <div class="phase-bar done"></div>
+    <div class="phase-bar done"></div>
+    <div class="phase-bar active"></div>
+  </div>
+
+  <div class="label label-violet">PROTOCOL 02 // PHASE 2</div>
+  <h2 class="screen-title">Signal Neutralization</h2>
+  <p class="screen-sub">To re-establish the Architect's authority over your cognitive bandwidth, you must first clear the signal. Activate the following overrides.</p>
+
+  <div class="panel panel-violet">
+    <div class="label label-dim" style="margin-bottom:20px;">OVERRIDE PROTOCOLS</div>
+
+    <div class="toggle-row" id="tog-social" onclick="toggleSwitch('tog-social')">
+      <span class="toggle-label">Social Media Feed Blocked — simulation input suspended</span>
+      <div class="toggle-switch"><div class="toggle-knob"></div></div>
+    </div>
+    <div class="toggle-row" id="tog-notif" onclick="toggleSwitch('tog-notif')">
+      <span class="toggle-label">System Notifications Muted — reactive mode offline</span>
+      <div class="toggle-switch"><div class="toggle-knob"></div></div>
+    </div>
+    <div class="toggle-row" id="tog-news" onclick="toggleSwitch('tog-news')">
+      <span class="toggle-label">Propaganda / News Ingest Offline — fear architecture disabled</span>
+      <div class="toggle-switch"><div class="toggle-knob"></div></div>
+    </div>
+    <div class="toggle-row" id="tog-comm" onclick="toggleSwitch('tog-comm')">
+      <span class="toggle-label">Non-Essential Communication Silent — containment field active</span>
+      <div class="toggle-switch"><div class="toggle-knob"></div></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:8px;">
+    <div class="label label-dim" style="margin-bottom:16px;">WHAT THIS ACTUALLY DOES</div>
+    <p class="content-block">
+      The Input Embargo is not self-discipline theater. It is <strong>a recognition that the simulation runs on your attention.</strong> Every notification is a request to serve someone else's timeline. Every feed scroll is a vote to stay inside the cage.
+    </p>
+    <div class="quote-block">
+      "The Architect who cannot hold a 48-hour embargo has not yet established ownership of their own cognitive architecture."
+    </div>
+    <p class="content-block">
+      Activating all four overrides is the first real act of sovereignty. Not because the switches matter — because the <span class="highlight">decision</span> to throw them does.
+    </p>
+  </div>
+
+  <button class="btn btn-outline-cyan" id="embargoBtn" onclick="completePhase2()" disabled style="margin-top:8px;">
+    CONTAINMENT FIELD ESTABLISHED — CONTINUE →
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — PHASE 3: LOCKED / SMA UPSELL
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-3">
+
+  <div class="phase-progress">
+    <div class="phase-bar done"></div>
+    <div class="phase-bar done"></div>
+    <div class="phase-bar" style="background: var(--gold);"></div>
+  </div>
+
+  <div class="label label-gold">PHASE 3 // SYSTEM MASTERY ARCHITECTURE</div>
+  <h2 class="screen-title">You've reached the boundary.</h2>
+  <p class="screen-sub">Phase 1 showed you where the containment field is. Phase 2 gave you the first tool to collapse it. Phase 3 is the operational system — the architecture for building a reality on your terms.</p>
+
+  <div class="lock-phases">
+    <div class="lock-phase open">
+      <div class="lock-phase-label">Phase 1</div>
+      <div class="lock-phase-title">Vampire Scan</div>
+      <div class="lock-phase-status">✓ COMPLETE</div>
+    </div>
+    <div class="lock-phase open">
+      <div class="lock-phase-label">Phase 2</div>
+      <div class="lock-phase-title">Input Embargo</div>
+      <div class="lock-phase-status">✓ COMPLETE</div>
+    </div>
+    <div class="lock-phase locked-ph">
+      <div class="lock-phase-label">Phase 3</div>
+      <div class="lock-phase-title">System Mastery</div>
+      <div class="lock-phase-status">⚿ LOCKED</div>
+    </div>
+  </div>
+
+  <div class="offer-block">
+    <div class="offer-title">System Mastery Architecture: Phase 1</div>
+    <div class="offer-sub">
+      The complete operational framework. Not a course — a system. Built for people who have already seen the architecture and are ready to run it.
+    </div>
+
+    <ul class="offer-includes">
+      <li>The full 3-Phase Sovereign Architecture implementation guide</li>
+      <li>The Faraday Protocol — how to maintain frequency under external pressure</li>
+      <li>The Scorched Earth Decision Matrix — identifying what to eliminate and in what order</li>
+      <li>The Creative Plane access framework — structured methodology for idea-to-execution</li>
+      <li>Direct access to the architect's implementation workspace and templates</li>
+      <li>Inner Circle initiate status — monitored, not mentored</li>
+    </ul>
+
+    <a href="https://sovereign-synthesis.com/tier-3" class="btn btn-gold" style="text-decoration:none; display:flex; margin-bottom: 0;">
+      UNLOCK PHASE 3 — GET SYSTEM MASTERY ARCHITECTURE →
+    </a>
+  </div>
+
+  <div class="panel" style="background:transparent; border-color:var(--border-dim);">
+    <div class="label label-dim" style="margin-bottom:16px;">THE DIFFERENCE BETWEEN HAVING THE MAP AND RUNNING THE TERRITORY</div>
+    <p class="content-block">
+      The Manifesto was the map. Phase 1 and Phase 2 were entry protocols. What you accessed here was diagnostic — designed to establish clarity on where you are.
+    </p>
+    <p class="content-block">
+      System Mastery Architecture is the <strong>operational layer</strong>. It assumes you've accepted what the diagnostic showed you, and you're ready to build instead of analyze.
+    </p>
+    <p class="content-block">
+      The gap between reading about sovereignty and operating it is where most people stall. SMA is the bridge.
+    </p>
+  </div>
+
+</div>
+
+</main>
+</div><!-- /shell -->
+
+<script>
+// ── STATE ──
+const state = {
+  checks: { 'chk-shield': false, 'chk-freq': false, 'chk-embargo': false, 'chk-presence': false },
+  toggles: { 'tog-social': false, 'tog-notif': false, 'tog-news': false, 'tog-comm': false },
+  vampireQ: 0,
+  vampireAnswers: [],
+  vampireScore: 0,
+  phase1Done: false,
+  phase2Done: false,
+  currentTab: 0,
+};
+
+const VAMPIRE_QUESTIONS = [
+  { text: 'How often do you feel drained after interacting with your primary social circle?', type: 'FREQUENCY' },
+  { text: 'Do you notice physical heaviness when entering your current workspace?', type: 'INTENSITY' },
+  { text: 'How many hours a day are spent in simulation noise — doom-scrolling, news, social feeds?', type: 'DRAG' },
+  { text: 'Do you have people in your life who fear-monger about your sovereign goals?', type: 'HOSTILITY' },
+  { text: 'Is your internal lexicon filled with standard survival language — safe, stable, realistic?', type: 'FREQUENCY' },
+  { text: 'Does biological drag — old habits, legacy thinking — surface during high-velocity work?', type: 'DRAG' },
+  { text: 'Can you maintain a Gray Rock / Faraday stance with energy vampires for more than 48 hours?', type: 'SHIELD' },
+];
+
+// ── INIT CHECKLIST ──
+function toggleCheck(id) {
+  state.checks[id] = !state.checks[id];
+  const row = document.getElementById(id);
+  row.classList.toggle('on', state.checks[id]);
+  const allDone = Object.values(state.checks).every(Boolean);
+  document.getElementById('initBtn').disabled = !allDone;
+}
+
+// ── INPUT EMBARGO TOGGLES ──
+function toggleSwitch(id) {
+  state.toggles[id] = !state.toggles[id];
+  const row = document.getElementById(id);
+  row.classList.toggle('on', state.toggles[id]);
+  const allOn = Object.values(state.toggles).every(Boolean);
+  document.getElementById('embargoBtn').disabled = !allOn;
+}
+
+// ── PHASE NAV ──
+function showTab(n) {
+  if (n === 1 && !state.phase1Done && state.currentTab !== 1) return;
+  if (n === 2 && !state.phase1Done) return;
+  if (n === 3) return; // locked via tab
+  if (n > 0 && state.currentTab === 0) return; // must go through init
+  goToScreen(n);
+}
+
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach((s, i) => {
+    s.classList.toggle('active', i === n);
+  });
+  state.currentTab = n;
+
+  const tabs = ['tab-0','tab-1','tab-2','tab-3'];
+  tabs.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('active','done','locked');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+    else if (i === 3) el.classList.add('locked');
+  });
+
+  const metas = [
+    'PHASE 000 — INITIALIZATION',
+    'PHASE 1 — DIAGNOSTIC // VAMPIRE SCAN',
+    'PHASE 2 — PROTOCOL // INPUT EMBARGO',
+    'PHASE 3 — SYSTEM MASTERY ARCHITECTURE',
+  ];
+  document.getElementById('headerMeta').textContent = metas[n] || '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── PHASE 1: VAMPIRE SCAN ──
+function startPhase1() {
+  renderVampireQ();
+  goToScreen(1);
+}
+
+function renderVampireQ() {
+  const q = VAMPIRE_QUESTIONS[state.vampireQ];
+  const progress = ((state.vampireQ) / VAMPIRE_QUESTIONS.length) * 100;
+
+  document.getElementById('vampireQ').innerHTML = `
+    <div class="q-header">
+      <div class="q-counter">${state.vampireQ + 1} / ${VAMPIRE_QUESTIONS.length}</div>
+      <div class="status-badge badge-cyan">VAMPIRE SCAN</div>
+    </div>
+    <div class="q-progress-bar">
+      <div class="q-progress-fill" style="width:${progress}%"></div>
+    </div>
+    <div class="q-type">${q.type}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="q-options">
+      ${[1,2,3,4,5].map(n => `
+        <div class="q-opt" onclick="answerQ(${n})">
+          <div class="q-opt-num">${n}</div>
+          <div class="q-opt-label">${n===1?'NEVER':n===2?'RARE':n===3?'SOME':n===4?'OFTEN':'ALWAYS'}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function answerQ(score) {
+  state.vampireAnswers.push(score);
+  state.vampireScore += score;
+  state.vampireQ++;
+
+  if (state.vampireQ < VAMPIRE_QUESTIONS.length) {
+    renderVampireQ();
+  } else {
+    showVampireResult();
+  }
+}
+
+function showVampireResult() {
+  const total = state.vampireScore;
+  const max = VAMPIRE_QUESTIONS.length * 5;
+  const pct = Math.round((total / max) * 100);
+  const severity = total > 24 ? 'CRITICAL' : total > 16 ? 'ELEVATED' : 'MODERATE';
+  const severityColor = total > 24 ? '#e87070' : total > 16 ? var_gold() : '#4CAF50';
+
+  document.getElementById('vampireQ').innerHTML = `
+    <div class="label label-cyan" style="margin-bottom:20px;">SCAN COMPLETE // RESULTS</div>
+    <div class="result-row">
+      <span class="result-key">CONTAMINATION INDEX</span>
+      <span class="result-val" style="color:${severityColor}; font-family:var(--mono); font-size:24px;">${pct}%</span>
+    </div>
+    <div class="result-row">
+      <span class="result-key">SEVERITY</span>
+      <span class="result-val" style="color:${severityColor}; font-family:var(--mono);">${severity}</span>
+    </div>
+    <div class="result-row">
+      <span class="result-key">SCORE</span>
+      <span class="result-val" style="font-family:var(--mono);">${total} / ${max}</span>
+    </div>
+    <div class="divider"></div>
+    <p style="font-size:14px; color:var(--text-dim); line-height:1.7; margin-bottom:24px;">
+      ${total > 24
+        ? 'The containment field is heavy. You are running significant biological drag. The next phase gives you the first override protocol.'
+        : total > 16
+        ? 'The contamination is present and measurable. The architecture is visible. The Input Embargo protocol will begin clearing the signal.'
+        : 'The field is lighter than most initiates — but the contamination detected still requires the override protocols.'
+      }
+    </p>
+    <button class="btn btn-outline-cyan" onclick="proceedToPhase2()">
+      PROCEED TO PHASE 2 — INPUT EMBARGO →
+    </button>
+  `;
+  state.phase1Done = true;
+  document.getElementById('tab-1').classList.remove('active');
+  document.getElementById('tab-1').classList.add('done');
+}
+
+function var_gold() { return '#C9A84C'; }
+
+function proceedToPhase2() {
+  goToScreen(2);
+}
+
+// ── PHASE 2: INPUT EMBARGO ──
+function completePhase2() {
+  state.phase2Done = true;
+  goToScreen(3);
+
+  // unlock phase 3 tab visually (still locked functionally — shows upsell)
+  const t3 = document.getElementById('tab-3');
+  t3.classList.remove('locked');
+  t3.classList.add('active');
+  t3.onclick = function() { goToScreen(3); };
+}
+
+// init
+document.getElementById('initBtn').disabled = true;
+document.getElementById('embargoBtn').disabled = true;
+</script>
+</body>
+</html>
