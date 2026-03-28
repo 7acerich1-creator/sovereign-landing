@@ -321,11 +321,23 @@
       color: #252530;
       text-decoration: none;
       text-transform: uppercase;
-      transition: color 0.4s ease;
+      transition: color 0.4s ease, text-shadow 0.4s ease;
       border-bottom: 1px solid #0e0e18;
       padding-bottom: 2px;
+      animation: signalTwinkle 6s ease-out forwards;
     }
-    .architect-link:hover { color: #484858; border-bottom-color: #252530; }
+    .architect-link:hover { color: #7C5CFC; border-bottom-color: #7C5CFC; text-shadow: 0 0 8px rgba(124,92,252,0.4); }
+
+    @keyframes signalTwinkle {
+      0%   { color: #252530; text-shadow: none; border-bottom-color: #0e0e18; }
+      8%   { color: #9B7EFF; text-shadow: 0 0 12px rgba(124,92,252,0.6), 0 0 24px rgba(124,92,252,0.3); border-bottom-color: rgba(124,92,252,0.5); }
+      12%  { color: #484860; text-shadow: 0 0 4px rgba(124,92,252,0.15); border-bottom-color: #1a1a28; }
+      20%  { color: #C9A84C; text-shadow: 0 0 14px rgba(201,168,76,0.5), 0 0 28px rgba(201,168,76,0.2); border-bottom-color: rgba(201,168,76,0.4); }
+      28%  { color: #606078; text-shadow: 0 0 6px rgba(124,92,252,0.1); border-bottom-color: #1e1e2c; }
+      38%  { color: #7C5CFC; text-shadow: 0 0 10px rgba(124,92,252,0.4); border-bottom-color: rgba(124,92,252,0.3); }
+      55%  { color: #3a3a50; text-shadow: 0 0 2px rgba(124,92,252,0.05); border-bottom-color: #151520; }
+      100% { color: #252530; text-shadow: none; border-bottom-color: #0e0e18; }
+    }
 
     @media (max-width: 480px) {
       .dossier-row { flex-direction: column; gap: 2px; }
@@ -392,7 +404,7 @@
     </div>
 
     <div class="cta-block">
-      <a href="https://sovereign-synthesis.com" class="cta-link">
+      <a href="https://interactive-manifesto.vercel.app" class="cta-link">
         <span class="cta-arrow">//</span>
         <span class="cta-text">SOMETHING FEELS OFF. FIND OUT WHY.</span>
         <span class="cta-arrow">→</span>
