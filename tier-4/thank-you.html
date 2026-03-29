@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -232,5 +232,114 @@
       <p>Sovereign Synthesis &copy; 2026</p>
     </footer>
   </div>
+<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
+<style id="ss-theme-light">
+[data-theme="light"] {
+  --bg:           #F5F2EE !important;
+  --bg-card:      #FFFFFF !important;
+  --bg-card2:     #FAF8F5 !important;
+  --bg-panel:     #FFFFFF !important;
+  --bg-elevated:  #FEFEFE !important;
+  --text:         #1A1A2E !important;
+  --text-dim:     #4A4A6A !important;
+  --text-ghost:   #8888A0 !important;
+  --dim:          rgba(26,26,46,0.55) !important;
+  --dim2:         rgba(26,26,46,0.3) !important;
+  --ghost:        #9090A8 !important;
+  --border:       rgba(26,26,46,0.12) !important;
+  --border-subtle: rgba(26,26,46,0.06) !important;
+  --subtle:       rgba(26,26,46,0.04) !important;
+  --violet-dim:   rgba(124,92,252,0.08) !important;
+  --violet-glow:  rgba(124,92,252,0.15) !important;
+  --violet-border:rgba(124,92,252,0.2) !important;
+  --cyan-dim:     rgba(62,247,232,0.08) !important;
+  --cyan-glow:    rgba(62,247,232,0.2) !important;
+  --cyan-border:  rgba(62,247,232,0.15) !important;
+  --gold-dim:     rgba(201,168,76,0.1) !important;
+  --gold-glow:    rgba(201,168,76,0.18) !important;
+  --gold-border:  rgba(201,168,76,0.15) !important;
+  --amber-dim:    rgba(232,146,26,0.1) !important;
+  --amber-glow:   rgba(232,146,26,0.2) !important;
+  --amber-faint:  rgba(232,146,26,0.04) !important;
+}
+[data-theme="light"] body::before { opacity: 0 !important; }
+.ss-theme-toggle {
+  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border, rgba(255,255,255,0.06));
+  background: var(--bg-card, #09090f);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
+.ss-theme-toggle:active { transform: scale(0.95); }
+.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
+.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
+.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
+.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
+.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
+@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
+</style>
+<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+<script>
+(function(){
+  'use strict';
+  function getThemeFromURL(){
+    return new URLSearchParams(window.location.search).get('theme')||'dark';
+  }
+  function applyTheme(t){
+    if(t==='light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+  }
+  function updateLinks(t){
+    document.querySelectorAll('a[href]').forEach(function(a){
+      var h=a.getAttribute('href');
+      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
+      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
+      try{
+        var u=new URL(h,window.location.origin);
+        if(t==='light') u.searchParams.set('theme','light');
+        else u.searchParams.delete('theme');
+        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
+        else{
+          var base=h.split('?')[0].split('#')[0];
+          var qs=u.search||'';
+          var hash=u.hash||'';
+          a.setAttribute('href',base+qs+hash);
+        }
+      }catch(e){}
+    });
+  }
+  function updateCurrentURL(t){
+    var u=new URL(window.location);
+    if(t==='light') u.searchParams.set('theme','light');
+    else u.searchParams.delete('theme');
+    window.history.replaceState({},'',u);
+  }
+  var cur=getThemeFromURL();
+  applyTheme(cur);
+  function init(){
+    updateLinks(cur);
+    var btn=document.querySelector('.ss-theme-toggle');
+    if(btn) btn.addEventListener('click',function(){
+      cur=(cur==='light')?'dark':'light';
+      applyTheme(cur);
+      updateCurrentURL(cur);
+      updateLinks(cur);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+<!-- ═══ END THEME TOGGLE ═══ -->
+
 </body>
 </html>
