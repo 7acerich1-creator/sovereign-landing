@@ -29,6 +29,53 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
   background-size:32px 32px}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
+/* ═══ PREMIUM ANIMATIONS ═══ */
+@keyframes glitchText{
+  0%,100%{transform:translate(0);filter:none}
+  20%{transform:translate(-2px,1px);filter:hue-rotate(90deg)}
+  40%{transform:translate(2px,-1px);filter:hue-rotate(-90deg)}
+  60%{transform:translate(-1px,-2px);filter:brightness(1.5)}
+  80%{transform:translate(1px,2px);filter:hue-rotate(45deg)}
+}
+@keyframes vampireBleed{
+  0%{box-shadow:inset 0 0 0 0 rgba(200,20,20,0);border-color:var(--border)}
+  50%{box-shadow:inset 0 0 30px 0 rgba(200,20,20,0.08);border-color:rgba(200,20,20,0.3)}
+  100%{box-shadow:inset 0 0 0 0 rgba(200,20,20,0);border-color:var(--border)}
+}
+@keyframes slideReveal{
+  0%{opacity:0;transform:translateY(12px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+@keyframes freqShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.glitch-title{animation:glitchText 4s ease-in-out infinite;display:inline-block}
+.vampire-card{animation:vampireBleed 3s ease-in-out infinite}
+.slide-in{animation:slideReveal 0.6s ease-out forwards;opacity:0}
+.freq-bar{background:linear-gradient(90deg,var(--violet),var(--cyan),var(--gold),var(--violet));background-size:300% 100%;animation:freqShift 6s ease infinite;height:2px;margin:20px 0}
+.protocol-box{background:var(--bg-card);border:1px solid var(--violet-border);padding:20px 24px;margin:12px 0;position:relative;overflow:hidden}
+.protocol-box::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--violet)}
+.protocol-step{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+.protocol-step-num{font-family:var(--mono);font-size:10px;color:var(--violet);min-width:24px;font-weight:700;padding-top:2px}
+.protocol-step-text{font-size:14px;color:var(--dim);line-height:1.6}
+.slide-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+@media(max-width:580px){.slide-compare{grid-template-columns:1fr}}
+.slide-old,.slide-new{padding:20px;text-align:center;font-family:var(--mono);font-size:13px;line-height:1.6}
+.slide-old{background:rgba(200,20,20,0.04);border:1px solid rgba(200,20,20,0.2);color:var(--dim)}
+.slide-new{background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.2);color:var(--cyan)}
+.slide-label{font-size:9px;letter-spacing:2px;display:block;margin-bottom:10px;opacity:.6}
+.axiom-block{background:var(--bg-card);border:1px solid var(--gold);padding:20px 24px;margin:12px 0}
+.axiom-name{font-weight:600;font-size:14px;color:var(--gold);margin-bottom:6px}
+.axiom-desc{font-size:13px;color:var(--dim);line-height:1.7}
+.frequency-card{padding:16px 20px;background:var(--bg-card);border-left:3px solid var(--violet);margin:8px 0}
+.frequency-card.fear{border-left-color:#c41414}
+.frequency-card.ego{border-left-color:#e89a1a}
+.frequency-card.attention{border-left-color:var(--cyan)}
+.freq-name{font-weight:600;font-size:14px;margin-bottom:6px;color:var(--text)}
+.freq-desc{font-size:13px;color:var(--dim);line-height:1.7}
+
 .layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh;position:relative;z-index:1}
 
 /* SIDEBAR */
@@ -220,8 +267,22 @@ textarea::placeholder{color:var(--ghost)}
     <div id="phase-0" class="phase-content">
       <div class="phase-num-tag">[PHASE 01 OF 05] — THE PRE-FRAME</div>
       <h2 class="phase-title">The Pre-Frame</h2>
-      <p class="install-hook">"Before you can navigate, you must accept that you were running on someone else's operating system."</p>
-      <p class="body-text">The Simulation is not a conspiracy. It is a design. Every default behavior pattern, every inherited belief, every reactive trigger — was <strong>installed</strong>. Not chosen. You have been operating on factory settings. The Sovereign Architecture is not an upgrade. It is a clean install.</p>
+      <p class="install-hook">"WARNING: Once seen, the mechanics of control cannot be unseen. Proceed only if you are ready to disconnect."</p>
+
+      <p class="body-text">In 1910, Wallace D. Wattles demanded readers accept his statements as law. In 1937, Napoleon Hill codified the laws of success for the Industrial Age. The frequency has now shifted. <strong>Industrial → Digital → Network → Architect.</strong> The old keys no longer turn the tumblers of this new reality.</p>
+
+      <div class="freq-bar"></div>
+
+      <p class="body-text">To unlock the Sovereign Architecture, you must accept the following as axiomatic — not as theory, but as operating parameters. If you cannot grant this authority to the text, close this page. It will not serve you.</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin:24px 0">
+        <div class="axiom-block"><div class="axiom-name">AXIOM 1 — THE SOURCE IS VALID</div><div class="axiom-desc">Receive this transmission as if handed down by the highest authority you recognize. Not because the author demands worship — but because doubt creates metaphysical drag, and you need zero resistance for what comes next.</div></div>
+        <div class="axiom-block"><div class="axiom-name">AXIOM 2 — THE CIRCUIT IS OPEN</div><div class="axiom-desc">Doubt creates metaphysical drag. Faith creates superconductivity. You must offer zero resistance. This is not about belief — it is about conductivity. An open circuit receives the signal.</div></div>
+        <div class="axiom-block"><div class="axiom-name">AXIOM 3 — THE APPLICATION IS ABSOLUTE</div><div class="axiom-desc">You are not here to "try." You are here to install. Partial installation produces system conflicts. Full installation produces a clean architecture.</div></div>
+      </div>
+
+      <p class="body-text">The Simulation is not a conspiracy. It is a <strong>design</strong>. Every default behavior pattern, every inherited belief, every reactive trigger — was installed. Not chosen. You have been operating on factory settings.</p>
+
       <p class="body-text">Three signals that confirm you are still running borrowed code:</p>
       <div class="mechanism-list">
         <div class="mechanism"><div class="mechanism-name">Signal 1 — The Unprompted Explanation</div><div class="mechanism-desc">You explain your decisions to people who never asked for an explanation. This is borrowed code running in the background: a loop that requires external permission before action is valid.</div></div>
@@ -239,14 +300,35 @@ textarea::placeholder{color:var(--ghost)}
     <div id="phase-1" class="phase-content">
       <div class="phase-num-tag">[PHASE 02 OF 05] — THE DIAGNOSTIC</div>
       <h2 class="phase-title">The Diagnostic</h2>
-      <p class="install-hook">"You cannot upgrade what you cannot see. The Diagnostic maps the containment architecture."</p>
-      <p class="body-text">The Containment Field is the invisible system of habits, relationships, environments, and narratives keeping the Architect in a predictable behavioral loop. It does not require guards. It requires your belief that the loop is normal.</p>
-      <p class="body-text">Three primary containment mechanisms:</p>
-      <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">Identity Anchoring</div><div class="mechanism-desc">You behave consistently with who you believe you are — even when that identity no longer serves the mission. The Containment Field wins by convincing you that change is a betrayal of self.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Social Frequency Entrainment</div><div class="mechanism-desc">The people you spend the most time with calibrate your baseline frequency. This is not metaphor — it is behavioral science. Your reference group sets the ceiling.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Narrative Sovereignty Theft</div><div class="mechanism-desc">External systems insert the operating narrative, leaving you as a character in someone else's story. The Architect's task is to reclaim the narrative — not rewrite it, but recognize it was never theirs to begin with.</div></div>
+      <p class="install-hook">"You believe you are free because you can choose your flavor of distraction. This is the first illusion."</p>
+
+      <p class="body-text">True captivity is not bars on a window; it is a frequency broadcast designed to keep your consciousness locked in a holding pattern. I call this <strong>The Containment Field</strong>. It is an aggregate of social engineering, dark psychology, and algorithmic feedback loops designed to do one thing: <strong>Harvest your energy.</strong></p>
+      <p class="body-text">Every time you react to fear, every time you scroll for dopamine, every time you seek validation from the external world — you are acting as a battery for a system that does not serve you.</p>
+
+      <p class="body-text" style="margin-top:28px;font-weight:500;color:var(--text)">Three Primary Frequencies of the Containment Field:</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div class="frequency-card fear"><div class="freq-name">01 // THE SURVIVAL OSCILLATION (Fear)</div><div class="freq-desc">The system keeps you in low-grade survival mode. Operating from the amygdala, you become reactive. You make decisions from a crouch — conserving, protecting, contracting. This is not living. This is maintenance mode.</div></div>
+        <div class="frequency-card ego"><div class="freq-name">02 // THE VALIDATION LOOP (Ego)</div><div class="freq-desc">Tie self-worth to external metrics — likes, views, approval, titles. These are digital leashes. When your internal state depends on external feedback, you are not sovereign. You are a puppet with WiFi.</div></div>
+        <div class="frequency-card attention"><div class="freq-name">03 // THE ATTENTION FRACTURE</div><div class="freq-desc">Your attention is the only currency you truly own. The system fractures it into a thousand fragments — notifications, feeds, headlines, drama. A fractured mind cannot architect. It can only consume.</div></div>
       </div>
+
+      <p class="body-text"><em>We do not fight the Containment Field. We tune to a frequency it cannot touch.</em></p>
+
+      <div class="freq-bar"></div>
+
+      <div class="protocol-box" style="margin:28px 0">
+        <span class="reflect-label" style="color:var(--violet)">SYSTEM SYNC 01 // THE INPUT EMBARGO</span>
+        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"The Architect does not ask the world what to think. The Architect tells the world what is."</p>
+        <p class="body-text" style="margin:8px 0">Objective: Prove that your mind is a broadcasting station, not a receiving terminal. Execute a Strict Input Embargo during the first 60 minutes of every day.</p>
+        <div style="margin:16px 0">
+          <div class="protocol-step"><span class="protocol-step-num">01</span><span class="protocol-step-text"><strong>Phone Status:</strong> Airplane Mode immediately upon waking.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num">02</span><span class="protocol-step-text"><strong>No Consumption:</strong> Zero emails. Zero social media. Zero news. Zero podcasts.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num">03</span><span class="protocol-step-text"><strong>The Vacuum:</strong> Sit in silence for 10 minutes. Observe anxiety as foreign programs trying to re-install.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num">04</span><span class="protocol-step-text"><strong>The Output:</strong> By 10:00 AM, write down the one High Value idea that arrived in the silence.</span></div>
+        </div>
+        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--text)">The moment you broadcast before you receive, you become a data SOURCE instead of a data SINKHOLE.</p>
+      </div>
+
       <div class="reflect-block">
         <span class="reflect-label">// DIAGNOSTIC INPUTS</span>
         <div style="display:flex;flex-direction:column;gap:14px">
@@ -269,43 +351,98 @@ textarea::placeholder{color:var(--ghost)}
 
     <!-- PHASE 3: THE GLITCH -->
     <div id="phase-2" class="phase-content">
-      <div class="phase-num-tag">[PHASE 03 OF 05] — THE GLITCH</div>
-      <h2 class="phase-title">The Glitch</h2>
-      <p class="install-hook">"The Glitch is the moment the simulation's code becomes visible. It is not a breakdown. It is a signal."</p>
-      <p class="body-text">A Glitch is any moment where the expected system behavior fails to produce the expected result — and you notice the seam. The gap between what was promised and what was delivered. The moment where the architecture becomes briefly visible from outside it.</p>
-      <p class="body-text">Common Glitch patterns:</p>
-      <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">The Right Moves, Wrong Result</div><div class="mechanism-desc">Doing everything "correctly" by societal parameters — and still feeling controlled, empty, or off-mission. The system is working as designed. You are not the variable. The design is.</div></div>
-        <div class="mechanism"><div class="mechanism-name">The Extraction Reveal</div><div class="mechanism-desc">A relationship, system, or institution that claimed to support you reveals its extraction mechanism. The support was conditional on your compliance.</div></div>
-        <div class="mechanism"><div class="mechanism-name">The Clarity Window</div><div class="mechanism-desc">A moment of unexpected clarity — usually in stillness, solitude, or crisis — where you perceive the architecture from outside it. These are the most valuable data points you have.</div></div>
+      <div class="phase-num-tag">[PHASE 03 OF 05] — THE EXPLOIT</div>
+      <h2 class="phase-title glitch-title">The Glitch</h2>
+      <p class="install-hook">"The Containment Field is powerful, but it is not perfect. Within your consciousness lies a Glitch that the system cannot patch."</p>
+
+      <p class="body-text">The Containment Field is built on logic, algorithms, and linear control. It assumes you are a rational machine that responds to inputs A and B. But you are not a machine. <strong>You are a consciousness.</strong> And within your consciousness lies a Glitch that the system cannot patch. That glitch is <strong>The Subconscious Mind.</strong></p>
+
+      <p class="body-text">The controllers know this secret: the subconscious mind cannot distinguish between a real event and a vividly imagined one. If you watch a terrifying movie, your heart races — even though your conscious mind knows you are on a couch. The Containment Field exploits this by flooding your screen with fear, lack, and division. It hacks your subconscious to manifest their nightmare.</p>
+
+      <p class="body-text" style="color:var(--cyan);font-weight:500">But this mechanism works both ways.</p>
+
+      <p class="body-text">If you bypass the conscious gatekeeper and impress a new image upon the subconscious — an image of wealth, sovereignty, and silence — <strong>the subconscious must objectify it.</strong> It has no choice. It is a servant mechanism.</p>
+
+      <div class="slide-compare">
+        <div class="slide-old"><span class="slide-label">OLD SLIDE</span>"I need to survive. I am susceptible to interference."</div>
+        <div class="slide-new"><span class="slide-label">NEW SLIDE</span>"I am the interference. I am the signal."</div>
       </div>
-      <p class="body-text">The Glitch is not to be suppressed. It is the entry point. The Architect's task is to widen it — deliberately, systematically. Document your Glitch events. They are not random. They are the system showing you where the code breaks.</p>
+
+      <p class="body-text">The moment you realize that your <strong>feeling-state</strong> is the control panel for your reality, the Containment Field loses its grip. That is where you are sovereign. That is where the architecture begins.</p>
+
+      <div class="freq-bar"></div>
+
+      <div class="protocol-box vampire-card" style="margin:28px 0;border-color:rgba(200,20,20,0.2)">
+        <span class="reflect-label" style="color:#c41414">SYSTEM SYNC 02 // THE VAMPIRE SCAN</span>
+        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"You do not negotiate with parasites. You starve them."</p>
+        <p class="body-text" style="margin:8px 0">Objective: Identify the specific Energy Parasites currently draining your creative velocity. You cannot build a skyscraper on a sinkhole.</p>
+        <p class="body-text" style="margin:8px 0;font-weight:500;color:var(--text)">Perform a forensic audit of your last 72 hours. Identify the Three Leaks:</p>
+        <div style="margin:16px 0">
+          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">01</span><span class="protocol-step-text"><strong>THE TIME LEAK:</strong> What activity stole 30+ minutes with zero ROI?</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">02</span><span class="protocol-step-text"><strong>THE EMOTIONAL LEAK:</strong> Who or what triggered a survival response (anger, fear, jealousy)?</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">03</span><span class="protocol-step-text"><strong>THE FINANCIAL LEAK:</strong> What did you purchase to "soothe" rather than invest in yourself?</span></div>
+        </div>
+        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--dim)">Write each leak on paper. Write the word <strong style="color:#c41414">REVOKED</strong> beside each one. The circuit is severed.</p>
+      </div>
+
       <div class="reflect-block">
-        <span class="reflect-label">// GLITCH EVENT LOG</span>
+        <span class="reflect-label">// GLITCH EVENT LOG + VAMPIRE SCAN</span>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Glitch Event 1 — a moment where the expected pattern failed to produce the expected result:</label>
-            <textarea id="p2-g1" rows="2" placeholder="Log the first Glitch."></textarea>
+            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Glitch Event — a moment where the expected pattern failed to produce the expected result:</label>
+            <textarea id="p2-g1" rows="2" placeholder="Log the Glitch. Where did the code break?"></textarea>
           </div>
           <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Glitch Event 2:</label>
-            <textarea id="p2-g2" rows="2" placeholder="Log the second Glitch."></textarea>
+            <label style="font-size:13px;color:#c41414;display:block;margin-bottom:8px">Time Leak — what stole 30+ minutes with zero return?</label>
+            <textarea id="p2-g2" rows="2" placeholder="Name the leak. Write REVOKED."></textarea>
           </div>
           <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Glitch Event 3:</label>
-            <textarea id="p2-g3" rows="2" placeholder="Log the third Glitch."></textarea>
+            <label style="font-size:13px;color:#c41414;display:block;margin-bottom:8px">Emotional Leak — who triggered your survival response?</label>
+            <textarea id="p2-g3" rows="2" placeholder="Name the parasite. Starve it."></textarea>
           </div>
         </div>
       </div>
-      <button class="btn btn-violet btn-block" onclick="installPhase(2)">GLITCH DOCUMENTED — INSTALL PHASE 3 →</button>
+      <button class="btn btn-violet btn-block" onclick="installPhase(2)">EXPLOIT DOCUMENTED — INSTALL PHASE 3 →</button>
     </div>
 
     <!-- PHASE 4: GRADUATION -->
     <div id="phase-3" class="phase-content">
       <div class="phase-num-tag">[PHASE 04 OF 05] — THE GRADUATION</div>
       <h2 class="phase-title">The Graduation</h2>
-      <p class="install-hook">"Graduation is not the end of learning. It is the moment you stop accepting someone else's curriculum."</p>
-      <p class="body-text">The Graduation event is the specific moment the Architect formally exits the Containment Field's authority. Not awareness — awareness was Phase 1. Graduation is the moment compliance ends. Three archetypes. Select the one that matches your current operating parameters.</p>
+      <p class="install-hook">"The Containment Field operates on a single foundational lie: There is not enough."</p>
+
+      <p class="body-text">When you believe there is not enough, you enter the <strong>Competitive Plane</strong>. You believe that for you to win, someone else must lose. Competition generates friction. Friction generates heat (stress), not light.</p>
+
+      <div class="slide-compare" style="margin:24px 0">
+        <div class="slide-old"><span class="slide-label">COMPETITIVE PLANE</span>You fight for what already exists. Scarcity. Zero-sum. Friction.</div>
+        <div class="slide-new"><span class="slide-label">CREATIVE PLANE</span>You create what needs to exist. Abundance. Infinite-sum. Flow.</div>
+      </div>
+
+      <p class="body-text">You are not taking money from people. You are exchanging use value for cash value. When the use value exceeds the cash value, the Formless Substance rushes to support you.</p>
+
+      <p class="body-text" style="font-weight:500;color:var(--text);margin-top:24px">The Sovereign State of Mind — 3 Operating Principles:</p>
+      <div class="mechanism-list">
+        <div class="mechanism"><div class="mechanism-name">SPEED, NOT HASTE</div><div class="mechanism-desc">The Sovereign never hurries. You know the opportunity is generated by you, so it cannot be taken by another. Move with precision, not panic.</div></div>
+        <div class="mechanism"><div class="mechanism-name">CERTAINTY</div><div class="mechanism-desc">You do not hope the product sells. You know. You hold the image of the completed transaction and perform all actions from that state. Hope is Competitive. Certainty is Creative.</div></div>
+        <div class="mechanism"><div class="mechanism-name">THE VACUUM</div><div class="mechanism-desc">By putting out high-frequency content, you create a low-pressure zone that pulls resources in to fill the void. When you feel guilt asking for money, you are still Competitive — thinking you are taking. When you feel power asking for money, you are Creative — knowing you are giving.</div></div>
+      </div>
+
+      <div class="protocol-box" style="margin:28px 0;border-color:var(--gold)">
+        <span class="reflect-label" style="color:var(--gold)">SYSTEM SYNC 03 // THE SOVEREIGN OVERLAY</span>
+        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"Faith is not believing what you cannot see. Faith is seeing what is already there."</p>
+        <p class="body-text" style="margin:8px 0">Install the Definite Chief Aim into your subconscious architecture. This moves your goal from a hope to a <strong>memory of the future.</strong></p>
+        <div style="margin:16px 0">
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">01</span><span class="protocol-step-text"><strong>THE CARD:</strong> Write your specific financial target and service in present tense on a physical card.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">02</span><span class="protocol-step-text"><strong>THE MOVIE:</strong> Close your eyes. Visualize the moment <em>after</em> you have it — not getting it. Feel the texture of the table. See the person you are mentoring.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">03</span><span class="protocol-step-text"><strong>THE ANCHOR:</strong> Hold this image for 60 seconds without interruption. Smell the air. Feel the weight of success in your posture.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">04</span><span class="protocol-step-text"><strong>THE CARRY:</strong> Keep this card in your pocket. Touch it every time you feel the drift of the Old Earth frequency.</span></div>
+        </div>
+        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--text)">The Reticular Activating System (RAS) filters reality. If you do not program it, the system will program it for you — usually with anxiety.</p>
+      </div>
+
+      <div class="freq-bar"></div>
+
+      <p class="body-text">The Graduation is the moment compliance ends. Three archetypes — select the one that matches your current operating parameters:</p>
       <div class="archetype-grid">
         <div class="archetype" onclick="selectArchetype(this,'hard-exit')">
           <div class="arch-name">The Hard Exit</div>
@@ -330,12 +467,30 @@ textarea::placeholder{color:var(--ghost)}
     <div id="phase-4" class="phase-content">
       <div class="phase-num-tag">[PHASE 05 OF 05] — EXECUTION PROTOCOL</div>
       <h2 class="phase-title">Execution Protocol + Logic Gate</h2>
-      <p class="install-hook">"The Manifesto is not philosophy. It is an operating system. This is the installation sequence."</p>
-      <p class="body-text">The Execution Protocol is the bridge between awareness and implementation. Three non-negotiable parameters before you proceed to the Build phase:</p>
+      <p class="install-hook">"Knowing the grid exists does not free you from it. Your neural pathways are wired for reaction, fear, and consumption. To rewire them, you must execute a hard reset every single day."</p>
+      <p class="body-text">These are not "self-help" tips. These are <strong>counter-measures against psychological warfare.</strong></p>
+
+      <p class="body-text" style="font-weight:600;color:var(--text);margin-top:28px">5 Daily Tactical Maneuvers — Non-Negotiable:</p>
       <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">Sovereign Scheduling</div><div class="mechanism-desc">Block time on your calendar designated exclusively for architecture work. Non-negotiable. Non-cancellable. Not "when I have time" — before everything else is scheduled.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Frequency Audit</div><div class="mechanism-desc">Weekly review: which inputs are elevating your frequency and which are contaminating it. The data is non-negotiable. What you consistently consume is what you become.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Progress Logging</div><div class="mechanism-desc">A sovereign record of decisions made from architect-position vs. reactive-position. The ratio changes over time. Logging makes the trajectory visible.</div></div>
+        <div class="mechanism"><div class="mechanism-name">01 — THE INPUT EMBARGO</div><div class="mechanism-desc">07:00–08:00: No screens, no voices, no text. Output only. Write, think, or move. You are the broadcaster, not the receiver.</div></div>
+        <div class="mechanism"><div class="mechanism-name">02 — THE SOVEREIGN OVERLAY</div><div class="mechanism-desc">Write, read aloud, and run a 60-second mental movie of your Definite Chief Aim already achieved. Not getting it — having it. Feel the weight of it in your body.</div></div>
+        <div class="mechanism"><div class="mechanism-name">03 — THE ALGORITHMIC BREACH</div><div class="mechanism-desc">Break one pattern today. Different route. Different conversation. Different response to a familiar trigger. This breaks your autopilot. Wakes your consciousness from the loop.</div></div>
+        <div class="mechanism"><div class="mechanism-name">04 — THE VAMPIRE SCAN</div><div class="mechanism-desc">Who tries to make you angry or fearful today? Observe like a scientist. Refuse to react. You starve the vampire by denying it the emotional response it feeds on.</div></div>
+        <div class="mechanism"><div class="mechanism-name">05 — THE SUBCONSCIOUS SEED</div><div class="mechanism-desc">Pre-sleep protocol: Never fall asleep worrying. Replay the day going right. Repeat: "It is done. I am free. The money flows. The architecture holds." The last image before sleep is the blueprint your subconscious builds overnight.</div></div>
+      </div>
+
+      <div class="freq-bar"></div>
+
+      <div class="protocol-box" style="margin:28px 0;border-color:var(--cyan)">
+        <span class="reflect-label" style="color:var(--cyan)">SYSTEM SYNC 04 // THE VOID OFFERING</span>
+        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"You cannot receive the harvest until you plant the seed."</p>
+        <p class="body-text" style="margin:8px 0">The Law of Equivalent Exchange. Create one piece of High Frequency value today.</p>
+        <div style="margin:16px 0">
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">01</span><span class="protocol-step-text">It can be a video script, a piece of advice to a stranger, or a solution to a problem you've solved.</span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">02</span><span class="protocol-step-text">Release it into the world — post it, send it, speak it — with <strong>ZERO expectation of return.</strong></span></div>
+          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">03</span><span class="protocol-step-text">You are not trading; you are emitting. Once released, say aloud: <em>"The cycle has begun."</em></span></div>
+        </div>
+        <p class="body-text" style="margin:12px 0;font-size:13px;color:var(--dim)">When you give without expectation, you signal to the subconscious and to the Quantum Field that you operate from abundance — not scarcity. The Formless Substance fills a vacuum. By emitting, you create the vacuum. By creating the vacuum, you pull. This is the counter-intuitive law that separates Sovereigns from Survivors.</p>
       </div>
 
       <div class="gate-block">
