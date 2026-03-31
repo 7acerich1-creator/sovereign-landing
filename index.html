@@ -137,7 +137,6 @@
   <script>
     const SUPABASE_URL = "https://wzthxohtgojenukmdubz.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU";
-    const MAKE_WEBHOOK = "https://hook.us2.make.com/wf0ttyqrjk8mz4fohjb9bpokzrk1hdrf";
     const EDGE_FN_URL = "https://wzthxohtgojenukmdubz.supabase.co/functions/v1/send-nurture-email";
     async function handleSubmit(e) {
       e.preventDefault();
@@ -153,8 +152,7 @@
           headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json", "Prefer": "return=minimal,resolution=ignore-duplicates" },
           body: JSON.stringify({ full_name: name, email: email, source: "landing-page", payment_status: "unpaid", application_status: "lead" })
         });
-        fetch(EDGE_FN_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email, step: 1 }) }).catch(() => {});
-        fetch(MAKE_WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ full_name: name, email: email }) }).catch(() => {});
+        await fetch(EDGE_FN_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email, step: 1 }) });
         document.getElementById("captureForm").style.display = "none";
         document.getElementById("successState").style.display = "block";
       } catch (err) {
