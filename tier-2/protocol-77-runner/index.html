@@ -1,116 +1,678 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Shield: Protocol 77 — Runner</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0f; --bg-card: #111118; --text: #e8e8e8; --text-dim: #888; --accent: #3EF7E8; --accent-glow: rgba(62,247,232,0.12); --border: #1a1a24; --serif: 'EB Garamond', Georgia, serif; --mono: 'Courier Prime', 'Courier New', monospace; }
-    body { font-family: var(--serif); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-    .portal-header { padding: 60px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
-    .portal-badge { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--accent); border: 1px solid rgba(62,247,232,0.3); padding: 5px 14px; margin-bottom: 24px; text-transform: uppercase; }
-    .portal-tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 8px; }
-    .portal-title { font-size: clamp(28px, 5vw, 40px); font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 12px; }
-    .portal-subtitle { font-size: 18px; color: var(--text-dim); line-height: 1.7; }
-    .protocol-list { margin: 40px 0; }
-    .protocol-item { background: var(--bg-card); border: 1px solid var(--border); padding: 24px 28px; margin-bottom: 12px; transition: border-color 0.2s; }
-    .protocol-item:hover { border-color: rgba(62,247,232,0.2); }
-    .protocol-name { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 6px; }
-    .protocol-desc { font-size: 15px; color: var(--text-dim); }
-    .locked-notice { background: var(--bg-card); border: 1px solid var(--border); padding: 40px; text-align: center; margin: 48px 0; }
-    .locked-notice h3 { font-size: 20px; color: #fff; margin-bottom: 12px; }
-    .locked-notice p { color: var(--text-dim); margin-bottom: 16px; font-size: 16px; line-height: 1.7; }
-    .locked-notice .login-note { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; margin-top: 16px; }
-    .footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
-    .footer p { font-family: var(--mono); font-size: 12px; color: #444; letter-spacing: 1px; }
-    .footer .sig { font-family: var(--serif); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
-    .back-link { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-dim); text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
-    .back-link:hover { color: var(--accent); }
-  
-    /* LIGHT THEME */
-    [data-theme="light"] {
-      --bg: #f5f4f0;
-      --bg-card: #ffffff;
-      --text: #1a1a2e;
-      --text-dim: #555;
-      --border: #ddd8d0;
-    }
-    [data-theme="light"] .portal-title,
-    [data-theme="light"] .protocol-name,
-    [data-theme="light"] .content-name,
-    [data-theme="light"] .module-name,
-    [data-theme="light"] .phase-name,
-    [data-theme="light"] .trans-title,
-    [data-theme="light"] .locked-notice h3,
-    [data-theme="light"] h1,
-    [data-theme="light"] h2,
-    [data-theme="light"] h3,
-    [data-theme="light"] .p77 h3,
-    [data-theme="light"] .hero h1 { color: #111; }
-    [data-theme="light"] .footer p { color: #aaa; }
-    [data-theme="light"] .lesson-title { color: #1a1a2e; }
-    .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 9999; width: 63px; height: 63px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 27px; transition: all 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocol 77 — Guided Runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050508;--bg-card:#09090f;--bg-elevated:#0d0d1a;
+  --text:#E8E4F0;--dim:#7C7A9A;--ghost:#484860;
+  --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.08);--cyan-border:rgba(62,247,232,0.18);
+  --gold:#C9A84C;--gold-glow:rgba(201,168,76,0.15);
+  --violet:#7C5CFC;
+  --border:rgba(124,92,252,0.14);--subtle:rgba(255,255,255,0.04);
+  --display:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
+}
+body{font-family:var(--display);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+.grid{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(62,247,232,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(62,247,232,0.022) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse at center,rgba(0,0,0,0.5) 0%,transparent 70%)}
+
+.wrap{max-width:700px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
+
+/* PROGRESS BAR */
+.progress-bar{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--subtle);padding:16px 0}
+.progress-inner{max-width:700px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px}
+.prog-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim);white-space:nowrap}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{width:32px;height:3px;border-radius:2px;background:var(--ghost);transition:all .3s}
+.dot.active{background:var(--cyan);box-shadow:0 0 8px rgba(62,247,232,0.6)}
+.dot.done{background:var(--gold)}
+.day-badge{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;margin-left:auto}
+
+/* SCREENS */
+.screen{display:none;animation:fadeIn .4s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* BRIEFING */
+.briefing{padding:80px 0 40px;text-align:center}
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);border:1px solid var(--cyan-border);padding:6px 16px;margin-bottom:32px;text-transform:uppercase}
+.briefing h1{font-size:clamp(26px,5vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px}
+.briefing h1 em{color:var(--cyan);font-style:normal}
+.briefing p{font-size:17px;color:var(--dim);max-width:520px;margin:0 auto 32px;font-weight:300}
+.seq{text-align:left;background:var(--bg-card);border:1px solid var(--border);padding:24px 28px;margin:40px 0;display:inline-block;min-width:360px}
+.seq-title{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:16px}
+.seq-row{display:flex;align-items:baseline;gap:16px;padding:6px 0;border-bottom:1px solid var(--subtle)}
+.seq-row:last-child{border-bottom:none}
+.seq-day{font-family:var(--mono);font-size:10px;color:var(--gold);min-width:48px}
+.seq-text{font-size:13px;color:var(--dim)}
+
+/* PHASE */
+.phase-wrap{padding:48px 0}
+.phase-header{margin-bottom:32px}
+.func-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);opacity:.7;margin-bottom:8px}
+.phase-title{font-size:clamp(22px,4vw,34px);font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.phase-desc{font-size:16px;color:var(--dim);font-weight:300;max-width:600px;line-height:1.8}
+
+.field-block{background:var(--bg-card);border:1px solid var(--border);padding:24px 28px;margin:28px 0;border-left:2px solid var(--cyan)}
+.field-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px;display:block;opacity:.8}
+textarea,input[type=text]{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);font-family:var(--display);font-size:14px;padding:12px 16px;resize:vertical;border-radius:2px;transition:border-color .2s;line-height:1.6}
+textarea:focus,input[type=text]:focus{outline:none;border-color:rgba(62,247,232,0.4)}
+textarea::placeholder,input::placeholder{color:var(--ghost)}
+
+.audit-grid{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.audit-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-elevated);border:1px solid var(--subtle)}
+.audit-label{font-size:14px;color:var(--dim)}
+.radio-group{display:flex;gap:8px}
+.radio-opt{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--ghost);color:var(--ghost);cursor:pointer;letter-spacing:1px;transition:all .2s;background:none}
+.radio-opt.selected-signal{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim)}
+.radio-opt.selected-noise{border-color:#FC5C5C;color:#FC5C5C;background:rgba(252,92,92,0.06)}
+
+/* EMBARGO TIMER */
+.embargo-block{background:var(--bg-card);border:1px solid rgba(62,247,232,0.25);padding:28px;margin:28px 0;text-align:center}
+.embargo-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px}
+.timer-display{font-family:var(--mono);font-size:clamp(28px,6vw,48px);color:var(--text);letter-spacing:4px;margin:16px 0}
+.timer-display.complete{color:var(--gold)}
+.embargo-status{font-size:13px;color:var(--dim);margin-bottom:20px}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.check-item{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px 14px;background:var(--bg-elevated);border:1px solid var(--subtle);transition:border-color .2s}
+.check-item:hover{border-color:var(--border)}
+.check-item.checked{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
+.check-box{width:18px;height:18px;border:1px solid var(--ghost);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.check-box.checked{background:var(--gold);border-color:var(--gold)}
+.check-box::after{content:'✓';font-size:11px;color:#050508;display:none}
+.check-box.checked::after{display:block}
+.check-text{font-size:14px;color:var(--dim);line-height:1.5}
+
+/* DRAG SECTION */
+.drag-block{background:var(--bg-card);border:1px solid var(--border);padding:24px 28px;margin:12px 0;cursor:pointer}
+.drag-header{display:flex;align-items:center;justify-content:space-between}
+.drag-name{font-weight:600;font-size:15px}
+.drag-arrow{color:var(--dim);transition:transform .2s;font-size:12px}
+.drag-block.open .drag-arrow{transform:rotate(180deg)}
+.drag-content{display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--subtle);font-size:14px;color:var(--dim);line-height:1.7}
+.drag-block.open .drag-content{display:block}
+.counter-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;display:block}
+
+/* ANCHOR */
+.anchor-field{border-color:rgba(201,168,76,0.4)!important;border-width:1px!important}
+.anchor-field:focus{border-color:var(--gold)!important}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:14px 28px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;text-decoration:none}
+.btn-gold{background:var(--gold);color:#050508;font-weight:700}
+.btn-gold:hover{background:var(--gold-hover);box-shadow:0 0 24px var(--gold-glow)}
+.btn-cyan{background:transparent;color:var(--cyan);border:1px solid var(--cyan-border)}
+.btn-cyan:hover{background:var(--cyan-dim)}
+.btn-outline{background:transparent;color:var(--dim);border:1px solid var(--subtle)}
+.btn-outline:hover{border-color:var(--border);color:var(--text)}
+.btn-block{display:flex;width:100%;margin-top:36px}
+
+/* COMPLETION */
+.complete-screen{padding:64px 0;text-align:center}
+.complete-screen h2{font-size:clamp(24px,5vw,40px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px}
+.anchor-display{background:var(--bg-card);border:1px solid rgba(201,168,76,0.3);padding:28px;margin:32px 0;text-align:left}
+.anchor-display .label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;display:block}
+.anchor-display .anchor-text{font-size:18px;color:var(--text);font-weight:500;font-style:italic;line-height:1.6}
+.phase-seals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:32px 0}
+.seal{background:var(--bg-card);border:1px solid rgba(201,168,76,0.3);padding:16px 8px;text-align:center}
+.seal-num{font-family:var(--mono);font-size:9px;color:var(--gold);display:block;margin-bottom:4px}
+.seal-name{font-size:11px;color:var(--dim)}
+.checkpoint-block{text-align:left;margin:32px 0}
+.cp-row{display:flex;gap:16px;align-items:flex-start;padding:16px;background:var(--bg-card);border:1px solid var(--border);margin-bottom:4px}
+.cp-day{font-family:var(--mono);font-size:10px;color:var(--cyan);min-width:56px;padding-top:2px}
+.cp-text{font-size:14px;color:var(--dim)}
+.cta-block{background:linear-gradient(135deg,rgba(62,247,232,0.04),rgba(124,92,252,0.04));border:1px solid var(--border);padding:32px;margin:40px 0;text-align:center}
+.cta-block p{font-size:16px;color:var(--dim);margin-bottom:20px;font-style:italic}
+
+hr.divider{border:none;border-top:1px solid var(--subtle);margin:32px 0}
+
+@media(max-width:580px){
+  .seq{min-width:0;width:100%}
+  .audit-row{flex-direction:column;gap:10px;align-items:flex-start}
+  .phase-seals{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <a href="/" class="back-link">&larr; SOVEREIGN SYNTHESIS</a>
-    <header class="portal-header">
-      <div class="portal-badge">Protocol Runner</div>
-      <div class="portal-tier">TIER 2 // THE SHIELD</div>
-      <h1 class="portal-title">Protocol 77</h1>
-      <p class="portal-subtitle">Four practical frameworks for protecting your focus, energy, and decision-making from external interference.</p>
-    </header>
-    <div class="protocol-list">
-      <div class="protocol-item"><div class="protocol-name">Gray Rock Protocol</div><div class="protocol-desc">Become invisible to energy vampires. Reduce your emotional signal until predatory patterns lose interest.</div></div>
-      <div class="protocol-item"><div class="protocol-name">Faraday Protocol</div><div class="protocol-desc">Build an electromagnetic shield around your attention. Block interference at the source.</div></div>
-      <div class="protocol-item"><div class="protocol-name">Lighthouse Stance</div><div class="protocol-desc">Stand firm without attacking. Emit your own signal instead of reacting to theirs.</div></div>
-      <div class="protocol-item"><div class="protocol-name">Containment Field</div><div class="protocol-desc">Define the boundaries of your operating space. What enters, what exits, what stays out.</div></div>
+<div class="grid"></div>
+
+<!-- PROGRESS -->
+<div class="progress-bar" id="progress-bar" style="display:none">
+  <div class="progress-inner">
+    <span class="prog-label">PROTOCOL 77</span>
+    <div class="dots">
+      <div class="dot active" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+      <div class="dot" id="dot-3"></div>
+      <div class="dot" id="dot-4"></div>
     </div>
-    <div class="locked-notice">
-      <h3>Content is access-controlled</h3>
-      <p>The full Protocol 77 framework is delivered after purchase. Check your email for access instructions.</p>
-      <p class="login-note">Sign in with your purchase email to access your content.</p>
-    </div>
-    <footer class="footer"><p class="sig">&mdash; Ace Richie</p><p>Sovereign Synthesis &copy; 2026</p></footer>
+    <span class="day-badge" id="day-badge">DAY 0</span>
   </div>
+</div>
+
+<div class="wrap">
+
+<!-- SCREEN 0: BRIEFING -->
+<div class="screen active" id="screen-0">
+  <div class="briefing">
+    <div class="tag">⬡ Protocol 77 — Activated</div>
+    <h1>The <em>Shield</em> is now deploying.</h1>
+    <p>This is not a document. This is a 21-day deployment sequence. Each phase installs a layer of external defense. Run them in order.</p>
+    <div class="seq">
+      <div class="seq-title">DEPLOYMENT SEQUENCE</div>
+      <div class="seq-row"><span class="seq-day">DAY 0</span><span class="seq-text">Briefing received — begin deployment</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 1</span><span class="seq-text">Phase 1 — Gray Rock Protocol</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 2</span><span class="seq-text">Phase 2 — Faraday Protocol (72-hr embargo)</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 5</span><span class="seq-text">Phase 4 — Sovereign Anchor locked</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 7</span><span class="seq-text">Phase 3 — Lighthouse Stance calibrated</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 14</span><span class="seq-text">First checkpoint — baseline comparison</span></div>
+      <div class="seq-row"><span class="seq-day">DAY 21</span><span class="seq-text">Protocol 77 fully operational</span></div>
+    </div>
+    <button class="btn btn-gold" onclick="startDeployment()">BEGIN DEPLOYMENT →</button>
+  </div>
+</div>
+
+<!-- SCREEN 1: GRAY ROCK -->
+<div class="screen" id="screen-1">
+  <div class="phase-wrap">
+    <div class="phase-header">
+      <div class="func-tag">[PHASE 01 OF 04] — DAY 1</div>
+      <h2 class="phase-title">Gray Rock Protocol</h2>
+      <p class="phase-desc">Gray Rock is not avoidance. It is resource allocation. The Architect's bandwidth is a finite system. Every reaction extracted by an interference vector is compute stolen from the mission. Become uninteresting to those who feed on reactivity. Flat responses. No emotional surface area. No entry point.</p>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// INTERFERENCE VECTOR AUDIT</span>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Primary interference vector — who or what drains the most bandwidth:</label>
+          <textarea id="gr-1" rows="2" placeholder="Name the vector. Be specific."></textarea>
+        </div>
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Where is reactivity being most consistently triggered and harvested:</label>
+          <textarea id="gr-2" rows="2" placeholder="Map the trigger point."></textarea>
+        </div>
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Which interactions can you deploy Gray Rock in immediately:</label>
+          <textarea id="gr-3" rows="2" placeholder="Name the specific interactions."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-block" onclick="deployPhase(1)">DEPLOY PHASE 1 →</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: FARADAY -->
+<div class="screen" id="screen-2">
+  <div class="phase-wrap">
+    <div class="phase-header">
+      <div class="func-tag">[PHASE 02 OF 04] — DAY 2</div>
+      <h2 class="phase-title">Faraday Protocol</h2>
+      <p class="phase-desc">The Faraday cage blocks external electromagnetic fields. You are building the informational equivalent. Every input stream classified: Signal or Noise. Then the Input Embargo begins — a 72-hour minimum blackout of all classified Noise streams. The frequency data before and after will confirm the contamination source.</p>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// INPUT STREAM CLASSIFICATION</span>
+      <div class="audit-grid">
+        <div class="audit-row">
+          <span class="audit-label">News feeds</span>
+          <div class="radio-group">
+            <span class="radio-opt" onclick="classifyStream(this,'news','signal')">SIGNAL</span>
+            <span class="radio-opt" onclick="classifyStream(this,'news','noise')">NOISE</span>
+          </div>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Social media</span>
+          <div class="radio-group">
+            <span class="radio-opt" onclick="classifyStream(this,'social','signal')">SIGNAL</span>
+            <span class="radio-opt" onclick="classifyStream(this,'social','noise')">NOISE</span>
+          </div>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Specific conversations / relationships</span>
+          <div class="radio-group">
+            <span class="radio-opt" onclick="classifyStream(this,'convos','signal')">SIGNAL</span>
+            <span class="radio-opt" onclick="classifyStream(this,'convos','noise')">NOISE</span>
+          </div>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Work environment</span>
+          <div class="radio-group">
+            <span class="radio-opt" onclick="classifyStream(this,'work','signal')">SIGNAL</span>
+            <span class="radio-opt" onclick="classifyStream(this,'work','noise')">NOISE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="embargo-block">
+      <div class="embargo-title">⬡ 72-HOUR INPUT EMBARGO</div>
+      <p class="embargo-status" id="embargo-status">Blackout all classified Noise streams for 72 continuous hours. Start the timer when you are ready to execute.</p>
+      <div class="timer-display" id="timer-display">72:00:00</div>
+      <button class="btn btn-cyan" id="embargo-btn" onclick="startEmbargo()">START EMBARGO</button>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// EMBARGO PROTOCOL CHECKLIST</span>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">No news consumption during execution blocks</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">No parasitic conversation threads during build phases</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Social media access restricted to defined time windows only</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Environmental audit complete — workspace is frequency-clean</span></div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-block" onclick="deployPhase(2)">DEPLOY PHASE 2 →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: LIGHTHOUSE -->
+<div class="screen" id="screen-3">
+  <div class="phase-wrap">
+    <div class="phase-header">
+      <div class="func-tag">[PHASE 03 OF 04] — DAY 7</div>
+      <h2 class="phase-title">Lighthouse Stance</h2>
+      <p class="phase-desc">The Lighthouse does not fight the ocean. It transmits from a fixed, elevated position — and the ships that need it find it. Your values, mission parameters, and operating limits do not move based on social pressure. The Lighthouse does not leave its position to save ships. It transmits. Reception is the ship's responsibility.</p>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// BIOLOGICAL DRAG RECOGNITION</span>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:16px">Identify the three specific patterns that have historically pulled you off-position. Name them.</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Drag Pattern 1 — what most consistently pulls you off-position:</label>
+          <textarea id="lh-1" rows="2" placeholder="Name it precisely."></textarea>
+        </div>
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Drag Pattern 2:</label>
+          <textarea id="lh-2" rows="2" placeholder="Second pattern."></textarea>
+        </div>
+        <div>
+          <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Drag Pattern 3:</label>
+          <textarea id="lh-3" rows="2" placeholder="Third pattern."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// LIGHTHOUSE CALIBRATION — DAY 7 TASK</span>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:16px">Transmit once, from sovereign position, on one platform. Not for engagement. For calibration.</p>
+      <div class="checklist" style="margin-bottom:16px">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">I have transmitted from Lighthouse position on at least one platform</span></div>
+      </div>
+      <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Platform and what you transmitted:</label>
+      <textarea id="lh-tx" rows="2" placeholder="Log the transmission."></textarea>
+    </div>
+
+    <button class="btn btn-gold btn-block" onclick="deployPhase(3)">DEPLOY PHASE 3 →</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: SOVEREIGN ANCHOR -->
+<div class="screen" id="screen-4">
+  <div class="phase-wrap">
+    <div class="phase-header">
+      <div class="func-tag">[PHASE 04 OF 04] — DAY 5</div>
+      <h2 class="phase-title">Sovereign Anchor</h2>
+      <p class="phase-desc">The Sovereign Anchor is a single, irreducible statement of the Architect's core identity and mission. Not a mantra. A load-bearing axiom — the fixed point around which the entire sovereign architecture rotates. Written, stored, and reviewed at the beginning of each execution session. When biological drag fires, when all four phases are under pressure — this is the return point.</p>
+    </div>
+
+    <div class="field-block">
+      <span class="field-label">// COMPOSE YOUR SOVEREIGN ANCHOR</span>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:16px">Use the format below as a foundation. Replace every bracket with your actual architecture.</p>
+      <textarea id="anchor" class="anchor-field" rows="4" placeholder="I am [core identity]. My mission is [irreducible purpose]. Everything else is [classification].">I am [core identity]. My mission is [irreducible purpose]. Everything else is [classification].</textarea>
+    </div>
+
+    <div style="margin:16px 0">
+      <div class="drag-block" onclick="this.classList.toggle('open')">
+        <div class="drag-header"><span class="drag-name">⚠ Overheating CPU</span><span class="drag-arrow">▼</span></div>
+        <div class="drag-content"><span class="counter-label">COUNTER-PROTOCOL</span>Manufactured urgency and drama escalation fill your working memory with low-priority, high-emotion signals until no bandwidth remains for sovereign work. Identify your top 3 recurring overload triggers. Name them. Label them as "CPU overload events" — not emergencies. Respond on a 24-hour delay minimum.</div>
+      </div>
+      <div class="drag-block" onclick="this.classList.toggle('open')">
+        <div class="drag-header"><span class="drag-name">⚠ Insomnia of the Architect</span><span class="drag-arrow">▼</span></div>
+        <div class="drag-content"><span class="counter-label">COUNTER-PROTOCOL</span>Sleep disruption is a biological attack vector. Your most critical sovereign work — pattern recognition, strategic clarity, emotional regulation — requires sleep. Sleep is infrastructure. Protect it with the same rigor as production systems. Your sleep window is non-negotiable sovereign territory.</div>
+      </div>
+      <div class="drag-block" onclick="this.classList.toggle('open')">
+        <div class="drag-header"><span class="drag-name">⚠ Phantom Limb</span><span class="drag-arrow">▼</span></div>
+        <div class="drag-content"><span class="counter-label">COUNTER-PROTOCOL</span>The psychological residue of severed interference connections. Former parasitic relationships, terminated systems, or exited environments that continue consuming bandwidth through rumination and grief loops. Phantom Limb is real but it is not signal. It is noise from a severed connection. Acknowledge the sensation — refuse to act on it — redirect bandwidth to the living architecture.</div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-block" onclick="sealProtocol()">ANCHOR LOCKED — SEAL THE PROTOCOL →</button>
+  </div>
+</div>
+
+<!-- SCREEN 5: COMPLETE -->
+<div class="screen" id="screen-5">
+  <div class="complete-screen">
+    <div class="tag" style="margin-bottom:24px">⬡ Protocol 77 — Operational</div>
+    <h2>Shield Activated.</h2>
+    <p style="color:var(--dim);font-size:17px;max-width:520px;margin:0 auto 32px">All four phases deployed. The perimeter is sealed. Your Sovereign Anchor is locked.</p>
+
+    <div class="anchor-display">
+      <span class="label">// YOUR SOVEREIGN ANCHOR</span>
+      <div class="anchor-text" id="anchor-display-text">—</div>
+    </div>
+
+    <div class="phase-seals">
+      <div class="seal"><span class="seal-num">01</span><span class="seal-name">Gray Rock<br>Sealed</span></div>
+      <div class="seal"><span class="seal-num">02</span><span class="seal-name">Faraday<br>Sealed</span></div>
+      <div class="seal"><span class="seal-num">03</span><span class="seal-name">Lighthouse<br>Sealed</span></div>
+      <div class="seal"><span class="seal-num">04</span><span class="seal-name">Anchor<br>Locked</span></div>
+    </div>
+
+    <div class="checkpoint-block">
+      <div class="func-tag" style="margin-bottom:12px">// REMAINING SEQUENCE</div>
+      <div class="cp-row"><span class="cp-day">DAY 14</span><span class="cp-text">First checkpoint — measure your current frequency state against your Day 0 baseline. Record the delta.</span></div>
+      <div class="cp-row"><span class="cp-day">DAY 21</span><span class="cp-text">Protocol 77 fully operational. The perimeter holds. You are ready to receive The Map.</span></div>
+    </div>
+
+    <div class="cta-block">
+      <p>"Shield activated. Now navigate the full architecture."</p>
+      <a class="btn btn-gold" href="../tier-3/manifesto.html">DEPLOY THE MAP — $177 →</a>
+    </div>
+
+    <hr class="divider">
+    <button class="btn btn-outline" onclick="copyAnchor()" style="margin:0 auto">COPY SOVEREIGN ANCHOR</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// State management
+const STORAGE_KEY = 'p77_state';
+let state = {
+  currentScreen: 0,
+  completedPhases: [],
+  embargoStart: null,
+  anchorStatement: '',
+  phaseData: {}
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = {...state, ...JSON.parse(saved)};
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function showScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+  state.currentScreen = n;
+  updateProgress(n);
+  saveState();
+  window.scrollTo(0,0);
+}
+
+function updateProgress(n) {
+  const bar = document.getElementById('progress-bar');
+  if (n === 0 || n === 5) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  const days = {1:'DAY 1',2:'DAY 2',3:'DAY 7',4:'DAY 5'};
+  document.getElementById('day-badge').textContent = days[n] || '';
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-'+i);
+    dot.className = 'dot';
+    if (state.completedPhases.includes(i)) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  }
+}
+
+function startDeployment() {
+  showScreen(1);
+}
+
+function deployPhase(phase) {
+  // Save inputs
+  if (phase === 1) {
+    state.phaseData.gr1 = document.getElementById('gr-1').value;
+    state.phaseData.gr2 = document.getElementById('gr-2').value;
+    state.phaseData.gr3 = document.getElementById('gr-3').value;
+  } else if (phase === 2) {
+    state.phaseData.streams = collectStreams();
+  } else if (phase === 3) {
+    state.phaseData.lh1 = document.getElementById('lh-1').value;
+    state.phaseData.lh2 = document.getElementById('lh-2').value;
+    state.phaseData.lh3 = document.getElementById('lh-3').value;
+    state.phaseData.lhTx = document.getElementById('lh-tx').value;
+  }
+  if (!state.completedPhases.includes(phase)) state.completedPhases.push(phase);
+  saveState();
+  showScreen(phase + 1);
+}
+
+function sealProtocol() {
+  state.anchorStatement = document.getElementById('anchor').value;
+  if (!state.completedPhases.includes(4)) state.completedPhases.push(4);
+  saveState();
+  document.getElementById('anchor-display-text').textContent = state.anchorStatement || '— No anchor composed —';
+  showScreen(5);
+}
+
+// Classify stream buttons
+function classifyStream(el, stream, type) {
+  const group = el.parentElement;
+  group.querySelectorAll('.radio-opt').forEach(o => o.className = 'radio-opt');
+  el.classList.add(type === 'signal' ? 'selected-signal' : 'selected-noise');
+  if (!state.phaseData.streams) state.phaseData.streams = {};
+  state.phaseData.streams[stream] = type;
+  saveState();
+}
+
+function collectStreams() {
+  return state.phaseData.streams || {};
+}
+
+// Embargo timer
+let embargoInterval = null;
+
+function startEmbargo() {
+  if (state.embargoStart && !isEmbargoComplete()) return;
+  state.embargoStart = Date.now();
+  saveState();
+  runEmbargoTimer();
+  document.getElementById('embargo-btn').textContent = 'EMBARGO ACTIVE';
+  document.getElementById('embargo-btn').disabled = true;
+}
+
+function runEmbargoTimer() {
+  if (embargoInterval) clearInterval(embargoInterval);
+  embargoInterval = setInterval(updateEmbargoDisplay, 1000);
+  updateEmbargoDisplay();
+}
+
+function isEmbargoComplete() {
+  if (!state.embargoStart) return false;
+  return Date.now() - state.embargoStart >= 72 * 60 * 60 * 1000;
+}
+
+function updateEmbargoDisplay() {
+  if (!state.embargoStart) return;
+  const elapsed = Date.now() - state.embargoStart;
+  const total = 72 * 60 * 60 * 1000;
+  const remaining = Math.max(0, total - elapsed);
+  const disp = document.getElementById('timer-display');
+  const btn = document.getElementById('embargo-btn');
+  const status = document.getElementById('embargo-status');
+
+  if (remaining === 0) {
+    disp.textContent = 'EMBARGO COMPLETE';
+    disp.classList.add('complete');
+    btn.textContent = 'EMBARGO COMPLETE';
+    btn.disabled = true;
+    status.textContent = 'Blackout sequence complete. Frequency state logged.';
+    clearInterval(embargoInterval);
+    return;
+  }
+
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  disp.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  status.textContent = 'Embargo active. All classified Noise streams are offline.';
+  btn.textContent = 'EMBARGO ACTIVE';
+  btn.disabled = true;
+}
+
+// Checklist
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  box.classList.toggle('checked');
+}
+
+// Copy anchor
+function copyAnchor() {
+  const txt = state.anchorStatement || document.getElementById('anchor')?.value || '';
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = event.target;
+    btn.textContent = 'ANCHOR COPIED ✓';
+    setTimeout(() => btn.textContent = 'COPY SOVEREIGN ANCHOR', 2000);
+  });
+}
+
+// INIT
+loadState();
+showScreen(state.currentScreen || 0);
+
+// Restore anchor if returning
+if (state.anchorStatement && document.getElementById('anchor')) {
+  document.getElementById('anchor').value = state.anchorStatement;
+}
+if (state.anchorStatement && document.getElementById('anchor-display-text')) {
+  document.getElementById('anchor-display-text').textContent = state.anchorStatement;
+}
+if (state.embargoStart) runEmbargoTimer();
+</script>
+<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
+<style id="ss-theme-light">
+[data-theme="light"] {
+  --bg:           #F5F2EE !important;
+  --bg-card:      #FFFFFF !important;
+  --bg-card2:     #FAF8F5 !important;
+  --bg-panel:     #FFFFFF !important;
+  --bg-elevated:  #FEFEFE !important;
+  --text:         #1A1A2E !important;
+  --text-dim:     #4A4A6A !important;
+  --text-ghost:   #8888A0 !important;
+  --dim:          rgba(26,26,46,0.55) !important;
+  --dim2:         rgba(26,26,46,0.3) !important;
+  --ghost:        #9090A8 !important;
+  --border:       rgba(26,26,46,0.12) !important;
+  --border-subtle: rgba(26,26,46,0.06) !important;
+  --subtle:       rgba(26,26,46,0.04) !important;
+  --violet-dim:   rgba(124,92,252,0.08) !important;
+  --violet-glow:  rgba(124,92,252,0.15) !important;
+  --violet-border:rgba(124,92,252,0.2) !important;
+  --cyan-dim:     rgba(62,247,232,0.08) !important;
+  --cyan-glow:    rgba(62,247,232,0.2) !important;
+  --cyan-border:  rgba(62,247,232,0.15) !important;
+  --gold-dim:     rgba(201,168,76,0.1) !important;
+  --gold-glow:    rgba(201,168,76,0.18) !important;
+  --gold-border:  rgba(201,168,76,0.15) !important;
+  --amber-dim:    rgba(232,146,26,0.1) !important;
+  --amber-glow:   rgba(232,146,26,0.2) !important;
+  --amber-faint:  rgba(232,146,26,0.04) !important;
+}
+[data-theme="light"] body::before { opacity: 0 !important; }
+.ss-theme-toggle {
+  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border, rgba(255,255,255,0.06));
+  background: var(--bg-card, #09090f);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
+.ss-theme-toggle:active { transform: scale(0.95); }
+.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
+.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
+.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
+.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
+.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
+@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
+</style>
+<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+<script>
+(function(){
+  'use strict';
+  function getThemeFromURL(){
+    return new URLSearchParams(window.location.search).get('theme')||'dark';
+  }
+  function applyTheme(t){
+    if(t==='light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+  }
+  function updateLinks(t){
+    document.querySelectorAll('a[href]').forEach(function(a){
+      var h=a.getAttribute('href');
+      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
+      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
+      try{
+        var u=new URL(h,window.location.origin);
+        if(t==='light') u.searchParams.set('theme','light');
+        else u.searchParams.delete('theme');
+        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
+        else{
+          var base=h.split('?')[0].split('#')[0];
+          var qs=u.search||'';
+          var hash=u.hash||'';
+          a.setAttribute('href',base+qs+hash);
+        }
+      }catch(e){}
+    });
+  }
+  function updateCurrentURL(t){
+    var u=new URL(window.location);
+    if(t==='light') u.searchParams.set('theme','light');
+    else u.searchParams.delete('theme');
+    window.history.replaceState({},'',u);
+  }
+  var cur=getThemeFromURL();
+  applyTheme(cur);
+  function init(){
+    updateLinks(cur);
+    var btn=document.querySelector('.ss-theme-toggle');
+    if(btn) btn.addEventListener('click',function(){
+      cur=(cur==='light')?'dark':'light';
+      applyTheme(cur);
+      updateCurrentURL(cur);
+      updateLinks(cur);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+<!-- ═══ END THEME TOGGLE ═══ -->
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>window.SS_TIER_SLUG = 'p77';</script>
   <script src="/js/auth-gate.js"></script>
-
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme" style="color:#FFD700;">&#9728;</button>
-  <script>
-    (function(){
-      var btn = document.getElementById('themeToggle');
-      var html = document.documentElement;
-      var saved = null;
-      try { saved = localStorage.getItem('ss-theme'); } catch(e){}
-      if (saved === 'light') {
-        html.setAttribute('data-theme', 'light');
-        btn.innerHTML = '&#9790;';
-        btn.style.color = '#7C5CFC';
-      }
-      btn.addEventListener('click', function(){
-        var current = html.getAttribute('data-theme');
-        if (current === 'light') {
-          html.removeAttribute('data-theme');
-          btn.innerHTML = '&#9728;';
-          btn.style.color = '#FFD700';
-          try { localStorage.setItem('ss-theme', 'dark'); } catch(e){}
-        } else {
-          html.setAttribute('data-theme', 'light');
-          btn.innerHTML = '&#9790;';
-          btn.style.color = '#7C5CFC';
-          try { localStorage.setItem('ss-theme', 'light'); } catch(e){}
-        }
-      });
-    })();
-  </script>
 </body>
 </html>
