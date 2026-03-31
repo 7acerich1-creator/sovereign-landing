@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 3: THE DEPLOYMENT — Course Portal</title>
+  <meta name="description" content="The Architect: Sovereign Integration — Full Sovereign Synthesis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --bg: #0a0a0f; --bg-card: #111118; --text: #e8e8e8; --text-dim: #888; --accent: #C9A84C; --accent-glow: rgba(201,168,76,0.15); --gold: #d4a843; --border: #1a1a24; --serif: 'EB Garamond', Georgia, serif; --mono: 'Courier Prime', 'Courier New', monospace; }
+    body { font-family: var(--serif); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    .portal-header { padding: 60px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .portal-badge { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--accent); border: 1px solid rgba(201,168,76,0.3); padding: 5px 14px; margin-bottom: 24px; text-transform: uppercase; }
+    .portal-tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 8px; }
+    .portal-title { font-size: clamp(28px, 5vw, 40px); font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 12px; }
+    .portal-subtitle { font-size: 18px; color: var(--text-dim); line-height: 1.7; max-width: 560px; }
+    .portal-phase { font-family: var(--mono); font-size: 12px; letter-spacing: 0.15em; color: var(--accent); margin-top: 20px; padding: 8px 16px; background: var(--accent-glow); border-left: 2px solid var(--accent); display: inline-block; }
+    .module { background: var(--bg-card); border: 1px solid var(--border); margin-bottom: 32px; overflow: hidden; }
+    .module-header { padding: 28px 32px 20px; border-bottom: 1px solid var(--border); }
+    .module-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; color: var(--accent); font-weight: bold; margin-bottom: 6px; }
+    .module-name { font-size: 22px; font-weight: 600; color: #fff; }
+    .lessons { padding: 8px 0; }
+    .lesson { display: flex; align-items: center; padding: 16px 32px; border-bottom: 1px solid rgba(255,255,255,0.02); transition: background 0.2s; cursor: pointer; }
+    .lesson:hover { background: rgba(201,168,76,0.04); }
+    .lesson:last-child { border-bottom: none; }
+    .lesson-num { font-family: var(--mono); font-size: 11px; font-weight: bold; color: var(--accent); min-width: 48px; opacity: 0.7; }
+    .lesson-title { font-size: 17px; color: var(--text); flex: 1; }
+    .lesson-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-glow); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 12px; flex-shrink: 0; }
+    .features-section { padding: 48px 0; border-top: 1px solid var(--border); }
+    .features-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 20px; }
+    .feature-item { font-size: 16px; color: var(--text); padding: 8px 0 8px 24px; position: relative; }
+    .feature-item::before { content: '\2192'; position: absolute; left: 0; color: var(--accent); }
+    .locked-notice { background: var(--bg-card); border: 1px solid var(--border); padding: 40px; text-align: center; margin: 48px 0; }
+    .locked-notice h3 { font-size: 20px; color: #fff; margin-bottom: 12px; }
+    .locked-notice p { color: var(--text-dim); margin-bottom: 24px; font-size: 16px; line-height: 1.7; }
+    .locked-notice .login-note { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; margin-top: 16px; }
+    .footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
+    .footer p { font-family: var(--mono); font-size: 12px; color: #444; letter-spacing: 1px; }
+    .footer .sig { font-family: var(--serif); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
+    .back-link { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-dim); text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
+  
+    /* LIGHT THEME */
+    [data-theme="light"] {
+      --bg: #f5f4f0;
+      --bg-card: #ffffff;
+      --text: #1a1a2e;
+      --text-dim: #555;
+      --border: #ddd8d0;
+    }
+    [data-theme="light"] .portal-title,
+    [data-theme="light"] .protocol-name,
+    [data-theme="light"] .content-name,
+    [data-theme="light"] .module-name,
+    [data-theme="light"] .phase-name,
+    [data-theme="light"] .trans-title,
+    [data-theme="light"] .locked-notice h3,
+    [data-theme="light"] h1,
+    [data-theme="light"] h2,
+    [data-theme="light"] h3,
+    [data-theme="light"] .p77 h3,
+    [data-theme="light"] .hero h1 { color: #111; }
+    [data-theme="light"] .footer p { color: #aaa; }
+    [data-theme="light"] .lesson-title { color: #1a1a2e; }
+    .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 9999; width: 63px; height: 63px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 27px; transition: all 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">&larr; SOVEREIGN SYNTHESIS</a>
+    <header class="portal-header">
+      <div class="portal-badge">Course Portal</div>
+      <div class="portal-tier">TIER 6 // CODENAME: THE DEPLOYMENT</div>
+      <h1 class="portal-title">The Architect: Sovereign Integration</h1>
+      <p class="portal-subtitle">Full Sovereign Synthesis. The Integration.</p>
+      <div class="portal-phase">PHASE 3: THE DEPLOYMENT</div>
+    </header>
+
+    <div class="module">
+      <div class="module-header">
+        <div class="module-num">MODULE 005</div>
+        <div class="module-name">Offer Architecture</div>
+      </div>
+      <div class="lessons">
+        <div class="lesson"><span class="lesson-num">L1</span><span class="lesson-title">The Sovereign Offer Stack</span><div class="lesson-icon">&#9654;</div></div>
+        <div class="lesson"><span class="lesson-num">L2</span><span class="lesson-title">Brand Signal Architecture</span><div class="lesson-icon">&#9654;</div></div>
+        <div class="lesson"><span class="lesson-num">L3</span><span class="lesson-title">Content System Build</span><div class="lesson-icon">&#9654;</div></div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <div class="module-num">MODULE 006</div>
+        <div class="module-name">Scale Architecture</div>
+      </div>
+      <div class="lessons">
+        <div class="lesson"><span class="lesson-num">L4</span><span class="lesson-title">Revenue Milestone Map</span><div class="lesson-icon">&#9654;</div></div>
+        <div class="lesson"><span class="lesson-num">L5</span><span class="lesson-title">Scale Architecture</span><div class="lesson-icon">&#9654;</div></div>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <div class="features-title">WHAT'S INCLUDED</div>
+      <div class="feature-item">Full course portal</div>
+      <div class="feature-item">2 modules, 5 lessons</div>
+      <div class="feature-item">Video modules + workbooks per module</div>
+      <div class="feature-item">All previous tier content unlocked</div>
+    </div>
+
+    <div class="locked-notice">
+      <h3>Course content is access-controlled</h3>
+      <p>Video lessons and workbooks are delivered after purchase. If you've already purchased, check your email for your magic link to access the full content.</p>
+      <p class="login-note">Sign in with your purchase email to access your content.</p>
+    </div>
+
+    <footer class="footer">
+      <p class="sig">&mdash; Ace Richie</p>
+      <p>Sovereign Synthesis &copy; 2026</p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>window.SS_TIER_SLUG = 'dp3';</script>
+  <script src="/js/auth-gate.js"></script>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme" style="color:#FFD700;">&#9728;</button>
+  <script>
+    (function(){
+      var btn = document.getElementById('themeToggle');
+      var html = document.documentElement;
+      var saved = null;
+      try { saved = localStorage.getItem('ss-theme'); } catch(e){}
+      if (saved === 'light') {
+        html.setAttribute('data-theme', 'light');
+        btn.innerHTML = '&#9790;';
+        btn.style.color = '#7C5CFC';
+      }
+      btn.addEventListener('click', function(){
+        var current = html.getAttribute('data-theme');
+        if (current === 'light') {
+          html.removeAttribute('data-theme');
+          btn.innerHTML = '&#9728;';
+          btn.style.color = '#FFD700';
+          try { localStorage.setItem('ss-theme', 'dark'); } catch(e){}
+        } else {
+          html.setAttribute('data-theme', 'light');
+          btn.innerHTML = '&#9790;';
+          btn.style.color = '#7C5CFC';
+          try { localStorage.setItem('ss-theme', 'light'); } catch(e){}
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
