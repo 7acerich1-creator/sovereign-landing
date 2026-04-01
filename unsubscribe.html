@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsubscribe | Sovereign Synthesis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0d0b14;
+      --text: #E8E4F0; --dim: #7C7A9A; --ghost: #484860;
+      --cyan: #3EF7E8; --cyan-border: rgba(62,247,232,0.15);
+      --gold: #C9A84C;
+      --border: rgba(255,255,255,0.06); --subtle: rgba(255,255,255,0.03);
+      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
+    }
+    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 520px; margin: 0 auto; padding: 0 24px 96px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    header { padding: 64px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .back { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ghost); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px; text-transform: uppercase; transition: color .2s; }
+    .back:hover { color: var(--cyan); }
+    .doc-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; display: block; opacity: 0.7; }
+    header h1 { font-size: clamp(24px, 4vw, 34px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; }
+    p { font-size: 16px; color: var(--dim); margin-bottom: 14px; font-weight: 300; line-height: 1.85; }
+
+    .form-block { background: var(--bg-card); border: 1px solid var(--border); padding: 32px; margin: 24px 0; position: relative; }
+    .form-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cyan); opacity: 0.25; }
+
+    label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ghost); text-transform: uppercase; display: block; margin-bottom: 10px; }
+    input[type="email"] {
+      width: 100%; padding: 14px 16px; font-family: var(--display); font-size: 16px; font-weight: 300;
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      outline: none; transition: border-color .2s;
+    }
+    input[type="email"]:focus { border-color: var(--cyan); }
+    input[type="email"]::placeholder { color: var(--ghost); }
+
+    .btn {
+      display: inline-block; margin-top: 20px; padding: 14px 28px;
+      font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      background: transparent; border: 1px solid var(--ghost); color: var(--dim);
+      cursor: pointer; transition: all .2s;
+    }
+    .btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .status { margin-top: 20px; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; display: none; }
+    .status.success { color: var(--cyan); display: block; }
+    .status.error { color: #E85A5A; display: block; }
+    .status.loading { color: var(--ghost); display: block; }
+
+    .note { font-size: 13px; color: var(--ghost); margin-top: 32px; line-height: 1.7; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--ghost); letter-spacing: 1px; }
+    footer a { color: var(--ghost); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--cyan); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="/" class="back">&larr; Back to site</a>
+      <span class="doc-label">Email Preferences</span>
+      <h1>Unsubscribe</h1>
+    </header>
+
+    <div id="form-view">
+      <p>Enter your email below to unsubscribe from all Sovereign Synthesis transmissions.</p>
+
+      <div class="form-block">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="your@email.com" autocomplete="email" />
+        <button class="btn" id="unsub-btn" onclick="handleUnsubscribe()">Confirm Unsubscribe</button>
+        <div class="status" id="status"></div>
+      </div>
+
+      <p class="note">This will stop all automated email sequences. If you change your mind, you can re-subscribe at sovereign-synthesis.com.</p>
+    </div>
+
+    <div id="success-view" style="display:none;">
+      <div class="form-block">
+        <p style="color: var(--cyan); font-weight: 500; margin-bottom: 8px;">Transmission terminated.</p>
+        <p>You have been unsubscribed. No further emails will be sent to this address.</p>
+      </div>
+      <p class="note">If you ever want back in, you know where to find us.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="/">Sovereign Synthesis</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></p>
+  </footer>
+
+  <script>
+    var SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
+
+    // Pre-fill email from query param if present
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var email = params.get('email');
+      if (email) {
+        document.getElementById('email').value = decodeURIComponent(email);
+      }
+    })();
+
+    async function handleUnsubscribe() {
+      var emailInput = document.getElementById('email');
+      var btn = document.getElementById('unsub-btn');
+      var status = document.getElementById('status');
+      var email = emailInput.value.trim().toLowerCase();
+
+      if (!email || !email.includes('@')) {
+        status.className = 'status error';
+        status.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      btn.disabled = true;
+      status.className = 'status loading';
+      status.textContent = 'Processing...';
+
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/unsubscribe_email', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ target_email: email })
+        });
+
+        if (res.ok) {
+          document.getElementById('form-view').style.display = 'none';
+          document.getElementById('success-view').style.display = 'block';
+        } else {
+          status.className = 'status error';
+          status.textContent = 'Something went wrong. Please try again.';
+          btn.disabled = false;
+        }
+      } catch (e) {
+        status.className = 'status error';
+        status.textContent = 'Network error. Please try again.';
+        btn.disabled = false;
+      }
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('email').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleUnsubscribe();
+    });
+  </script>
+
+</body>
+</html>
