@@ -1,0 +1,8 @@
+Read the following files FIRST before doing anything:
+
+Sovereign-Sentinel-Bot/SOVEREIGN-SENTINEL-BOT_MASTER-REFERENCE.md — canonical source of truth for the bot
+Sovereign-Mission-Control/MISSION-CONTROL-MASTER-REFERENCE.md — canonical source for the dashboard
+Sovereign-Mission-Control/SOVEREIGN-POSTING-GUIDE.md — the operational posting schedule
+
+
+
