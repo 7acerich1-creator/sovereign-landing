@@ -400,7 +400,6 @@
   <script>
     const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
-    const MAKE_WEBHOOK = 'https://hook.us2.make.com/wf0ttyqrjk8mz4fohjb9bpokzrk1hdrf';
 
     document.getElementById('captureForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -422,11 +421,6 @@
           },
           body: JSON.stringify({ email, source: 'landing-page', tier: 0, created_at: new Date().toISOString() })
         });
-        fetch(MAKE_WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, event: 'new_initiate' })
-        }).catch(() => {});
         document.getElementById('formState').classList.add('hidden');
         document.getElementById('successState').classList.add('active');
       } catch (err) {
