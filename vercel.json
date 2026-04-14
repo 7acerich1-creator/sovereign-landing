@@ -7,7 +7,7 @@
     { "source": "/tier-0/links.html", "destination": "/", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/diagnostic", "destination": "/tier-1/diagnostic.html" },
+    { "source": "/diagnostic", "destination": "/tier-1/diagnostic" },
     { "source": "/manual", "destination": "/manual/index.html" }
   ]
 }
