@@ -116,6 +116,12 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 .retake-wrap{text-align:center;margin-top:40px}
 
 @media(max-width:500px){.score-name{min-width:110px}.q-text{font-size:18px}.protocol-cta{padding:24px 20px}}
+
+.field-diag { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: var(--display); font-size: 15px; padding: 12px 14px; margin-bottom: 10px; outline: none; transition: border-color 0.2s; }
+.field-diag:focus { border-color: var(--cyan); }
+.field-diag::placeholder { color: var(--ghost); }
+.privacy-note { font-family: var(--mono); font-size: 10px; color: var(--ghost); letter-spacing: 1px; margin-top: 10px; }
+#diagnosticLeadForm { display: flex; flex-direction: column; gap: 0; max-width: 420px; margin: 14px auto 0; }
 </style>
 </head>
 <body>
@@ -204,9 +210,18 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 
     <hr class="result-div">
 
-    <div class="manual-cta">
-      <p>Your Reality Override Manual maps the full three-pattern framework — beginning with yours.</p>
-      <a class="btn btn-cyan" href="./download.html">ACCESS YOUR MANUAL →</a>
+    <div class="manual-cta" id="manual-cta-block">
+      <p>Your full Reality Override Manual — the three-pattern framework beginning with yours — will be emailed to you now.</p>
+      <form id="diagnosticLeadForm" onsubmit="captureLeadAndDownload(event); return false;">
+        <input type="text" class="field-diag" id="diagFullName" placeholder="Your name" required>
+        <input type="email" class="field-diag" id="diagEmail" placeholder="Your email" required>
+        <button type="submit" class="btn btn-cyan" id="diagSubmitBtn" style="width:100%;margin-top:8px;">SEND ME THE MANUAL →</button>
+      </form>
+      <p class="privacy-note">No spam. Unsubscribe anytime.</p>
+    </div>
+    <div class="manual-cta" id="manual-success" style="display:none;">
+      <p>Manual is on its way. Check your inbox.</p>
+      <a class="btn btn-cyan" href="./download.html">DOWNLOAD NOW →</a>
     </div>
 
     <div class="protocol-cta" id="protocol-cta-block">
@@ -352,6 +367,7 @@ function showResults(){
   let dominant = 'A';
   if(scores.B === max && scores.B >= scores.A) dominant = 'B';
   if(scores.C === max && scores.C >= scores.B && scores.C >= scores.A) dominant = 'C';
+  window.currentDominant = dominant;
   const pat = PATTERNS[dominant];
 
   // Save
@@ -423,6 +439,54 @@ function retake(){
   }catch(e){}
   showScreen('screen-entry');
 })();
+
+// === Post-result email capture (Session 56 funnel restructure) ===
+const SUPABASE_URL_DIAG = "https://wzthxohtgojenukmdubz.supabase.co";
+const SUPABASE_ANON_KEY_DIAG = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU";
+const EDGE_FN_URL_DIAG = "https://wzthxohtgojenukmdubz.supabase.co/functions/v1/send-nurture-email";
+
+async function captureLeadAndDownload(e){
+  if(e && e.preventDefault) e.preventDefault();
+  const btn = document.getElementById('diagSubmitBtn');
+  const name = document.getElementById('diagFullName').value.trim();
+  const email = document.getElementById('diagEmail').value.trim();
+  if(!email) return;
+  btn.disabled = true;
+  btn.textContent = 'PROCESSING...';
+  const dom = window.currentDominant || 'A';
+  const patternMap = {A: 'approval-loop', B: 'overload-spiral', C: 'identity-lock'};
+  const patternSlug = patternMap[dom] || 'unknown';
+  try{
+    await fetch(SUPABASE_URL_DIAG + '/rest/v1/initiates', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY_DIAG,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY_DIAG,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal,resolution=ignore-duplicates'
+      },
+      body: JSON.stringify({
+        full_name: name,
+        email: email,
+        source: 'diagnostic-' + patternSlug,
+        payment_status: 'unpaid',
+        application_status: 'lead',
+        dominant_pattern: patternSlug
+      })
+    });
+    await fetch(EDGE_FN_URL_DIAG, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, step: 1})
+    });
+    document.getElementById('manual-cta-block').style.display = 'none';
+    document.getElementById('manual-success').style.display = 'block';
+  }catch(err){
+    btn.disabled = false;
+    btn.textContent = 'SEND ME THE MANUAL →';
+    alert('Something went wrong. Please try again.');
+  }
+}
 </script>
 <!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
 <style id="ss-theme-light">

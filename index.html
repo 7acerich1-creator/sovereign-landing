@@ -2,195 +2,573 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sovereign Synthesis — Break the Pattern</title>
-  <meta name="description" content="A step-by-step framework for identifying the invisible patterns draining your energy, focus, and momentum.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Sovereign Synthesis</title>
+  <meta name="description" content="Assembling the first organized formation of people willing to lose what they are to become what they actually are.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg: #0a0a0f;
-      --bg-card: #111118;
-      --text: #e8e8e8;
-      --text-dim: #888;
-      --accent: #00e5c7;
-      --gold: #d4a843;
-      --gold-hover: #e8bf5a;
-      --border: #222;
-      --serif: 'EB Garamond', Georgia, serif;
-      --mono: 'Courier Prime', 'Courier New', monospace;
+      /* ── TIER 0: THE CONTAINMENT FIELD ──
+         Mirror the viewer's current psychological state.
+         Institutional. Oppressive. ONE thread of gold.
+         ── Canonical brand tokens, dimmed intentionally for psychological effect. ── */
+
+      /* Brand canonical — blue-shifted dark */
+      --bg: #050508;
+      --bg-panel: #09090e;
+      --cage: #0e0e18;
+
+      /* Text — muted, not alive */
+      --text-dull: #9A9AA8;
+      --text-ghost: #4A4A5A;
+      --text-dead: #2A2A36;
+
+      /* Accent — dimmed (intentional at T0: escape feels distant) */
+      --rust: #8B2E2E;
+      --dead-green: #3A4232;
+      --gold-dim: #7A601A;      /* Intentionally suppressed — not the full canonical gold */
+      --gold-dimmer: #4A3A10;
+
+      /* Fonts */
+      --display: 'Space Grotesk', sans-serif;
+      --mono: 'Space Mono', monospace;
     }
-    body { font-family: var(--serif); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-    .hero { padding: 80px 0 60px; text-align: center; position: relative; }
-    .hero::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--accent); }
-    .badge { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--accent); border: 1px solid rgba(0, 229, 199, 0.3); padding: 6px 16px; margin-bottom: 32px; text-transform: uppercase; }
-    .hero h1 { font-family: var(--serif); font-size: clamp(28px, 5vw, 42px); font-weight: 600; line-height: 1.2; margin-bottom: 24px; color: #fff; }
-    .hero h1 em { font-style: italic; color: var(--accent); }
-    .hero p { font-size: 18px; color: var(--text-dim); max-width: 560px; margin: 0 auto 40px; line-height: 1.9; }
-    .capture { background: var(--bg-card); border: 1px solid var(--border); padding: 48px 40px; margin: 60px auto; max-width: 520px; }
-    .capture h2 { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
-    .capture p { font-size: 17px; color: var(--text); margin-bottom: 28px; line-height: 1.7; }
-    .field { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: var(--serif); font-size: 16px; padding: 14px 16px; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
-    .field:focus { border-color: var(--accent); }
-    .field::placeholder { color: #555; }
-    .btn-primary { display: block; width: 100%; background: var(--gold); color: #0a0a0f; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 16px; border: none; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--gold-hover); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .privacy { font-size: 12px; color: #555; text-align: center; margin-top: 12px; font-family: var(--mono); }
-    .section { padding: 60px 0; border-top: 1px solid var(--border); }
-    .section h2 { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #fff; }
-    .section p { font-size: 17px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.8; }
-    .arrow-item { font-size: 16px; color: var(--text); padding: 8px 0 8px 24px; position: relative; }
-    .arrow-item::before { content: '\2192'; position: absolute; left: 0; color: var(--accent); }
-    .p77 { background: var(--bg-card); border: 1px solid var(--border); padding: 48px 40px; margin: 20px auto 60px; text-align: center; }
-    .p77 h3 { font-size: 22px; margin-bottom: 12px; color: #fff; }
-    .p77 p { color: var(--text-dim); margin-bottom: 24px; font-size: 16px; line-height: 1.7; }
-    .btn-secondary { display: inline-block; background: transparent; color: var(--gold); font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 14px 40px; border: 1px solid var(--gold); text-decoration: none; transition: all 0.2s; }
-    .btn-secondary:hover { background: var(--gold); color: #0a0a0f; }
-    .footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
-    .footer p { font-family: var(--mono); font-size: 12px; color: #444; letter-spacing: 1px; }
-    .footer .sig { font-family: var(--serif); font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
-    .success { display: none; text-align: center; }
-    .success h2 { font-size: 24px; color: #fff; margin-bottom: 16px; }
-    .success p { color: var(--text-dim); font-size: 17px; margin-bottom: 28px; }
-    .btn-download { display: inline-block; background: var(--accent); color: #0a0a0f; font-family: var(--mono); font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; padding: 16px 48px; text-decoration: none; transition: opacity 0.2s; }
-    .btn-download:hover { opacity: 0.85; }
-    .quote { font-style: italic; color: #555; font-size: 15px; text-align: center; padding: 40px 0; border-top: 1px solid var(--border); }
-    @keyframes signal-pulse { 0% { color: #444; text-shadow: none; } 50% { color: #5a7a78; text-shadow: 0 0 8px rgba(0,229,199,0.18); } 100% { color: #444; text-shadow: none; } }
-    .signal-link { color: #444; text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; animation: signal-pulse 11s ease-in-out infinite; animation-delay: 4s; cursor: default; display: inline-block; }
-    .signal-link:hover { color: var(--accent); text-shadow: 0 0 12px rgba(0,229,199,0.3); cursor: pointer; animation: none; transition: color 0.3s, text-shadow 0.3s; }
+
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text-dull);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ═══ BOOT SEQUENCE ═══ */
+    .boot-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      animation: bootFade 3.2s ease-in forwards;
+    }
+    .boot-line {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--text-dead);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .boot-line:nth-child(1) { animation: bootType 0.3s 0.3s forwards; }
+    .boot-line:nth-child(2) { animation: bootType 0.3s 0.7s forwards; }
+    .boot-line:nth-child(3) { animation: bootType 0.3s 1.1s forwards; }
+    .boot-line:nth-child(4) { animation: bootType 0.3s 1.5s forwards; color: var(--rust); }
+    @keyframes bootType { to { opacity: 1; } }
+    @keyframes bootFade { 0%, 70% { opacity: 1; } 100% { opacity: 0; pointer-events: none; } }
+
+    /* ═══ SCAN LINE ═══ */
+    .scan-line {
+      position: fixed;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(139, 46, 46, 0.07);
+      pointer-events: none;
+      z-index: 10;
+      animation: scanMove 4s linear infinite;
+    }
+    @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+
+    /* ═══ GRID ═══ */
+    .grid-h {
+      position: fixed;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.018);
+      pointer-events: none;
+    }
+    .grid-v {
+      position: fixed;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(255,255,255,0.015);
+      pointer-events: none;
+    }
+
+    /* ═══ NOISE TEXTURE ═══ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ═══ VIGNETTE ═══ */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(5,5,8,0.7) 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      position: relative;
+      z-index: 5;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* ═══ SYSTEM HEADER ═══ */
+    .sys-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--text-dead);
+      border-bottom: 1px solid #0e0e18;
+      padding-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    /* ═══ DOSSIER ═══ */
+    .dossier {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.25rem;
+      border: 1px solid #0d0d18;
+      background: #070710;
+    }
+    .dossier-row {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .dossier-key { color: #30303A; min-width: 160px; }
+    .dossier-val { color: #484858; }
+    .dossier-val.rust { color: var(--rust); }
+
+    /* ═══ IDENTITY ═══ */
+    .identity { display: flex; flex-direction: column; gap: 0.75rem; }
+    .redact-bar { height: 6px; width: 120px; background: var(--cage); }
+    .redact-bar-sm { height: 4px; width: 60px; background: #0c0c16; }
+    .name {
+      font-family: var(--display);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      color: #9898A8;
+      line-height: 1;
+      text-transform: uppercase;
+      position: relative;
+    }
+    /* Glitch effect */
+    .name::before, .name::after {
+      content: 'ACE RICHIE';
+      position: absolute;
+      top: 0; left: 0;
+      opacity: 0;
+    }
+    .name::before {
+      color: var(--rust);
+      animation: glitch1 8s ease-in-out infinite;
+    }
+    .name::after {
+      color: var(--dead-green);
+      animation: glitch2 8s ease-in-out infinite;
+    }
+    @keyframes glitch1 {
+      0%, 94%, 100% { opacity: 0; transform: none; }
+      95% { opacity: 0.8; transform: translate(-2px, 1px); }
+      96% { opacity: 0; }
+    }
+    @keyframes glitch2 {
+      0%, 94%, 100% { opacity: 0; transform: none; }
+      95.5% { opacity: 0.6; transform: translate(2px, -1px); }
+      96.5% { opacity: 0; }
+    }
+    .title-line {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: #303040;
+      text-transform: uppercase;
+    }
+
+    /* ═══ STATEMENT ═══ */
+    .statement-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-left: 2px solid var(--cage);
+      padding-left: 1.5rem;
+    }
+    .statement-main {
+      font-family: var(--display);
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 700;
+      color: #8A8A9A;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+    }
+    .statement-sub {
+      font-size: 13px;
+      color: #484858;
+      line-height: 1.7;
+    }
+    .statement-ghost {
+      font-size: 13px;
+      color: #585868;
+      line-height: 1.7;
+      margin-top: 0.25rem;
+    }
+
+    /* ═══ CTA — The one thread of gold ═══ */
+    .cta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid #0e0e18;
+    }
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--gold-dim);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.75rem 0;
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+    }
+    .cta-link:hover {
+      color: #C9A84C;  /* Reveals the canonical gold on hover — a preview of what's coming */
+      text-shadow: 0 0 24px rgba(201, 168, 76, 0.2);
+    }
+    .cta-arrow { color: var(--gold-dimmer); font-size: 11px; }
+    .cta-text {
+      border-bottom: 1px solid var(--gold-dimmer);
+      padding-bottom: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-text::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent);
+      animation: ctaShimmer 7s ease-in-out infinite;
+    }
+    @keyframes ctaShimmer {
+      0%, 100% { left: -100%; }
+      50% { left: 100%; }
+    }
+    .cta-note {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: #252530;
+      text-transform: uppercase;
+    }
+
+    /* ═══ FOOTER ═══ */
+    .footer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: #252530;
+      text-transform: uppercase;
+    }
+    .footer-val { color: #303040; }
+    .redacted-inline {
+      background: #0e0e18;
+      color: #0e0e18;
+      padding: 0 4px;
+      user-select: none;
+    }
+    /* Closet door — architect profile link */
+    .architect-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: #252530;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+      border-bottom: 1px solid #0e0e18;
+      padding-bottom: 2px;
+      animation: signalDetonation 8s ease-out 3.5s forwards;
+    }
+    .architect-link:hover { color: #3EF7E8; border-bottom-color: #3EF7E8; text-shadow: 0 0 12px rgba(62,247,232,0.6); }
+
+    @keyframes signalDetonation {
+      /* 0-35%: silence. eyes are still scanning. */
+      0%    { color: #252530; text-shadow: none; border-bottom-color: #0e0e18; }
+      /* 35%: THE FLASH. white-hot center, violet+cyan+gold corona. pattern-breaking. */
+      4%    { color: #FFFFFF; text-shadow: 0 0 40px #FFFFFF, 0 0 80px #3EF7E8, 0 0 120px #7C5CFC, 0 0 160px #C9A84C, 0 0 200px rgba(62,247,232,0.6); border-bottom-color: #3EF7E8; }
+      /* hold the burn */
+      7%    { color: #FFFFFF; text-shadow: 0 0 35px #3EF7E8, 0 0 70px #7C5CFC, 0 0 120px #9B7EFF, 0 0 160px rgba(201,168,76,0.7); border-bottom-color: #FFFFFF; }
+      /* afterimage — cyan dominant, still screaming */
+      12%   { color: #3EF7E8; text-shadow: 0 0 30px #3EF7E8, 0 0 60px rgba(124,92,252,0.8), 0 0 100px rgba(62,247,232,0.5); border-bottom-color: #3EF7E8; }
+      /* second pulse — gold detonation */
+      18%   { color: #E8C56A; text-shadow: 0 0 35px #C9A84C, 0 0 70px rgba(201,168,76,0.7), 0 0 100px rgba(124,92,252,0.4); border-bottom-color: #C9A84C; }
+      /* violet afterglow */
+      25%   { color: #9B7EFF; text-shadow: 0 0 25px #7C5CFC, 0 0 50px rgba(124,92,252,0.5); border-bottom-color: #7C5CFC; }
+      /* cooling — still visible */
+      35%   { color: #7C5CFC; text-shadow: 0 0 15px rgba(124,92,252,0.4), 0 0 30px rgba(62,247,232,0.15); border-bottom-color: rgba(124,92,252,0.4); }
+      /* dimming */
+      50%   { color: #484860; text-shadow: 0 0 6px rgba(124,92,252,0.1); border-bottom-color: #1e1e2c; }
+      /* ghost — back to near-invisible */
+      70%   { color: #303040; text-shadow: none; border-bottom-color: #121218; }
+      100%  { color: #252530; text-shadow: none; border-bottom-color: #0e0e18; }
+    }
+
+    @media (max-width: 480px) {
+      .dossier-row { flex-direction: column; gap: 2px; }
+      .dossier-key { min-width: auto; }
+      .sys-header { flex-direction: column; gap: 4px; }
+    }
   
-    /* LIGHT THEME */
-    [data-theme="light"] {
-      --bg: #f5f4f0;
-      --bg-card: #ffffff;
-      --text: #1a1a2e;
-      --text-dim: #555;
-      --border: #ddd8d0;
-    }
-    [data-theme="light"] .portal-title,
-    [data-theme="light"] .protocol-name,
-    [data-theme="light"] .content-name,
-    [data-theme="light"] .module-name,
-    [data-theme="light"] .phase-name,
-    [data-theme="light"] .trans-title,
-    [data-theme="light"] .locked-notice h3,
-    [data-theme="light"] h1,
-    [data-theme="light"] h2,
-    [data-theme="light"] h3,
-    [data-theme="light"] .p77 h3,
-    [data-theme="light"] .hero h1 { color: #111; }
-    [data-theme="light"] .footer p { color: #aaa; }
-    [data-theme="light"] .lesson-title { color: #1a1a2e; }
-    .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 9999; width: 63px; height: 63px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 27px; transition: all 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
-  </style>
+    .purpose-subtext { display: flex; flex-direction: column; gap: 0.25rem; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: var(--text-dead); text-transform: uppercase; border-left: 1px solid #0e0e18; padding-left: 1.5rem; }
+    .purpose-subtext p { line-height: 1.5; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <section class="hero">
-      <div class="badge">Free Download</div>
-      <h1>Everything feels rigged because <em>it is.</em></h1>
-      <p>A step-by-step framework for identifying the invisible patterns draining your energy, focus, and momentum &mdash; and the exact protocols to break free.</p>
-    </section>
-    <div class="capture" id="captureForm">
-      <h2>Free Declassification</h2>
-      <p>Enter your email to download <strong>The Reality Override Manual</strong> &mdash; a diagnostic for the systems running your life without your permission.</p>
-      <form id="leadForm" onsubmit="handleSubmit(event)">
-        <input type="text" class="field" id="fullName" placeholder="Your name" required>
-        <input type="email" class="field" id="email" placeholder="Your email" required>
-        <button type="submit" class="btn-primary" id="submitBtn">Download the Manual</button>
-      </form>
-      <p class="privacy">No spam. Unsubscribe anytime.</p>
-    </div>
-    <div class="capture success" id="successState">
-      <h2>Check your inbox.</h2>
-      <p>The Reality Override Manual is on its way. While you wait &mdash; run the interactive diagnostic now:</p>
-      <a href="/tier-1/diagnostic" class="btn-download">&rarr; Run the Diagnostic</a>
-    </div>
-    <section class="section">
-      <h2>What you'll find inside</h2>
-      <p>The Reality Override Manual isn't motivation. It's a diagnostic.</p>
-      <div class="arrow-item">A breakdown of the 3 invisible patterns draining your energy, time, and money</div>
-      <div class="arrow-item">Why traditional self-help makes the problem worse (and what actually works)</div>
-      <div class="arrow-item">A simple diagnostic you can run on your own life &mdash; tonight</div>
-      <p style="margin-top: 20px;">Read it. Be honest about what you find. That honesty is the first real move.</p>
-    </section>
-    <section class="section">
-      <h2>The patterns aren't random. They're structural.</h2>
-      <p>Your environment, your relationships, your daily inputs &mdash; they form a system. And that system isn't designed for you. It's designed to keep you predictable.</p>
-      <p>You don't need more motivation. You don't need another morning routine. You need to see the architecture that's already running your life &mdash; and decide whether to keep it or replace it.</p>
-    </section>
-    <section class="p77">
-      <h3>Ready for the defense system?</h3>
-      <p>Protocol 77 is four practical frameworks for protecting your focus, energy, and decision-making from external interference. Gray Rock. Faraday Protocol. Lighthouse Stance.</p>
-      <a href="https://buy.stripe.com/eVq5kFcwy8sX4N0eD9fYY00" class="btn-secondary">Get Protocol 77 &mdash; $77</a>
-    </section>
-    <div class="quote">"The feeling you have isn't paranoia. It's the first sign you're paying attention."</div>
-    <footer class="footer">
-      <p class="sig">&mdash; Ace Richie</p>
-      <p><a href="/about.html" class="signal-link">Sovereign Synthesis</a> &copy; 2026</p>
-    </footer>
+
+  <div class="boot-overlay">
+    <div class="boot-line">INITIALIZING OBSERVATION PROTOCOL...</div>
+    <div class="boot-line">SCANNING BEHAVIORAL PATTERNS...</div>
+    <div class="boot-line">SUBJECT LOCATED</div>
+    <div class="boot-line">STATUS: CONTAINED</div>
   </div>
+
+  <div class="scan-line"></div>
+
+  <div class="grid-h" style="top:15%"></div>
+  <div class="grid-h" style="top:30%"></div>
+  <div class="grid-h" style="top:45%"></div>
+  <div class="grid-h" style="top:60%"></div>
+  <div class="grid-h" style="top:75%"></div>
+  <div class="grid-h" style="top:90%"></div>
+  <div class="grid-v" style="left:20%"></div>
+  <div class="grid-v" style="left:40%"></div>
+  <div class="grid-v" style="left:60%"></div>
+  <div class="grid-v" style="left:80%"></div>
+
+  <div class="container">
+
+    <div class="sys-header">
+      <span>OBSERVATION PROTOCOL // ACTIVE</span>
+      <span id="timestamp">SYNCING...</span>
+    </div>
+
+    <div class="dossier">
+      <div class="dossier-row">
+        <span class="dossier-key">SUBJECT</span>
+        <span class="dossier-val">UNIDENTIFIED // SYSTEM CITIZEN</span>
+      </div>
+      <div class="dossier-row">
+        <span class="dossier-key">STATUS</span>
+        <span class="dossier-val rust">CONTAINED</span>
+      </div>
+      <div class="dossier-row">
+        <span class="dossier-key">CONTAINMENT TYPE</span>
+        <span class="dossier-val">SELF-IMPOSED // FEAR ARCHITECTURE</span>
+      </div>
+    </div>
+
+    <div class="purpose-subtext">
+      <p>// I WAS NEVER REWARDED FOR BEING GOOD, BECAUSE I NEVER MANIPULATED.</p>
+      <p>// THIS IS FOR THE ONES WHO KNOW WHAT THAT MEANS.</p>
+    </div>
+
+    <div class="identity">
+      <div class="redact-bar"></div>
+      <h1 class="name">ACE RICHIE</h1>
+      <div class="redact-bar-sm"></div>
+      <p class="title-line">SYSTEMS ENGINEER // REALITY ARCHITECT</p>
+    </div>
+
+    <div class="statement-block">
+      <p class="statement-main">You are not burned out.</p>
+      <p class="statement-sub">You are running on firmware that was written for you by people who needed you contained.</p>
+      <p class="statement-ghost">The question is whether you are ready to see the architecture.</p>
+    </div>
+
+    <div class="cta-block">
+      <a href="/diagnostic" class="cta-link">
+        <span class="cta-arrow">//</span>
+        <span class="cta-text">SOMETHING FEELS OFF. FIND OUT WHY.</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <p class="cta-note">NO SALES. NO PITCH. ONLY THE PATTERN.</p>
+    </div>
+
+    <div class="footer">
+      <div class="footer-row">
+        <span>FREQUENCY</span>
+        <span class="footer-val">77.00 MHZ</span>
+      </div>
+      <div class="footer-row">
+        <span>CLEARANCE</span>
+        <span class="footer-val">CIVILIAN // TIER 0</span>
+      </div>
+      <div class="footer-row">
+        <span>CLASSIFICATION</span>
+        <span class="footer-val"><span class="redacted-inline">CLASSIFIED</span></span>
+      </div>
+      <div class="footer-row" style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid #0e0e18">
+        <span>SOVEREIGN SYNTHESIS</span>
+        <span class="footer-val">&copy; 2026</span>
+      </div>
+      <a href="/about" class="architect-link">OPERATOR PROFILE // WHO IS ACE RICHIE?</a>
+    </div>
+
+  </div>
+
   <script>
-    const SUPABASE_URL = "https://wzthxohtgojenukmdubz.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU";
-    const EDGE_FN_URL = "https://wzthxohtgojenukmdubz.supabase.co/functions/v1/send-nurture-email";
-    async function handleSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById("submitBtn");
-      const name = document.getElementById("fullName").value.trim();
-      const email = document.getElementById("email").value.trim();
-      if (!email) return;
-      btn.disabled = true;
-      btn.textContent = "Processing...";
-      try {
-        await fetch(SUPABASE_URL + "/rest/v1/initiates", {
-          method: "POST",
-          headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json", "Prefer": "return=minimal,resolution=ignore-duplicates" },
-          body: JSON.stringify({ full_name: name, email: email, source: "landing-page", payment_status: "unpaid", application_status: "lead" })
-        });
-        await fetch(EDGE_FN_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email, step: 1 }) });
-        document.getElementById("captureForm").style.display = "none";
-        document.getElementById("successState").style.display = "block";
-      } catch (err) {
-        btn.disabled = false;
-        btn.textContent = "Download the Manual";
-        alert("Something went wrong. Please try again.");
-      }
-    }
+    setInterval(() => {
+      const el = document.getElementById('timestamp');
+      if (el) el.textContent = new Date().toISOString().replace('T',' ').slice(0,19);
+    }, 1000);
   </script>
 
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme" style="color:#FFD700;">&#9728;</button>
-  <script>
-    (function(){
-      var btn = document.getElementById('themeToggle');
-      var html = document.documentElement;
-      var saved = null;
-      try { saved = localStorage.getItem('ss-theme'); } catch(e){}
-      if (saved === 'light') {
-        html.setAttribute('data-theme', 'light');
-        btn.innerHTML = '&#9790;';
-        btn.style.color = '#7C5CFC';
-      }
-      btn.addEventListener('click', function(){
-        var current = html.getAttribute('data-theme');
-        if (current === 'light') {
-          html.removeAttribute('data-theme');
-          btn.innerHTML = '&#9728;';
-          btn.style.color = '#FFD700';
-          try { localStorage.setItem('ss-theme', 'dark'); } catch(e){}
-        } else {
-          html.setAttribute('data-theme', 'light');
-          btn.innerHTML = '&#9790;';
-          btn.style.color = '#7C5CFC';
-          try { localStorage.setItem('ss-theme', 'light'); } catch(e){}
+<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
+<style id="ss-theme-light">
+[data-theme="light"] {
+  --bg:           #F5F2EE !important;
+  --bg-card:      #FFFFFF !important;
+  --bg-card2:     #FAF8F5 !important;
+  --bg-panel:     #FFFFFF !important;
+  --bg-elevated:  #FEFEFE !important;
+  --text:         #1A1A2E !important;
+  --text-dim:     #4A4A6A !important;
+  --text-ghost:   #8888A0 !important;
+  --dim:          rgba(26,26,46,0.55) !important;
+  --dim2:         rgba(26,26,46,0.3) !important;
+  --ghost:        #9090A8 !important;
+  --border:       rgba(26,26,46,0.12) !important;
+  --border-subtle: rgba(26,26,46,0.06) !important;
+  --subtle:       rgba(26,26,46,0.04) !important;
+  --violet-dim:   rgba(124,92,252,0.08) !important;
+  --violet-glow:  rgba(124,92,252,0.15) !important;
+  --violet-border:rgba(124,92,252,0.2) !important;
+  --cyan-dim:     rgba(62,247,232,0.08) !important;
+  --cyan-glow:    rgba(62,247,232,0.2) !important;
+  --cyan-border:  rgba(62,247,232,0.15) !important;
+  --gold-dim:     rgba(201,168,76,0.1) !important;
+  --gold-glow:    rgba(201,168,76,0.18) !important;
+  --gold-border:  rgba(201,168,76,0.15) !important;
+  --amber-dim:    rgba(232,146,26,0.1) !important;
+  --amber-glow:   rgba(232,146,26,0.2) !important;
+  --amber-faint:  rgba(232,146,26,0.04) !important;
+}
+[data-theme="light"] body::before { opacity: 0 !important; }
+.ss-theme-toggle {
+  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border, rgba(255,255,255,0.06));
+  background: var(--bg-card, #09090f);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
+.ss-theme-toggle:active { transform: scale(0.95); }
+.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
+.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
+.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
+.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
+.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
+[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
+@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
+</style>
+<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+<script>
+(function(){
+  'use strict';
+  function getThemeFromURL(){
+    return new URLSearchParams(window.location.search).get('theme')||'dark';
+  }
+  function applyTheme(t){
+    if(t==='light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+  }
+  function updateLinks(t){
+    document.querySelectorAll('a[href]').forEach(function(a){
+      var h=a.getAttribute('href');
+      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
+      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
+      try{
+        var u=new URL(h,window.location.origin);
+        if(t==='light') u.searchParams.set('theme','light');
+        else u.searchParams.delete('theme');
+        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
+        else{
+          var base=h.split('?')[0].split('#')[0];
+          var qs=u.search||'';
+          var hash=u.hash||'';
+          a.setAttribute('href',base+qs+hash);
         }
-      });
-    })();
-  </script>
+      }catch(e){}
+    });
+  }
+  function updateCurrentURL(t){
+    var u=new URL(window.location);
+    if(t==='light') u.searchParams.set('theme','light');
+    else u.searchParams.delete('theme');
+    window.history.replaceState({},'',u);
+  }
+  var cur=getThemeFromURL();
+  applyTheme(cur);
+  function init(){
+    updateLinks(cur);
+    var btn=document.querySelector('.ss-theme-toggle');
+    if(btn) btn.addEventListener('click',function(){
+      cur=(cur==='light')?'dark':'light';
+      applyTheme(cur);
+      updateCurrentURL(cur);
+      updateLinks(cur);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+<!-- ═══ END THEME TOGGLE ═══ -->
+
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

@@ -1,5 +1,13 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/tier-0/links", "destination": "/", "permanent": false },
+    { "source": "/tier-0/links.html", "destination": "/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/diagnostic", "destination": "/tier-1/diagnostic.html" },
+    { "source": "/manual", "destination": "/manual/index.html" }
+  ]
 }
