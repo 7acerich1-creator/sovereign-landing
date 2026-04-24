@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Lighthouse Stance Diagnostic — Protocol 77</title>
+  <meta name="description" content="9 questions. Returns the system currently running you — Approval, Overload, or Identity Lock — and the Shield counter-protocol for that specific pattern." />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #0a0a0f;
+      --card: #111118;
+      --border: #222222;
+      --text-primary: #FFFFFF;
+      --text-body: #e8e8e8;
+      --text-secondary: #CCCCCC;
+      --text-muted: #AAAAAA;
+      --text-dim: #888888;
+      --ss-gold: #d4a843;
+      --ss-gold-hover: #e8bf5a;
+      --tcf-cyan: #88CCFF;
+      --serif: 'EB Garamond', Georgia, serif;
+      --mono: 'Courier Prime', 'Courier New', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      background: var(--void);
+      color: var(--text-body);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      padding: 48px 20px 80px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 64px; border-bottom: 1px solid var(--border); padding-bottom: 48px; }
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--ss-gold);
+      text-transform: uppercase;
+      border: 1px solid rgba(212,168,67,0.4);
+      padding: 6px 14px;
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    h1 .accent { color: var(--ss-gold); font-style: italic; }
+    .intro-copy {
+      font-size: 19px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 8px;
+    }
+    .progress-bar {
+      height: 2px;
+      background: var(--border);
+      margin: 32px 0 48px;
+      position: relative;
+    }
+    .progress-fill {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      background: var(--ss-gold);
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      margin-bottom: 32px;
+    }
+    .q-number {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--ss-gold);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .q-text {
+      font-family: var(--serif);
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+    .choices { list-style: none; }
+    .choices li { margin-bottom: 12px; }
+    .choice {
+      display: block;
+      padding: 16px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-body);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.45;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice:hover {
+      border-color: var(--ss-gold);
+      color: var(--text-primary);
+    }
+    .choice.selected {
+      border-color: var(--ss-gold);
+      background: rgba(212,168,67,0.08);
+      color: var(--text-primary);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border: 1px solid var(--ss-gold);
+      background: var(--ss-gold);
+      color: var(--void);
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .btn:hover:not(:disabled) { background: var(--ss-gold-hover); border-color: var(--ss-gold-hover); }
+    .btn:disabled { background: transparent; color: var(--text-dim); border-color: var(--border); cursor: not-allowed; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { color: var(--text-primary); border-color: var(--text-muted); background: transparent !important; }
+
+    /* ====== RESULT STATE ====== */
+    .result {
+      background: linear-gradient(180deg, #15110a 0%, #0c0905 100%);
+      border: 1px solid rgba(212,168,67,0.35);
+      padding: 56px 44px;
+      position: relative;
+    }
+    .result::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #E5850F 0%, #d4a843 50%, #00e5c7 100%);
+    }
+    .dominant-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--ss-gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .dominant-name {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 40px;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .dominant-subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 20px;
+      color: var(--ss-gold);
+      margin-bottom: 32px;
+    }
+    .result p {
+      font-size: 17px;
+      color: var(--text-body);
+      margin-bottom: 18px;
+    }
+    .result h3 {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--tcf-cyan);
+      text-transform: uppercase;
+      margin: 36px 0 14px;
+    }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0 36px;
+    }
+    .score-card {
+      background: rgba(10,10,15,0.6);
+      border: 1px solid var(--border);
+      padding: 16px;
+      text-align: center;
+    }
+    .score-card.is-dominant { border-color: var(--ss-gold); background: rgba(212,168,67,0.06); }
+    .score-card .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .score-card .value {
+      font-family: var(--serif);
+      font-size: 32px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .protocol-box {
+      background: rgba(90,156,245,0.05);
+      border-left: 2px solid var(--tcf-cyan);
+      padding: 24px 28px;
+      margin: 28px 0 32px;
+    }
+    .protocol-box .p-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--tcf-cyan);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .protocol-box .p-text {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text-body);
+    }
+    .next-step {
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .next-step p { font-style: italic; font-size: 18px; margin-bottom: 20px; color: var(--text-secondary); }
+
+    @media (max-width: 640px) {
+      body { font-size: 16px; padding: 32px 16px 80px; }
+      .question-card { padding: 28px 20px; }
+      .q-text { font-size: 19px; }
+      .result { padding: 36px 22px; }
+      .dominant-name { font-size: 32px; }
+      .score-grid { grid-template-columns: 1fr; }
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <span class="tag">Protocol 77 · The Shield</span>
+      <h1>The Lighthouse <span class="accent">Stance</span> Diagnostic</h1>
+      <p class="intro-copy">Nine questions. Answer fast. The first response is usually the true one. Returns the system currently running you — Approval, Overload, or Identity Lock — and the exact counter-protocol from the Shield for that specific pattern.</p>
+    </header>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 of 9</div>
+
+    <form id="quizForm">
+
+      <!-- Questions injected by JS -->
+      <div id="questions"></div>
+
+      <div class="nav-row" id="navRow">
+        <button type="button" class="btn btn-secondary" id="backBtn" disabled>← Back</button>
+        <button type="button" class="btn" id="nextBtn" disabled>Next →</button>
+      </div>
+
+    </form>
+
+    <!-- Result panel -->
+    <div id="result" class="hidden"></div>
+
+    <footer style="margin-top:72px; text-align:center;">
+      <p style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;">
+        Sovereign Synthesis · The Shield · Protocol 77
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    // ====== DIAGNOSTIC LOGIC ======
+    // Each choice tags one of three axes: A (Approval Reflex), O (Overload Spiral), I (Identity Lock).
+    // Weights: 0 = no fire, 1 = mild, 2 = strong.
+    const QUESTIONS = [
+      {
+        q: "A message comes in from someone whose opinion has weight for you. Before you reply, you notice yourself:",
+        choices: [
+          { label: "Softening the words before they leave me", axis: "A", weight: 2 },
+          { label: "Mentally adding it to a list already too full", axis: "O", weight: 2 },
+          { label: "Answering as a version of me I rehearsed years ago", axis: "I", weight: 2 },
+          { label: "Pausing before I respond, without anxiety", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "A typical Sunday evening, looking at the week ahead:",
+        choices: [
+          { label: "I'm scanning for whose expectations I need to manage", axis: "A", weight: 2 },
+          { label: "My chest tightens before I can name a specific reason", axis: "O", weight: 2 },
+          { label: "I can see what's on the calendar but none of it is mine", axis: "I", weight: 2 },
+          { label: "I have a clean sense of what I'm choosing to do", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "When someone is visibly displeased with a decision you made:",
+        choices: [
+          { label: "I immediately start composing how to repair it", axis: "A", weight: 2 },
+          { label: "I offer to take more on to make it okay", axis: "O", weight: 2 },
+          { label: "I become the version of me they're used to, until they soften", axis: "I", weight: 2 },
+          { label: "I hold the position and let the displeasure pass through", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "The phrase 'what would I do today if nothing was on my calendar' returns:",
+        choices: [
+          { label: "A list of people I'd want to call first to make sure it's okay", axis: "A", weight: 2 },
+          { label: "A flash of panic before any answer arrives", axis: "O", weight: 2 },
+          { label: "A very quiet answer that I immediately distrust", axis: "I", weight: 2 },
+          { label: "A clear list of three things I actually want to do", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "A family member tells you, casually, who they think you are:",
+        choices: [
+          { label: "I find myself agreeing so they stay comfortable", axis: "A", weight: 2 },
+          { label: "I pivot to asking about them, their life, their problems", axis: "O", weight: 2 },
+          { label: "I realize they're describing someone I stopped being a decade ago", axis: "I", weight: 2 },
+          { label: "I calmly tell them the description is outdated", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "The last time you felt genuinely rested, for at least two consecutive days:",
+        choices: [
+          { label: "I was alone, with no one I felt responsible for", axis: "A", weight: 1 },
+          { label: "I can't remember, because rest has started to feel like guilt", axis: "O", weight: 2 },
+          { label: "I wasn't performing any role — I was just a person in a chair", axis: "I", weight: 2 },
+          { label: "Recently, in a way that felt natural and recoverable", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "When a compliment lands on the work you did:",
+        choices: [
+          { label: "I deflect and redirect to the next thing I'm behind on", axis: "O", weight: 2 },
+          { label: "I list every person who helped so I'm not taking too much space", axis: "A", weight: 2 },
+          { label: "I receive it as someone else would — through the costume, not as me", axis: "I", weight: 2 },
+          { label: "I accept it and feel it without apologizing", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "The thought that comes at 4:37 AM, on the nights it comes:",
+        choices: [
+          { label: "They're going to find out I'm not what they think I am", axis: "A", weight: 1 },
+          { label: "There is no room in my day for what I actually want", axis: "O", weight: 2 },
+          { label: "This entire life is organized around a person who isn't me", axis: "I", weight: 2 },
+          { label: "I sleep through the night without this thought", axis: "X", weight: 0 }
+        ]
+      },
+      {
+        q: "If you were to stop performing the role you're performing today, tomorrow:",
+        choices: [
+          { label: "People would be disappointed in a way that I'd have to fix", axis: "A", weight: 2 },
+          { label: "Too much would fall that can't fall", axis: "O", weight: 2 },
+          { label: "I'm not sure who would be left standing", axis: "I", weight: 2 },
+          { label: "The people who matter would still be there. The rest would sort themselves.", axis: "X", weight: 0 }
+        ]
+      }
+    ];
+
+    const PROTOCOLS = {
+      A: {
+        name: "The Approval Reflex",
+        subtitle: "You are running a survival heuristic written before you were old enough to consent.",
+        interpretation: "The Approval Reflex scans every room for micro-disapproval and dispatches low-grade anxiety to make you adjust. It is currently running underneath your emails, your negotiations, and your relationships — softening your positions before they leave you, and costing you cumulative hours every week on the cleanup of reflexive yeses.",
+        protocolName: "Gray Rock Override",
+        protocolBody: "When the reflex fires — you feel it in the throat or a forward lean at the shoulders — you do ONE thing. You do not respond for four seconds. Count them. By the fourth second, the power-balance of the room has relocated itself without a single word. What you say in that fourth second will be chosen, not reflexive.",
+        openings: "The first doorway. Until this is running, nothing else fully installs. Start here for the next 7 days. You will feel the reflex fire in the next email you draft — that noticing is the first victory."
+      },
+      O: {
+        name: "The Overload Spiral",
+        subtitle: "Your capacity is being harvested by a system that rewards you for producing and punishes you the moment you stop.",
+        interpretation: "The Overload Spiral is not workload. It is a pattern where competence attracts responsibility faster than boundaries can push back. You are not failing to manage your time — your time is being distributed to you by systems that have organized around your capacity. The actual tell is not the calendar; it is that 'what would I do if nothing was on it' returns silence or panic.",
+        protocolName: "The No-One-Watching Question",
+        protocolBody: "Deploy three times a day for seven days: 'If no one were watching, would this still be on my calendar?' Mark the items that don't survive. You will not cancel them in week one — you will just mark. By week four, the calendar will have reshaped itself around what you actually care about. Not doing less. Carrying less that was never yours.",
+        openings: "The emotional tell that the spiral is working: when you finally sit down to rest and feel anxiety instead of relief. That is the spiral defending itself. Sit with the phone in the other room. The nervous system will scream for exactly as long as it takes for the old code to exhaust itself, and then it will stop."
+      },
+      I: {
+        name: "The Identity Lock",
+        subtitle: "You became the person other people needed you to be so efficiently that you cannot locate the one underneath.",
+        interpretation: "The Identity Lock is the most subtle of the three. You did not choose the persona — you accumulated it, one compliant yes at a time, over two or three decades. Right now, a meaningful amount of your daily exhaustion is not from the work. It is from the energetic cost of holding the costume on while some other part of you — a part that has never had a voice — is trying to move.",
+        protocolName: "The Lighthouse Stance",
+        protocolBody: "A lighthouse does not persuade. It does not move toward the ships. It stands on its rock, emits its signal, and lets the ships sort themselves. The practice: in small, specific moments, stop generating the diplomatic answer. Give the honest one instead. Shorter. Without softening. Let the listener sort themselves. Some ships steer toward. Some steer away. The lighthouse does not negotiate its position.",
+        openings: "This is the most uncomfortable of the three overrides. The costume was load-bearing for a structure, and when it comes off, some parts of your current life will adjust — some for the better, some by leaving. The parts that stay will be the parts that were actually yours."
+      }
+    };
+
+    // ====== STATE ======
+    let state = { index: 0, answers: {} };
+
+    function renderQuestion() {
+      const qContainer = document.getElementById('questions');
+      const q = QUESTIONS[state.index];
+      const selectedIdx = state.answers[state.index];
+
+      qContainer.innerHTML = `
+        <div class="question-card">
+          <div class="q-number">Question ${String(state.index+1).padStart(2,'0')} of 09</div>
+          <div class="q-text">${q.q}</div>
+          <ul class="choices">
+            ${q.choices.map((c, i) => `
+              <li>
+                <button type="button" class="choice ${selectedIdx===i ? 'selected' : ''}" data-idx="${i}">
+                  ${c.label}
+                </button>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `;
+
+      document.querySelectorAll('.choice').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          state.answers[state.index] = idx;
+          renderQuestion();
+          updateNav();
+        });
+      });
+
+      // Progress
+      const pct = ((state.index) / QUESTIONS.length) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = `${state.index} of ${QUESTIONS.length}`;
+
+      updateNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateNav() {
+      document.getElementById('backBtn').disabled = state.index === 0;
+      const answered = state.answers[state.index] !== undefined;
+      document.getElementById('nextBtn').disabled = !answered;
+      document.getElementById('nextBtn').textContent = state.index === QUESTIONS.length - 1 ? 'Reveal Pattern →' : 'Next →';
+    }
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (state.index > 0) { state.index--; renderQuestion(); }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (state.index < QUESTIONS.length - 1) {
+        state.index++;
+        renderQuestion();
+      } else {
+        renderResult();
+      }
+    });
+
+    function renderResult() {
+      const scores = { A: 0, O: 0, I: 0 };
+      Object.keys(state.answers).forEach(qIdx => {
+        const choiceIdx = state.answers[qIdx];
+        const c = QUESTIONS[qIdx].choices[choiceIdx];
+        if (c.axis !== 'X') scores[c.axis] += c.weight;
+      });
+
+      // Find dominant
+      const total = scores.A + scores.O + scores.I;
+      let dominant = 'A';
+      let max = scores.A;
+      ['O','I'].forEach(k => { if (scores[k] > max) { dominant = k; max = scores[k]; } });
+
+      const p = PROTOCOLS[dominant];
+
+      // Hide quiz
+      document.getElementById('quizForm').classList.add('hidden');
+      document.getElementById('progressFill').style.width = '100%';
+      document.getElementById('progressLabel').textContent = 'Complete';
+
+      const resultEl = document.getElementById('result');
+      resultEl.classList.remove('hidden');
+
+      resultEl.innerHTML = `
+        <div class="result">
+          <div class="dominant-tag">Dominant Pattern Identified</div>
+          <h2 class="dominant-name">${p.name}</h2>
+          <div class="dominant-subtitle">${p.subtitle}</div>
+
+          <div class="score-grid">
+            <div class="score-card ${dominant==='A' ? 'is-dominant' : ''}">
+              <div class="label">Approval</div>
+              <div class="value">${scores.A}</div>
+            </div>
+            <div class="score-card ${dominant==='O' ? 'is-dominant' : ''}">
+              <div class="label">Overload</div>
+              <div class="value">${scores.O}</div>
+            </div>
+            <div class="score-card ${dominant==='I' ? 'is-dominant' : ''}">
+              <div class="label">Identity</div>
+              <div class="value">${scores.I}</div>
+            </div>
+          </div>
+
+          <h3>What this pattern is doing in you</h3>
+          <p>${p.interpretation}</p>
+
+          <h3>Your counter-protocol from the Shield</h3>
+          <div class="protocol-box">
+            <div class="p-name">${p.protocolName}</div>
+            <div class="p-text">${p.protocolBody}</div>
+          </div>
+
+          <h3>How to deploy this week</h3>
+          <p>${p.openings}</p>
+
+          <div class="next-step">
+            <p>The Shield addresses all three systems. This diagnostic surfaced the one currently loudest in you.<br />Open the Protocol 77 document to the section labeled "${p.name}" and begin there.</p>
+            <button type="button" class="btn" onclick="location.href='#'" id="enterShieldBtn">Enter the Shield →</button>
+          </div>
+        </div>
+      `;
+
+      // POST the pattern to Supabase if the page is hosted on sovereign-synthesis.com
+      // (same pattern as /diagnostic page — writes dominant_pattern to initiates row)
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email');
+        if (email && window.location.hostname.endsWith('sovereign-synthesis.com')) {
+          fetch('/api/diagnostic-result', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              dominant_pattern: dominant === 'A' ? 'approval' : dominant === 'O' ? 'overload' : 'identity',
+              scores: scores,
+              source: 'lighthouse-9q'
+            })
+          }).catch(() => {});
+        }
+      } catch(e) {}
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuestion();
+  </script>
+</body>
+</html>

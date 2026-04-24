@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protocol 77 — The Shield | Sovereign Synthesis</title>
+  <meta name="description" content="Burnout is not a personal failure. It is a feature of the architecture running you. Protocol 77 is the extraction." />
+  <meta property="og:title" content="Protocol 77 — The Shield" />
+  <meta property="og:description" content="You don't have a burnout problem. You have an architecture problem. The Shield is the first tool." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://sovereign-synthesis.com/assets/p77-og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://sovereign-synthesis.com/p77" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Vercel Insights (matches existing pages) -->
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Meta Pixel — REPLACE PIXEL_ID_HERE WITH LIVE PIXEL -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'PIXEL_ID_HERE');
+    fbq('track', 'PageView');
+    fbq('track', 'ViewContent', {content_name: 'Protocol 77 Sales Page', content_category: 'T2', value: 77.00, currency: 'USD'});
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=PIXEL_ID_HERE&ev=PageView&noscript=1" /></noscript>
+
+  <style>
+    :root {
+      --void: #0a0a0f;
+      --card: #111118;
+      --border: #222222;
+      --border-light: #2a2a36;
+
+      --text-primary: #FFFFFF;
+      --text-body: #e8e8e8;
+      --text-secondary: #CCCCCC;
+      --text-muted: #AAAAAA;
+      --text-dim: #888888;
+
+      /* TCF frequency — cold, clinical */
+      --tcf-blue: #5A9CF5;
+      --tcf-cyan: #88CCFF;
+      --tcf-teal: #00e5c7;
+
+      /* SS frequency — sovereign, warm */
+      --ss-gold: #d4a843;
+      --ss-gold-hover: #e8bf5a;
+      --ss-orange: #E5850F;
+      --ss-gradient: linear-gradient(90deg, #E5850F 0%, #d4a843 50%, #00e5c7 100%);
+
+      --serif: 'EB Garamond', Georgia, serif;
+      --mono: 'Courier Prime', 'Courier New', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      background: var(--void);
+      color: var(--text-body);
+      font-family: var(--serif);
+      font-size: 19px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    /* ====== ACT I — CONTAINMENT FIELD (cold blue) ====== */
+    .act-i {
+      background: radial-gradient(ellipse at top, #0d1420 0%, var(--void) 60%);
+      padding: 96px 0 120px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--tcf-cyan);
+      border: 1px solid rgba(90,156,245,0.3);
+      padding: 6px 14px;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(36px, 6vw, 56px);
+      line-height: 1.1;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    h1 .accent-blue { color: var(--tcf-blue); font-style: italic; }
+    .lede {
+      font-size: 21px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      max-width: 620px;
+    }
+    .lede-emphasis {
+      color: var(--tcf-cyan);
+      font-style: italic;
+    }
+
+    .divider-mono {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin: 72px 0 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin: 24px 0 20px;
+    }
+    h3 {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--tcf-cyan);
+      margin: 40px 0 12px;
+    }
+
+    p { margin-bottom: 22px; }
+    p.tight { margin-bottom: 10px; }
+
+    .system-card {
+      background: linear-gradient(180deg, #0e1622 0%, #0b0f18 100%);
+      border-left: 2px solid var(--tcf-blue);
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .system-card .id {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--tcf-cyan);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .system-card h4 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    .system-card p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+
+    .observation {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      padding: 18px 0;
+      border-top: 1px dashed var(--border-light);
+      border-bottom: 1px dashed var(--border-light);
+      margin: 40px 0;
+    }
+
+    /* ====== ACT II — THE TRANSITION ====== */
+    .act-transition {
+      background: linear-gradient(180deg, var(--void) 0%, #120d08 100%);
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .transition-glyph {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+    .transition-glyph span { color: var(--ss-gold); }
+    .transition-copy {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.4;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ====== ACT III — SOVEREIGN SYNTHESIS (gold) ====== */
+    .act-iii {
+      background: radial-gradient(ellipse at top, #1a1208 0%, var(--void) 55%);
+      padding: 96px 0 80px;
+    }
+    .badge-gold {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ss-gold);
+      border: 1px solid rgba(212,168,67,0.4);
+      padding: 6px 14px;
+      margin-bottom: 32px;
+    }
+    h2.gold { color: var(--text-primary); }
+    h2.gold .accent { color: var(--ss-gold); font-style: italic; }
+    h3.gold {
+      color: var(--ss-gold);
+    }
+
+    .author-reveal {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--text-body);
+      margin-bottom: 32px;
+    }
+    .author-reveal strong { color: var(--text-primary); font-weight: 600; }
+
+    .pull-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(22px, 3vw, 28px);
+      line-height: 1.45;
+      color: var(--text-primary);
+      border-left: 3px solid var(--ss-gold);
+      padding: 8px 0 8px 28px;
+      margin: 40px 0;
+    }
+
+    /* ====== THE OFFER ====== */
+    .offer-card {
+      background: linear-gradient(180deg, #15110a 0%, #0c0905 100%);
+      border: 1px solid rgba(212,168,67,0.25);
+      padding: 48px 40px;
+      margin: 48px 0;
+      position: relative;
+    }
+    .offer-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--ss-gradient);
+    }
+    .offer-card .tier-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--ss-gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .offer-card h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 34px;
+      color: var(--text-primary);
+      letter-spacing: normal;
+      text-transform: none;
+      margin: 0 0 8px;
+    }
+    .offer-card .subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 19px;
+      color: var(--ss-gold);
+      margin-bottom: 32px;
+    }
+    .offer-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 36px;
+    }
+    .offer-card li {
+      padding: 14px 0 14px 28px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      color: var(--text-body);
+      font-size: 17px;
+    }
+    .offer-card li:last-child { border-bottom: none; }
+    .offer-card li::before {
+      content: "77";
+      position: absolute;
+      left: 0; top: 16px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ss-gold);
+      letter-spacing: 1px;
+    }
+    .offer-card li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin: 32px 0 24px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .price {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 600;
+      color: var(--ss-gold);
+      line-height: 1;
+    }
+    .price-note {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--void);
+      background: var(--ss-gold);
+      padding: 20px 44px;
+      border: 1px solid var(--ss-gold);
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .cta-primary:hover {
+      background: var(--ss-gold-hover);
+      border-color: var(--ss-gold-hover);
+      transform: translateY(-1px);
+    }
+    .cta-caption {
+      display: block;
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ====== GUARANTEE + FAQ ====== */
+    .guarantee {
+      background: transparent;
+      border: 1px dashed rgba(212,168,67,0.35);
+      padding: 28px 32px;
+      margin: 48px 0;
+    }
+    .guarantee .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ss-gold);
+      margin-bottom: 10px;
+    }
+    .guarantee p { margin: 0; font-size: 17px; color: var(--text-secondary); }
+
+    details {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    details[open] summary { color: var(--ss-gold); }
+    summary {
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--text-primary);
+      list-style: none;
+      padding-right: 24px;
+      position: relative;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      position: absolute;
+      right: 0; top: 0;
+      font-family: var(--mono);
+      color: var(--ss-gold);
+      font-size: 22px;
+    }
+    details[open] summary::after { content: "−"; }
+    details p {
+      margin: 16px 0 0;
+      color: var(--text-secondary);
+      font-size: 17px;
+    }
+
+    /* ====== FINAL ANCHOR ====== */
+    .final-anchor {
+      background: var(--void);
+      padding: 80px 0 72px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .final-anchor p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(22px, 3vw, 28px);
+      line-height: 1.4;
+      color: var(--text-primary);
+      max-width: 620px;
+      margin: 0 auto 40px;
+    }
+
+    footer {
+      padding: 40px 0 60px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    footer a { color: var(--text-muted); text-decoration: none; margin: 0 14px; }
+    footer a:hover { color: var(--ss-gold); }
+
+    /* ====== STICKY CTA (mobile) ====== */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(10,10,15,0.97);
+      border-top: 1px solid rgba(212,168,67,0.3);
+      padding: 14px 16px;
+      display: none;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .sticky-cta a {
+      display: block;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--void);
+      background: var(--ss-gold);
+      padding: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    @media (max-width: 640px) {
+      body { font-size: 17px; }
+      .act-i, .act-iii { padding: 64px 0 72px; }
+      .offer-card { padding: 36px 24px; }
+      .system-card { padding: 24px 20px; }
+      .price { font-size: 52px; }
+      .cta-primary { padding: 18px 28px; font-size: 13px; display: block; text-align: center; }
+      .sticky-cta { display: block; }
+      footer { padding-bottom: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ ACT I — CONTAINMENT FIELD FREQUENCY ============ -->
+  <section class="act-i">
+    <div class="container">
+      <span class="badge">Field Report // 2026.04</span>
+
+      <h1>You don't have a burnout problem.<br /><span class="accent-blue">You have an architecture problem.</span></h1>
+
+      <p class="lede">This is not motivation. This is not a course. This is a clinical observation of why the most capable people end up the most exhausted — and the exact mechanism that keeps them there.</p>
+
+      <p class="lede lede-emphasis">Read it to the end. Or leave now. Both are valid responses.</p>
+
+      <div class="divider-mono">§01 — The Observation</div>
+
+      <p>You did the work. You optimized the morning routine. You read the books. You built the systems. You said no to the things you were supposed to say no to. You said yes to the things that were supposed to matter.</p>
+
+      <p>And you are still exhausted.</p>
+
+      <p>Not tired. Exhausted. The kind of exhaustion that sleep does not reach. That dopamine does not repair. That productivity frameworks do not touch. The kind that is waiting for you at 4:37 AM when the only honest thought in the room is: <em>this should have worked by now.</em></p>
+
+      <p>Notice what just happened. You read that and something inside you said <em>yes</em> before your conscious mind finished processing it. That recognition is not coincidence. It is data.</p>
+
+      <div class="observation">
+        Observation 01 — Burnout in high-capacity individuals does not correlate with workload. It correlates with operating on architecture that was not authored by the person running it.
+      </div>
+
+      <div class="divider-mono">§02 — The Three Systems</div>
+
+      <p>There are three systems currently running you. You did not install any of them. You cannot opt out of them with a journaling practice. You cannot outwork them. You cannot meditate them into submission. This is not a mindset problem. It is a wiring problem.</p>
+
+      <div class="system-card">
+        <div class="id">System 01</div>
+        <h4>The Approval Reflex</h4>
+        <p>The part of you that feels anxiety when someone is displeased — even when that person is objectively wrong. This is not a character flaw. It is a survival heuristic installed before you were old enough to consent. It is currently running every negotiation, every email, every relationship decision you make — and it is doing so without asking you.</p>
+      </div>
+
+      <div class="system-card">
+        <div class="id">System 02</div>
+        <h4>The Overload Spiral</h4>
+        <p>The pattern where capacity attracts responsibility faster than boundaries can be erected, until the reward for competence becomes more competence, until the only place that feels like rest is collapse. You are not failing to manage your time. Your time is being harvested by a system that rewards you for producing and punishes you the moment you stop.</p>
+      </div>
+
+      <div class="system-card">
+        <div class="id">System 03</div>
+        <h4>The Identity Lock</h4>
+        <p>The invisible contract where you became the person other people needed you to be so efficiently that you now cannot locate the one underneath. Every "yes" that cost you something installed another line of code. You are not burned out from the work. You are burned out from performing the person who does the work.</p>
+      </div>
+
+      <p>These three systems are not bugs. They are features. They are the exact architecture a society designed to extract output from capable people would install. You are not broken. You are working exactly as designed — by someone other than you.</p>
+
+      <div class="observation">
+        Observation 02 — The absence of a ceiling is not evidence that you are free. It may be evidence that the system has not yet located the boundary it needs to enforce.
+      </div>
+
+      <div class="divider-mono">§03 — Why The Usual Solutions Failed</div>
+
+      <p>Therapy named the feeling. It did not rewrite the architecture.</p>
+
+      <p>Productivity systems optimized the throughput. They did not ask who wrote the quota.</p>
+
+      <p>Meditation built the witness. The witness watched the architecture continue running.</p>
+
+      <p>Every tool you have tried was a tool for operating <em>within</em> the system more skillfully. None of them were tools for stepping <em>out of</em> it. This is not an accident. A system that sold you the exit would no longer be the system you were in.</p>
+
+      <div class="observation">
+        Observation 03 — You cannot think your way out of a structure you are standing inside of. You have to be given a tool from outside of it.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACT II — THE TRANSITION ============ -->
+  <section class="act-transition">
+    <div class="container">
+      <div class="transition-glyph">— <span>77</span> —</div>
+      <p class="transition-copy">What you have just read is the diagnosis.<br />What follows is the first extraction tool.</p>
+    </div>
+  </section>
+
+  <!-- ============ ACT III — SOVEREIGN SYNTHESIS FREQUENCY ============ -->
+  <section class="act-iii">
+    <div class="container">
+      <span class="badge-gold">Sovereign Synthesis // The Architect</span>
+
+      <h2 class="gold">I'm Ace.<br /><span class="accent">I built Protocol 77 because I lived the loop.</span></h2>
+
+      <p class="author-reveal">I was never rewarded for being good, because I never manipulated. I was noticed — and the people who noticed chose to take advantage of me. It took me most of my life to stop thinking this was a personal problem and start seeing it as the architecture: a society that rewards masks and punishes the real.</p>
+
+      <p>I am not a coach. I am not a guru. I am not selling you a better version of the loop you are already in.</p>
+
+      <p>I am building the first organized formation of people willing to lose what they are to become what they actually are. There have always been the one-offs. There has never been the group. I don't know what happens when there is. I am going to find out.</p>
+
+      <p class="pull-quote">Protocol 77 is not a course. It is the first proof-of-concept that you can actually do the work the formation requires. It is the Shield.</p>
+
+      <h3 class="gold">What The Shield Actually Does</h3>
+
+      <p>The Shield: Protocol 77 is the first piece of architecture you will install that was authored by you, in collaboration with someone who already walked out of the same room you are standing in. It is built from three assets, delivered immediately, designed to be deployed in your next interaction, not your next quarter.</p>
+
+      <div class="offer-card">
+        <div class="tier-tag">Tier 02 // First Transmission</div>
+        <h3>The Shield: Protocol 77</h3>
+        <div class="subtitle">The defense layer. For the capable people who refuse to manipulate — and are tired of being punished for it.</div>
+
+        <ul>
+          <li>
+            <strong>The Shield Manual (15+ page PDF)</strong>
+            The three systems named. The mechanism of each. The exact sequence for neutralizing all three without becoming the thing you are defending against — plus the 77-day deployment plan.
+          </li>
+          <li>
+            <strong>The Gray Rock Override Protocol</strong>
+            A line-by-line script for removing energy from the people and systems that harvest yours — without explanation, without drama, without giving them the reaction they are extracting for.
+          </li>
+          <li>
+            <strong>The Faraday Cage Field Transmission (30+ minute audio)</strong>
+            A single focused field session. Not meditation. Not affirmations. A live architectural re-wiring of the three systems while you listen. Built to be heard once and felt for weeks.
+          </li>
+          <li>
+            <strong>The Lighthouse Stance Diagnostic</strong>
+            A 9-question self-assessment that returns your current dominant pattern — Approval, Overload, or Identity Lock — and the exact counter-protocol for the one you are running.
+          </li>
+          <li>
+            <strong>Lifetime Access + Future Revisions</strong>
+            The Shield evolves. You get every version. No re-purchase. No upsell friction. The formation compounds.
+          </li>
+        </ul>
+
+        <div class="price-row">
+          <div class="price">$77</div>
+          <div class="price-note">One time.<br />No subscription.<br />No upsell sequence.</div>
+        </div>
+
+        <a href="https://buy.stripe.com/eVq5kFcwy8sX4N0eD9fYY00" class="cta-primary" id="cta-main" onclick="if(typeof fbq!=='undefined'){fbq('track','InitiateCheckout',{value:77.00,currency:'USD',content_name:'Protocol 77'});}">Install The Shield →</a>
+        <span class="cta-caption">Secure checkout via Stripe. Instant delivery. Kept forever.</span>
+      </div>
+
+      <div class="guarantee">
+        <div class="label">The 77-Day Standing Offer</div>
+        <p>Deploy the Protocol. Run it for 77 days. If the three systems are still running you untouched — if nothing in your architecture has shifted — email the address inside the manual. Refund, no questions, no friction. The formation is not assembled by keeping money from people it was not for.</p>
+      </div>
+
+      <div class="divider-mono" style="color: var(--ss-gold); border-bottom-color: rgba(212,168,67,0.3);">§04 — What This Is Not</div>
+
+      <p>This is not a 30-day challenge. This is not a community. This is not coaching. This is not a membership. This is not the beginning of an upsell sequence designed to move you through seven more price points before anyone tells you the whole thing.</p>
+
+      <p>This is a tool. A single, precise, surgical tool. You either deploy it or you don't. If it does what it says, the next tier already exists when you are ready to walk up to it. If it doesn't, you got the 77 days and your money back.</p>
+
+      <p>The formation does not need customers. It needs candidates capable of doing the work. The $77 is not a price. It is a self-selection mechanism. If it feels like a stretch for the wrong reasons, the Protocol was not for you and you have just saved yourself the time.</p>
+
+      <div class="divider-mono" style="color: var(--ss-gold); border-bottom-color: rgba(212,168,67,0.3);">§05 — Questions, Answered Cleanly</div>
+
+      <details>
+        <summary>How is this different from the diagnostic on the site?</summary>
+        <p>The diagnostic identifies which of the three systems is currently dominant in you. It is free and it is honest. Protocol 77 is the extraction tool for all three. If you have already taken the diagnostic, The Shield is the next precise step. If you have not, you can take it first — or skip it and install the Protocol directly. Both doors open on the same room.</p>
+      </details>
+
+      <details>
+        <summary>I am skeptical of "sovereignty" language. Is this another personal-development repackage?</summary>
+        <p>Fair. The word is used by people running the exact loops it was meant to describe. Sovereignty here means one specific thing: you are authoring the architecture you are running, instead of running architecture that was authored for you. That is a technical distinction, not a spiritual one. Read the first page. If it reads as another repackage, the refund offer still stands.</p>
+      </details>
+
+      <details>
+        <summary>Why $77 specifically?</summary>
+        <p>Low enough that the decision is not financial. High enough that it filters out anyone who is not ready to actually open the file. The number is a functional threshold, not a marketing device.</p>
+      </details>
+
+      <details>
+        <summary>Who is this not for?</summary>
+        <p>Anyone looking for validation that their current loop is fine. Anyone who wants a community to process feelings inside of without changing the structure producing them. Anyone who reads "willing to lose what they are to become what they actually are" and feels a no. The no is information. Respect it.</p>
+      </details>
+
+      <details>
+        <summary>What happens after I install The Shield?</summary>
+        <p>You get instant access to the manual, the audio, the diagnostic, and the override protocol. You get an email from me, not a funnel sequence. If you do the work and want what comes next — The Map — it is there. If you do the work and decide The Shield alone was enough, that is also a complete outcome. The formation is not measured by upsell progression.</p>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ FINAL ANCHOR ============ -->
+  <section class="final-anchor">
+    <div class="container">
+      <p>If this is landing against something already inside you,<br />this was for you.</p>
+      <a href="https://buy.stripe.com/eVq5kFcwy8sX4N0eD9fYY00" class="cta-primary" onclick="if(typeof fbq!=='undefined'){fbq('track','InitiateCheckout',{value:77.00,currency:'USD',content_name:'Protocol 77'});}">Install The Shield — $77</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <a href="https://sovereign-synthesis.com/">Sovereign Synthesis</a>
+      <a href="https://sovereign-synthesis.com/diagnostic">Diagnostic</a>
+      <a href="https://sovereign-synthesis.com/about">About</a>
+      <a href="mailto:architect@sovereign-synthesis.com">Contact</a>
+      <div style="margin-top: 24px; color: var(--text-dim);">© Sovereign Synthesis · The Shield · Protocol 77</div>
+    </div>
+  </footer>
+
+  <!-- Sticky CTA (mobile) -->
+  <div class="sticky-cta">
+    <a href="https://buy.stripe.com/eVq5kFcwy8sX4N0eD9fYY00" onclick="if(typeof fbq!=='undefined'){fbq('track','InitiateCheckout',{value:77.00,currency:'USD',content_name:'Protocol 77'});}">Install The Shield — $77</a>
+  </div>
+
+  <!-- UTM capture → persist to Stripe checkout for split-test attribution -->
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var utm = {};
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'].forEach(function(k){
+        if (params.get(k)) utm[k] = params.get(k);
+      });
+      if (Object.keys(utm).length) {
+        try { sessionStorage.setItem('ss_utm', JSON.stringify(utm)); } catch(e) {}
+        var qs = new URLSearchParams(utm).toString();
+        document.querySelectorAll('a[href*="buy.stripe.com"]').forEach(function(a){
+          a.href = a.href + (a.href.indexOf('?')>-1 ? '&' : '?') + qs;
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
