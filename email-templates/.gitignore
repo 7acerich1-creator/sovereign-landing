@@ -1,0 +1,8 @@
+﻿# This folder deploys to Vercel. Do not put secrets, MCP configs, scratchpads, or non-template files here.
+# Only .html email templates belong in this folder.
+*.txt
+*.json
+mcps*
+notes*
+scratchpad*
+*-PRIVATE*
