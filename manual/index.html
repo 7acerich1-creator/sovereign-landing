@@ -1,13 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Reality Override Manual | Sovereign Synthesis</title>
-  <link rel="stylesheet" href="/css/sovereign.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reality Override Manual | Sovereign Synthesis</title>
+<meta name="description" content="A diagnostic for minds that already know something is wrong with the rendering. Free. Read in 20 minutes.">
+<link rel="canonical" href="https://sovereign-synthesis.com/manual" />
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Manual-specific */
+  .screen { display: none; animation: fadeUp .4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chap-header { text-align: left; margin: 16px 0 28px; }
+  .chap-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 12px; display: block;
+  }
+  .chap-title {
+    font-family: var(--serif); font-size: clamp(32px, 5vw, 46px);
+    font-weight: 600; line-height: 1.15; letter-spacing: -0.4px;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .chap-title em { font-style: italic; color: var(--gold); font-weight: 600; }
+  .chap-sub {
+    font-family: var(--serif); font-style: italic;
+    font-size: 19px; color: var(--body-dim); margin-bottom: 4px;
+  }
+  .lex-def {
+    font-family: var(--sans); font-size: 14px;
+    color: var(--body-dim); font-style: italic;
+    border-left: 2px solid var(--gold);
+    background: var(--card-soft);
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+    margin: 0 0 22px;
+  }
+  .lex-def strong {
+    color: var(--text); font-style: normal;
+    font-family: var(--serif); font-weight: 600;
+  }
+
+  /* Diagnostic comparison rows (Phase 1) */
+  .diag-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 18px 0;
+  }
+  @media (max-width: 600px) { .diag-row { grid-template-columns: 1fr; } }
+  .diag-side {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px;
+    cursor: pointer; transition: all .2s;
+    position: relative;
+  }
+  .diag-side:hover { border-color: var(--gold); }
+  .diag-side.npc { border-left: 3px solid var(--danger); }
+  .diag-side.architect { border-left: 3px solid var(--gold); }
+  .diag-side.selected.npc { background: rgba(217,85,85,0.05); border-color: var(--danger); }
+  .diag-side.selected.architect { background: var(--gold-soft); border-color: var(--gold); }
+  .diag-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700; margin-bottom: 6px;
+    display: block;
+  }
+  .diag-side.npc .diag-label { color: var(--danger); }
+  .diag-side.architect .diag-label { color: var(--gold); }
+  .diag-archetype {
+    font-family: var(--serif); font-size: 17px; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .diag-text { font-size: 15px; color: var(--body); line-height: 1.65; }
+  .diag-question {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin: 28px 0 6px;
+    letter-spacing: -0.1px;
+  }
+  .diag-q-num {
+    font-family: var(--mono); font-size: 11px; color: var(--gold);
+    letter-spacing: 2px; font-weight: 700;
+    text-transform: uppercase;
+  }
+  .diag-tally {
+    margin-top: 32px; padding: 22px 26px;
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+  }
+  .diag-tally-title {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 10px; display: block;
+  }
+  .diag-tally-result {
+    font-family: var(--serif); font-size: 17px; color: var(--text);
+    line-height: 1.55;
+  }
+
+  /* Render mechanics cards */
+  .mech-grid { display: flex; flex-direction: column; gap: 14px; margin: 24px 0 32px; }
+  .mech-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 22px 26px;
+  }
+  .mech-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); font-weight: 700; margin-bottom: 6px; display: block;
+    text-transform: uppercase;
+  }
+  .mech-name {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .mech-text { font-size: 15px; color: var(--body); line-height: 1.7; }
+
+  /* Lexical replacement tables */
+  .lex-table {
+    margin: 22px 0; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .lex-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .lex-row:last-child { border-bottom: none; }
+  .lex-row.head {
+    background: var(--card-soft);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .lex-cell { padding: 14px 18px; font-size: 15px; color: var(--body); border-right: 1px solid var(--border); }
+  .lex-cell:last-child { border-right: none; }
+  .lex-row.head .lex-cell.delete { color: var(--danger); }
+  .lex-row.head .lex-cell.install { color: var(--gold); }
+  .lex-cell.delete { color: var(--body-dim); font-style: italic; }
+  .lex-cell.install { color: var(--text); font-weight: 600; font-family: var(--serif); }
+  @media (max-width: 600px) {
+    .lex-row { grid-template-columns: 1fr; }
+    .lex-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .lex-row.head .lex-cell { border-bottom: 1px solid var(--border); }
+    .lex-row:last-child .lex-cell:last-child { border-bottom: none; }
+  }
+
+  /* Pull quotes */
+  .pullquote-block {
+    background: var(--card-soft); border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 24px 28px; margin: 28px 0;
+  }
+  .pullquote-text {
+    font-family: var(--serif); font-style: italic;
+    font-size: 18px; color: var(--text); line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .pullquote-attr {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+  }
+
+  /* Protocol blocks (Phase 3 execution protocols) */
+  .protocol-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--copper); border-radius: var(--radius);
+    padding: 24px 28px; margin: 22px 0;
+  }
+  .protocol-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 8px; display: block;
+  }
+  .protocol-name {
+    font-family: var(--serif); font-size: 22px; font-weight: 600;
+    color: var(--text); margin-bottom: 12px; letter-spacing: -0.2px;
+  }
+  .protocol-step {
+    display: flex; gap: 14px; align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .protocol-step:last-of-type { border-bottom: none; }
+  .protocol-step-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--copper); min-width: 80px; font-weight: 700;
+    text-transform: uppercase;
+  }
+  .protocol-step-text { font-size: 15px; color: var(--body); line-height: 1.65; }
+
+  /* Bottom nav */
+  .nav-row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 32px 0 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .nav-meta {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .resume-banner {
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 16px 22px; margin: 0 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .resume-banner p { font-size: 14px; color: var(--body); margin: 0; }
+  .resume-banner .btn { padding: 10px 18px; font-size: 11px; }
+
+  /* Companion PDF link */
+  .companion-pdf {
+    margin: 24px 0; padding: 16px 22px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); text-align: center;
+  }
+  .companion-pdf p {
+    font-size: 13px; color: var(--muted); margin-bottom: 0;
+    font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase;
+  }
+  .companion-pdf a {
+    color: var(--gold); text-decoration: none; font-weight: 700;
+  }
+  .companion-pdf a:hover { color: var(--gold-hover); text-decoration: underline; }
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
+<!-- Header -->
 <div class="top">
   <div class="top-inner">
     <a href="/" class="wordmark">Sovereign Synthesis</a>
@@ -20,32 +243,459 @@
 </div>
 <div class="gold-line"></div>
 
-<section class="hero">
-  <span class="kicker">First Document · Free</span>
-  <h1>The Reality Override<br/><em>Manual.</em></h1>
-  <p class="lede">The first document. It names the architecture you are inside of and what it costs to keep performing inside it.</p>
-</section>
-
-<section class="block first">
-  <h2>What it covers.</h2>
-  <p>The Manual is the foundational text of Sovereign Synthesis. It is the document that names what most people feel and cannot articulate &mdash; the architecture inside which the costume was demanded, and the architecture inside which the costume becomes optional.</p>
-  <p>It is structured around the three interference patterns: The Approval Loop, The Overload Spiral, The Identity Lock. Each pattern is named, mapped, and traced back to the specific mechanisms maintaining it.</p>
-
-  <div class="cta-block" style="margin-top:32px;">
-    <p class="cta-kicker">Download</p>
-    <h2 class="cta-headline">Read the Manual.</h2>
-    <p class="cta-sub">PDF, optimized for desktop and mobile. Read it once cover-to-cover. Then take the diagnostic if you haven't already.</p>
-    <div class="btn-row">
-      <a href="/tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf" class="btn">Download Manual (PDF) &rarr;</a>
-      <a href="/diagnostic" class="btn btn-secondary">Take the Diagnostic &rarr;</a>
-    </div>
+<!-- Sticky progress -->
+<div class="prog-wrap" id="prog-wrap">
+  <div class="prog-inner">
+    <span class="prog-count" id="prog-count">Section 1 of 7</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:14%"></div></div>
   </div>
-</section>
-
-<div class="closing">
-  <p>The Manual is the map.<br/>Protocol 77 is the tool that ends the pattern.</p>
 </div>
 
+<div class="wrap">
+
+  <div class="resume-banner" id="resume-banner" style="display:none;">
+    <p>You started reading. <strong id="resume-where">—</strong></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="resume-continue">Continue &rarr;</button>
+      <button class="btn btn-ghost" onclick="restart()">Start Over</button>
+    </div>
+  </div>
+
+  <!-- ════════════ SCREEN 0 — COVER ════════════ -->
+  <div class="screen active" id="screen-0">
+    <section class="hero" style="padding-top:80px;padding-bottom:48px;">
+      <span class="kicker">Free Document · Read in 20 Minutes</span>
+      <h1>The Reality Override<br/><em>Manual.</em></h1>
+      <p class="lede">A diagnostic for minds that already know something is wrong with the rendering.</p>
+    </section>
+
+    <section class="block first">
+      <h2>What this is.</h2>
+      <p>A short read. Three phases. One clear test of which operating mode you are currently running &mdash; the one most people run by default, or the one that produces every architect history has ever recorded.</p>
+      <p>The Manual is the foundational text of the framework. If the diagnostic on your way in left you with a pattern name you didn't fully recognize, this gives you the map of the architecture all three patterns sit inside.</p>
+      <p>You can leave and come back &mdash; we save your place. The full PDF version is also available as a companion if you prefer to print or read offline.</p>
+
+      <div class="cta-block" style="margin-top:32px;">
+        <p class="cta-kicker">When you're ready</p>
+        <h2 class="cta-headline">Begin the read.</h2>
+        <p class="cta-sub">Each section advances when you click Next. About twenty minutes if you read straight through.</p>
+        <button class="btn" onclick="goTo(1)">Begin &rarr;</button>
+      </div>
+
+      <div class="companion-pdf">
+        <p>Prefer the PDF? <a href="/tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf" target="_blank">Download companion (PDF) &rarr;</a></p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 1 — AWAKENING PROTOCOL ════════════ -->
+  <div class="screen" id="screen-1">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">0.0 · The Awakening Protocol</span>
+        <h1 class="chap-title"><em>You felt the glitch.</em></h1>
+        <p class="chap-sub">That's why you're here.</p>
+      </div>
+
+      <p>You feel it when you look at the sky and the stars don't sit quite right. You feel it when you walk through the grocery store and realize the people around you are running on loops &mdash; repeating the same conversations, the same fears, the same limited scripts they were running three years ago.</p>
+
+      <p>You feel like you are waiting for something. A permission slip. A sign. A crash.</p>
+
+      <div class="pullquote-block">
+        <p class="pullquote-text">Stop waiting. The signal is here. You are already inside the sequence.</p>
+      </div>
+
+      <p>The feeling you have isn't paranoia. It is <strong>latency</strong>. You are running high-velocity consciousness on a low-bandwidth network. You are a supercomputer trying to load a reality that is still rendering in 480p.</p>
+
+      <h2 style="margin-top:36px;">The Containment Field.</h2>
+
+      <div class="lex-def">
+        <strong>The Containment Field.</strong> The closed loop of fear, scarcity, and survival that most of consciousness has lived inside for most of recorded history. The "Old Earth" frequency. A render designed to keep you small, working, and powerless. Not a conspiracy &mdash; just the steady-state of a system that runs on your reactivity.
+      </div>
+
+      <p>For most of history, humanity has existed within this field. Time is currency, and you are always running out. But every once in a while, an Architect appears. Lincoln. Tesla. The disruptors of history.</p>
+
+      <p>We look back at them and think they changed the future. They didn't. They changed the present. They refused to accept the current render. They pushed their consciousness so hard against the walls of the simulation that the simulation had to update. It had to patch the code to accommodate their size.</p>
+
+      <div class="pullquote-block">
+        <p class="pullquote-text">"I am not here to sell you a map of the prison. I am here to hand you the keys to the warden's office."</p>
+        <p class="pullquote-attr">Ace Richie · Sovereign Synthesis</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(0)">&larr; Cover</button>
+        <span class="nav-meta">Section 1 of 7</span>
+        <button class="btn" onclick="goTo(2)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 2 — PHASE 1: SYSTEM INTEGRITY SCAN ════════════ -->
+  <div class="screen" id="screen-2">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">Phase 1 · System Integrity Scan</span>
+        <h1 class="chap-title">The <em>Diagnostic.</em></h1>
+        <p class="chap-sub">Identify the active scripts running in your operating system.</p>
+      </div>
+
+      <p>Four comparisons. Each one names a script. On one side is the default operating mode &mdash; the script most consciousness runs without choosing. On the other is the Architect mode &mdash; the script that has to be installed deliberately.</p>
+
+      <p>Click the side you recognize yourself in. Be ruthlessly honest. You cannot patch a bug you refuse to acknowledge.</p>
+
+      <div class="lex-def">
+        <strong>NPC vs Architect.</strong> Used here as shorthand for two operating modes &mdash; not as an insult. NPC means "running the default script that came with the environment." Architect means "running a script you wrote yourself, with full awareness of the source code."
+      </div>
+
+      <p class="diag-question"><span class="diag-q-num">01 ·</span> The Input/Output Ratio</p>
+      <p style="font-size:15px;color:var(--body-dim);margin-bottom:6px;">How does your day begin?</p>
+      <div class="diag-row">
+        <div class="diag-side npc" data-q="1" data-side="npc" onclick="selectDiag(this)">
+          <span class="diag-label">NPC · The Consumer</span>
+          <p class="diag-archetype">You absorb first.</p>
+          <p class="diag-text">You wake up and immediately check your phone. You absorb the world's emotion, anxiety, and noise before you have your own thoughts. The frequency is set by whatever notification arrived first.</p>
+        </div>
+        <div class="diag-side architect" data-q="1" data-side="architect" onclick="selectDiag(this)">
+          <span class="diag-label">Architect · The Player</span>
+          <p class="diag-archetype">You broadcast first.</p>
+          <p class="diag-text">You wake up and broadcast intention. You write, create, or visualize before any input. The frequency is set by you, not by the world.</p>
+        </div>
+      </div>
+
+      <p class="diag-question"><span class="diag-q-num">02 ·</span> The Shadow Response</p>
+      <p style="font-size:15px;color:var(--body-dim);margin-bottom:6px;">What happens when you feel a hard emotion?</p>
+      <div class="diag-row">
+        <div class="diag-side npc" data-q="2" data-side="npc" onclick="selectDiag(this)">
+          <span class="diag-label">NPC · The Victim</span>
+          <p class="diag-archetype">You look outward for cause.</p>
+          <p class="diag-text">When you feel anger or jealousy, you look for who caused it. You say <em>"they made me feel..."</em> The locus of control sits outside your operating system.</p>
+        </div>
+        <div class="diag-side architect" data-q="2" data-side="architect" onclick="selectDiag(this)">
+          <span class="diag-label">Architect · The Sovereign</span>
+          <p class="diag-archetype">You look inward for code.</p>
+          <p class="diag-text">When you feel a trigger, you look inward. You ask, <em>"What part of my code is this revealing?"</em> The trigger becomes diagnostic data instead of an indictment of someone else.</p>
+        </div>
+      </div>
+
+      <p class="diag-question"><span class="diag-q-num">03 ·</span> The Time Dilation</p>
+      <p style="font-size:15px;color:var(--body-dim);margin-bottom:6px;">What zone are you operating in?</p>
+      <div class="diag-row">
+        <div class="diag-side npc" data-q="3" data-side="npc" onclick="selectDiag(this)">
+          <span class="diag-label">NPC · The Prisoner</span>
+          <p class="diag-archetype">Survival Zone.</p>
+          <p class="diag-text">You are constantly trying to catch up. Time moves at the speed of stress. The next deadline is the only future you can see clearly.</p>
+        </div>
+        <div class="diag-side architect" data-q="3" data-side="architect" onclick="selectDiag(this)">
+          <span class="diag-label">Architect · The Traveler</span>
+          <p class="diag-archetype">Sovereign Zone.</p>
+          <p class="diag-text">You operate from a different clock. You know that high-frequency action collapses time. You don't hurry. You accelerate.</p>
+        </div>
+      </div>
+
+      <p class="diag-question"><span class="diag-q-num">04 ·</span> The Reality Render</p>
+      <p style="font-size:15px;color:var(--body-dim);margin-bottom:6px;">How do you hold your goals?</p>
+      <div class="diag-row">
+        <div class="diag-side npc" data-q="4" data-side="npc" onclick="selectDiag(this)">
+          <span class="diag-label">NPC · The Wish</span>
+          <p class="diag-archetype">Hope, conditional.</p>
+          <p class="diag-text">You view your goals (money, freedom, work that matters) as things you hope will happen <em>if</em> conditions align. The goal lives somewhere outside you, waiting.</p>
+        </div>
+        <div class="diag-side architect" data-q="4" data-side="architect" onclick="selectDiag(this)">
+          <span class="diag-label">Architect · The Download</span>
+          <p class="diag-archetype">Transfer in progress.</p>
+          <p class="diag-text">You view your goals as a file transfer already in progress. You know the progress bar is running. Your daily actions are the download. You hold the image until completion.</p>
+        </div>
+      </div>
+
+      <div class="diag-tally" id="diag-tally" style="display:none;">
+        <span class="diag-tally-title">Scan Complete</span>
+        <p class="diag-tally-result" id="diag-tally-text"></p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(1)">&larr; Back</button>
+        <span class="nav-meta">Section 2 of 7</span>
+        <button class="btn" onclick="goTo(3)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 3 — PHASE 2: RENDER MECHANICS ════════════ -->
+  <div class="screen" id="screen-3">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">Phase 2 · Theory of Operations</span>
+        <h1 class="chap-title">The <em>Render Mechanics.</em></h1>
+        <p class="chap-sub">The laws underneath the simulation.</p>
+      </div>
+
+      <p>The diagnostic gave you the <em>what</em>. This phase gives you the <em>why</em> &mdash; the mechanics that determine which render you receive.</p>
+
+      <div class="lex-def">
+        <strong>Render.</strong> The version of reality your environment is currently producing for you. Most renders are not selected by the observer. They are inherited from the collective frequency around you. Architects override their inherited render and produce a custom one.
+      </div>
+
+      <div class="mech-grid">
+        <div class="mech-item">
+          <span class="mech-num">01</span>
+          <p class="mech-name">The Energy-Saving Protocol.</p>
+          <p class="mech-text">The physical world is performance-optimized. It only renders the reality matching the collective frequency of its observers. To save energy, the system relies on legacy scripts &mdash; fear, scarcity, survival &mdash; to keep the render stable. This is why history repeats. Most consciousness accepts the old frequency, so the system simply re-renders it. Not destiny. An energy-saving memory loop.</p>
+        </div>
+
+        <div class="mech-item">
+          <span class="mech-num">02</span>
+          <p class="mech-name">The System Anomaly &mdash; The Architect.</p>
+          <p class="mech-text">A System Paradox occurs when a consciousness enters the simulation and refuses to accept the current laws. This individual holds a frequency so high that it contradicts the physics of the Old Earth. Lincoln entered a system where slavery was a core operating script. He held a frequency of sovereignty so high that the old world could no longer compute. The system crashed and rebooted with a new patch.</p>
+        </div>
+
+        <div class="mech-item">
+          <span class="mech-num">03</span>
+          <p class="mech-name">Retrospective Collapse.</p>
+          <p class="mech-text">Once you successfully install a new frequency, the rendering engine updates your entire history. The system fills in the gaps to make your success look inevitable. Your past failures, broken friendships, and the financial drag you feel today are re-rendered as essential training modules. When the progress bar finishes, it appears as though it was always yours.</p>
+        </div>
+      </div>
+
+      <p style="font-style:italic;color:var(--body-dim);margin-top:24px;">The mechanics are not mystical. They are how attention, frequency, and outcome have always been wired together. Most people simply never see the wiring.</p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(2)">&larr; Back</button>
+        <span class="nav-meta">Section 3 of 7</span>
+        <button class="btn" onclick="goTo(4)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 4 — PHASE 3: SOVEREIGN OVERRIDE PROTOCOLS ════════════ -->
+  <div class="screen" id="screen-4">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">Phase 3 · Execution Protocols</span>
+        <h1 class="chap-title">The <em>Sovereign Override.</em></h1>
+        <p class="chap-sub">Three protocols. Each one rewrites a layer of the operating system.</p>
+      </div>
+
+      <p>Reading without execution is just lexical data. These are the three protocols that move information into installation. Each one creates friction with your old environment. That friction is the first sign they are working.</p>
+
+      <div class="protocol-block">
+        <span class="protocol-num">Protocol 1 · Lexical Containment Breach</span>
+        <p class="protocol-name">Recoding Speech.</p>
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:14px;">The vocabulary you use is the vocabulary the system reads. Old code keeps you in the old render. Replace the legacy phrases with sovereign ones &mdash; the system has to reinterpret the request.</p>
+
+        <div class="lex-table">
+          <div class="lex-row head">
+            <div class="lex-cell delete">Delete (old code)</div>
+            <div class="lex-cell install">Install (sovereign code)</div>
+          </div>
+          <div class="lex-row">
+            <div class="lex-cell delete">"I want to be..."</div>
+            <div class="lex-cell install">"I am rendering..."</div>
+          </div>
+          <div class="lex-row">
+            <div class="lex-cell delete">"I hope I can..."</div>
+            <div class="lex-cell install">"I am becoming..."</div>
+          </div>
+          <div class="lex-row">
+            <div class="lex-cell delete">"I can't afford..."</div>
+            <div class="lex-cell install">"Not currently prioritized."</div>
+          </div>
+          <div class="lex-row">
+            <div class="lex-cell delete">"Why is this happening?"</div>
+            <div class="lex-cell install">"What is this teaching me?"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-block">
+        <span class="protocol-num">Protocol 2 · The Pattern Interrupt</span>
+        <p class="protocol-name">De-bugging fear.</p>
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:14px;">Fear is not real danger. It is a legacy script designed to keep your ancestors alive in the wild. In the modern world, it is a Containment Field trigger that keeps you small, reactive, and poor.</p>
+
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Detect</span>
+          <span class="protocol-step-text">Name it. <em>"I am feeling fear / anger / frustration."</em> Naming separates the signal from your identity.</span>
+        </div>
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Identify</span>
+          <span class="protocol-step-text">Ask: <em>"Is this my code, or a legacy script from the old world?"</em> Most of what feels urgent is inherited.</span>
+        </div>
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Execute</span>
+          <span class="protocol-step-text">Do not react. Observe the frequency. Speak the command: <em>"Stay quiet. I am the Architect."</em> The trigger loses leverage the moment you refuse to be moved by it.</span>
+        </div>
+      </div>
+
+      <div class="protocol-block">
+        <span class="protocol-num">Protocol 3 · The Quantum Anchor</span>
+        <p class="protocol-name">Rendering the outcome.</p>
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:14px;">To manifest a specific outcome, you must visualize it as a memory of the future. You are not trying to <em>get</em> it. It is already awaiting transfer. Your job is to hold the image and let the download complete.</p>
+
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Tactile</span>
+          <span class="protocol-step-text">Don't just see it. Touch it with your hands in your mind. The subconscious cannot tell the difference between vivid imagined experience and real experience &mdash; use that.</span>
+        </div>
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Process</span>
+          <span class="protocol-step-text">Treat your current actions as the download. The progress bar is running. Each aligned action is a packet of data moving through the pipe.</span>
+        </div>
+        <div class="protocol-step">
+          <span class="protocol-step-tag">Hold</span>
+          <span class="protocol-step-text">Do not interrupt the transfer. Doubt cancels the download. Faith keeps the pipe open. You hold the image until completion.</span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(3)">&larr; Back</button>
+        <span class="nav-meta">Section 4 of 7</span>
+        <button class="btn" onclick="goTo(5)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 5 — END OF FILE / BEGINNING OF MASTERY ════════════ -->
+  <div class="screen" id="screen-5">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">4.0 · End of File</span>
+        <h1 class="chap-title">Beginning of <em>mastery.</em></h1>
+        <p class="chap-sub">You now have the theory. You now have the tools.</p>
+      </div>
+
+      <p>But reading the manual does not make you a Master Architect. The Containment Field is heavy. It will try to pull you back into the loop. It will offer you distractions, doubts, and reasonable excuses to stay small.</p>
+
+      <p>Do not let it.</p>
+
+      <div class="pullquote-block">
+        <p class="pullquote-text">Information is inert until it is synthesized into action. The Sovereign Architecture provided here is a living firmware update &mdash; it only executes if you authorize the command.</p>
+      </div>
+
+      <p>The gulf between a conversation that leaves you unchanged and one that collapses old timelines is found entirely in your frequency alignment. Your ability to manifest the outcome you have in mind is a direct reflection of your willingness to exchange lower-density habits for high-velocity sovereignty.</p>
+
+      <p style="font-family:var(--serif);font-style:italic;font-size:18px;color:var(--text);text-align:center;margin:32px 0;">
+        Choose: Sovereign Empowerment, or System Containment.<br/>
+        The transmission ends here. The execution begins.
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(4)">&larr; Back</button>
+        <span class="nav-meta">Section 5 of 7</span>
+        <button class="btn" onclick="goTo(6)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 6 — INNER CIRCLE INVITATION ════════════ -->
+  <div class="screen" id="screen-6">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">The Destination</span>
+        <h1 class="chap-title">The <em>Inner Circle.</em></h1>
+        <p class="chap-sub">A map is useless without the velocity to use it.</p>
+      </div>
+
+      <p>The document you just read is a fragment of the source code. A map of the prison. But a map alone does not break you out of the Containment Field. You need velocity.</p>
+
+      <p>The Inner Circle is not a course or a community. It is the formation Sovereign Synthesis was built around &mdash; one hundred architects working at the level of doctrine, not protocol.</p>
+
+      <div class="mech-grid">
+        <div class="mech-item">
+          <span class="mech-num">The Mission</span>
+          <p class="mech-text">Liberate one hundred thousand minds through the propagation of sovereign content. The Inner Circle is the working group that drives that mission.</p>
+        </div>
+        <div class="mech-item">
+          <span class="mech-num">The Service</span>
+          <p class="mech-text">Direct mentoring in the hidden mechanics of psychology and reality. Quarterly architect convenings. Sovereign licensing rights.</p>
+        </div>
+        <div class="mech-item">
+          <span class="mech-num">The Exchange</span>
+          <p class="mech-text">A professional synthesis of value for financial energy. The Inner Circle is application-only. The Phase 3 capstone of the Architect curriculum is the application.</p>
+        </div>
+      </div>
+
+      <div class="pullquote-block">
+        <p class="pullquote-text">Are you ready to stop being a guest in someone else's simulation?</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(5)">&larr; Back</button>
+        <span class="nav-meta">Section 6 of 7</span>
+        <button class="btn" onclick="goTo(7)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 7 — PATH FORWARD ════════════ -->
+  <div class="screen" id="screen-7">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">Path Forward</span>
+        <h1 class="chap-title">The <em>Sequence.</em></h1>
+        <p class="chap-sub">Each rung is optional. None of them require the next.</p>
+      </div>
+
+      <p>You have the diagnostic. You have the mechanics. You have the override protocols. The next rungs are velocity.</p>
+
+      <ul class="path-list" style="margin-top:24px;">
+        <li>
+          <span class="num">01</span>
+          <span class="body-cell">
+            <strong>The Diagnostic &mdash; Free</strong>
+            <span>If you haven't yet, run the Interference Pattern Diagnostic. Twelve questions. Three minutes. Returns the specific pattern currently running you &mdash; and the framework for stepping out of it.</span>
+            <a href="/diagnostic" class="btn btn-secondary" style="margin-top:14px;">Run the Diagnostic &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <span class="body-cell">
+            <strong>Protocol 77 &mdash; The Shield · $77</strong>
+            <span>The defense layer. A 21-day deployment that installs three external defense systems and one load-bearing axiom. Stops the bleeding so the rest can build.</span>
+            <a href="/p77" class="btn" style="margin-top:14px;">Deploy The Shield &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <span class="body-cell">
+            <strong>The Map &mdash; Navigation Override · $177</strong>
+            <span>Once the bleeding stops, the Map teaches you to read what a room is optimizing for before you walk into it.</span>
+            <a href="/tier-3/manifesto-navigator" class="btn btn-secondary" style="margin-top:14px;">See The Map &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <span class="body-cell">
+            <strong>The Architect &mdash; Three Phases</strong>
+            <span>Declassification ($477), Adversarial Systems ($1,497), Sovereign Integration ($3,777). Building the life and architecture the costume would never have allowed.</span>
+            <a href="/tier-4/course-portal" class="btn btn-secondary" style="margin-top:14px;">See Phase 1 &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">05</span>
+          <span class="body-cell">
+            <strong>Inner Circle &mdash; Sovereign Licensing · $12,000</strong>
+            <span>One hundred architects. Application only. The formation itself, at its deepest rung.</span>
+            <a href="/tier-7/member-portal" class="btn btn-secondary" style="margin-top:14px;">Inner Circle &rarr;</a>
+          </span>
+        </li>
+      </ul>
+
+      <div class="closing" style="border-top:1px solid var(--border);margin-top:32px;padding:48px 0 16px;">
+        <p>The filter is willingness, not demographics.<br/>You are already inside the sequence.</p>
+      </div>
+
+      <div class="companion-pdf">
+        <p>Want the portable version? <a href="/tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf" target="_blank">Download companion PDF &rarr;</a></p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(6)">&larr; Back</button>
+        <span class="nav-meta">Section 7 of 7 · Manual Complete</span>
+        <button class="btn btn-ghost" onclick="restart()">Read Again</button>
+      </div>
+    </section>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- Footer -->
 <footer>
   <div class="foot-inner">
     <p>
@@ -57,6 +707,126 @@
     <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
   </div>
 </footer>
+
+<script>
+const TOTAL_SCREENS = 8; // 0..7
+const STORAGE_KEY = 'ss_manual_state_v1';
+const SECTION_LABELS = [
+  'Cover',
+  'The Awakening Protocol',
+  'The Diagnostic',
+  'The Render Mechanics',
+  'The Sovereign Override',
+  'End of File',
+  'The Inner Circle',
+  'Path Forward'
+];
+
+let state = {
+  currentScreen: 0,
+  highestReached: 0,
+  diagSelections: { 1: null, 2: null, 3: null, 4: null }
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL_SCREENS) return;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  state.currentScreen = n;
+  if (n > state.highestReached) state.highestReached = n;
+  saveState();
+  updateProgress(n);
+  document.getElementById('resume-banner').style.display = 'none';
+  hydrateDiag();
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(n) {
+  const pct = Math.round((n / (TOTAL_SCREENS - 1)) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = 'Section ' + (n) + ' of 7';
+  document.getElementById('prog-wrap').classList.toggle('visible', n > 0);
+}
+
+function selectDiag(el) {
+  const q = el.getAttribute('data-q');
+  const side = el.getAttribute('data-side');
+  state.diagSelections[q] = side;
+  // Clear other side selection in this question
+  document.querySelectorAll('.diag-side[data-q="' + q + '"]').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  saveState();
+  updateDiagTally();
+}
+
+function hydrateDiag() {
+  for (const q in state.diagSelections) {
+    const side = state.diagSelections[q];
+    if (!side) continue;
+    const el = document.querySelector('.diag-side[data-q="' + q + '"][data-side="' + side + '"]');
+    if (el) {
+      document.querySelectorAll('.diag-side[data-q="' + q + '"]').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  }
+  updateDiagTally();
+}
+
+function updateDiagTally() {
+  const sels = state.diagSelections;
+  const answered = Object.values(sels).filter(v => v !== null).length;
+  if (answered < 4) return;
+  const npc = Object.values(sels).filter(v => v === 'npc').length;
+  const tally = document.getElementById('diag-tally');
+  const text = document.getElementById('diag-tally-text');
+  tally.style.display = 'block';
+  if (npc >= 3) {
+    text.innerHTML = 'Three or four scripts are running on default. That is the most common starting position. The framework was built for this exact starting point. The next sections give you the override protocols.';
+  } else if (npc === 2) {
+    text.innerHTML = 'Two scripts are running on default. You are already partway out of the field. The next sections will tighten the override on the remaining patterns.';
+  } else if (npc === 1) {
+    text.innerHTML = 'Only one script is still running on default. You are operating mostly in Architect mode already. The next sections will help you isolate and override the last legacy pattern.';
+  } else {
+    text.innerHTML = 'You are running Architect mode across all four scripts. The framework is now about deepening &mdash; not installing. The Inner Circle is built for this profile.';
+  }
+}
+
+function restart() {
+  if (!confirm('Restart the Manual? Your selections will be cleared.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  state = {
+    currentScreen: 0, highestReached: 0,
+    diagSelections: { 1: null, 2: null, 3: null, 4: null }
+  };
+  document.querySelectorAll('.diag-side').forEach(s => s.classList.remove('selected'));
+  document.getElementById('diag-tally').style.display = 'none';
+  goTo(0);
+}
+
+// INIT
+loadState();
+hydrateDiag();
+if (state.highestReached > 0) {
+  const banner = document.getElementById('resume-banner');
+  document.getElementById('resume-where').textContent = 'You left off at Section ' + state.currentScreen + ' (' + (SECTION_LABELS[state.currentScreen] || '') + ').';
+  banner.style.display = 'flex';
+  document.getElementById('resume-continue').onclick = () => goTo(state.currentScreen);
+  goTo(0);
+  banner.style.display = 'flex';
+} else {
+  goTo(0);
+}
+</script>
 
 </body>
 </html>

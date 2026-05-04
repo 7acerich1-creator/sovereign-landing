@@ -16,7 +16,7 @@
 | ☐ | https://sovereign-synthesis.com/ | `index.html` | Main landing — refined |
 | ☐ | https://sovereign-synthesis.com/about | `about.html` | Purpose page |
 | ☐ | https://sovereign-synthesis.com/diagnostic | `tier-1/diagnostic.html` | Interference Pattern Diagnostic — full reskin |
-| ☐ | https://sovereign-synthesis.com/manual | `manual/index.html` | Reality Override Manual portal |
+| ☐ | https://sovereign-synthesis.com/manual | `manual/index.html` | **Reality Override Manual INTERACTIVE — 7 sections, NPC vs Architect diagnostic with personalized tally, vocabulary defined inline. PDF lives as companion.** |
 | ☐ | https://sovereign-synthesis.com/manifesto-portal | `manifesto-portal/index.html` | **Manifesto INTERACTIVE — 11 sections, save-state, vocabulary defined inline** |
 | ☐ | https://sovereign-synthesis.com/p77 | `p77/index.html` | Protocol 77 sales page |
 | ☐ | https://sovereign-synthesis.com/download | `download.html` | Generic Manual download |
@@ -93,12 +93,11 @@ git push origin main
 
 Vercel auto-deploys 60-90 seconds after push.
 
-## 7. WHAT'S STILL ON THE DOCKET (NOT THIS SESSION)
+## 7. WHAT'S STILL ON THE DOCKET
 
-- Reality Override Manual interactive (replaces the PDF download with a paced web experience like the Manifesto)
-- Protocol Zero (architecture decision pending — placement + format)
-- Optional: redesigned PDFs in editorial light brand (Manual, Manifesto, P77 docs, Gray Rock one-pager) as fallback / brand-consistent companions to the interactives
-- Audit ad-targeted sales pages for T3-T7 if needed (currently sold via portal CTAs and email)
+- **Protocol Zero** (architecture decision pending — placement + format)
+- **Companion PDF redesigns** in editorial light brand (Manual, Manifesto, P77 docs, Gray Rock one-pager) — currently the PDFs are still in old aesthetic. The interactives are the canonical experience now; PDFs become brand-consistent reference docs. Use docx/pdf skills for these.
+- **Audit ad-targeted sales pages for T3-T7** if needed (currently sold via portal CTAs and email)
 
 ## 8. AUDIT NOTES (write here as you walk through)
 
