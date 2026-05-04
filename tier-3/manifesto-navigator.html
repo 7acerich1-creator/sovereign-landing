@@ -1,797 +1,97 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sovereign Architecture Manifesto — Phase Navigator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#050508;--bg-card:#09090f;--bg-elevated:#0d0d1a;
-  --text:#E8E4F0;--dim:#7C7A9A;--ghost:#484860;
-  --violet:#7C5CFC;--violet-dim:rgba(124,92,252,0.08);--violet-border:rgba(124,92,252,0.25);
-  --cyan:#3EF7E8;
-  --gold:#C9A84C;--gold-hover:#E8C56A;--gold-glow:rgba(201,168,76,0.15);
-  --border:rgba(124,92,252,0.14);--subtle:rgba(255,255,255,0.04);
-  --display:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
-}
-body{font-family:var(--display);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
-
-/* Dual data stream BG */
-.streams{position:fixed;inset:0;pointer-events:none;z-index:0}
-.stream{position:absolute;top:0;bottom:0;width:1px}
-.stream-l{left:12%;background:linear-gradient(180deg,transparent,rgba(124,92,252,0.08) 30%,rgba(124,92,252,0.12) 60%,transparent);animation:pulse 8s ease-in-out infinite}
-.stream-r{right:12%;background:linear-gradient(180deg,transparent,rgba(62,247,232,0.05) 30%,rgba(62,247,232,0.08) 60%,transparent);animation:pulse 8s ease-in-out infinite 4s}
-.dot-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:radial-gradient(rgba(124,92,252,0.08) 1px,transparent 1px);
-  background-size:32px 32px}
-@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-
-/* ═══ PREMIUM ANIMATIONS ═══ */
-@keyframes glitchText{
-  0%,100%{transform:translate(0);filter:none}
-  20%{transform:translate(-2px,1px);filter:hue-rotate(90deg)}
-  40%{transform:translate(2px,-1px);filter:hue-rotate(-90deg)}
-  60%{transform:translate(-1px,-2px);filter:brightness(1.5)}
-  80%{transform:translate(1px,2px);filter:hue-rotate(45deg)}
-}
-@keyframes vampireBleed{
-  0%{box-shadow:inset 0 0 0 0 rgba(200,20,20,0);border-color:var(--border)}
-  50%{box-shadow:inset 0 0 30px 0 rgba(200,20,20,0.08);border-color:rgba(200,20,20,0.3)}
-  100%{box-shadow:inset 0 0 0 0 rgba(200,20,20,0);border-color:var(--border)}
-}
-@keyframes slideReveal{
-  0%{opacity:0;transform:translateY(12px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-@keyframes freqShift{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-.glitch-title{animation:glitchText 4s ease-in-out infinite;display:inline-block}
-.vampire-card{animation:vampireBleed 3s ease-in-out infinite}
-.slide-in{animation:slideReveal 0.6s ease-out forwards;opacity:0}
-.freq-bar{background:linear-gradient(90deg,var(--violet),var(--cyan),var(--gold),var(--violet));background-size:300% 100%;animation:freqShift 6s ease infinite;height:2px;margin:20px 0}
-.protocol-box{background:var(--bg-card);border:1px solid var(--violet-border);padding:20px 24px;margin:12px 0;position:relative;overflow:hidden}
-.protocol-box::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--violet)}
-.protocol-step{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
-.protocol-step-num{font-family:var(--mono);font-size:10px;color:var(--violet);min-width:24px;font-weight:700;padding-top:2px}
-.protocol-step-text{font-size:14px;color:var(--dim);line-height:1.6}
-.slide-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
-@media(max-width:580px){.slide-compare{grid-template-columns:1fr}}
-.slide-old,.slide-new{padding:20px;text-align:center;font-family:var(--mono);font-size:13px;line-height:1.6}
-.slide-old{background:rgba(200,20,20,0.04);border:1px solid rgba(200,20,20,0.2);color:var(--dim)}
-.slide-new{background:rgba(62,247,232,0.04);border:1px solid rgba(62,247,232,0.2);color:var(--cyan)}
-.slide-label{font-size:9px;letter-spacing:2px;display:block;margin-bottom:10px;opacity:.6}
-.axiom-block{background:var(--bg-card);border:1px solid var(--gold);padding:20px 24px;margin:12px 0}
-.axiom-name{font-weight:600;font-size:14px;color:var(--gold);margin-bottom:6px}
-.axiom-desc{font-size:13px;color:var(--dim);line-height:1.7}
-.frequency-card{padding:16px 20px;background:var(--bg-card);border-left:3px solid var(--violet);margin:8px 0}
-.frequency-card.fear{border-left-color:#c41414}
-.frequency-card.ego{border-left-color:#e89a1a}
-.frequency-card.attention{border-left-color:var(--cyan)}
-.freq-name{font-weight:600;font-size:14px;margin-bottom:6px;color:var(--text)}
-.freq-desc{font-size:13px;color:var(--dim);line-height:1.7}
-
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh;position:relative;z-index:1}
-
-/* SIDEBAR */
-.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:rgba(5,5,8,0.9);backdrop-filter:blur(12px);border-right:1px solid var(--border);padding:40px 24px;display:flex;flex-direction:column;gap:8px}
-.sidebar-header{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--violet);margin-bottom:24px;opacity:.8}
-.phase-node{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid transparent;cursor:pointer;transition:all .2s;position:relative}
-.phase-node.active{border-color:var(--violet-border);background:var(--violet-dim)}
-.phase-node.done{border-color:rgba(201,168,76,0.2);background:rgba(201,168,76,0.03)}
-.phase-node.locked{opacity:.4;cursor:default}
-.node-indicator{width:20px;height:20px;border-radius:50%;border:1px solid var(--ghost);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
-.phase-node.active .node-indicator{border-color:var(--violet);background:var(--violet);color:white}
-.phase-node.done .node-indicator{border-color:var(--gold);background:var(--gold);color:#050508}
-.phase-node.locked .node-indicator{border-color:var(--ghost)}
-.node-text{display:flex;flex-direction:column;gap:2px}
-.node-num{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--dim)}
-.node-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.4}
-.phase-node.locked .node-name{color:var(--ghost)}
-.lock-icon{font-size:9px;color:var(--ghost)}
-
-/* MAIN */
-.main{padding:0 0 80px}
-.top-bar{position:sticky;top:0;z-index:50;background:rgba(5,5,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--subtle);padding:14px 48px;display:flex;align-items:center;justify-content:space-between}
-.top-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--violet)}
-.progress-track{display:flex;align-items:center;gap:8px}
-.prog-dot{width:20px;height:2px;background:var(--ghost);border-radius:1px;transition:all .3s}
-.prog-dot.active{background:var(--violet)}
-.prog-dot.done{background:var(--gold)}
-
-.content{padding:64px 48px}
-
-/* ENTRY */
-.entry{text-align:center;padding:40px 0 60px}
-.entry-tag{display:inline-flex;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--violet);border:1px solid var(--violet-border);padding:6px 16px;margin-bottom:28px}
-.entry h1{font-size:clamp(28px,4.5vw,46px);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px}
-.entry h1 em{color:var(--violet);font-style:normal}
-.entry p{font-size:17px;color:var(--dim);max-width:540px;margin:0 auto 40px;font-weight:300}
-.phase-chain{display:flex;flex-direction:column;gap:4px;max-width:420px;margin:0 auto 40px;text-align:left}
-.chain-row{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--bg-card);border:1px solid var(--border)}
-.chain-row:first-child{border-color:var(--violet-border)}
-.chain-num{font-family:var(--mono);font-size:9px;color:var(--violet);min-width:28px}
-.chain-name{font-size:13px;color:var(--dim)}
-.chain-row:first-child .chain-name{color:var(--text)}
-
-/* PHASE CONTENT */
-.phase-content{display:none}
-.phase-content.active{display:block}
-
-.install-hook{font-size:clamp(18px,3vw,26px);font-weight:600;font-style:italic;color:var(--violet);line-height:1.4;margin-bottom:32px;padding-left:20px;border-left:2px solid var(--violet)}
-.phase-num-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--violet);opacity:.7;margin-bottom:8px}
-.phase-title{font-size:clamp(24px,4vw,38px);font-weight:700;letter-spacing:-0.02em;margin-bottom:24px}
-.body-text{font-size:16px;color:var(--dim);font-weight:300;line-height:1.85;margin-bottom:16px}
-.body-text strong{color:var(--text);font-weight:500}
-
-.mechanism-list{display:flex;flex-direction:column;gap:8px;margin:24px 0}
-.mechanism{padding:16px 20px;background:var(--bg-card);border:1px solid var(--border);border-left:2px solid var(--violet)}
-.mechanism-name{font-weight:600;font-size:14px;margin-bottom:6px;color:var(--text)}
-.mechanism-desc{font-size:13px;color:var(--dim);line-height:1.6}
-
-.reflect-block{background:var(--bg-card);border:1px solid var(--violet-border);padding:24px 28px;margin:28px 0}
-.reflect-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--violet);margin-bottom:10px;display:block}
-textarea{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);font-family:var(--display);font-size:14px;padding:12px 16px;resize:vertical;border-radius:2px;transition:border-color .2s;line-height:1.6;min-height:80px}
-textarea:focus{outline:none;border-color:rgba(124,92,252,0.4)}
-textarea::placeholder{color:var(--ghost)}
-
-/* ARCHETYPE SELECTOR */
-.archetype-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-@media(max-width:640px){.archetype-grid{grid-template-columns:1fr}}
-.archetype{padding:20px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;transition:all .2s;text-align:center}
-.archetype:hover{border-color:var(--violet-border)}
-.archetype.selected{border-color:var(--violet);background:var(--violet-dim)}
-.arch-name{font-weight:600;font-size:14px;margin-bottom:8px;color:var(--text)}
-.arch-desc{font-size:12px;color:var(--dim);line-height:1.5}
-.arch-action{display:none;margin-top:16px;padding:12px 16px;background:rgba(124,92,252,0.06);border:1px solid var(--violet-border);border-radius:2px;font-size:13px;color:var(--text);line-height:1.6}
-.archetype.selected .arch-action{display:block}
-
-/* LOGIC GATE */
-.gate-block{background:var(--bg-card);border:1px solid var(--gold);padding:28px;margin:28px 0}
-.gate-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:16px;display:block}
-.gate-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
-.gate-item{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 16px;background:var(--bg-elevated);border:1px solid var(--subtle);transition:border-color .2s}
-.gate-item:hover{border-color:var(--border)}
-.gate-item.checked{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
-.gate-box{width:18px;height:18px;border:1px solid var(--ghost);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center}
-.gate-box.checked{background:var(--gold);border-color:var(--gold)}
-.gate-box::after{content:'✓';font-size:11px;color:#050508;display:none}
-.gate-box.checked::after{display:block}
-.gate-text{font-size:14px;color:var(--dim);line-height:1.5}
-.gate-cta{opacity:.3;pointer-events:none;transition:opacity .3s}
-.gate-cta.open{opacity:1;pointer-events:auto}
-
-.coupon-block{background:rgba(201,168,76,0.06);border:1px dashed rgba(201,168,76,0.4);padding:16px 20px;margin:16px 0;text-align:center}
-.coupon-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold);display:block;margin-bottom:6px}
-.coupon-code{font-family:var(--mono);font-size:20px;color:var(--gold);letter-spacing:4px;font-weight:700}
-.coupon-val{font-size:12px;color:var(--dim);margin-top:4px}
-
-/* COMPLETE */
-.complete-wrap{text-align:center;padding:40px 0}
-.complete-wrap h2{font-size:clamp(24px,4vw,38px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:32px 0;text-align:left}
-@media(max-width:580px){.summary-grid{grid-template-columns:1fr}}
-.summary-card{background:var(--bg-card);border:1px solid var(--border);padding:16px 20px}
-.sum-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--violet);display:block;margin-bottom:8px}
-.sum-val{font-size:13px;color:var(--dim);line-height:1.5}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:14px 28px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;text-decoration:none}
-.btn-violet{background:var(--violet);color:white}
-.btn-violet:hover{box-shadow:0 0 24px rgba(124,92,252,0.4)}
-.btn-gold{background:var(--gold);color:#050508;font-weight:700}
-.btn-gold:hover{background:var(--gold-hover);box-shadow:0 0 24px var(--gold-glow)}
-.btn-outline{background:transparent;color:var(--dim);border:1px solid var(--subtle)}
-.btn-block{display:flex;width:100%;margin-top:36px}
-
-@media(max-width:768px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto;flex-direction:row;overflow-x:auto;gap:4px;padding:16px}
-  .sidebar-header{display:none}
-  .phase-node{min-width:80px;flex-direction:column;align-items:center;text-align:center;padding:10px 8px}
-  .node-text{align-items:center}
-  .content{padding:40px 24px}
-  .top-bar{padding:12px 24px}
-}
-</style>
+<title>The Map — Navigation Override | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
 </head>
 <body>
-<div class="streams"><div class="stream stream-l"></div><div class="stream stream-r"></div></div>
-<div class="dot-grid"></div>
 
-<div class="layout">
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sidebar-header">OS INSTALL PROGRESS</div>
-  <div class="phase-node active" id="nav-0" onclick="navToPhase(0)">
-    <div class="node-indicator">1</div>
-    <div class="node-text"><span class="node-num">PHASE 01</span><span class="node-name">The Pre-Frame</span></div>
-  </div>
-  <div class="phase-node locked" id="nav-1" onclick="navToPhase(1)">
-    <div class="node-indicator"><span class="lock-icon">⚿</span></div>
-    <div class="node-text"><span class="node-num">PHASE 02</span><span class="node-name">The Diagnostic</span></div>
-  </div>
-  <div class="phase-node locked" id="nav-2" onclick="navToPhase(2)">
-    <div class="node-indicator"><span class="lock-icon">⚿</span></div>
-    <div class="node-text"><span class="node-num">PHASE 03</span><span class="node-name">The Glitch</span></div>
-  </div>
-  <div class="phase-node locked" id="nav-3" onclick="navToPhase(3)">
-    <div class="node-indicator"><span class="lock-icon">⚿</span></div>
-    <div class="node-text"><span class="node-num">PHASE 04</span><span class="node-name">The Graduation</span></div>
-  </div>
-  <div class="phase-node locked" id="nav-4" onclick="navToPhase(4)">
-    <div class="node-indicator"><span class="lock-icon">⚿</span></div>
-    <div class="node-text"><span class="node-num">PHASE 05</span><span class="node-name">Execution Protocol</span></div>
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+    </nav>
   </div>
 </div>
+<div class="gold-line"></div>
 
-<!-- MAIN -->
-<div class="main">
-  <div class="top-bar">
-    <span class="top-tag" id="phase-tag">SOVEREIGN ARCHITECTURE MANIFESTO</span>
-    <div class="progress-track">
-      <div class="prog-dot active" id="pd-0"></div>
-      <div class="prog-dot" id="pd-1"></div>
-      <div class="prog-dot" id="pd-2"></div>
-      <div class="prog-dot" id="pd-3"></div>
-      <div class="prog-dot" id="pd-4"></div>
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 3 · Member Portal</span>
+  <h1>The Map.<br/><em>Navigation Override.</em></h1>
+  <p class="lede">Once the bleeding stops, the Map teaches you to read what a room is optimizing for before you walk into it.</p>
+</section>
+
+<section class="block first">
+  <h2>What you have access to.</h2>
+  <p>The Manifesto Navigator is your phase navigation system for the Sovereign Architecture Manifesto. It is the framework that lets you read the architecture of any environment — relational, professional, social — and identify what it is optimizing for, before that optimization extracts something from you.</p>
+
+  <div class="cta-block" style="margin-top:32px;">
+    <p class="cta-kicker">Currently delivering</p>
+    <h2 class="cta-headline">The Sovereign Architecture Manifesto.</h2>
+    <p class="cta-sub">The full Manifesto PDF — your foundational text — is being delivered to your email and is available in your Manifesto Portal. Read it once cover-to-cover. Then return for the navigation tools.</p>
+    <div class="btn-row">
+      <a href="/manifesto-portal" class="btn">Open Manifesto Portal &rarr;</a>
+      <a href="/p77" class="btn btn-secondary">Re-enter P77 Runner &rarr;</a>
     </div>
   </div>
+</section>
 
-  <div class="content">
+<section class="block bordered">
+  <h2>What's deploying next.</h2>
+  <p>The full interactive Navigation Override toolset is being deployed in waves to Tier 3 holders. As each module ships, you'll receive a notification by email and it will appear here.</p>
+  <ul class="path-list">
+    <li>
+      <span class="num">01</span>
+      <span class="body-cell">
+        <strong>Environmental Read Protocol</strong>
+        <span>How to identify what a room is optimizing for in under sixty seconds. The four signals. The three tells. The one question that reveals the architecture.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">02</span>
+      <span class="body-cell">
+        <strong>Frequency Classification System</strong>
+        <span>The full Fear / Ego / Attention / Sovereign frequency map. Where most rooms operate. How to recognize the rare ones that don't.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">03</span>
+      <span class="body-cell">
+        <strong>The Three Axioms</strong>
+        <span>The three load-bearing axioms that govern sovereign navigation. Read once. Operated daily. Each one removes a category of decision from the table.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">04</span>
+      <span class="body-cell">
+        <strong>Phase Navigator (interactive)</strong>
+        <span>The walk-through tool that maps your current phase, identifies the next phase's prerequisites, and surfaces the specific navigation move required.</span>
+      </span>
+    </li>
+  </ul>
+</section>
 
-    <!-- ENTRY -->
-    <div id="screen-entry" class="phase-content active">
-      <div class="entry">
-        <div class="entry-tag">⬡ OS INSTALL — INITIATED</div>
-        <h1>The <em>Sovereign Architecture</em> Manifesto</h1>
-        <p>Five phases. Each one installs a new layer of the operating system. Complete in sequence. What you leave here is not reading comprehension — it is a new internal architecture.</p>
-        <div class="phase-chain">
-          <div class="chain-row"><span class="chain-num">01</span><span class="chain-name">The Pre-Frame — factory settings identified</span></div>
-          <div class="chain-row"><span class="chain-num">02</span><span class="chain-name">The Diagnostic — containment mapped</span></div>
-          <div class="chain-row"><span class="chain-num">03</span><span class="chain-name">The Glitch — seam located</span></div>
-          <div class="chain-row"><span class="chain-num">04</span><span class="chain-name">The Graduation — exit archetype selected</span></div>
-          <div class="chain-row"><span class="chain-num">05</span><span class="chain-name">Execution Protocol — OS operational</span></div>
-        </div>
-        <button class="btn btn-violet" onclick="beginInstall()">BEGIN OS INSTALLATION →</button>
-      </div>
-    </div>
+<div class="closing">
+  <p>The Shield was the perimeter.<br/>The Map is the geography.<br/>The Architecture is what you build inside it.</p>
+  <a href="/tier-4/course-portal" class="btn">Continue to The Architect &rarr;</a>
+</div>
 
-    <!-- PHASE 1: PRE-FRAME -->
-    <div id="phase-0" class="phase-content">
-      <div class="phase-num-tag">[PHASE 01 OF 05] — THE PRE-FRAME</div>
-      <h2 class="phase-title">The Pre-Frame</h2>
-      <p class="install-hook">"WARNING: Once seen, the mechanics of control cannot be unseen. Proceed only if you are ready to disconnect."</p>
-
-      <p class="body-text">In 1910, Wallace D. Wattles demanded readers accept his statements as law. In 1937, Napoleon Hill codified the laws of success for the Industrial Age. The frequency has now shifted. <strong>Industrial → Digital → Network → Architect.</strong> The old keys no longer turn the tumblers of this new reality.</p>
-
-      <div class="freq-bar"></div>
-
-      <p class="body-text">To unlock the Sovereign Architecture, you must accept the following as axiomatic — not as theory, but as operating parameters. If you cannot grant this authority to the text, close this page. It will not serve you.</p>
-
-      <div style="display:flex;flex-direction:column;gap:8px;margin:24px 0">
-        <div class="axiom-block"><div class="axiom-name">AXIOM 1 — THE SOURCE IS VALID</div><div class="axiom-desc">Receive this transmission as if handed down by the highest authority you recognize. Not because the author demands worship — but because doubt creates metaphysical drag, and you need zero resistance for what comes next.</div></div>
-        <div class="axiom-block"><div class="axiom-name">AXIOM 2 — THE CIRCUIT IS OPEN</div><div class="axiom-desc">Doubt creates metaphysical drag. Faith creates superconductivity. You must offer zero resistance. This is not about belief — it is about conductivity. An open circuit receives the signal.</div></div>
-        <div class="axiom-block"><div class="axiom-name">AXIOM 3 — THE APPLICATION IS ABSOLUTE</div><div class="axiom-desc">You are not here to "try." You are here to install. Partial installation produces system conflicts. Full installation produces a clean architecture.</div></div>
-      </div>
-
-      <p class="body-text">The Simulation is not a conspiracy. It is a <strong>design</strong>. Every default behavior pattern, every inherited belief, every reactive trigger — was installed. Not chosen. You have been operating on factory settings.</p>
-
-      <p class="body-text">Three signals that confirm you are still running borrowed code:</p>
-      <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">Signal 1 — The Unprompted Explanation</div><div class="mechanism-desc">You explain your decisions to people who never asked for an explanation. This is borrowed code running in the background: a loop that requires external permission before action is valid.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Signal 2 — External State Control</div><div class="mechanism-desc">Your emotional state is more determined by external events than by internal architecture. The operating system is reactive, not sovereign. Someone else holds the input controls.</div></div>
-        <div class="mechanism"><div class="mechanism-name">Signal 3 — Fear of Being Wrong Over Being Controlled</div><div class="mechanism-desc">You are more afraid of being wrong than of being controlled. This is the deepest factory setting — the system has convinced you that compliance is safety.</div></div>
-      </div>
-      <div class="reflect-block">
-        <span class="reflect-label">// PHASE 1 REFLECTION</span>
-        <textarea id="p0-reflect" rows="3" placeholder="What is one belief you hold that, when examined, you realize you never actually chose?"></textarea>
-      </div>
-      <button class="btn btn-violet btn-block" onclick="installPhase(0)">INSTALL PHASE 1 →</button>
-    </div>
-
-    <!-- PHASE 2: DIAGNOSTIC -->
-    <div id="phase-1" class="phase-content">
-      <div class="phase-num-tag">[PHASE 02 OF 05] — THE DIAGNOSTIC</div>
-      <h2 class="phase-title">The Diagnostic</h2>
-      <p class="install-hook">"You believe you are free because you can choose your flavor of distraction. This is the first illusion."</p>
-
-      <p class="body-text">True captivity is not bars on a window; it is a frequency broadcast designed to keep your consciousness locked in a holding pattern. I call this <strong>The Containment Field</strong>. It is an aggregate of social engineering, dark psychology, and algorithmic feedback loops designed to do one thing: <strong>Harvest your energy.</strong></p>
-      <p class="body-text">Every time you react to fear, every time you scroll for dopamine, every time you seek validation from the external world — you are acting as a battery for a system that does not serve you.</p>
-
-      <p class="body-text" style="margin-top:28px;font-weight:500;color:var(--text)">Three Primary Frequencies of the Containment Field:</p>
-      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
-        <div class="frequency-card fear"><div class="freq-name">01 // THE SURVIVAL OSCILLATION (Fear)</div><div class="freq-desc">The system keeps you in low-grade survival mode. Operating from the amygdala, you become reactive. You make decisions from a crouch — conserving, protecting, contracting. This is not living. This is maintenance mode.</div></div>
-        <div class="frequency-card ego"><div class="freq-name">02 // THE VALIDATION LOOP (Ego)</div><div class="freq-desc">Tie self-worth to external metrics — likes, views, approval, titles. These are digital leashes. When your internal state depends on external feedback, you are not sovereign. You are a puppet with WiFi.</div></div>
-        <div class="frequency-card attention"><div class="freq-name">03 // THE ATTENTION FRACTURE</div><div class="freq-desc">Your attention is the only currency you truly own. The system fractures it into a thousand fragments — notifications, feeds, headlines, drama. A fractured mind cannot architect. It can only consume.</div></div>
-      </div>
-
-      <p class="body-text"><em>We do not fight the Containment Field. We tune to a frequency it cannot touch.</em></p>
-
-      <div class="freq-bar"></div>
-
-      <div class="protocol-box" style="margin:28px 0">
-        <span class="reflect-label" style="color:var(--violet)">SYSTEM SYNC 01 // THE INPUT EMBARGO</span>
-        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"The Architect does not ask the world what to think. The Architect tells the world what is."</p>
-        <p class="body-text" style="margin:8px 0">Objective: Prove that your mind is a broadcasting station, not a receiving terminal. Execute a Strict Input Embargo during the first 60 minutes of every day.</p>
-        <div style="margin:16px 0">
-          <div class="protocol-step"><span class="protocol-step-num">01</span><span class="protocol-step-text"><strong>Phone Status:</strong> Airplane Mode immediately upon waking.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num">02</span><span class="protocol-step-text"><strong>No Consumption:</strong> Zero emails. Zero social media. Zero news. Zero podcasts.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num">03</span><span class="protocol-step-text"><strong>The Vacuum:</strong> Sit in silence for 10 minutes. Observe anxiety as foreign programs trying to re-install.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num">04</span><span class="protocol-step-text"><strong>The Output:</strong> By 10:00 AM, write down the one High Value idea that arrived in the silence.</span></div>
-        </div>
-        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--text)">The moment you broadcast before you receive, you become a data SOURCE instead of a data SINKHOLE.</p>
-      </div>
-
-      <div class="reflect-block">
-        <span class="reflect-label">// DIAGNOSTIC INPUTS</span>
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Where in your life are you most consistently reactive rather than intentional?</label>
-            <textarea id="p1-q1" rows="2" placeholder="Map the reactive zones."></textarea>
-          </div>
-          <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Which relationships consume more bandwidth than they generate?</label>
-            <textarea id="p1-q2" rows="2" placeholder="Name them without judgment."></textarea>
-          </div>
-          <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">What narrative about yourself are you still running that was installed by someone else?</label>
-            <textarea id="p1-q3" rows="2" placeholder="The borrowed belief."></textarea>
-          </div>
-        </div>
-      </div>
-      <button class="btn btn-violet btn-block" onclick="installPhase(1)">DIAGNOSTIC COMPLETE — INSTALL PHASE 2 →</button>
-    </div>
-
-    <!-- PHASE 3: THE GLITCH -->
-    <div id="phase-2" class="phase-content">
-      <div class="phase-num-tag">[PHASE 03 OF 05] — THE EXPLOIT</div>
-      <h2 class="phase-title glitch-title">The Glitch</h2>
-      <p class="install-hook">"The Containment Field is powerful, but it is not perfect. Within your consciousness lies a Glitch that the system cannot patch."</p>
-
-      <p class="body-text">The Containment Field is built on logic, algorithms, and linear control. It assumes you are a rational machine that responds to inputs A and B. But you are not a machine. <strong>You are a consciousness.</strong> And within your consciousness lies a Glitch that the system cannot patch. That glitch is <strong>The Subconscious Mind.</strong></p>
-
-      <p class="body-text">The controllers know this secret: the subconscious mind cannot distinguish between a real event and a vividly imagined one. If you watch a terrifying movie, your heart races — even though your conscious mind knows you are on a couch. The Containment Field exploits this by flooding your screen with fear, lack, and division. It hacks your subconscious to manifest their nightmare.</p>
-
-      <p class="body-text" style="color:var(--cyan);font-weight:500">But this mechanism works both ways.</p>
-
-      <p class="body-text">If you bypass the conscious gatekeeper and impress a new image upon the subconscious — an image of wealth, sovereignty, and silence — <strong>the subconscious must objectify it.</strong> It has no choice. It is a servant mechanism.</p>
-
-      <div class="slide-compare">
-        <div class="slide-old"><span class="slide-label">OLD SLIDE</span>"I need to survive. I am susceptible to interference."</div>
-        <div class="slide-new"><span class="slide-label">NEW SLIDE</span>"I am the interference. I am the signal."</div>
-      </div>
-
-      <p class="body-text">The moment you realize that your <strong>feeling-state</strong> is the control panel for your reality, the Containment Field loses its grip. That is where you are sovereign. That is where the architecture begins.</p>
-
-      <div class="freq-bar"></div>
-
-      <div class="protocol-box vampire-card" style="margin:28px 0;border-color:rgba(200,20,20,0.2)">
-        <span class="reflect-label" style="color:#c41414">SYSTEM SYNC 02 // THE VAMPIRE SCAN</span>
-        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"You do not negotiate with parasites. You starve them."</p>
-        <p class="body-text" style="margin:8px 0">Objective: Identify the specific Energy Parasites currently draining your creative velocity. You cannot build a skyscraper on a sinkhole.</p>
-        <p class="body-text" style="margin:8px 0;font-weight:500;color:var(--text)">Perform a forensic audit of your last 72 hours. Identify the Three Leaks:</p>
-        <div style="margin:16px 0">
-          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">01</span><span class="protocol-step-text"><strong>THE TIME LEAK:</strong> What activity stole 30+ minutes with zero ROI?</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">02</span><span class="protocol-step-text"><strong>THE EMOTIONAL LEAK:</strong> Who or what triggered a survival response (anger, fear, jealousy)?</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:#c41414">03</span><span class="protocol-step-text"><strong>THE FINANCIAL LEAK:</strong> What did you purchase to "soothe" rather than invest in yourself?</span></div>
-        </div>
-        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--dim)">Write each leak on paper. Write the word <strong style="color:#c41414">REVOKED</strong> beside each one. The circuit is severed.</p>
-      </div>
-
-      <div class="reflect-block">
-        <span class="reflect-label">// GLITCH EVENT LOG + VAMPIRE SCAN</span>
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div>
-            <label style="font-size:13px;color:var(--dim);display:block;margin-bottom:8px">Glitch Event — a moment where the expected pattern failed to produce the expected result:</label>
-            <textarea id="p2-g1" rows="2" placeholder="Log the Glitch. Where did the code break?"></textarea>
-          </div>
-          <div>
-            <label style="font-size:13px;color:#c41414;display:block;margin-bottom:8px">Time Leak — what stole 30+ minutes with zero return?</label>
-            <textarea id="p2-g2" rows="2" placeholder="Name the leak. Write REVOKED."></textarea>
-          </div>
-          <div>
-            <label style="font-size:13px;color:#c41414;display:block;margin-bottom:8px">Emotional Leak — who triggered your survival response?</label>
-            <textarea id="p2-g3" rows="2" placeholder="Name the parasite. Starve it."></textarea>
-          </div>
-        </div>
-      </div>
-      <button class="btn btn-violet btn-block" onclick="installPhase(2)">EXPLOIT DOCUMENTED — INSTALL PHASE 3 →</button>
-    </div>
-
-    <!-- PHASE 4: GRADUATION -->
-    <div id="phase-3" class="phase-content">
-      <div class="phase-num-tag">[PHASE 04 OF 05] — THE GRADUATION</div>
-      <h2 class="phase-title">The Graduation</h2>
-      <p class="install-hook">"The Containment Field operates on a single foundational lie: There is not enough."</p>
-
-      <p class="body-text">When you believe there is not enough, you enter the <strong>Competitive Plane</strong>. You believe that for you to win, someone else must lose. Competition generates friction. Friction generates heat (stress), not light.</p>
-
-      <div class="slide-compare" style="margin:24px 0">
-        <div class="slide-old"><span class="slide-label">COMPETITIVE PLANE</span>You fight for what already exists. Scarcity. Zero-sum. Friction.</div>
-        <div class="slide-new"><span class="slide-label">CREATIVE PLANE</span>You create what needs to exist. Abundance. Infinite-sum. Flow.</div>
-      </div>
-
-      <p class="body-text">You are not taking money from people. You are exchanging use value for cash value. When the use value exceeds the cash value, the Formless Substance rushes to support you.</p>
-
-      <p class="body-text" style="font-weight:500;color:var(--text);margin-top:24px">The Sovereign State of Mind — 3 Operating Principles:</p>
-      <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">SPEED, NOT HASTE</div><div class="mechanism-desc">The Sovereign never hurries. You know the opportunity is generated by you, so it cannot be taken by another. Move with precision, not panic.</div></div>
-        <div class="mechanism"><div class="mechanism-name">CERTAINTY</div><div class="mechanism-desc">You do not hope the product sells. You know. You hold the image of the completed transaction and perform all actions from that state. Hope is Competitive. Certainty is Creative.</div></div>
-        <div class="mechanism"><div class="mechanism-name">THE VACUUM</div><div class="mechanism-desc">By putting out high-frequency content, you create a low-pressure zone that pulls resources in to fill the void. When you feel guilt asking for money, you are still Competitive — thinking you are taking. When you feel power asking for money, you are Creative — knowing you are giving.</div></div>
-      </div>
-
-      <div class="protocol-box" style="margin:28px 0;border-color:var(--gold)">
-        <span class="reflect-label" style="color:var(--gold)">SYSTEM SYNC 03 // THE SOVEREIGN OVERLAY</span>
-        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"Faith is not believing what you cannot see. Faith is seeing what is already there."</p>
-        <p class="body-text" style="margin:8px 0">Install the Definite Chief Aim into your subconscious architecture. This moves your goal from a hope to a <strong>memory of the future.</strong></p>
-        <div style="margin:16px 0">
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">01</span><span class="protocol-step-text"><strong>THE CARD:</strong> Write your specific financial target and service in present tense on a physical card.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">02</span><span class="protocol-step-text"><strong>THE MOVIE:</strong> Close your eyes. Visualize the moment <em>after</em> you have it — not getting it. Feel the texture of the table. See the person you are mentoring.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">03</span><span class="protocol-step-text"><strong>THE ANCHOR:</strong> Hold this image for 60 seconds without interruption. Smell the air. Feel the weight of success in your posture.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--gold)">04</span><span class="protocol-step-text"><strong>THE CARRY:</strong> Keep this card in your pocket. Touch it every time you feel the drift of the Old Earth frequency.</span></div>
-        </div>
-        <p class="body-text" style="margin:8px 0;font-size:13px;color:var(--text)">The Reticular Activating System (RAS) filters reality. If you do not program it, the system will program it for you — usually with anxiety.</p>
-      </div>
-
-      <div class="freq-bar"></div>
-
-      <p class="body-text">The Graduation is the moment compliance ends. Three archetypes — select the one that matches your current operating parameters:</p>
-      <div class="archetype-grid">
-        <div class="archetype" onclick="selectArchetype(this,'hard-exit')">
-          <div class="arch-name">The Hard Exit</div>
-          <div class="arch-desc">A clean, deliberate severance from a system, relationship, or identity that was containing the architecture.</div>
-          <div class="arch-action">Your next action: Identify the single highest-leverage severance. Define the clean exit date. Execute without renegotiation.</div>
-        </div>
-        <div class="archetype" onclick="selectArchetype(this,'slow-burn')">
-          <div class="arch-name">The Slow Burn</div>
-          <div class="arch-desc">A gradual, methodical withdrawal of energy from the Containment Field agents until their leverage is eliminated.</div>
-          <div class="arch-action">Your next action: Map where you are still feeding the system. Begin withdrawing 10% of that bandwidth per week. Document the frequency shift.</div>
-        </div>
-        <div class="archetype" onclick="selectArchetype(this,'rebuild')">
-          <div class="arch-name">Rebuild in Place</div>
-          <div class="arch-desc">Remain within the same environment while systematically rebuilding the internal architecture until the external system loses its grip.</div>
-          <div class="arch-action">Your next action: Identify the internal upgrade that would make the external system irrelevant. Begin building it — in parallel, in silence.</div>
-        </div>
-      </div>
-      <button class="btn btn-violet btn-block" id="grad-btn" onclick="installPhase(3)">GRADUATION ARCHETYPE SELECTED — INSTALL PHASE 4 →</button>
-    </div>
-
-    <!-- PHASE 5: EXECUTION -->
-    <div id="phase-4" class="phase-content">
-      <div class="phase-num-tag">[PHASE 05 OF 05] — EXECUTION PROTOCOL</div>
-      <h2 class="phase-title">Execution Protocol + Logic Gate</h2>
-      <p class="install-hook">"Knowing the grid exists does not free you from it. Your neural pathways are wired for reaction, fear, and consumption. To rewire them, you must execute a hard reset every single day."</p>
-      <p class="body-text">These are not "self-help" tips. These are <strong>counter-measures against psychological warfare.</strong></p>
-
-      <p class="body-text" style="font-weight:600;color:var(--text);margin-top:28px">5 Daily Tactical Maneuvers — Non-Negotiable:</p>
-      <div class="mechanism-list">
-        <div class="mechanism"><div class="mechanism-name">01 — THE INPUT EMBARGO</div><div class="mechanism-desc">07:00–08:00: No screens, no voices, no text. Output only. Write, think, or move. You are the broadcaster, not the receiver.</div></div>
-        <div class="mechanism"><div class="mechanism-name">02 — THE SOVEREIGN OVERLAY</div><div class="mechanism-desc">Write, read aloud, and run a 60-second mental movie of your Definite Chief Aim already achieved. Not getting it — having it. Feel the weight of it in your body.</div></div>
-        <div class="mechanism"><div class="mechanism-name">03 — THE ALGORITHMIC BREACH</div><div class="mechanism-desc">Break one pattern today. Different route. Different conversation. Different response to a familiar trigger. This breaks your autopilot. Wakes your consciousness from the loop.</div></div>
-        <div class="mechanism"><div class="mechanism-name">04 — THE VAMPIRE SCAN</div><div class="mechanism-desc">Who tries to make you angry or fearful today? Observe like a scientist. Refuse to react. You starve the vampire by denying it the emotional response it feeds on.</div></div>
-        <div class="mechanism"><div class="mechanism-name">05 — THE SUBCONSCIOUS SEED</div><div class="mechanism-desc">Pre-sleep protocol: Never fall asleep worrying. Replay the day going right. Repeat: "It is done. I am free. The money flows. The architecture holds." The last image before sleep is the blueprint your subconscious builds overnight.</div></div>
-      </div>
-
-      <div class="freq-bar"></div>
-
-      <div class="protocol-box" style="margin:28px 0;border-color:var(--cyan)">
-        <span class="reflect-label" style="color:var(--cyan)">SYSTEM SYNC 04 // THE VOID OFFERING</span>
-        <p class="body-text" style="margin:12px 0;font-style:italic;color:var(--text)">"You cannot receive the harvest until you plant the seed."</p>
-        <p class="body-text" style="margin:8px 0">The Law of Equivalent Exchange. Create one piece of High Frequency value today.</p>
-        <div style="margin:16px 0">
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">01</span><span class="protocol-step-text">It can be a video script, a piece of advice to a stranger, or a solution to a problem you've solved.</span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">02</span><span class="protocol-step-text">Release it into the world — post it, send it, speak it — with <strong>ZERO expectation of return.</strong></span></div>
-          <div class="protocol-step"><span class="protocol-step-num" style="color:var(--cyan)">03</span><span class="protocol-step-text">You are not trading; you are emitting. Once released, say aloud: <em>"The cycle has begun."</em></span></div>
-        </div>
-        <p class="body-text" style="margin:12px 0;font-size:13px;color:var(--dim)">When you give without expectation, you signal to the subconscious and to the Quantum Field that you operate from abundance — not scarcity. The Formless Substance fills a vacuum. By emitting, you create the vacuum. By creating the vacuum, you pull. This is the counter-intuitive law that separates Sovereigns from Survivors.</p>
-      </div>
-
-      <div class="gate-block">
-        <span class="gate-label">// THE LOGIC GATE — CONFIRM BEFORE PROCEEDING</span>
-        <div class="gate-checks">
-          <div class="gate-item" onclick="toggleGate(this,0)"><div class="gate-box"></div><span class="gate-text">I have completed the Diagnostic and documented my containment mechanisms (Phase 2 complete)</span></div>
-          <div class="gate-item" onclick="toggleGate(this,1)"><div class="gate-box"></div><span class="gate-text">I have identified my Graduation archetype and defined my first next action (Phase 4 complete)</span></div>
-          <div class="gate-item" onclick="toggleGate(this,2)"><div class="gate-box"></div><span class="gate-text">I have a Sovereign Scheduling block on my calendar this week — non-negotiable time for architecture work</span></div>
-        </div>
-        <div class="coupon-block" style="margin-bottom:20px">
-          <span class="coupon-label">YOUR MANIFESTO177 COUPON CODE</span>
-          <div class="coupon-code">MANIFESTO177</div>
-          <div class="coupon-val">$177 off System Mastery Architecture: Phase 1 (normally $477 → $300)</div>
-        </div>
-        <div id="gate-cta" class="gate-cta">
-          <a class="btn btn-gold" href="../tier-4/defense-protocol.html" style="width:100%;display:flex">ARCHITECTURE READY — DEPLOY SMA PHASE 1 →</a>
-        </div>
-      </div>
-
-      <button class="btn btn-violet btn-block" onclick="installPhase(4)">OS INSTALLATION COMPLETE →</button>
-    </div>
-
-    <!-- COMPLETE SCREEN -->
-    <div id="screen-complete" class="phase-content">
-      <div class="complete-wrap">
-        <div class="entry-tag" style="display:inline-flex;margin-bottom:24px">⬡ OS INSTALLATION — COMPLETE</div>
-        <h2>Sovereign Architecture installed.</h2>
-        <p style="color:var(--dim);font-size:17px;max-width:520px;margin:0 auto 32px;font-weight:300">All five phases deployed. The operating system is live. What happens next is architecture work — not theory.</p>
-        <div class="summary-grid" id="summary-grid"></div>
-        <div class="coupon-block" style="margin:32px 0">
-          <span class="coupon-label">YOUR COUPON CODE — USE AT CHECKOUT</span>
-          <div class="coupon-code">MANIFESTO177</div>
-          <div class="coupon-val">$177 off System Mastery Architecture: Phase 1</div>
-        </div>
-        <a class="btn btn-gold" href="../tier-4/defense-protocol.html">DEPLOY SMA PHASE 1 — FROM $300 →</a>
-        <div style="margin-top:24px">
-          <button class="btn btn-outline" onclick="resetOS()" style="font-size:10px">RESET OS (restart installation)</button>
-        </div>
-      </div>
-    </div>
-
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
   </div>
-</div><!-- /main -->
-</div><!-- /layout -->
-
-<script>
-const STORAGE_KEY = 'manifesto_state';
-let state = {
-  currentPhase: -1, // -1 = entry screen
-  completedPhases: [],
-  archetype: null,
-  gateChecks: [false,false,false],
-  phaseData: {}
-};
-
-function loadState(){
-  try{const s=localStorage.getItem(STORAGE_KEY);if(s)state={...state,...JSON.parse(s)}}catch(e){}
-}
-function saveState(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}
-}
-
-function beginInstall(){
-  state.currentPhase = 0;
-  saveState();
-  showPhase(0);
-}
-
-function showPhase(n){
-  document.querySelectorAll('.phase-content').forEach(el=>el.classList.remove('active'));
-  if(n === -1){
-    document.getElementById('screen-entry').classList.add('active');
-  } else if(n === 5){
-    buildSummary();
-    document.getElementById('screen-complete').classList.add('active');
-  } else {
-    document.getElementById('phase-'+n).classList.add('active');
-  }
-  updateNav(n);
-  updateTopBar(n);
-  window.scrollTo(0,0);
-}
-
-function updateNav(current){
-  for(let i=0;i<5;i++){
-    const node = document.getElementById('nav-'+i);
-    const dot = document.getElementById('pd-'+i);
-    node.className = 'phase-node';
-    dot.className = 'prog-dot';
-    if(state.completedPhases.includes(i)){
-      node.classList.add('done');
-      node.querySelector('.node-indicator').textContent='✓';
-      dot.classList.add('done');
-    } else if(i===current){
-      node.classList.add('active');
-      node.querySelector('.node-indicator').textContent=i+1;
-      dot.classList.add('active');
-    } else if(i < current || state.completedPhases.includes(i)){
-      node.classList.add('active');
-    } else {
-      node.classList.add('locked');
-      node.querySelector('.node-indicator').innerHTML='<span class="lock-icon">⚿</span>';
-    }
-  }
-}
-
-function updateTopBar(n){
-  const tags = ['PHASE 01 // THE PRE-FRAME','PHASE 02 // THE DIAGNOSTIC','PHASE 03 // THE GLITCH','PHASE 04 // THE GRADUATION','PHASE 05 // EXECUTION PROTOCOL'];
-  document.getElementById('phase-tag').textContent = n >= 0 && n < 5 ? tags[n] : 'SOVEREIGN ARCHITECTURE MANIFESTO';
-}
-
-function navToPhase(n){
-  if(state.completedPhases.includes(n) || n <= state.currentPhase){
-    state.currentPhase = n;
-    saveState();
-    showPhase(n);
-  }
-}
-
-function installPhase(n){
-  // Save phase data
-  const inputs = {};
-  document.querySelectorAll('#phase-'+n+' textarea').forEach(t=>{inputs[t.id]=t.value});
-  state.phaseData['phase'+n] = inputs;
-  if(!state.completedPhases.includes(n)) state.completedPhases.push(n);
-  state.currentPhase = n+1;
-  saveState();
-  if(n===4){showPhase(5)}else{showPhase(n+1)}
-}
-
-function selectArchetype(el, type){
-  document.querySelectorAll('.archetype').forEach(a=>a.classList.remove('selected'));
-  el.classList.add('selected');
-  state.archetype = type;
-  saveState();
-}
-
-let gateChecks = [false,false,false];
-function toggleGate(el, idx){
-  el.classList.toggle('checked');
-  const box = el.querySelector('.gate-box');
-  box.classList.toggle('checked');
-  gateChecks[idx] = !gateChecks[idx];
-  state.gateChecks = gateChecks;
-  saveState();
-  if(gateChecks.every(Boolean)){
-    document.getElementById('gate-cta').classList.add('open');
-  } else {
-    document.getElementById('gate-cta').classList.remove('open');
-  }
-}
-
-function buildSummary(){
-  const archNames = {'hard-exit':'The Hard Exit','slow-burn':'The Slow Burn','rebuild':'Rebuild in Place'};
-  const d = state.phaseData;
-  const cards = [
-    {label:'PREFRAME REFLECTION',val: d.phase0?.['p0-reflect']||'—'},
-    {label:'GRADUATION ARCHETYPE',val: state.archetype ? archNames[state.archetype]||state.archetype : '—'},
-    {label:'PRIMARY REACTIVE ZONE',val: d.phase1?.['p1-q1']||'—'},
-    {label:'GLITCH EVENT 1',val: d.phase2?.['p2-g1']||'—'},
-  ];
-  document.getElementById('summary-grid').innerHTML = cards.map(c=>`
-    <div class="summary-card"><span class="sum-label">${c.label}</span><div class="sum-val">${c.val}</div></div>
-  `).join('');
-}
-
-function resetOS(){
-  localStorage.removeItem(STORAGE_KEY);
-  location.reload();
-}
-
-// INIT
-loadState();
-if(state.currentPhase === -1 || state.currentPhase === undefined){
-  showPhase(-1);
-} else {
-  showPhase(state.currentPhase >= 5 ? 5 : state.currentPhase);
-}
-// Restore gate checks
-if(state.gateChecks){
-  gateChecks = state.gateChecks;
-  state.gateChecks.forEach((checked,i)=>{
-    if(checked){
-      const items = document.querySelectorAll('.gate-item');
-      if(items[i]){
-        items[i].classList.add('checked');
-        items[i].querySelector('.gate-box').classList.add('checked');
-      }
-    }
-  });
-  if(gateChecks.every(Boolean)) document.getElementById('gate-cta').classList.add('open');
-}
-</script>
-<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
-<style id="ss-theme-light">
-[data-theme="light"] {
-  --bg:           #F5F2EE !important;
-  --bg-card:      #FFFFFF !important;
-  --bg-card2:     #FAF8F5 !important;
-  --bg-panel:     #FFFFFF !important;
-  --bg-elevated:  #FEFEFE !important;
-  --text:         #1A1A2E !important;
-  --text-dim:     #4A4A6A !important;
-  --text-ghost:   #8888A0 !important;
-  --dim:          rgba(26,26,46,0.55) !important;
-  --dim2:         rgba(26,26,46,0.3) !important;
-  --ghost:        #9090A8 !important;
-  --border:       rgba(26,26,46,0.12) !important;
-  --border-subtle: rgba(26,26,46,0.06) !important;
-  --subtle:       rgba(26,26,46,0.04) !important;
-  --violet-dim:   rgba(124,92,252,0.08) !important;
-  --violet-glow:  rgba(124,92,252,0.15) !important;
-  --violet-border:rgba(124,92,252,0.2) !important;
-  --cyan-dim:     rgba(62,247,232,0.08) !important;
-  --cyan-glow:    rgba(62,247,232,0.2) !important;
-  --cyan-border:  rgba(62,247,232,0.15) !important;
-  --gold-dim:     rgba(201,168,76,0.1) !important;
-  --gold-glow:    rgba(201,168,76,0.18) !important;
-  --gold-border:  rgba(201,168,76,0.15) !important;
-  --amber-dim:    rgba(232,146,26,0.1) !important;
-  --amber-glow:   rgba(232,146,26,0.2) !important;
-  --amber-faint:  rgba(232,146,26,0.04) !important;
-}
-[data-theme="light"] body::before { opacity: 0 !important; }
-.ss-theme-toggle {
-  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 1px solid var(--border, rgba(255,255,255,0.06));
-  background: var(--bg-card, #09090f);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  -webkit-tap-highlight-color: transparent;
-}
-.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
-.ss-theme-toggle:active { transform: scale(0.95); }
-.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
-.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
-.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
-.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
-.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
-@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
-</style>
-<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-</button>
-<script>
-(function(){
-  'use strict';
-  function getThemeFromURL(){
-    return new URLSearchParams(window.location.search).get('theme')||'dark';
-  }
-  function applyTheme(t){
-    if(t==='light') document.documentElement.setAttribute('data-theme','light');
-    else document.documentElement.removeAttribute('data-theme');
-  }
-  function updateLinks(t){
-    document.querySelectorAll('a[href]').forEach(function(a){
-      var h=a.getAttribute('href');
-      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
-      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
-      try{
-        var u=new URL(h,window.location.origin);
-        if(t==='light') u.searchParams.set('theme','light');
-        else u.searchParams.delete('theme');
-        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
-        else{
-          var base=h.split('?')[0].split('#')[0];
-          var qs=u.search||'';
-          var hash=u.hash||'';
-          a.setAttribute('href',base+qs+hash);
-        }
-      }catch(e){}
-    });
-  }
-  function updateCurrentURL(t){
-    var u=new URL(window.location);
-    if(t==='light') u.searchParams.set('theme','light');
-    else u.searchParams.delete('theme');
-    window.history.replaceState({},'',u);
-  }
-  var cur=getThemeFromURL();
-  applyTheme(cur);
-  function init(){
-    updateLinks(cur);
-    var btn=document.querySelector('.ss-theme-toggle');
-    if(btn) btn.addEventListener('click',function(){
-      cur=(cur==='light')?'dark':'light';
-      applyTheme(cur);
-      updateCurrentURL(cur);
-      updateLinks(cur);
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
-<!-- ═══ END THEME TOGGLE ═══ -->
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.SS_TIER_SLUG = 'manifesto';</script>

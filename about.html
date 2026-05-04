@@ -3,83 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purpose | Sovereign Synthesis</title>
+  <title>About | Sovereign Synthesis</title>
   <meta name="description" content="Assembling the first organized formation of people willing to lose what they are to become what they actually are.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #05050a;
-      --bg-2: #0a0a12;
-      --text: #d8d8e0;
-      --text-dim: #8a8a98;
-      --text-dead: #44444e;
-      --ghost: #2a2a33;
-      --gold: #c9a55a;
-      --cyan: #7fd4ff;
-      --edge: #14141c;
-      --mono: 'Space Mono', ui-monospace, monospace;
-      --sans: 'Space Grotesk', system-ui, sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; -webkit-font-smoothing: antialiased; min-height: 100vh; }
-    body { background-image: radial-gradient(circle at 20% 10%, rgba(201,165,90,0.025) 0%, transparent 45%), radial-gradient(circle at 80% 80%, rgba(127,212,255,0.02) 0%, transparent 50%); background-attachment: fixed; }
-    .scan::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 3px); pointer-events: none; z-index: 2; }
-    .wrap { max-width: 760px; margin: 0 auto; padding: 5rem 1.75rem 6rem; position: relative; z-index: 1; }
-    .meta-line { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; color: var(--text-dead); text-transform: uppercase; margin-bottom: 3.5rem; display: flex; justify-content: space-between; border-top: 1px solid var(--edge); border-bottom: 1px solid var(--edge); padding: 0.8rem 0; }
-    .meta-line span + span { color: var(--gold); }
-    h1.title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; color: var(--text-dim); text-transform: uppercase; font-weight: 400; margin-bottom: 2.5rem; }
-    h1.title::before { content: '// '; color: var(--gold); }
-    .statement { font-family: var(--sans); font-size: 1.25rem; line-height: 1.85; color: var(--text); font-weight: 300; letter-spacing: 0.005em; margin-bottom: 2rem; }
-    .statement + .statement { margin-top: 0; }
-    .statement em { font-style: italic; color: #efefe8; }
-    .statement strong { color: var(--gold); font-weight: 500; }
-    .divider { height: 1px; background: linear-gradient(to right, transparent, var(--edge) 20%, var(--edge) 80%, transparent); margin: 3rem 0; }
-    .final { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--text-dim); line-height: 1.9; margin-bottom: 3.5rem; }
-    .final::before { content: '// '; color: var(--text-dead); }
-    .cta-row { border-top: 1px solid var(--edge); padding-top: 2.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-    .cta-row .meta { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; color: var(--text-dead); text-transform: uppercase; }
-    .cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; text-decoration: none; border: 1px solid var(--gold); padding: 0.85rem 1.5rem; transition: background 0.25s, color 0.25s; }
-    .cta:hover { background: var(--gold); color: var(--bg); }
-    .footer { margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--edge); font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; color: var(--text-dead); text-transform: uppercase; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-    .footer a { color: var(--text-dead); text-decoration: none; transition: color 0.2s; }
-    .footer a:hover { color: var(--gold); }
-    @media (max-width: 640px) {
-      .wrap { padding: 3rem 1.25rem 4rem; }
-      .statement { font-size: 1.08rem; line-height: 1.8; }
-      .meta-line { font-size: 9px; }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/sovereign.css" />
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
-<body class="scan">
-  <div class="wrap">
-    <div class="meta-line">
-      <span>FILE // PURPOSE.MD</span>
-      <span>SIGNAL ACTIVE</span>
-    </div>
+<body>
 
-    <h1 class="title">Why this exists</h1>
-
-    <p class="statement">I was never rewarded for being good, because I never manipulated. I was noticed &mdash; and the people who noticed chose to take advantage of me. It took me most of my life to stop thinking this was a personal problem and start seeing it as the architecture: <em>a society that rewards masks and punishes the real.</em></p>
-
-    <p class="statement">I am not building an audience. I am <strong>assembling a group that has never existed in history</strong> &mdash; the first organized formation of people willing to lose what they are to become what they actually are. There have always been the one&#8209;offs. There has never been the group. I don&rsquo;t know what happens when there is. I am going to find out.</p>
-
-    <div class="divider"></div>
-
-    <p class="final">If this is landing against something already inside you, this was for you.</p>
-
-    <div class="cta-row">
-      <div class="meta">STEP ONE // DIAGNOSTIC</div>
-      <a href="/diagnostic" class="cta">IF YOU SEE IT, RUN THE DIAGNOSTIC &rarr;</a>
-    </div>
-
-    <div class="footer">
-      <a href="/">&larr; RETURN TO DOSSIER</a>
-      <span>SOVEREIGN-SYNTHESIS.COM</span>
-    </div>
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+    </nav>
   </div>
+</div>
+<div class="gold-line"></div>
 
-<script defer src="/_vercel/insights/script.js"></script>
+<section class="hero">
+  <span class="kicker">Purpose</span>
+  <h1>About <em>Sovereign Synthesis.</em></h1>
+  <p class="lede">A formation, not a course. The first organized group of people willing to lose what they are to become what they actually are.</p>
+</section>
+
+<section class="block first">
+  <h2>What this is.</h2>
+  <p>Sovereign Synthesis is built around a single question: <strong>what becomes possible when people who refused to perform finally find each other?</strong></p>
+  <p>For most of history they have been one-offs. Scattered across centuries. The person who saw the room for what it was, paid the cost of refusing to perform the costume the room demanded, and kept walking. There has never been the group.</p>
+  <p>This is the group.</p>
+</section>
+
+<section class="block bordered">
+  <h2>Who runs it.</h2>
+  <p>I am Ace. I built the framework after spending most of my life inside systems that rewarded the costume and punished the real. I kept paying the cost. I kept noticing the architecture.</p>
+  <p>At a certain point the cost of staying inside it exceeded the cost of naming it. Sovereign Synthesis is what came out the other side &mdash; a complete operating doctrine for people who recognize the same architecture and have decided they are done performing inside it.</p>
+  <p>I am not building an audience. I am assembling a formation.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How the framework runs.</h2>
+  <p>Five rungs. Each one optional. None of them require the next.</p>
+  <ul class="path-list">
+    <li>
+      <span class="num">01</span>
+      <span class="body-cell">
+        <strong>The Reality Override Manual</strong>
+        <span>The first document. Free. Names the architecture you are inside of.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">02</span>
+      <span class="body-cell">
+        <strong>Protocol 77 — The Shield</strong>
+        <span>The defense layer. Three systems named, three counter-protocols, a 21-day deployment plan.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">03</span>
+      <span class="body-cell">
+        <strong>The Map — Navigation Override</strong>
+        <span>How to read what a room is optimizing for before you walk into it.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">04</span>
+      <span class="body-cell">
+        <strong>The Architect — three phases</strong>
+        <span>Declassification, Adversarial Systems, Sovereign Integration. Building the life the costume would never have allowed.</span>
+      </span>
+    </li>
+    <li>
+      <span class="num">05</span>
+      <span class="body-cell">
+        <strong>Inner Circle — Sovereign Licensing</strong>
+        <span>One hundred architects. Application only. The formation itself, at its deepest rung.</span>
+      </span>
+    </li>
+  </ul>
+</section>
+
+<div class="closing">
+  <p>The filter is willingness, not demographics.<br/>Most readers will close this tab. Some will recognize the room they are in for the first time.</p>
+  <a href="/diagnostic" class="btn">Take the Diagnostic &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
 </body>
 </html>

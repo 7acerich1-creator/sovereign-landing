@@ -2,132 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Interference Pattern Diagnostic | Sovereign Synthesis</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="description" content="Twelve questions. Three minutes. Returns the specific pattern currently running you — and the framework for stepping out of it.">
+<link rel="canonical" href="https://sovereign-synthesis.com/diagnostic" />
+<link rel="stylesheet" href="/css/sovereign.css" />
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#050508;--bg-card:#09090f;--bg-elevated:#0d0d1a;
-  --text:#E8E4F0;--dim:#7C7A9A;--ghost:#484860;
-  --cyan:#3EF7E8;--cyan-dim:rgba(62,247,232,0.06);--cyan-border:rgba(62,247,232,0.15);
-  --gold:#C9A84C;--gold-hover:#E8C56A;--gold-glow:rgba(201,168,76,0.18);--gold-border:rgba(201,168,76,0.22);
-  --violet:#7C5CFC;--violet-dim:rgba(124,92,252,0.08);
-  --border:rgba(62,247,232,0.1);--subtle:rgba(255,255,255,0.04);
-  --display:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
-  --pat-a:#3EF7E8;--pat-b:#7C5CFC;--pat-c:#C9A84C;
-}
-body{font-family:var(--display);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
-
-/* Cyan crack */
-.crack{position:fixed;top:0;bottom:0;left:50%;width:1px;background:linear-gradient(180deg,transparent 0%,rgba(62,247,232,0.07) 30%,rgba(62,247,232,0.1) 60%,transparent 100%);pointer-events:none;z-index:0}
-
-.wrap{max-width:660px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
-
-/* SCREENS */
-.screen{display:none;animation:fadeUp .4s ease}
-.screen.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-
-/* ENTRY */
-.entry{padding:96px 0 56px;text-align:center}
-.entry-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);border:1px solid var(--cyan-border);padding:7px 18px;margin-bottom:32px;text-transform:uppercase;position:relative}
-.entry-tag::before{content:'';position:absolute;inset:-4px;border:1px solid rgba(62,247,232,0.06);animation:tagPulse 4s ease-in-out infinite}
-@keyframes tagPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0;transform:scale(1.08)}}
-.entry h1{font-size:clamp(26px,5.5vw,46px);font-weight:700;letter-spacing:-0.02em;line-height:1.12;margin-bottom:18px}
-.entry h1 em{color:var(--cyan);font-style:italic;font-weight:400}
-.entry-sub{font-size:17px;color:var(--dim);max-width:520px;margin:0 auto 14px;font-weight:300;line-height:1.8}
-.entry-note{font-family:var(--mono);font-size:11px;color:var(--ghost);max-width:440px;margin:0 auto 40px;letter-spacing:1px;line-height:1.6}
-.entry-mechanics{display:flex;justify-content:center;gap:28px;margin-bottom:36px;flex-wrap:wrap}
-.mech-item{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ghost);text-transform:uppercase}
-.mech-item span{color:var(--cyan);font-weight:bold}
-
-/* PROGRESS */
-.prog-wrap{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--subtle);padding:12px 0;display:none}
-.prog-wrap.visible{display:block}
-.prog-inner{max-width:660px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px}
-.prog-count{font-family:var(--mono);font-size:9px;color:var(--dim);white-space:nowrap;letter-spacing:1px;min-width:90px}
-.prog-track{flex:1;height:2px;background:var(--subtle);border-radius:1px;overflow:hidden}
-.prog-fill{height:100%;background:var(--cyan);border-radius:1px;transition:width .4s ease;width:0%}
-
-/* QUESTION */
-.q-screen{padding:64px 0}
-.q-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--ghost);margin-bottom:20px;display:block;text-transform:uppercase}
-.q-text{font-size:clamp(19px,3.8vw,30px);font-weight:600;line-height:1.35;letter-spacing:-0.01em;margin-bottom:36px;max-width:560px;color:var(--text)}
-.answers{display:flex;flex-direction:column;gap:8px}
-.answer{padding:17px 24px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;font-size:16px;color:var(--dim);transition:all .2s;display:flex;align-items:center;gap:14px;text-align:left}
-.answer:hover{border-color:rgba(62,247,232,0.3);color:var(--text);background:var(--cyan-dim)}
-.answer.selecting{border-color:var(--cyan);color:var(--text);background:var(--cyan-dim);transform:scale(1.01)}
-.answer-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--ghost);flex-shrink:0;transition:all .2s}
-.answer:hover .answer-dot,.answer.selecting .answer-dot{border-color:var(--cyan);background:var(--cyan)}
-.answer-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ghost);margin-left:auto;white-space:nowrap}
-
-/* RESULT */
-.result{padding:72px 0}
-.result-badge{font-family:var(--mono);font-size:9px;letter-spacing:3px;border:1px solid;padding:6px 16px;margin-bottom:28px;text-transform:uppercase;display:inline-block}
-.result-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:10px;text-transform:uppercase}
-.pattern-name{font-size:clamp(24px,5vw,44px);font-weight:700;letter-spacing:-0.02em;margin-bottom:28px;line-height:1.1}
-.pattern-card{padding:28px 32px;border:1px solid;margin-bottom:4px;border-left-width:3px;position:relative}
-.pattern-card.dominant{background:rgba(62,247,232,0.03)}
-.pattern-desc{font-size:17px;line-height:1.8;margin-bottom:14px;font-weight:300;font-style:italic;color:var(--dim)}
-.pattern-frame{font-family:var(--mono);font-size:10px;letter-spacing:2px;margin-bottom:6px;opacity:.85;text-transform:uppercase}
-.pattern-plain{font-size:14px;color:var(--dim);font-style:italic}
-
-/* SCORE BARS */
-.score-section{margin:36px 0 28px}
-.score-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ghost);margin-bottom:18px;display:block;text-transform:uppercase}
-.score-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.score-name{font-size:13px;color:var(--dim);min-width:150px}
-.score-bar-wrap{flex:1;height:4px;background:var(--subtle);border-radius:2px;overflow:hidden}
-.score-bar{height:100%;border-radius:2px;transition:width 1s ease .3s;width:0%}
-.score-val{font-family:var(--mono);font-size:10px;color:var(--ghost);min-width:36px;text-align:right}
-
-/* WHAT IT MEANS */
-.means-block{background:var(--bg-card);border:1px solid var(--border);padding:26px 30px;margin:28px 0;position:relative}
-.means-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);opacity:0.3}
-.means-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px;display:block;opacity:.8;text-transform:uppercase}
-.means-text{font-size:15px;color:var(--dim);line-height:1.85;font-weight:300}
-
-/* DIVIDER */
-.result-div{border:none;border-top:1px solid var(--subtle);margin:36px 0}
-
-/* PROTOCOL CTA BLOCK */
-.protocol-cta{background:var(--bg-elevated);border:1px solid var(--gold-border);padding:32px 32px 28px;margin:0 0 16px;position:relative}
-.protocol-cta::before{content:'';position:absolute;top:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.25}
-.protocol-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:rgba(201,168,76,0.6);text-transform:uppercase;margin-bottom:14px;display:block}
-.protocol-cta h3{font-size:20px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-0.01em;line-height:1.3}
-.protocol-cta p{font-size:15px;color:var(--dim);margin-bottom:20px;font-weight:300;line-height:1.8}
-.price-signal{font-family:var(--mono);font-size:11px;color:rgba(201,168,76,0.7);letter-spacing:1px;margin-bottom:20px}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:14px 28px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;text-decoration:none}
-.btn-gold{background:var(--gold);color:#050508;font-weight:bold;display:block;text-align:center;position:relative;overflow:hidden}
-.btn-gold:hover{background:var(--gold-hover);box-shadow:0 0 32px var(--gold-glow)}
-.btn-gold::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);animation:shimmer 7s ease-in-out infinite}
-@keyframes shimmer{0%,100%{left:-100%}50%{left:100%}}
-.btn-cyan{background:transparent;color:var(--cyan);border:1px solid var(--cyan-border);display:block;text-align:center}
-.btn-cyan:hover{background:var(--cyan-dim);border-color:rgba(62,247,232,0.4)}
-.btn-ghost{background:transparent;color:var(--ghost);border:1px solid var(--subtle);font-size:10px;display:inline-flex}
-.btn-ghost:hover{color:var(--dim);border-color:var(--border)}
-
-.manual-cta{text-align:center;margin:0 0 32px;padding:20px 0 0}
-.manual-cta p{font-size:14px;color:var(--ghost);margin-bottom:12px;font-style:italic}
-
-.retake-wrap{text-align:center;margin-top:40px}
-
-@media(max-width:500px){.score-name{min-width:110px}.q-text{font-size:18px}.protocol-cta{padding:24px 20px}}
-
-.field-diag { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: var(--display); font-size: 15px; padding: 12px 14px; margin-bottom: 10px; outline: none; transition: border-color 0.2s; }
-.field-diag:focus { border-color: var(--cyan); }
-.field-diag::placeholder { color: var(--ghost); }
-.privacy-note { font-family: var(--mono); font-size: 10px; color: var(--ghost); letter-spacing: 1px; margin-top: 10px; }
-#diagnosticLeadForm { display: flex; flex-direction: column; gap: 0; max-width: 420px; margin: 14px auto 0; }
+  /* Diagnostic-specific */
+  .screen { display: none; animation: fadeUp .4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stack-narrow { max-width: 360px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 12px; }
 </style>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-<div class="crack"></div>
 
-<!-- PROGRESS BAR -->
+<!-- Header -->
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<!-- Sticky progress (revealed during questions) -->
 <div class="prog-wrap" id="prog-wrap">
   <div class="prog-inner">
     <span class="prog-count" id="prog-count">Signal 1 of 12</span>
@@ -137,109 +44,134 @@ body{font-family:var(--display);background:var(--bg);color:var(--text);line-heig
 
 <div class="wrap">
 
-<!-- RETAKE PROMPT -->
-<div class="screen" id="screen-retake">
-  <div class="entry">
-    <div class="entry-tag">⬡ SOVEREIGN SYNTHESIS — DIAGNOSTIC</div>
-    <h1>Your interference pattern<br>is already on file.</h1>
-    <p class="entry-sub">Your previous diagnostic result is saved. You can review it now, or run the diagnostic again from the start.</p>
-    <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
-      <button class="btn btn-gold" onclick="showResults()">SEE MY PATTERN →</button>
-      <button class="btn btn-cyan" onclick="retake()">RUN DIAGNOSTIC AGAIN</button>
-    </div>
-  </div>
-</div>
-
-<!-- ENTRY -->
-<div class="screen active" id="screen-entry">
-  <div class="entry">
-    <div class="entry-tag">⬡ INTERFERENCE PATTERN — DIAGNOSTIC</div>
-    <h1>The system running your life<br>has a <em>specific architecture.</em></h1>
-    <p class="entry-sub">This diagnostic maps the interference pattern that is generating the results you don't recognize as yours — the reactive cycles, the drained energy, the decisions that don't feel like your own.</p>
-    <p class="entry-note">// 12 SIGNALS — 3 MINUTES — RESULT IS SPECIFIC, NOT GENERIC</p>
-    <div class="entry-mechanics">
-      <span class="mech-item"><span>3</span> INTERFERENCE PATTERNS</span>
-      <span class="mech-item"><span>12</span> CALIBRATION SIGNALS</span>
-      <span class="mech-item"><span>1</span> DOMINANT PATTERN IDENTIFIED</span>
-    </div>
-    <button class="btn btn-gold" onclick="startDiagnostic()">RUN THE DIAGNOSTIC →</button>
-  </div>
-</div>
-
-<!-- QUESTION SCREEN (dynamically filled) -->
-<div class="screen" id="screen-question">
-  <div class="q-screen">
-    <span class="q-tag" id="q-tag">// SIGNAL CALIBRATION</span>
-    <div class="q-text" id="q-text"></div>
-    <div class="answers" id="q-answers"></div>
-  </div>
-</div>
-
-<!-- RESULT -->
-<div class="screen" id="screen-result">
-  <div class="result">
-    <div class="result-badge" id="result-badge">⬡ DIAGNOSTIC COMPLETE — PATTERN IDENTIFIED</div>
-    <div class="result-eyebrow">Your primary interference pattern:</div>
-    <div class="pattern-name" id="result-pattern-name"></div>
-
-    <div class="pattern-card dominant" id="result-card"></div>
-
-    <div class="score-section">
-      <span class="score-label">// PATTERN SIGNAL STRENGTHS</span>
-      <div class="score-row">
-        <span class="score-name">The Approval Loop</span>
-        <div class="score-bar-wrap"><div class="score-bar" id="bar-a" style="background:var(--pat-a)"></div></div>
-        <span class="score-val" id="val-a">—</span>
-      </div>
-      <div class="score-row">
-        <span class="score-name">The Overload Spiral</span>
-        <div class="score-bar-wrap"><div class="score-bar" id="bar-b" style="background:var(--pat-b)"></div></div>
-        <span class="score-val" id="val-b">—</span>
-      </div>
-      <div class="score-row">
-        <span class="score-name">The Identity Lock</span>
-        <div class="score-bar-wrap"><div class="score-bar" id="bar-c" style="background:var(--pat-c)"></div></div>
-        <span class="score-val" id="val-c">—</span>
+  <!-- RETAKE PROMPT -->
+  <div class="screen" id="screen-retake">
+    <div class="entry">
+      <span class="tag-mono gold" style="margin-bottom:28px;">Sovereign Synthesis · Diagnostic</span>
+      <h1>Your interference pattern<br/><em>is already on file.</em></h1>
+      <p class="entry-sub">Your previous diagnostic result is saved. You can review it now, or run the diagnostic again from the start.</p>
+      <div class="stack-narrow">
+        <button class="btn" onclick="showResults()">See My Pattern &rarr;</button>
+        <button class="btn btn-secondary" onclick="retake()">Run Diagnostic Again</button>
       </div>
     </div>
+  </div>
 
-    <div class="means-block">
-      <span class="means-label">// WHAT THIS MEANS</span>
-      <div class="means-text" id="means-text"></div>
-    </div>
-
-    <hr class="result-div">
-
-    <div class="manual-cta" id="manual-cta-block">
-      <p>Your full Reality Override Manual — the three-pattern framework beginning with yours — will be emailed to you now.</p>
-      <form id="diagnosticLeadForm" onsubmit="captureLeadAndDownload(event); return false;">
-        <input type="text" class="field-diag" id="diagFullName" placeholder="Your name" required>
-        <input type="email" class="field-diag" id="diagEmail" placeholder="Your email" required>
-        <button type="submit" class="btn btn-cyan" id="diagSubmitBtn" style="width:100%;margin-top:8px;">SEND ME THE MANUAL →</button>
-      </form>
-      <p class="privacy-note">No spam. Unsubscribe anytime.</p>
-    </div>
-    <div class="manual-cta" id="manual-success" style="display:none;">
-      <p>Manual is on its way. Check your inbox.</p>
-      <p style="font-family:var(--mono);font-size:10px;color:var(--ghost);letter-spacing:1px;margin:10px 0 14px;line-height:1.7">If it lands in spam, mark it "not spam" — after that, emails from Sovereign Synthesis will arrive in Promotions. We don't spam and you can unsubscribe anytime.</p>
-      <a class="btn btn-cyan" href="./download.html">DOWNLOAD NOW →</a>
-    </div>
-
-    <div class="protocol-cta" id="protocol-cta-block">
-      <span class="protocol-label" id="protocol-label">// THE NEUTRALIZATION SEQUENCE</span>
-      <h3 id="protocol-heading"></h3>
-      <p id="protocol-body"></p>
-      <p class="price-signal">// PROTOCOL 77 — $77 &middot; THE TOOL THAT ENDS THE PATTERN</p>
-      <a class="btn btn-gold" href="/p77">SEE PROTOCOL 77 →</a>
-    </div>
-
-    <div class="retake-wrap">
-      <button class="btn btn-ghost" onclick="retake()">RETAKE DIAGNOSTIC</button>
+  <!-- ENTRY -->
+  <div class="screen active" id="screen-entry">
+    <div class="entry">
+      <span class="tag-mono gold" style="margin-bottom:28px;">Interference Pattern · Diagnostic</span>
+      <h1>The system running your life<br/>has a <em>specific architecture.</em></h1>
+      <p class="entry-sub">This diagnostic maps the interference pattern that is generating the results you don't recognize as yours &mdash; the reactive cycles, the drained energy, the decisions that don't feel like your own.</p>
+      <p class="entry-note">12 signals · 3 minutes · result is specific, not generic</p>
+      <div class="entry-mechanics">
+        <span class="mech-item"><span>3</span> Interference Patterns</span>
+        <span class="mech-item"><span>12</span> Calibration Signals</span>
+        <span class="mech-item"><span>1</span> Dominant Pattern Identified</span>
+      </div>
+      <button class="btn" onclick="startDiagnostic()">Run the Diagnostic &rarr;</button>
     </div>
   </div>
-</div>
+
+  <!-- QUESTION SCREEN (filled dynamically) -->
+  <div class="screen" id="screen-question">
+    <div class="q-screen">
+      <span class="q-tag" id="q-tag">Signal Calibration</span>
+      <div class="q-text" id="q-text"></div>
+      <div class="answers" id="q-answers"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="result">
+      <div class="result-badge" id="result-badge">Diagnostic Complete · Pattern Identified</div>
+      <span class="eyebrow">Your primary interference pattern</span>
+      <div class="pattern-name" id="result-pattern-name"></div>
+
+      <div class="pattern-card" id="result-card"></div>
+
+      <div class="score-section">
+        <span class="score-label">Pattern Signal Strengths</span>
+        <div class="score-row">
+          <span class="score-name">The Approval Loop</span>
+          <div class="score-bar-wrap"><div class="score-bar" id="bar-a"></div></div>
+          <span class="score-val" id="val-a">&mdash;</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">The Overload Spiral</span>
+          <div class="score-bar-wrap"><div class="score-bar" id="bar-b"></div></div>
+          <span class="score-val" id="val-b">&mdash;</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">The Identity Lock</span>
+          <div class="score-bar-wrap"><div class="score-bar" id="bar-c"></div></div>
+          <span class="score-val" id="val-c">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="means-block">
+        <span class="means-label">What this means</span>
+        <div class="means-text" id="means-text"></div>
+      </div>
+
+      <hr class="divider-line">
+
+      <!-- Manual delivery (lead capture) -->
+      <div id="manual-cta-block">
+        <h3 class="h3">Your full Reality Override Manual.</h3>
+        <p style="font-size:16px;color:var(--body);margin-bottom:18px;line-height:1.7;">
+          The three-pattern framework, beginning with yours. We'll email it now.
+        </p>
+        <form id="diagnosticLeadForm" class="form-stack" onsubmit="captureLeadAndDownload(event); return false;">
+          <input type="text" class="field" id="diagFullName" placeholder="Your name" required>
+          <input type="email" class="field" id="diagEmail" placeholder="Your email" required>
+          <button type="submit" class="btn btn-block" id="diagSubmitBtn">Send Me the Manual &rarr;</button>
+        </form>
+        <p class="form-note">No spam. Unsubscribe anytime.</p>
+      </div>
+
+      <div id="manual-success" style="display:none;">
+        <h3 class="h3">Manual is on its way.</h3>
+        <p style="font-size:16px;color:var(--body);margin-bottom:14px;line-height:1.7;">
+          Check your inbox. If it lands in spam, mark it &ldquo;not spam&rdquo; &mdash; after that, emails from Sovereign Synthesis will arrive in Promotions.
+        </p>
+        <a class="btn btn-secondary" href="./download.html">Download Now &rarr;</a>
+      </div>
+
+      <hr class="divider-line">
+
+      <!-- Pattern-specific Protocol 77 CTA -->
+      <div class="cta-block">
+        <p class="cta-kicker">The neutralization sequence</p>
+        <h2 class="cta-headline" id="protocol-heading"></h2>
+        <p class="cta-sub" id="protocol-body"></p>
+        <p style="font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;font-weight:700;">
+          Protocol 77 &middot; $77 &middot; The tool that ends the pattern
+        </p>
+        <a class="btn" href="/p77">See Protocol 77 &rarr;</a>
+      </div>
+
+      <div style="text-align:center;margin-top:32px;">
+        <button class="btn btn-ghost" onclick="retake()">Retake Diagnostic</button>
+      </div>
+    </div>
+  </div>
 
 </div><!-- /wrap -->
+
+<!-- Footer -->
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
 
 <script>
 // QUESTIONS — shuffled per session, 4 per pattern
@@ -262,18 +194,17 @@ const QUESTIONS = [
 ];
 
 const ANSWERS = [
-  {label:'Never',   score:0},
-  {label:'Sometimes',score:1},
-  {label:'Often',   score:2},
-  {label:'Almost Always',score:3},
+  {label:'Never',         score:0},
+  {label:'Sometimes',     score:1},
+  {label:'Often',         score:2},
+  {label:'Almost Always', score:3},
 ];
 
 const PATTERNS = {
   A: {
     name:'The Approval Loop',
-    color:'var(--pat-a)',
     desc:"You're not stuck because you don't know what to do. You're stuck because you've been waiting for someone to confirm it's safe to do it — and that confirmation was never coming from a source that had your interests in mind.",
-    frame:"PRIMARY PATTERN: EXTERNAL PERMISSION DEPENDENCY",
+    frame:"Primary pattern: external permission dependency",
     plain:"You've been outsourcing your permission slip to systems that were designed to keep it.",
     means:"Every time you waited for someone else's approval before acting, you handed decision-making authority to a system that was never equipped to return it. The people you've been seeking validation from are running the same installed patterns — their approval couldn't give you what you were actually looking for, because what you're looking for is your own authority. The loop runs automatically until it is audited and interrupted. The Reality Override Manual maps the architecture of the loop. Understanding it is the first step. The second step is deploying the specific neutralization sequence — which is what Protocol 77 was built to do.",
     p77heading:"Protocol 77 was designed specifically for the Approval Loop.",
@@ -281,9 +212,8 @@ const PATTERNS = {
   },
   B: {
     name:'The Overload Spiral',
-    color:'var(--pat-b)',
     desc:"You're not stuck because you lack motivation. You're stuck because your operating bandwidth has been claimed — by inputs you never consciously agreed to, by systems running on your attention without your permission.",
-    frame:"PRIMARY PATTERN: COGNITIVE BANDWIDTH HIJACKING",
+    frame:"Primary pattern: cognitive bandwidth hijacking",
     plain:"You've been operating in someone else's emergency.",
     means:"The busyness isn't laziness disguised — it's a bandwidth problem. Your calendar, your attention, and your decision-making capacity have been claimed by inputs you didn't consciously install. The result is high activity with low advancement: exhaustion without progress. Until you audit what has access to your focus — and by what mechanism it claimed that access — the spiral continues regardless of your effort level. The Reality Override Manual contains the initial audit framework. It identifies the categories of input that are generating the drain. But identifying the categories is different from understanding the exact mechanisms used to claim your attention in the first place — which is what Protocol 77 maps.",
     p77heading:"Protocol 77 audits the seven vectors hijacking your bandwidth.",
@@ -291,9 +221,8 @@ const PATTERNS = {
   },
   C: {
     name:'The Identity Lock',
-    color:'var(--pat-c)',
     desc:"You're not stuck because you can't change. You're stuck because a part of your operating system was built to prevent it — not out of weakness, but because the version of you that exists right now is all it knows how to protect.",
-    frame:"PRIMARY PATTERN: IDENTITY PRESERVATION REFLEX",
+    frame:"Primary pattern: identity preservation reflex",
     plain:"You've been protecting a version of yourself that was never chosen.",
     means:"The resistance you feel toward the life you actually want is not a character flaw. It is a protection mechanism doing exactly what it was built to do: keep you consistent with the identity that was accumulated before you had the tools to design one intentionally. The problem is that consistency was never your choice — it was installed. Every time you declined an opportunity that would have required a different version of you, the lock tightened. Not because you were afraid. Because the mechanism made the current version feel like the only safe one. The Reality Override Manual maps the structure of this lock. Protocol 77 maps the seven vectors that are actively maintaining it — and gives you the specific sequence to interrupt each one.",
     p77heading:"Protocol 77 maps the seven vectors maintaining the Identity Lock.",
@@ -325,13 +254,13 @@ function startDiagnostic(){
 function showQuestion(n){
   const q = shuffledQuestions[n];
   document.getElementById('q-text').textContent = q.text;
-  document.getElementById('q-tag').textContent = `// SIGNAL ${n+1} OF 12`;
+  document.getElementById('q-tag').textContent = `Signal ${n+1} of 12`;
   const answersEl = document.getElementById('q-answers');
   answersEl.innerHTML = ANSWERS.map((a,i)=>`
     <div class="answer" onclick="selectAnswer(${i},${a.score},'${q.pattern}')">
       <div class="answer-dot"></div>
       <span>${a.label}</span>
-      <span class="answer-label">${['NEVER','SOMETIMES','OFTEN','ALMOST ALWAYS'][i]}</span>
+      <span class="answer-label">${['Never','Sometimes','Often','Almost Always'][i]}</span>
     </div>
   `).join('');
   updateProgress(n);
@@ -374,21 +303,13 @@ function showResults(){
   // Save
   try{localStorage.setItem(STORAGE_KEY, JSON.stringify({scores, dominant}))}catch(e){}
 
-  // Badge
-  const badge = document.getElementById('result-badge');
-  badge.style.color = pat.color;
-  badge.style.borderColor = pat.color;
-
   // Pattern name
-  const nameEl = document.getElementById('result-pattern-name');
-  nameEl.textContent = pat.name;
-  nameEl.style.color = pat.color;
+  document.getElementById('result-pattern-name').textContent = pat.name;
 
   // Pattern card
-  document.getElementById('result-card').style.borderColor = pat.color;
   document.getElementById('result-card').innerHTML = `
     <div class="pattern-desc">"${pat.desc}"</div>
-    <div class="pattern-frame" style="color:${pat.color}">${pat.frame}</div>
+    <div class="pattern-frame">${pat.frame}</div>
     <div class="pattern-plain">${pat.plain}</div>
   `;
 
@@ -441,7 +362,7 @@ function retake(){
   showScreen('screen-entry');
 })();
 
-// === Post-result email capture (Session 56 funnel restructure) ===
+// === Post-result email capture ===
 const SUPABASE_URL_DIAG = "https://wzthxohtgojenukmdubz.supabase.co";
 const SUPABASE_ANON_KEY_DIAG = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU";
 const EDGE_FN_URL_DIAG = "https://wzthxohtgojenukmdubz.supabase.co/functions/v1/send-nurture-email";
@@ -453,7 +374,7 @@ async function captureLeadAndDownload(e){
   const email = document.getElementById('diagEmail').value.trim();
   if(!email) return;
   btn.disabled = true;
-  btn.textContent = 'PROCESSING...';
+  btn.textContent = 'Processing...';
   const dom = window.currentDominant || 'A';
   const patternMap = {A: 'approval-loop', B: 'overload-spiral', C: 'identity-lock'};
   const patternSlug = patternMap[dom] || 'unknown';
@@ -484,120 +405,11 @@ async function captureLeadAndDownload(e){
     document.getElementById('manual-success').style.display = 'block';
   }catch(err){
     btn.disabled = false;
-    btn.textContent = 'SEND ME THE MANUAL →';
+    btn.textContent = 'Send Me the Manual →';
     alert('Something went wrong. Please try again.');
   }
 }
 </script>
-<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
-<style id="ss-theme-light">
-[data-theme="light"] {
-  --bg:           #F5F2EE !important;
-  --bg-card:      #FFFFFF !important;
-  --bg-card2:     #FAF8F5 !important;
-  --bg-panel:     #FFFFFF !important;
-  --bg-elevated:  #FEFEFE !important;
-  --text:         #1A1A2E !important;
-  --text-dim:     #4A4A6A !important;
-  --text-ghost:   #8888A0 !important;
-  --dim:          rgba(26,26,46,0.55) !important;
-  --dim2:         rgba(26,26,46,0.3) !important;
-  --ghost:        #9090A8 !important;
-  --border:       rgba(26,26,46,0.12) !important;
-  --border-subtle: rgba(26,26,46,0.06) !important;
-  --subtle:       rgba(26,26,46,0.04) !important;
-  --violet-dim:   rgba(124,92,252,0.08) !important;
-  --violet-glow:  rgba(124,92,252,0.15) !important;
-  --violet-border:rgba(124,92,252,0.2) !important;
-  --cyan-dim:     rgba(62,247,232,0.08) !important;
-  --cyan-glow:    rgba(62,247,232,0.2) !important;
-  --cyan-border:  rgba(62,247,232,0.15) !important;
-  --gold-dim:     rgba(201,168,76,0.1) !important;
-  --gold-glow:    rgba(201,168,76,0.18) !important;
-  --gold-border:  rgba(201,168,76,0.15) !important;
-  --amber-dim:    rgba(232,146,26,0.1) !important;
-  --amber-glow:   rgba(232,146,26,0.2) !important;
-  --amber-faint:  rgba(232,146,26,0.04) !important;
-}
-[data-theme="light"] body::before { opacity: 0 !important; }
-.ss-theme-toggle {
-  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 1px solid var(--border, rgba(255,255,255,0.06));
-  background: var(--bg-card, #09090f);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  -webkit-tap-highlight-color: transparent;
-}
-.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
-.ss-theme-toggle:active { transform: scale(0.95); }
-.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
-.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
-.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
-.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
-.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
-@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
-</style>
-<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-</button>
-<script>
-(function(){
-  'use strict';
-  function getThemeFromURL(){
-    return new URLSearchParams(window.location.search).get('theme')||'dark';
-  }
-  function applyTheme(t){
-    if(t==='light') document.documentElement.setAttribute('data-theme','light');
-    else document.documentElement.removeAttribute('data-theme');
-  }
-  function updateLinks(t){
-    document.querySelectorAll('a[href]').forEach(function(a){
-      var h=a.getAttribute('href');
-      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
-      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
-      try{
-        var u=new URL(h,window.location.origin);
-        if(t==='light') u.searchParams.set('theme','light');
-        else u.searchParams.delete('theme');
-        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
-        else{
-          var base=h.split('?')[0].split('#')[0];
-          var qs=u.search||'';
-          var hash=u.hash||'';
-          a.setAttribute('href',base+qs+hash);
-        }
-      }catch(e){}
-    });
-  }
-  function updateCurrentURL(t){
-    var u=new URL(window.location);
-    if(t==='light') u.searchParams.set('theme','light');
-    else u.searchParams.delete('theme');
-    window.history.replaceState({},'',u);
-  }
-  var cur=getThemeFromURL();
-  applyTheme(cur);
-  function init(){
-    updateLinks(cur);
-    var btn=document.querySelector('.ss-theme-toggle');
-    if(btn) btn.addEventListener('click',function(){
-      cur=(cur==='light')?'dark':'light';
-      applyTheme(cur);
-      updateCurrentURL(cur);
-      updateLinks(cur);
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
-<!-- ═══ END THEME TOGGLE ═══ -->
 
-<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

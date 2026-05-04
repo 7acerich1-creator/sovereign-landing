@@ -1,253 +1,70 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service | Sovereign Synthesis</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --bg: #050508; --bg-card: #09090f; --bg-elevated: #0d0b14;
-      --text: #E8E4F0; --dim: #7C7A9A; --ghost: #484860;
-      --cyan: #3EF7E8; --cyan-border: rgba(62,247,232,0.15);
-      --gold: #C9A84C;
-      --border: rgba(255,255,255,0.06); --subtle: rgba(255,255,255,0.03);
-      --display: 'Space Grotesk', sans-serif; --mono: 'Space Mono', monospace;
-    }
-    body { font-family: var(--display); background: var(--bg); color: var(--text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 700px; margin: 0 auto; padding: 0 24px 96px; }
-
-    header { padding: 64px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
-    .back { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ghost); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px; text-transform: uppercase; transition: color .2s; }
-    .back:hover { color: var(--cyan); }
-    .doc-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 14px; display: block; opacity: 0.7; }
-    header h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; }
-    .effective { font-family: var(--mono); font-size: 11px; color: var(--ghost); letter-spacing: 1px; }
-
-    section { margin-bottom: 48px; }
-    h2 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 14px; letter-spacing: -0.01em; padding-top: 8px; }
-    p { font-size: 16px; color: var(--dim); margin-bottom: 14px; font-weight: 300; line-height: 1.85; }
-    p:last-child { margin-bottom: 0; }
-    strong { color: var(--text); font-weight: 500; }
-
-    .notice-block { background: var(--bg-elevated); border: 1px solid rgba(201,168,76,0.2); padding: 24px 28px; margin: 20px 0; position: relative; }
-    .notice-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0.35; }
-    .notice-block p { font-size: 14px; margin-bottom: 10px; }
-    .notice-block p:last-child { margin-bottom: 0; }
-    .notice-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--gold); opacity: 0.7; text-transform: uppercase; margin-bottom: 12px; display: block; }
-
-    .contact-block { background: var(--bg-card); border: 1px solid var(--border); padding: 28px 32px; margin-top: 20px; }
-    .contact-block a { color: var(--cyan); text-decoration: none; }
-    .contact-block a:hover { text-decoration: underline; }
-
-    footer { border-top: 1px solid var(--border); padding: 40px 0 0; text-align: center; margin-top: 64px; }
-    footer p { font-family: var(--mono); font-size: 11px; color: var(--ghost); letter-spacing: 1px; }
-  </style>
+  <title>Terms | Sovereign Synthesis</title>
+  <link rel="stylesheet" href="/css/sovereign.css" />
 </head>
 <body>
-  <div class="container">
 
-    <header>
-      <a href="./tier-1/index.html" class="back">← Sovereign Synthesis</a>
-      <span class="doc-label">// Legal Document</span>
-      <h1>Terms of Service</h1>
-      <p class="effective">Effective Date: March 26, 2026 &nbsp;·&nbsp; Last Updated: March 26, 2026</p>
-    </header>
-
-    <section>
-      <p>These Terms of Service ("Terms") govern your access to and use of the Sovereign Synthesis website, free resources, and paid products and programs (collectively, "Services") operated by Ace Richie ("we," "us," or "our").</p>
-      <p>By accessing our website, downloading free resources, or purchasing any product, you agree to be bound by these Terms. If you do not agree, do not use our Services.</p>
-    </section>
-
-    <section>
-      <h2>Products and Access</h2>
-      <p>Sovereign Synthesis offers digital educational products including written materials, interactive tools, and structured programs delivered via online platforms. All products are delivered digitally. No physical goods are shipped.</p>
-      <p>Upon completing a purchase, you will receive access to the purchased product per the delivery method described at checkout. Access credentials and portal links are sent to the email address used at purchase. You are responsible for keeping that email address current and accessible.</p>
-      <p>Your license to access purchased content is personal, non-transferable, and non-exclusive. You may not share, resell, reproduce, or distribute any content from our products without express written permission.</p>
-    </section>
-
-    <section>
-      <h2>Payment and Pricing</h2>
-      <p>All prices are listed in US dollars and are subject to change. The price you see at the time of checkout is the price you pay. Payments are processed securely by Stripe. We do not store your payment card information.</p>
-      <p>Promotional codes and coupons are valid only for the product and time period specified. They cannot be applied retroactively to completed purchases.</p>
-    </section>
-
-    <section>
-      <h2>Refund Policy</h2>
-      <div class="notice-block">
-        <span class="notice-label">// Important — Please Read</span>
-        <p>Due to the digital and immediately-accessible nature of our products, <strong>all sales are final.</strong> We do not offer refunds on digital products once access has been granted.</p>
-        <p>If you experience a technical issue preventing you from accessing a product you purchased, contact us within 30 days of purchase and we will work to resolve it. Technical failures on our end will be remedied.</p>
-        <p>Dissatisfaction with content, a change of mind, or failure to engage with the material does not constitute grounds for a refund.</p>
-      </div>
-      <p>If you believe you were charged in error, contact us at the address below with your order details and we will investigate promptly.</p>
-    </section>
-
-    <section>
-      <h2>Inner Circle — Application Terms</h2>
-      <p>The Inner Circle is an application-based program. Submitting an application does not guarantee acceptance. Acceptance is at our sole discretion based on the criteria described in the application process.</p>
-      <p>If your application is accepted and you complete payment, the refund policy above applies. The Inner Circle arrangement is personal and non-transferable. Access cannot be reassigned to another individual.</p>
-    </section>
-
-    <section>
-      <h2>Intellectual Property</h2>
-      <p>All content on the Sovereign Synthesis website and within our products — including frameworks, terminology, written materials, interactive tools, course content, and design — is owned by Ace Richie and protected by applicable intellectual property laws.</p>
-      <p>You may not reproduce, copy, publish, sell, or create derivative works from any content without prior written consent. Personal use for your own implementation of the frameworks is permitted and encouraged. Commercial use, redistribution, or use in your own products or services is not permitted without a licensing arrangement.</p>
-    </section>
-
-    <section>
-      <h2>Disclaimer of Warranties</h2>
-      <p>Our products provide educational frameworks and structured implementation tools. Results are dependent on your own effort, circumstances, and application of the material. <strong>We make no guarantees of specific financial outcomes, life results, or other measurable achievements.</strong></p>
-      <p>Our Services are provided "as is" and "as available" without warranties of any kind, express or implied. We do not warrant that the Services will be uninterrupted, error-free, or free of harmful components.</p>
-    </section>
-
-    <section>
-      <h2>Limitation of Liability</h2>
-      <p>To the maximum extent permitted by applicable law, Sovereign Synthesis and Ace Richie shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use our Services, including loss of profits, data, or goodwill.</p>
-      <p>Our total liability to you for any claim arising from these Terms or your use of our Services shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
-    </section>
-
-    <section>
-      <h2>Acceptable Use</h2>
-      <p>You agree not to use our Services in any way that violates applicable law, infringes the rights of others, or disrupts our infrastructure. Attempts to reverse-engineer, copy, or systematically extract content from our platforms are prohibited.</p>
-      <p>We reserve the right to suspend or terminate access for any user who violates these Terms, without refund.</p>
-    </section>
-
-    <section>
-      <h2>Governing Law</h2>
-      <p>These Terms are governed by the laws of the United States and the state of Florida, without regard to conflict of law principles. Any disputes arising from these Terms shall be resolved in the courts of Florida, and you consent to personal jurisdiction there.</p>
-    </section>
-
-    <section>
-      <h2>Changes to These Terms</h2>
-      <p>We may update these Terms from time to time. The "Last Updated" date at the top of this page reflects the most recent revision. Continued use of our Services after changes constitutes acceptance of the revised Terms. For material changes, we will make reasonable efforts to notify active customers directly.</p>
-    </section>
-
-    <section>
-      <h2>Contact</h2>
-      <div class="contact-block">
-        <p>For questions about these Terms, billing issues, or access problems, contact us directly:</p>
-        <p style="margin-top: 14px;"><strong>Sovereign Synthesis</strong><br>
-        Email: <a href="mailto:empoweredservices2013@gmail.com">empoweredservices2013@gmail.com</a><br>
-        Operated by: Ace Richie</p>
-      </div>
-    </section>
-
-    <footer>
-      <p>Sovereign Synthesis &copy; 2026 &nbsp;·&nbsp; <a href="./privacy.html" style="color: var(--ghost); text-decoration: none;">Privacy Policy</a></p>
-    </footer>
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+    </nav>
   </div>
-<!-- ═══ SOVEREIGN SYNTHESIS LIGHT THEME TOGGLE ═══ -->
-<style id="ss-theme-light">
-[data-theme="light"] {
-  --bg:           #F5F2EE !important;
-  --bg-card:      #FFFFFF !important;
-  --bg-card2:     #FAF8F5 !important;
-  --bg-panel:     #FFFFFF !important;
-  --bg-elevated:  #FEFEFE !important;
-  --text:         #1A1A2E !important;
-  --text-dim:     #4A4A6A !important;
-  --text-ghost:   #8888A0 !important;
-  --dim:          rgba(26,26,46,0.55) !important;
-  --dim2:         rgba(26,26,46,0.3) !important;
-  --ghost:        #9090A8 !important;
-  --border:       rgba(26,26,46,0.12) !important;
-  --border-subtle: rgba(26,26,46,0.06) !important;
-  --subtle:       rgba(26,26,46,0.04) !important;
-  --violet-dim:   rgba(124,92,252,0.08) !important;
-  --violet-glow:  rgba(124,92,252,0.15) !important;
-  --violet-border:rgba(124,92,252,0.2) !important;
-  --cyan-dim:     rgba(62,247,232,0.08) !important;
-  --cyan-glow:    rgba(62,247,232,0.2) !important;
-  --cyan-border:  rgba(62,247,232,0.15) !important;
-  --gold-dim:     rgba(201,168,76,0.1) !important;
-  --gold-glow:    rgba(201,168,76,0.18) !important;
-  --gold-border:  rgba(201,168,76,0.15) !important;
-  --amber-dim:    rgba(232,146,26,0.1) !important;
-  --amber-glow:   rgba(232,146,26,0.2) !important;
-  --amber-faint:  rgba(232,146,26,0.04) !important;
-}
-[data-theme="light"] body::before { opacity: 0 !important; }
-.ss-theme-toggle {
-  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 1px solid var(--border, rgba(255,255,255,0.06));
-  background: var(--bg-card, #09090f);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  -webkit-tap-highlight-color: transparent;
-}
-.ss-theme-toggle:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(124,92,252,0.25); border-color: var(--violet, #7C5CFC); }
-.ss-theme-toggle:active { transform: scale(0.95); }
-.ss-theme-toggle svg { width: 20px; height: 20px; transition: opacity 0.3s ease, transform 0.3s ease; }
-.ss-theme-toggle .ss-icon-sun { color: #E8C56A; }
-.ss-theme-toggle .ss-icon-moon { color: #7C5CFC; position: absolute; }
-.ss-theme-toggle .ss-icon-sun  { opacity: 1; transform: rotate(0deg); }
-.ss-theme-toggle .ss-icon-moon { opacity: 0; transform: rotate(-90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-sun  { opacity: 0; transform: rotate(90deg); }
-[data-theme="light"] .ss-theme-toggle .ss-icon-moon { opacity: 1; transform: rotate(0deg); }
-@media (max-width: 768px) { .ss-theme-toggle { bottom: 16px; right: 16px; } }
-</style>
-<button class="ss-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-  <svg class="ss-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  <svg class="ss-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-</button>
-<script>
-(function(){
-  'use strict';
-  function getThemeFromURL(){
-    return new URLSearchParams(window.location.search).get('theme')||'dark';
-  }
-  function applyTheme(t){
-    if(t==='light') document.documentElement.setAttribute('data-theme','light');
-    else document.documentElement.removeAttribute('data-theme');
-  }
-  function updateLinks(t){
-    document.querySelectorAll('a[href]').forEach(function(a){
-      var h=a.getAttribute('href');
-      if(!h||h.startsWith('mailto:')||h.startsWith('tel:')||h.startsWith('#')||h.startsWith('javascript:')) return;
-      if(h.startsWith('http')&&!h.includes('sovereign-synthesis.com')&&!h.includes('sovereign-landing.vercel.app')) return;
-      try{
-        var u=new URL(h,window.location.origin);
-        if(t==='light') u.searchParams.set('theme','light');
-        else u.searchParams.delete('theme');
-        if(h.startsWith('http')){a.setAttribute('href',u.toString());}
-        else{
-          var base=h.split('?')[0].split('#')[0];
-          var qs=u.search||'';
-          var hash=u.hash||'';
-          a.setAttribute('href',base+qs+hash);
-        }
-      }catch(e){}
-    });
-  }
-  function updateCurrentURL(t){
-    var u=new URL(window.location);
-    if(t==='light') u.searchParams.set('theme','light');
-    else u.searchParams.delete('theme');
-    window.history.replaceState({},'',u);
-  }
-  var cur=getThemeFromURL();
-  applyTheme(cur);
-  function init(){
-    updateLinks(cur);
-    var btn=document.querySelector('.ss-theme-toggle');
-    if(btn) btn.addEventListener('click',function(){
-      cur=(cur==='light')?'dark':'light';
-      applyTheme(cur);
-      updateCurrentURL(cur);
-      updateLinks(cur);
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
-<!-- ═══ END THEME TOGGLE ═══ -->
+</div>
+<div class="gold-line"></div>
 
-<script defer src="/_vercel/insights/script.js"></script>
+<section class="hero">
+  <span class="kicker">Terms of Service</span>
+  <h1>The agreement, in plain language.</h1>
+  <p class="lede">No fine-print theatre. Last updated 2026-05-04.</p>
+</section>
+
+<section class="block first">
+  <h2>What you are buying.</h2>
+  <p>When you purchase a tier of Sovereign Synthesis, you are buying access to the materials, runners, portals, and frameworks associated with that tier. Access is granted on payment confirmation and lasts as long as the platform is operational. You may use these materials for your own personal sovereign architecture work.</p>
+</section>
+
+<section class="block bordered">
+  <h2>What you are not buying.</h2>
+  <p>You are not buying licensing rights. You may not resell, redistribute, repackage, or commercially license the materials. The Inner Circle tier (Tier 7) includes specific licensing rights granted under separate agreement.</p>
+  <p>You are not buying psychotherapy, medical advice, financial advice, or legal advice. The framework is an architecture and operating doctrine. It is not a substitute for a licensed professional in any of those domains.</p>
+</section>
+
+<section class="block bordered">
+  <h2>Refunds.</h2>
+  <p>Tier 2 (Protocol 77) and Tier 3 (Manifesto Navigator): refundable within 14 days of purchase if you have not completed the runner or downloaded the full Manifesto. Email <a href="mailto:ace@sovereign-synthesis.com">ace@sovereign-synthesis.com</a> with your purchase email.</p>
+  <p>Tiers 4, 5, 6 (The Architect phases): refundable within 7 days of purchase. After 7 days, no refunds.</p>
+  <p>Tier 7 (Inner Circle): non-refundable. Admission is a deliberate decision on both sides.</p>
+</section>
+
+<section class="block bordered">
+  <h2>Liability.</h2>
+  <p>You take responsibility for what you do with the framework. Sovereign Synthesis is provided as-is. We are not liable for outcomes that result from how you apply the materials. The framework is a tool. You are the architect.</p>
+</section>
+
+<section class="block bordered">
+  <h2>Changes.</h2>
+  <p>We may update these terms. Material changes will be communicated by email to active subscribers. Continued use after a change constitutes acceptance.</p>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
 </body>
 </html>
