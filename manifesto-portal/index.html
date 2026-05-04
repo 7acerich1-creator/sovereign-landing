@@ -1,13 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Sovereign Architecture Manifesto | Sovereign Synthesis</title>
-  <link rel="stylesheet" href="/css/sovereign.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sovereign Architecture Manifesto | Sovereign Synthesis</title>
+<meta name="description" content="The foundational text of the framework. Free. A protocol for exiting the architecture you didn't choose.">
+<link rel="canonical" href="https://sovereign-synthesis.com/manifesto-portal" />
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Manifesto-specific */
+  .screen { display: none; animation: fadeUp .4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chap-header { text-align: left; margin: 16px 0 28px; }
+  .chap-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 12px; display: block;
+  }
+  .chap-title {
+    font-family: var(--serif); font-size: clamp(32px, 5vw, 46px);
+    font-weight: 600; line-height: 1.15; letter-spacing: -0.4px;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .chap-title em { font-style: italic; color: var(--gold); font-weight: 600; }
+  .chap-sub {
+    font-family: var(--serif); font-style: italic;
+    font-size: 19px; color: var(--body-dim); margin-bottom: 4px;
+  }
+  .lex-def {
+    font-family: var(--sans); font-size: 14px;
+    color: var(--body-dim); font-style: italic;
+    border-left: 2px solid var(--gold);
+    padding: 4px 0 4px 16px;
+    margin: 0 0 22px;
+    background: var(--card-soft);
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+  }
+  .lex-def strong {
+    color: var(--text); font-style: normal;
+    font-family: var(--serif); font-weight: 600;
+  }
+  .freq-grid { display: flex; flex-direction: column; gap: 12px; margin: 24px 0 32px; }
+  .freq-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 22px 26px;
+  }
+  .freq-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); font-weight: 700; margin-bottom: 6px; display: block;
+    text-transform: uppercase;
+  }
+  .freq-name {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .freq-text { font-size: 15px; color: var(--body); line-height: 1.7; }
+
+  .axiom-list { margin: 22px 0 28px; }
+  .axiom-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 18px; align-items: baseline;
+  }
+  .axiom-item:last-child { border-bottom: none; }
+  .axiom-num {
+    font-family: var(--mono); font-size: 12px; color: var(--gold);
+    letter-spacing: 2px; min-width: 28px; font-weight: 700;
+  }
+  .axiom-body strong {
+    display: block;
+    font-family: var(--serif); font-size: 17px;
+    color: var(--text); font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .axiom-body span { font-size: 15px; color: var(--body); line-height: 1.65; }
+
+  /* Sync exercise blocks (the practical sessions between chapters) */
+  .sync-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 24px 0;
+  }
+  .sync-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 10px; display: block;
+  }
+  .sync-title {
+    font-family: var(--serif); font-size: 24px; font-weight: 600;
+    color: var(--text); margin-bottom: 14px; letter-spacing: -0.2px;
+  }
+  .sync-pull {
+    font-family: var(--serif); font-style: italic;
+    font-size: 18px; color: var(--text); line-height: 1.55;
+    border-left: 2px solid var(--copper);
+    padding: 6px 0 6px 18px;
+    margin: 18px 0 22px;
+  }
+  .sync-step {
+    display: flex; gap: 14px; align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .sync-step:last-of-type { border-bottom: none; }
+  .sync-step-num {
+    font-family: var(--mono); font-size: 11px; color: var(--copper);
+    letter-spacing: 1.5px; min-width: 24px; font-weight: 700;
+  }
+  .sync-step-text { font-size: 15px; color: var(--body); line-height: 1.6; }
+  .sync-output {
+    margin-top: 18px; padding: 14px 18px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--mono); font-size: 12px;
+    color: var(--gold); letter-spacing: 1px;
+  }
+  .sync-output strong { color: var(--text); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-right: 8px; }
+
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 24px 0;
+  }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-cell {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px;
+  }
+  .compare-cell.old { border-left: 3px solid var(--danger); }
+  .compare-cell.new { border-left: 3px solid var(--gold); }
+  .compare-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
+    display: block;
+  }
+  .compare-cell.old .compare-label { color: var(--danger); }
+  .compare-cell.new .compare-label { color: var(--gold); }
+  .compare-text {
+    font-family: var(--serif); font-style: italic;
+    font-size: 16px; color: var(--text); line-height: 1.5;
+  }
+
+  .maneuver-list { margin: 22px 0; }
+  .maneuver {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 20px; align-items: baseline;
+  }
+  .maneuver:last-child { border-bottom: none; }
+  .maneuver-num {
+    font-family: var(--mono); font-size: 14px; color: var(--gold);
+    letter-spacing: 1px; min-width: 36px; font-weight: 700;
+  }
+  .maneuver-body strong {
+    display: block;
+    font-family: var(--serif); font-size: 18px;
+    color: var(--text); font-weight: 600; margin-bottom: 4px;
+  }
+  .maneuver-body span { font-size: 15px; color: var(--body); line-height: 1.65; }
+
+  /* Sync interactive inputs */
+  .sync-input-block { margin: 18px 0 6px; }
+  .sync-input-label {
+    display: block; font-size: 14px; color: var(--body-dim);
+    margin-bottom: 8px; font-family: var(--sans);
+  }
+  .sync-input-block .field { font-size: 15px; }
+  .sync-mark {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 12px; cursor: pointer;
+    font-family: var(--sans); font-size: 14px; color: var(--body);
+  }
+  .sync-mark input { accent-color: var(--gold); width: 18px; height: 18px; cursor: pointer; }
+  .sync-mark.checked { color: var(--gold); font-weight: 600; }
+
+  /* Bottom nav */
+  .nav-row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 32px 0 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .nav-row .nav-spacer { flex: 1; }
+  .nav-meta {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .resume-banner {
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 16px 22px; margin: 0 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .resume-banner p {
+    font-size: 14px; color: var(--body); margin: 0;
+  }
+  .resume-banner .btn { padding: 10px 18px; font-size: 11px; }
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
+<!-- Header -->
 <div class="top">
   <div class="top-inner">
     <a href="/" class="wordmark">Sovereign Synthesis</a>
@@ -20,31 +223,635 @@
 </div>
 <div class="gold-line"></div>
 
-<section class="hero">
-  <span class="kicker">Manifesto Portal · Free</span>
-  <h1>The Sovereign<br/>Architecture <em>Manifesto.</em></h1>
-  <p class="lede">The document that names what most people feel and cannot articulate. Free. Yours.</p>
-</section>
-
-<section class="block first">
-  <h2>What this is.</h2>
-  <p>The Manifesto is the foundational text of the framework &mdash; the document that names the architecture inside which the costume was demanded, and the architecture inside which the costume becomes optional. It is the prerequisite reading for everything else in Sovereign Synthesis.</p>
-
-  <div class="cta-block" style="margin-top:32px;">
-    <p class="cta-kicker">Download</p>
-    <h2 class="cta-headline">Read the Manifesto.</h2>
-    <p class="cta-sub">PDF. Read it once cover-to-cover. It will land against something already inside you, or it will not. Either answer is the right one.</p>
-    <div class="btn-row">
-      <a href="/tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf" class="btn">Download (PDF) &rarr;</a>
-      <a href="/p77" class="btn btn-secondary">After: Deploy Protocol 77 &rarr;</a>
-    </div>
+<!-- Sticky progress -->
+<div class="prog-wrap" id="prog-wrap">
+  <div class="prog-inner">
+    <span class="prog-count" id="prog-count">Section 1 of 11</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:9%"></div></div>
   </div>
-</section>
-
-<div class="closing">
-  <p>The Manifesto is the map of the room.<br/>The framework is what you build after you have read it.</p>
 </div>
 
+<div class="wrap">
+
+  <!-- Resume banner (shown if user has prior progress) -->
+  <div class="resume-banner" id="resume-banner" style="display:none;">
+    <p>You started reading. <strong id="resume-where">—</strong></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="resume-continue">Continue &rarr;</button>
+      <button class="btn btn-ghost" onclick="restart()">Start Over</button>
+    </div>
+  </div>
+
+  <!-- ════════════ SCREEN 0 — COVER ════════════ -->
+  <div class="screen active" id="screen-0">
+    <section class="hero" style="padding-top:80px;padding-bottom:48px;">
+      <span class="kicker">Free Transmission · Level 1 Clearance</span>
+      <h1>The Sovereign<br/>Architecture <em>Manifesto.</em></h1>
+      <p class="lede">A protocol for exiting the architecture you didn't choose.</p>
+      <p class="lede">Not theory. Architecture.</p>
+    </section>
+
+    <section class="block first">
+      <h2>What this is.</h2>
+      <p>Most documents tell you what to think. This one names what is already happening.</p>
+      <p>If you have run the diagnostic, you already know there is a pattern operating in your background. A specific shape to the resistance. A specific architecture inside which the costume was demanded and the cost has been mounting.</p>
+      <p>The Manifesto is the foundational text that gives that architecture its name &mdash; <strong>The Containment Field</strong> &mdash; and walks you, page by page, to the point where the mechanism becomes visible. Once it is visible, it loses most of its leverage.</p>
+      <p>Five chapters. Four short practical sync sessions between them. A closing transmission. About forty minutes if you read straight through. You can leave and come back &mdash; we save your place.</p>
+
+      <div class="cta-block" style="margin-top:32px;">
+        <p class="cta-kicker">When you're ready</p>
+        <h2 class="cta-headline">Begin the transmission.</h2>
+        <p class="cta-sub">Read at your own pace. Each section advances when you click Next. Your progress saves automatically.</p>
+        <button class="btn" onclick="goTo(1)">Begin &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 1 — PRE-FRAME ════════════ -->
+  <div class="screen" id="screen-1">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">0.0 · The Pre-Frame</span>
+        <h1 class="chap-title"><em>Once seen,</em><br/>this cannot be unseen.</h1>
+        <p class="chap-sub">A clearance protocol before you proceed.</p>
+      </div>
+
+      <p>You are about to enter a construct of high-velocity reality mechanics. The efficacy of this transmission depends entirely on the frequency at which you receive it.</p>
+
+      <p>In 1910, Wallace D. Wattles prefaced <em>The Science of Getting Rich</em> by demanding the reader accept his statements with the same faith they would grant a law of physics. In 1937, Napoleon Hill codified the laws of success for the Industrial Age. The frequency has shifted again. Industrial &rarr; Digital &rarr; Network &rarr; Architect. The old keys no longer turn the new locks.</p>
+
+      <p>Therefore, set previous definitions aside.</p>
+
+      <h2 style="margin-top:32px;">The Sovereign Axiom.</h2>
+      <p>To unlock the architecture, accept the following as axiomatic for the duration of the read:</p>
+
+      <div class="axiom-list">
+        <div class="axiom-item">
+          <span class="axiom-num">01</span>
+          <span class="axiom-body">
+            <strong>The source is valid.</strong>
+            <span>Receive this transmission as if handed down by the highest authority you recognize &mdash; a king, a teacher, the immutable laws of physics. Whoever's voice carries weight for you, lend that weight here.</span>
+          </span>
+        </div>
+        <div class="axiom-item">
+          <span class="axiom-num">02</span>
+          <span class="axiom-body">
+            <strong>The circuit is open.</strong>
+            <span>Doubt creates drag. Faith creates flow. For the next forty minutes, offer zero resistance. You can go back to skepticism after the read &mdash; but not during it.</span>
+          </span>
+        </div>
+        <div class="axiom-item">
+          <span class="axiom-num">03</span>
+          <span class="axiom-body">
+            <strong>The application is absolute.</strong>
+            <span>You are not here to "try." You are here to install. The framework either runs in your operating system or it doesn't. There is no half-state.</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="lex-def">
+        <strong>Note on language.</strong> Some of the words in this manifesto will feel unfamiliar. Each one is defined the first time it appears. The vocabulary is the lever &mdash; once you can name a mechanism, the mechanism stops running invisibly.
+      </div>
+
+      <p>If you cannot grant this authority to the text, close the document. It will not serve you.</p>
+      <p>If you can &mdash; proceed.</p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(0)">&larr; Cover</button>
+        <span class="nav-meta">Section 1 of 11</span>
+        <button class="btn" onclick="goTo(2)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 2 — DIAGNOSTIC: CONTAINMENT FIELD ════════════ -->
+  <div class="screen" id="screen-2">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">1.0 · The Diagnostic</span>
+        <h1 class="chap-title">The <em>Containment Field.</em></h1>
+        <p class="chap-sub">Why most freedom is a flavor of distraction.</p>
+      </div>
+
+      <div class="lex-def">
+        <strong>Containment Field.</strong> The aggregate of social engineering, dark psychology, and algorithmic feedback loops designed to keep your consciousness in a holding pattern. It is not a conspiracy. It is the steady-state of a system that runs on your reactivity. When you react, the system gets fed.
+      </div>
+
+      <p>You believe you are free because you can choose your flavor of distraction. This is the first illusion. True captivity is not bars on a window. It is a frequency broadcast designed to keep your attention locked in a holding pattern.</p>
+
+      <p>Every time you react to fear, every time you scroll for dopamine, every time you seek validation from the external world &mdash; you are acting as a battery for a system that does not serve you.</p>
+
+      <h2 style="margin-top:36px;">The three frequencies of the Containment Field.</h2>
+      <p>Three primary mechanisms keep most people inside the field. They run in parallel. Most architectures-in-waiting are operating under all three at once and don't realize it.</p>
+
+      <div class="freq-grid">
+        <div class="freq-item">
+          <span class="freq-num">01 · Survival Oscillation</span>
+          <p class="freq-name">The fear loop.</p>
+          <p class="freq-text">When you are worried about the basics &mdash; shelter, status, money, judgment &mdash; your brain operates from the amygdala (the lizard brain). You become reactive. You cannot create from this state. You can only respond to the reality others have built. The Competitive Plane forces you to fight for scraps and keeps your eyes on the ground.</p>
+        </div>
+        <div class="freq-item">
+          <span class="freq-num">02 · Validation Loop</span>
+          <p class="freq-name">The ego leash.</p>
+          <p class="freq-text">The easiest way to control a human is to tie their self-worth to external metrics. Likes. Views. Approval. Titles. These are digital leashes. When you seek validation, you hand the sovereign remote to the crowd. The crowd is asleep. If you let them steer, they will drive you off a cliff.</p>
+        </div>
+        <div class="freq-item">
+          <span class="freq-num">03 · Attention Fracture</span>
+          <p class="freq-name">The scattered light bulb.</p>
+          <p class="freq-text">Your attention is the only currency you truly own. The Containment Field fractures it into a thousand fragments &mdash; news, drama, notifications, noise. A fractured mind cannot manifest. It has no signal strength. To pierce the veil, you must become a laser. The world is designed to make you a scattered light bulb.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top:36px;">The shift.</h2>
+      <p>You are not "struggling" because you are weak. You are experiencing <strong>drag</strong> because you are trying to leave the atmosphere. The resistance you feel is the system trying to keep its battery. The fear is the boundary of the cage.</p>
+
+      <p>To exit the Containment Field, we do not fight it. We do not compete with it. We tune to a frequency it cannot touch. We move from the <strong>Competitive Plane</strong> (fighting for resources) to the <strong>Creative Plane</strong> (generating resources). The first leaves you negotiating with parasites. The second leaves you walking through the wall.</p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(1)">&larr; Back</button>
+        <span class="nav-meta">Section 2 of 11</span>
+        <button class="btn" onclick="goTo(3)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 3 — SYNC 01: INPUT EMBARGO ════════════ -->
+  <div class="screen" id="screen-3">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">System Sync 01</span>
+        <h1 class="chap-title">The <em>Input Embargo.</em></h1>
+        <p class="chap-sub">Prove the mind is a broadcasting station, not a receiver.</p>
+      </div>
+
+      <div class="sync-block">
+        <span class="sync-tag">Sync Protocol · 24 Hours</span>
+        <div class="sync-title">The Input Embargo</div>
+        <p class="sync-pull">"The Architect does not ask the world what to think. The Architect tells the world what is."</p>
+
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:18px;">
+          <strong style="color:var(--text);">Objective.</strong> You cannot transmit on the Sovereign frequency if your bandwidth is clogged with Old Earth noise. For the next twenty-four hours, run a strict input embargo during the first sixty minutes of your day.
+        </p>
+
+        <div class="sync-step">
+          <span class="sync-step-num">01</span>
+          <span class="sync-step-text"><strong>Phone status:</strong> airplane mode immediately upon waking.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">02</span>
+          <span class="sync-step-text"><strong>No consumption:</strong> zero email, zero social media, zero news, zero podcasts.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">03</span>
+          <span class="sync-step-text"><strong>The vacuum:</strong> sit in silence for ten minutes. Observe anxiety as foreign programs trying to re-install. Do not entertain them.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">04</span>
+          <span class="sync-step-text"><strong>The output:</strong> by 10:00 AM, write down the one high-value idea that arrived in the silence.</span>
+        </div>
+
+        <label class="sync-mark" id="mark-sync1" onclick="toggleMark('sync1')">
+          <input type="checkbox" id="check-sync1" />
+          <span>I have run the Input Embargo at least once.</span>
+        </label>
+
+        <div class="sync-output">
+          <strong>Output</strong> One sovereign thought generated before the world enters.
+        </div>
+
+        <p style="font-size:14px;color:var(--body-dim);line-height:1.7;margin-top:22px;font-style:italic;">
+          The moment you broadcast before you receive, you become a data <em>source</em> instead of a data <em>sinkhole.</em>
+        </p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(2)">&larr; Back</button>
+        <span class="nav-meta">Section 3 of 11</span>
+        <button class="btn" onclick="goTo(4)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 4 — EXPLOIT: THE GLITCH ════════════ -->
+  <div class="screen" id="screen-4">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">2.0 · The Exploit</span>
+        <h1 class="chap-title">The <em>Glitch.</em></h1>
+        <p class="chap-sub">The bug in the system that the system cannot patch.</p>
+      </div>
+
+      <p>The Containment Field is powerful, but not perfect. It is built on logic, algorithms, and linear control. It assumes you are a rational machine that responds to inputs A and B.</p>
+
+      <p>You are not a machine. You are consciousness. And inside consciousness lies a glitch the system cannot patch.</p>
+
+      <div class="lex-def">
+        <strong>The Glitch.</strong> The subconscious mind. It cannot distinguish between a real event and a vividly imagined one. If you watch a terrifying movie, your heart races even though your conscious mind knows you are on a couch. The Containment Field exploits this by flooding screens with fear, lack, and division &mdash; hacking your subconscious to manifest its nightmare. The mechanism works in both directions.
+        </div>
+
+      <h2 style="margin-top:32px;">The Creative Method.</h2>
+      <p>If you bypass the conscious gatekeeper and impress a new image upon the subconscious &mdash; an image of wealth, sovereignty, and silence &mdash; the subconscious must objectify it. It has no choice. It is a servant mechanism.</p>
+
+      <p style="font-family:var(--serif);font-style:italic;font-size:18px;color:var(--text);text-align:center;margin:32px 0;">
+        Change the slide in the projector.<br/>Not the image on the wall.
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-cell old">
+          <span class="compare-label">Old slide</span>
+          <p class="compare-text">"I need to survive. I am susceptible to interference."</p>
+        </div>
+        <div class="compare-cell new">
+          <span class="compare-label">New slide</span>
+          <p class="compare-text">"I am the interference. I am the signal."</p>
+        </div>
+      </div>
+
+      <p>The moment you realize that your feeling-state is the control panel for your reality, the Containment Field loses its grip. That is where you are sovereign. That is where the architecture begins.</p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(3)">&larr; Back</button>
+        <span class="nav-meta">Section 4 of 11</span>
+        <button class="btn" onclick="goTo(5)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 5 — SYNC 02: VAMPIRE SCAN ════════════ -->
+  <div class="screen" id="screen-5">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">System Sync 02</span>
+        <h1 class="chap-title">The <em>Vampire Scan.</em></h1>
+        <p class="chap-sub">A forensic audit of where your energy is leaking.</p>
+      </div>
+
+      <div class="sync-block">
+        <span class="sync-tag">Sync Protocol · Forensic Audit</span>
+        <div class="sync-title">The Vampire Scan</div>
+        <p class="sync-pull">"You do not negotiate with parasites. You starve them."</p>
+
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:18px;">
+          <strong style="color:var(--text);">Objective.</strong> Identify the specific energy parasites currently draining your creative velocity. You cannot build a skyscraper on a sinkhole. Audit your last seventy-two hours and identify three leaks.
+        </p>
+
+        <div class="sync-input-block">
+          <label class="sync-input-label"><strong>01 &middot; The Time Leak</strong> &mdash; what activity stole 30+ minutes with zero return?</label>
+          <textarea class="field" id="vamp-time" rows="2" placeholder="Name it precisely."></textarea>
+        </div>
+        <div class="sync-input-block">
+          <label class="sync-input-label"><strong>02 &middot; The Emotional Leak</strong> &mdash; who or what triggered a survival response (anger, fear, jealousy)?</label>
+          <textarea class="field" id="vamp-emo" rows="2" placeholder="Name the source."></textarea>
+        </div>
+        <div class="sync-input-block">
+          <label class="sync-input-label"><strong>03 &middot; The Financial Leak</strong> &mdash; what did you purchase to "soothe" rather than invest in yourself?</label>
+          <textarea class="field" id="vamp-fin" rows="2" placeholder="Name it."></textarea>
+        </div>
+
+        <label class="sync-mark" id="mark-sync2" onclick="toggleMark('sync2')">
+          <input type="checkbox" id="check-sync2" />
+          <span>I have written each leak down. I am ready to revoke them.</span>
+        </label>
+
+        <div class="sync-output">
+          <strong>Output</strong> Each leak named is a leak severed.
+        </div>
+
+        <p style="font-size:14px;color:var(--body-dim);line-height:1.7;margin-top:22px;">
+          <strong style="color:var(--text);">Energy Vampire Taxonomy:</strong> the most common parasites are <em>Crabs in the Bucket</em> (people running fear/survival who pull you down to validate their lives) and <em>The Algorithm</em> (platforms engineered to harvest attention and manufacture emotion). Both feed on reactivity. Both starve in silence.
+        </p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(4)">&larr; Back</button>
+        <span class="nav-meta">Section 5 of 11</span>
+        <button class="btn" onclick="goTo(6)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 6 — GRADUATION: COMPETITIVE → CREATIVE ════════════ -->
+  <div class="screen" id="screen-6">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">3.0 · The Graduation</span>
+        <h1 class="chap-title">The <em>Shift.</em></h1>
+        <p class="chap-sub">From the Competitive Plane to the Creative Plane.</p>
+      </div>
+
+      <p>The Containment Field operates on a single foundational lie: <em>there is not enough.</em> Not enough money, not enough attention, not enough success.</p>
+
+      <p>When you believe this, you enter the Competitive Plane. You believe that for you to win, someone else must lose. Competition generates friction. Friction generates heat (stress), not light.</p>
+
+      <div class="lex-def">
+        <strong>Competitive Plane &rarr; Creative Plane.</strong> On the Competitive Plane, you fight for what already exists. On the Creative Plane, you create what needs to exist. You are not taking money from people. You are exchanging use-value for cash-value. When the use-value exceeds the cash-value, the field rushes to support you.
+      </div>
+
+      <h2 style="margin-top:32px;">Three operating principles of the sovereign state.</h2>
+
+      <div class="freq-grid">
+        <div class="freq-item">
+          <span class="freq-num">01</span>
+          <p class="freq-name">Speed, not haste.</p>
+          <p class="freq-text">The Sovereign never hurries. You know the opportunity is generated by you, so it cannot be taken by someone else. Move with intent. Do not move with fear.</p>
+        </div>
+        <div class="freq-item">
+          <span class="freq-num">02</span>
+          <p class="freq-name">Certainty.</p>
+          <p class="freq-text">You do not hope the next thing works. You know. You hold the image of the completed transaction and perform the actions consistent with someone for whom it has already happened.</p>
+        </div>
+        <div class="freq-item">
+          <span class="freq-num">03</span>
+          <p class="freq-name">The vacuum.</p>
+          <p class="freq-text">By emitting high-frequency signal, you create a low-pressure zone that pulls resources in to fill it. You do not chase. You become the gravity well.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:24px;">When you feel guilt asking for money, you are still Competitive &mdash; thinking you are taking. When you feel power asking for money, you are Creative &mdash; knowing you are giving.</p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(5)">&larr; Back</button>
+        <span class="nav-meta">Section 6 of 11</span>
+        <button class="btn" onclick="goTo(7)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 7 — SYNC 03: SOVEREIGN OVERLAY ════════════ -->
+  <div class="screen" id="screen-7">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">System Sync 03</span>
+        <h1 class="chap-title">The <em>Sovereign Overlay.</em></h1>
+        <p class="chap-sub">Install your Definite Chief Aim into the operating system.</p>
+      </div>
+
+      <div class="sync-block">
+        <span class="sync-tag">Sync Protocol · Daily, Morning</span>
+        <div class="sync-title">The Sovereign Overlay</div>
+        <p class="sync-pull">"Faith is not believing what you cannot see. Faith is seeing what is already there."</p>
+
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:18px;">
+          <strong style="color:var(--text);">Objective.</strong> Move your goal from a hope to a memory of the future. The subconscious treats vivid imagined experience the same way it treats real experience. Use that.
+        </p>
+
+        <div class="sync-step">
+          <span class="sync-step-num">01</span>
+          <span class="sync-step-text"><strong>The Card.</strong> Write your specific financial target and your service in present tense on a physical card.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">02</span>
+          <span class="sync-step-text"><strong>The Movie.</strong> Close your eyes. Visualize the moment <em>after</em> you have it &mdash; not getting it. Feel the texture of the table. See the room.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">03</span>
+          <span class="sync-step-text"><strong>The Anchor.</strong> Hold this image for 60 seconds without interruption. Smell the air. Hear the conversation.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">04</span>
+          <span class="sync-step-text"><strong>The Carry.</strong> Keep the card in your pocket. Touch it every time you feel the drift of the Old Earth frequency.</span>
+        </div>
+
+        <div class="sync-input-block" style="margin-top:22px;">
+          <label class="sync-input-label">Your Sovereign Overlay statement (what you are calling in, in present tense):</label>
+          <textarea class="field" id="overlay-stmt" rows="3" placeholder="Write it as if it has already happened."></textarea>
+        </div>
+
+        <label class="sync-mark" id="mark-sync3" onclick="toggleMark('sync3')">
+          <input type="checkbox" id="check-sync3" />
+          <span>The card is written. The Overlay is locked.</span>
+        </label>
+
+        <div class="sync-output">
+          <strong>Output</strong> The goal is no longer a hope. It is a memory of the future.
+        </div>
+
+        <p style="font-size:14px;color:var(--body-dim);line-height:1.7;margin-top:22px;font-style:italic;">
+          The Reticular Activating System (the brain's filter) shows you what you have programmed it to look for. If you do not program it, the system programs it for you &mdash; usually with anxiety. The Sovereign Overlay is your daily reprogramming protocol.
+        </p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(6)">&larr; Back</button>
+        <span class="nav-meta">Section 7 of 11</span>
+        <button class="btn" onclick="goTo(8)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 8 — EXECUTION: 5 DAILY MANEUVERS ════════════ -->
+  <div class="screen" id="screen-8">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">4.0 · The Execution</span>
+        <h1 class="chap-title">The <em>Protocol.</em></h1>
+        <p class="chap-sub">Five daily tactical maneuvers. Non-negotiable.</p>
+      </div>
+
+      <p>Knowing the field exists does not free you from it. The Containment Field is reinforced by habit. Your neural pathways were wired for reaction, fear, and consumption long before you had a say in it. To rewire them, you execute a hard reset every single day.</p>
+
+      <p>These are not self-help tips. These are counter-measures against psychological warfare.</p>
+
+      <div class="maneuver-list">
+        <div class="maneuver">
+          <span class="maneuver-num">01</span>
+          <span class="maneuver-body">
+            <strong>The Input Embargo.</strong>
+            <span>07:00&ndash;08:00: no screens, no voices, no text. Output only. Write, think, or move. You are the broadcaster.</span>
+          </span>
+        </div>
+        <div class="maneuver">
+          <span class="maneuver-num">02</span>
+          <span class="maneuver-body">
+            <strong>The Sovereign Overlay.</strong>
+            <span>Write, read aloud, and run a 60-second mental movie of your Definite Chief Aim already achieved. Not getting it. Having it.</span>
+          </span>
+        </div>
+        <div class="maneuver">
+          <span class="maneuver-num">03</span>
+          <span class="maneuver-body">
+            <strong>The Algorithmic Breach.</strong>
+            <span>Break one pattern today. Different route. Different conversation. Different choice. Breaks autopilot. Wakes consciousness.</span>
+          </span>
+        </div>
+        <div class="maneuver">
+          <span class="maneuver-num">04</span>
+          <span class="maneuver-body">
+            <strong>The Vampire Scan.</strong>
+            <span>Who tries to make you angry or fearful today? Observe like a scientist. Refuse to react. You starve the parasite.</span>
+          </span>
+        </div>
+        <div class="maneuver">
+          <span class="maneuver-num">05</span>
+          <span class="maneuver-body">
+            <strong>The Subconscious Seed.</strong>
+            <span>Pre-sleep: never fall asleep worrying. Replay the day going right. Repeat: <em>"It is done. I am free. The signal carries."</em></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(7)">&larr; Back</button>
+        <span class="nav-meta">Section 8 of 11</span>
+        <button class="btn" onclick="goTo(9)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 9 — SYNC 04: VOID OFFERING ════════════ -->
+  <div class="screen" id="screen-9">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">System Sync 04</span>
+        <h1 class="chap-title">The <em>Void Offering.</em></h1>
+        <p class="chap-sub">Initiate the Law of Equivalent Exchange.</p>
+      </div>
+
+      <div class="sync-block">
+        <span class="sync-tag">Sync Protocol · Today</span>
+        <div class="sync-title">The Void Offering</div>
+        <p class="sync-pull">"You cannot receive the harvest until you plant the seed."</p>
+
+        <p style="font-size:15px;color:var(--body);line-height:1.7;margin-bottom:18px;">
+          <strong style="color:var(--text);">Objective.</strong> Create one piece of high-frequency value today and release it into the world with zero expectation of return.
+        </p>
+
+        <div class="sync-step">
+          <span class="sync-step-num">01</span>
+          <span class="sync-step-text">The offering can be a video script, a piece of advice to a stranger, or a solution to a problem you have already solved for yourself.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">02</span>
+          <span class="sync-step-text">Release it &mdash; post it, send it, speak it &mdash; with zero expectation of reciprocity from the specific recipient.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">03</span>
+          <span class="sync-step-text">You are not trading. You are emitting. The trade happens at a different frequency, with someone you may never meet.</span>
+        </div>
+        <div class="sync-step">
+          <span class="sync-step-num">04</span>
+          <span class="sync-step-text">Once released, say aloud: <em>"The cycle has begun."</em></span>
+        </div>
+
+        <label class="sync-mark" id="mark-sync4" onclick="toggleMark('sync4')">
+          <input type="checkbox" id="check-sync4" />
+          <span>I have made the Void Offering today.</span>
+        </label>
+
+        <div class="sync-output">
+          <strong>Output</strong> The field knows you are a source, not a consumer.
+        </div>
+
+        <p style="font-size:14px;color:var(--body-dim);line-height:1.7;margin-top:22px;">
+          When you give without expectation, you signal that you operate from abundance, not scarcity. The field fills a vacuum. By emitting, you create the vacuum. By creating the vacuum, you pull. This is not mysticism. It is the mechanics of why high-frequency creators consistently out-earn reactive consumers &mdash; and why most people never understand the gap.
+        </p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(8)">&larr; Back</button>
+        <span class="nav-meta">Section 9 of 11</span>
+        <button class="btn" onclick="goTo(10)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 10 — CLOSING TRANSMISSION ════════════ -->
+  <div class="screen" id="screen-10">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">Closing Transmission</span>
+        <h1 class="chap-title">Timeline <em>Convergence.</em></h1>
+        <p class="chap-sub">The reading ends. The architecture begins.</p>
+      </div>
+
+      <p>Information is inert until it is synthesized into action. Just as foundational scriptures or blueprints for wealth possess the power to rewrite a life's trajectory, the Sovereign Architecture is a living firmware update &mdash; it only executes if you authorize the command.</p>
+
+      <p>The gulf between a conversation that leaves you unchanged and one that collapses old timelines is found entirely in your frequency alignment.</p>
+
+      <p>To absorb these truths without implementation is to trample pearls. It is a conscious return to Victim Containment. Growth is not linear. It is a funnel &mdash; a constant revisiting of fundamentals until the architecture is no longer your master, but your tool.</p>
+
+      <blockquote>
+        Choose: Sovereign Empowerment or System Containment.<br/>
+        The transmission ends. The architecture begins.
+      </blockquote>
+
+      <p>You stand at the aperture of a trajectory shift. You can treat this as lexical data, or you can use it as the trigger for escape velocity. The signal is no longer in the air. It is in your court.</p>
+
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:36px;text-align:center;">
+        Authored by Ace Richie · Sovereign Synthesis · 2026
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(9)">&larr; Back</button>
+        <span class="nav-meta">Section 10 of 11</span>
+        <button class="btn" onclick="goTo(11)">Continue to the Logic Gate &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 11 — LOGIC GATE: INITIATION ════════════ -->
+  <div class="screen" id="screen-11">
+    <section class="block first">
+      <div class="chap-header">
+        <span class="chap-num">5.0 · The Logic Gate</span>
+        <h1 class="chap-title"><em>Initiation.</em></h1>
+        <p class="chap-sub">You have the map. The next sequence is execution.</p>
+      </div>
+
+      <p>The Old Earth will try to pull you back. It will offer you distractions, doubts, and reasonable excuses to stay small. The only way to escape its gravity is to reach escape velocity. The next rungs are the velocity.</p>
+
+      <p>Each one is optional. None of them require the next. The framework runs at whatever depth you choose.</p>
+
+      <ul class="path-list" style="margin-top:24px;">
+        <li>
+          <span class="num">01</span>
+          <span class="body-cell">
+            <strong>The Diagnostic &mdash; Free</strong>
+            <span>If you haven't yet, run the Interference Pattern Diagnostic. Twelve questions. Three minutes. Returns the specific pattern currently running you.</span>
+            <a href="/diagnostic" class="btn btn-secondary" style="margin-top:14px;">Run the Diagnostic &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <span class="body-cell">
+            <strong>Protocol 77 &mdash; The Shield · $77</strong>
+            <span>The defense layer. A 21-day deployment that installs three external defense systems and one load-bearing axiom. Stops the bleeding so the rest can build.</span>
+            <a href="/p77" class="btn" style="margin-top:14px;">Deploy The Shield &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <span class="body-cell">
+            <strong>The Architect &mdash; Three Phases</strong>
+            <span>Declassification ($477), Adversarial Systems ($1,497), Sovereign Integration ($3,777). Building the life, work, and architecture the costume would never have allowed.</span>
+            <a href="/tier-4/course-portal" class="btn btn-secondary" style="margin-top:14px;">See Phase 1 &rarr;</a>
+          </span>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <span class="body-cell">
+            <strong>Inner Circle &mdash; Sovereign Licensing · $12,000</strong>
+            <span>One hundred architects. Application only. The formation itself, at its deepest rung. Tier 6 capstone is the application.</span>
+            <a href="/tier-7/member-portal" class="btn btn-secondary" style="margin-top:14px;">Inner Circle &rarr;</a>
+          </span>
+        </li>
+      </ul>
+
+      <div class="closing" style="border-top:1px solid var(--border);margin-top:32px;padding:48px 0 16px;">
+        <p>The filter is willingness, not demographics.<br/>You have the map. You have the codes. The protocol is execution.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(10)">&larr; Back to Closing</button>
+        <span class="nav-meta">Section 11 of 11 &middot; Manifesto Complete</span>
+        <button class="btn btn-ghost" onclick="restart()">Read Again</button>
+      </div>
+    </section>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- Footer -->
 <footer>
   <div class="foot-inner">
     <p>
@@ -56,6 +863,134 @@
     <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
   </div>
 </footer>
+
+<script>
+const TOTAL_SCREENS = 12; // 0..11
+const STORAGE_KEY = 'ss_manifesto_state_v1';
+const SECTION_LABELS = [
+  'Cover',
+  'Pre-Frame',
+  'The Containment Field',
+  'Input Embargo',
+  'The Glitch',
+  'Vampire Scan',
+  'The Shift',
+  'Sovereign Overlay',
+  '5 Daily Maneuvers',
+  'Void Offering',
+  'Closing',
+  'Logic Gate'
+];
+
+let state = {
+  currentScreen: 0,
+  highestReached: 0,
+  marks: { sync1: false, sync2: false, sync3: false, sync4: false },
+  inputs: { vampTime: '', vampEmo: '', vampFin: '', overlayStmt: '' }
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL_SCREENS) return;
+  // Persist any inputs from the current screen
+  captureInputs();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  state.currentScreen = n;
+  if (n > state.highestReached) state.highestReached = n;
+  saveState();
+  updateProgress(n);
+  // Hide resume banner once user takes action
+  document.getElementById('resume-banner').style.display = 'none';
+  // Re-fill inputs in case we're returning
+  hydrateInputs();
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(n) {
+  const pct = Math.round((n / (TOTAL_SCREENS - 1)) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = 'Section ' + (n) + ' of 11';
+  document.getElementById('prog-wrap').classList.toggle('visible', n > 0);
+}
+
+function toggleMark(key) {
+  const cb = document.getElementById('check-' + key);
+  // Allow input click to toggle
+  setTimeout(() => {
+    state.marks[key] = cb.checked;
+    document.getElementById('mark-' + key).classList.toggle('checked', cb.checked);
+    saveState();
+  }, 0);
+}
+
+function captureInputs() {
+  const ids = { 'vamp-time': 'vampTime', 'vamp-emo': 'vampEmo', 'vamp-fin': 'vampFin', 'overlay-stmt': 'overlayStmt' };
+  for (const id in ids) {
+    const el = document.getElementById(id);
+    if (el) state.inputs[ids[id]] = el.value;
+  }
+  saveState();
+}
+
+function hydrateInputs() {
+  const ids = { 'vamp-time': 'vampTime', 'vamp-emo': 'vampEmo', 'vamp-fin': 'vampFin', 'overlay-stmt': 'overlayStmt' };
+  for (const id in ids) {
+    const el = document.getElementById(id);
+    if (el) el.value = state.inputs[ids[id]] || '';
+  }
+  // Hydrate marks
+  for (const key in state.marks) {
+    const cb = document.getElementById('check-' + key);
+    if (cb) {
+      cb.checked = !!state.marks[key];
+      document.getElementById('mark-' + key).classList.toggle('checked', !!state.marks[key]);
+    }
+  }
+}
+
+function restart() {
+  if (!confirm('Restart the Manifesto? Your inputs will be cleared.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  state = {
+    currentScreen: 0, highestReached: 0,
+    marks: { sync1:false, sync2:false, sync3:false, sync4:false },
+    inputs: { vampTime:'', vampEmo:'', vampFin:'', overlayStmt:'' }
+  };
+  hydrateInputs();
+  goTo(0);
+}
+
+// INIT
+loadState();
+hydrateInputs();
+// Show resume banner if user has prior progress beyond cover
+if (state.highestReached > 0) {
+  const banner = document.getElementById('resume-banner');
+  document.getElementById('resume-where').textContent = 'You left off at Section ' + state.currentScreen + ' (' + (SECTION_LABELS[state.currentScreen] || '') + ').';
+  banner.style.display = 'flex';
+  document.getElementById('resume-continue').onclick = () => goTo(state.currentScreen);
+  // Show the cover behind the banner
+  goTo(0);
+  banner.style.display = 'flex'; // keep banner visible after goTo hides it
+} else {
+  goTo(0);
+}
+
+// Auto-save inputs as user types
+document.addEventListener('input', (e) => {
+  if (e.target.matches('.field')) captureInputs();
+});
+</script>
 
 </body>
 </html>
