@@ -62,6 +62,86 @@
     border-left: 2px solid var(--gold); padding: 4px 0 4px 16px;
     margin: 0 0 18px;
   }
+
+  /* Companion deliverable card (PDF / audio embed) */
+  .companion-doc {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--copper); border-radius: var(--radius);
+    padding: 22px 26px; margin: 20px 0;
+  }
+  .companion-doc .doc-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 8px; display: block;
+  }
+  .companion-doc .doc-title {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px; letter-spacing: -0.1px;
+  }
+  .companion-doc .doc-desc {
+    font-size: 14px; color: var(--body-dim); line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .companion-doc audio {
+    width: 100%; margin: 8px 0 14px; display: block;
+  }
+  .companion-doc .doc-cta {
+    display: inline-block; padding: 10px 20px;
+    font-family: var(--sans); font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text); background: var(--gold-soft);
+    border: 1.5px solid var(--gold); border-radius: var(--radius-sm);
+    text-decoration: none; transition: all 0.15s ease;
+  }
+  .companion-doc .doc-cta:hover {
+    background: var(--gold); color: var(--text); border-color: var(--gold);
+  }
+
+  /* Phase-mapped drag pattern badge */
+  .drag-block .phase-tag {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700;
+    margin-left: auto; padding-right: 12px;
+  }
+  .drag-intro {
+    font-size: 14px; color: var(--body); line-height: 1.65;
+    margin: 0 0 18px; font-style: italic;
+  }
+  .phantom-limb-note {
+    margin-top: 18px; padding: 14px 18px;
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--body-dim); line-height: 1.65;
+  }
+  .phantom-limb-note strong {
+    color: var(--text); font-family: var(--serif); font-weight: 600;
+  }
+
+  /* Deliverables archive (Complete screen) */
+  .deliverables-archive {
+    margin: 32px 0; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); text-align: left;
+  }
+  .deliverables-archive h3 {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .deliverables-archive p.deliv-sub {
+    font-size: 14px; color: var(--body-dim); margin-bottom: 16px;
+  }
+  .deliv-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--border); gap: 16px;
+  }
+  .deliv-row:last-child { border-bottom: none; }
+  .deliv-name { font-size: 14px; color: var(--body); font-family: var(--sans); }
+  .deliv-link {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gold); text-decoration: none;
+    font-weight: 700; white-space: nowrap;
+  }
+  .deliv-link:hover { color: var(--gold-hover); text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -111,6 +191,14 @@
       <div class="seq-row"><span class="seq-day">Day 14</span><span class="seq-text">First checkpoint — baseline comparison</span></div>
       <div class="seq-row"><span class="seq-day">Day 21</span><span class="seq-text">Protocol 77 fully operational</span></div>
     </div>
+
+    <div class="companion-doc" style="text-align:left;max-width:560px;margin:32px auto;">
+      <span class="doc-tag">Orientation document</span>
+      <p class="doc-title">The Shield Manual.</p>
+      <p class="doc-desc">The canonical Protocol 77 doctrine. Three systems, three counter-protocols, the full 21-day plan. Read once before you deploy. The runner walks you through it phase by phase &mdash; the Manual is the reference you can return to anytime.</p>
+      <a class="doc-cta" href="/tier-2/assets/PROTOCOL_77_v4.pdf" target="_blank">Open the Manual (PDF) &rarr;</a>
+    </div>
+
     <button class="btn" onclick="startDeployment()">Begin Deployment &rarr;</button>
   </div>
 </div>
@@ -125,6 +213,13 @@
     </div>
 
     <p class="lex-note">An <em>interference vector</em> is any person, pattern, or situation that consistently pulls your energy and attention off-mission.</p>
+
+    <div class="companion-doc">
+      <span class="doc-tag">Field tool</span>
+      <p class="doc-title">The Gray Rock Override.</p>
+      <p class="doc-desc">A printable one-pager with six scripted lines for high-friction situations. Carry it on your phone or print it for the desk. It is the tactical companion to this phase &mdash; deploy the lines verbatim until the response becomes automatic.</p>
+      <a class="doc-cta" href="/tier-2/assets/gray-rock-override.pdf" target="_blank">Download One-Pager (PDF) &rarr;</a>
+    </div>
 
     <div class="field-block">
       <span class="field-label">Interference Vector Audit</span>
@@ -155,6 +250,14 @@
       <div class="func-tag">Phase 02 of 04 · Day 2</div>
       <h2 class="phase-title">Faraday Protocol</h2>
       <p class="phase-desc">The Faraday cage blocks external electromagnetic fields. You are building the informational equivalent. Every input stream classified: Signal or Noise. Then the Input Embargo begins — a 72-hour minimum blackout of all classified Noise streams. The frequency data before and after will confirm the contamination source.</p>
+    </div>
+
+    <div class="companion-doc">
+      <span class="doc-tag">Field transmission</span>
+      <p class="doc-title">The Faraday Cage transmission.</p>
+      <p class="doc-desc">A thirty-minute sustained session. Not meditation. Not affirmation. A live re-wiring of the three systems while you listen. Run it once before you start the embargo &mdash; the audio primes the perimeter; the embargo seals it.</p>
+      <audio controls preload="metadata" src="/tier-2/assets/faraday-cage-transmission.mp3"></audio>
+      <a class="doc-cta" href="/tier-2/assets/faraday-cage-transmission.mp3" download>Download Audio (MP3) &rarr;</a>
     </div>
 
     <div class="field-block">
@@ -269,19 +372,72 @@
       <textarea id="anchor" class="field" rows="4" placeholder="I am [core identity]. My mission is [irreducible purpose]. Everything else is [classification].">I am [core identity]. My mission is [irreducible purpose]. Everything else is [classification].</textarea>
     </div>
 
-    <div style="margin:24px 0">
-      <h3 class="h3" style="margin-bottom:14px;">Counter-Protocols for Biological Drag</h3>
+    <div style="margin:32px 0">
+      <h3 class="h3" style="margin-bottom:10px;">Counter-Protocols for Biological Drag.</h3>
+      <p class="drag-intro">Biological drag is the failure-mode catalog for the four phases. When you feel pulled off-mission, identify which phase is being eroded &mdash; then deploy the matching counter-protocol below.</p>
+
       <div class="drag-block" onclick="this.classList.toggle('open')">
-        <div class="drag-header"><span class="drag-name">Overheating CPU</span><span class="drag-arrow">▾</span></div>
-        <div class="drag-content"><span class="counter-label">Counter-Protocol</span>Manufactured urgency and drama escalation fill your working memory with low-priority, high-emotion signals until no bandwidth remains for sovereign work. Identify your top 3 recurring overload triggers. Name them. Label them as "CPU overload events" — not emergencies. Respond on a 24-hour delay minimum.</div>
+        <div class="drag-header">
+          <span class="drag-name">The Provocation Cascade</span>
+          <span class="phase-tag">Defends Phase 1 · Gray Rock</span>
+          <span class="drag-arrow">▾</span>
+        </div>
+        <div class="drag-content">
+          <span class="counter-label">Pattern</span>
+          An interference vector senses Gray Rock and escalates. First a small jab. Then a louder one. Then something explicit, designed to force a reaction. The cascade is structured to find the threshold where Gray Rock breaks.
+          <br/><br/>
+          <span class="counter-label">Counter-Protocol</span>
+          Hold the flatline through the second and third escalation. Most architects break on round three. Round three is where the vector exhausts its arsenal &mdash; if you do not react, the pattern collapses and the cascade itself becomes evidence of the architecture you have just exposed.
+        </div>
       </div>
+
       <div class="drag-block" onclick="this.classList.toggle('open')">
-        <div class="drag-header"><span class="drag-name">Insomnia of the Architect</span><span class="drag-arrow">▾</span></div>
-        <div class="drag-content"><span class="counter-label">Counter-Protocol</span>Sleep disruption is a biological attack vector. Your most critical sovereign work — pattern recognition, strategic clarity, emotional regulation — requires sleep. Sleep is infrastructure. Protect it with the same rigor as production systems. Your sleep window is non-negotiable sovereign territory.</div>
+        <div class="drag-header">
+          <span class="drag-name">The Re-Infection Vector</span>
+          <span class="phase-tag">Defends Phase 2 · Faraday</span>
+          <span class="drag-arrow">▾</span>
+        </div>
+        <div class="drag-content">
+          <span class="counter-label">Pattern</span>
+          A Noise stream you successfully embargoed sneaks back in through a "harmless" or "necessary" channel. A friend forwards a clip. The algorithm slips one past. You check "just one notification." The seal looks intact &mdash; but the signal is leaking.
+          <br/><br/>
+          <span class="counter-label">Counter-Protocol</span>
+          Re-classify the channel that let it through. Tighten the embargo on that specific path. The leak is never the noise itself; the leak is the channel that decided to admit it. Treat the channel as the failure point, not the content.
+        </div>
       </div>
+
       <div class="drag-block" onclick="this.classList.toggle('open')">
-        <div class="drag-header"><span class="drag-name">Phantom Limb</span><span class="drag-arrow">▾</span></div>
-        <div class="drag-content"><span class="counter-label">Counter-Protocol</span>The psychological residue of severed interference connections. Former parasitic relationships, terminated systems, or exited environments that continue consuming bandwidth through rumination and grief loops. Phantom Limb is real but it is not signal. It is noise from a severed connection. Acknowledge the sensation — refuse to act on it — redirect bandwidth to the living architecture.</div>
+        <div class="drag-header">
+          <span class="drag-name">The Crowd Pull</span>
+          <span class="phase-tag">Defends Phase 3 · Lighthouse</span>
+          <span class="drag-arrow">▾</span>
+        </div>
+        <div class="drag-content">
+          <span class="counter-label">Pattern</span>
+          Social pressure to leave the elevated position and "engage." Debate the wrong frame. Defend yourself against accusations made in bad faith. Justify your stance to people who do not have the prerequisites to evaluate it. The pull always feels reasonable in the moment.
+          <br/><br/>
+          <span class="counter-label">Counter-Protocol</span>
+          Lighthouses do not negotiate with ships. Restate your position once if context allows. Then return to transmission. Reception remains the ship's responsibility &mdash; not the Lighthouse's burden to descend.
+        </div>
+      </div>
+
+      <div class="drag-block" onclick="this.classList.toggle('open')">
+        <div class="drag-header">
+          <span class="drag-name">Anchor Erosion</span>
+          <span class="phase-tag">Defends Phase 4 · Sovereign Anchor</span>
+          <span class="drag-arrow">▾</span>
+        </div>
+        <div class="drag-content">
+          <span class="counter-label">Pattern</span>
+          Fatigue, failure, or sustained criticism gradually loosen the Anchor's grip until you no longer feel certain of who you are. Subtle. Slow. The most dangerous of the four because you do not notice it eroding &mdash; you only notice the result.
+          <br/><br/>
+          <span class="counter-label">Counter-Protocol</span>
+          Re-read the Anchor card aloud once daily, no matter how stable you feel. Repetition keeps the axiom load-bearing. The Anchor is not installed once &mdash; it is maintained. Days without re-reading are days the erosion runs unchecked.
+        </div>
+      </div>
+
+      <div class="phantom-limb-note">
+        <strong>A note on Phantom Limb sensations.</strong> After Gray Rock and Faraday land, you will feel the psychological residue of severed Containment Field connections &mdash; rumination, grief loops, the urge to reach back. This is not a drag pattern. It is a normal side-effect of the perimeter sealing correctly. Acknowledge the sensation. Refuse to act on it. It fades.
       </div>
     </div>
 
@@ -319,6 +475,27 @@
       <h2 class="cta-headline">Shield activated. Now navigate the full architecture.</h2>
       <p class="cta-sub">Once the bleeding stops, the Map teaches you to read what a room is optimizing for before you walk into it.</p>
       <a class="btn" href="/tier-3/manifesto-navigator">Deploy The Map · $177 &rarr;</a>
+    </div>
+
+    <div class="deliverables-archive">
+      <h3>Your deliverables &mdash; archived.</h3>
+      <p class="deliv-sub">Every piece of Protocol 77 is yours, permanently. Return to any of them whenever the perimeter needs reinforcing.</p>
+      <div class="deliv-row">
+        <span class="deliv-name">The Shield Manual &middot; canonical doctrine</span>
+        <a class="deliv-link" href="/tier-2/assets/PROTOCOL_77_v4.pdf" target="_blank">Open PDF &rarr;</a>
+      </div>
+      <div class="deliv-row">
+        <span class="deliv-name">Gray Rock Override &middot; field one-pager</span>
+        <a class="deliv-link" href="/tier-2/assets/gray-rock-override.pdf" target="_blank">Open PDF &rarr;</a>
+      </div>
+      <div class="deliv-row">
+        <span class="deliv-name">Faraday Cage transmission &middot; 30-min audio</span>
+        <a class="deliv-link" href="/tier-2/assets/faraday-cage-transmission.mp3" target="_blank">Open Audio &rarr;</a>
+      </div>
+      <div class="deliv-row">
+        <span class="deliv-name">Interference Pattern Diagnostic &middot; pattern locator</span>
+        <a class="deliv-link" href="/diagnostic">Run Diagnostic &rarr;</a>
+      </div>
     </div>
 
     <hr class="divider-line">
