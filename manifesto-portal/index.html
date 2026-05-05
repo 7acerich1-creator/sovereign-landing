@@ -205,6 +205,31 @@
     font-size: 14px; color: var(--body); margin: 0;
   }
   .resume-banner .btn { padding: 10px 18px; font-size: 11px; }
+
+  /* Recommended-next-step tag (Path Forward) */
+  .rec-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    background: var(--gold-soft);
+  }
+  .rec-why {
+    display: block;
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--body-dim);
+    font-style: italic;
+    margin: 10px 0 0;
+    line-height: 1.6;
+  }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -814,8 +839,10 @@
         <li>
           <span class="num">02</span>
           <span class="body-cell">
+            <span class="rec-tag">Recommended baseline</span>
             <strong>Protocol 77 &mdash; The Shield · $77</strong>
             <span>The defense layer. A 21-day deployment that installs three external defense systems and one load-bearing axiom. Stops the bleeding so the rest can build.</span>
+            <span class="rec-why">The smallest move with the biggest immediate return. The Shield seals the perimeter so the daily energy leak stops &mdash; and you start feeling like yourself again, often within the first week. Twenty-one days. Plain steps. No deeper commitment required &mdash; once it holds, you decide what comes next.</span>
             <a href="/p77" class="btn" style="margin-top:14px;">Deploy The Shield &rarr;</a>
           </span>
         </li>
