@@ -154,6 +154,13 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const TIER_INFO = {
+  protocol_zero: {
+    name: 'Protocol Zero — The One Sitdown',
+    desc: 'The awareness installation. The architecture, named. Free.',
+    tag: 'Tier 00',
+    url: '/tier-0/protocol-zero',
+    rank: 0
+  },
   p77: {
     name: 'Protocol 77 — The Shield',
     desc: 'The defense layer. 21-day deployment. Stops the daily energy leak.',
@@ -202,9 +209,9 @@ function getRecommendation(userTiers) {
   if (userTiers.length === 0) {
     return {
       kicker: 'Start here',
-      title: 'Run the diagnostic.',
-      desc: 'Twelve questions. Three minutes. Returns the specific pattern currently running you — and the framework for stepping out of it. Free.',
-      url: '/diagnostic'
+      title: 'Begin Protocol Zero.',
+      desc: 'The one sitdown. Free. Fifteen minutes. The architecture, named — once. After this, the framework is all solutions.',
+      url: '/protocol-zero'
     };
   }
   if (userTiers.includes('inner_circle')) return null;

@@ -13,9 +13,12 @@
 
 | ☐ | Live URL | Repo path | What it is |
 |---|----------|-----------|------------|
-| ☐ | https://sovereign-synthesis.com/ | `index.html` | Main landing — refined |
+| ☐ | https://sovereign-synthesis.com/ | `index.html` | Main landing — Protocol Zero is now headline offer |
 | ☐ | https://sovereign-synthesis.com/about | `about.html` | Purpose page |
-| ☐ | https://sovereign-synthesis.com/diagnostic | `tier-1/diagnostic.html` | Interference Pattern Diagnostic — full reskin |
+| ☐ | https://sovereign-synthesis.com/protocol-zero | `protocol-zero/index.html` | **NEW** — The Entry. $0 free product. Email signup → enroll_protocol_zero RPC → magic link to Tier 0 portal. |
+| ☐ | https://sovereign-synthesis.com/newsletter | `newsletter/index.html` | **NEW** — Newsletter archive index. Numbered editions. Subscribe form writes to newsletter_subscribers. |
+| ☐ | https://sovereign-synthesis.com/newsletter/your-default-settings-are-a-lie | `newsletter/your-default-settings-are-a-lie/index.html` | **NEW** — Edition 01 (Anita's draft). |
+| ☐ | https://sovereign-synthesis.com/diagnostic | `tier-1/diagnostic.html` | Interference Pattern Diagnostic — also the capstone of Tier 0 Protocol Zero |
 | ☐ | https://sovereign-synthesis.com/manual | `manual/index.html` | **Reality Override Manual INTERACTIVE — 7 sections, NPC vs Architect diagnostic with personalized tally, vocabulary defined inline. PDF lives as companion.** |
 | ☐ | https://sovereign-synthesis.com/manifesto-portal | `manifesto-portal/index.html` | **Manifesto INTERACTIVE — 11 sections, save-state, vocabulary defined inline** |
 | ☐ | https://sovereign-synthesis.com/p77 | `p77/index.html` | Protocol 77 sales page |
@@ -26,7 +29,15 @@
 | ☐ | https://sovereign-synthesis.com/login | `login.html` | **Universal login** — magic-link entry point, works on any device. Supports `?next=/path` for post-auth redirect. |
 | ☐ | https://sovereign-synthesis.com/members | `members/index.html` | **Members dashboard** — lists every active tier the signed-in user has, plus smart "next rung" recommendation. Sign-out button. |
 
-## 2. PAID MEMBER PORTALS (auth-gated · uses `/js/auth-gate.js`)
+## 2. MEMBER PORTALS (auth-gated · uses `/js/auth-gate.js`)
+
+**Free tier (auto-enroll on signup at $0):**
+
+| ☐ | Live URL | Repo path | Tier slug | Price |
+|---|----------|-----------|-----------|-------|
+| ☐ | /tier-0/protocol-zero | `tier-0/protocol-zero/index.html` | `protocol_zero` | $0 |
+
+**Paid tiers:**
 
 The auth overlay is now light editorial — every paid customer gets the on-brand "Access your portal" card.
 

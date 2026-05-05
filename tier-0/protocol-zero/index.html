@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocol Zero | Sovereign Synthesis</title>
+<meta name="description" content="The one sitdown. Free. Read once. Carry once. Then we build." />
+<link rel="canonical" href="https://sovereign-synthesis.com/tier-0/protocol-zero" />
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Protocol Zero — blunt voice, tighter screens */
+  .screen { display: none; animation: fadeUp .4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .pz-screen-header { text-align: left; margin: 16px 0 28px; }
+  .pz-screen-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 12px; display: block;
+  }
+  .pz-screen-title {
+    font-family: var(--serif); font-size: clamp(32px, 5vw, 46px);
+    font-weight: 600; line-height: 1.15; letter-spacing: -0.4px;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .pz-screen-title em { font-style: italic; color: var(--gold); font-weight: 600; }
+  .pz-screen-sub {
+    font-family: var(--serif); font-style: italic;
+    font-size: 19px; color: var(--body-dim); margin-bottom: 4px;
+  }
+  .pz-body p {
+    font-family: var(--serif); font-size: 18px; line-height: 1.7;
+    color: var(--body); margin: 0 0 18px;
+  }
+  .pz-body p strong {
+    font-family: var(--serif); color: var(--text); font-weight: 700;
+  }
+  .pz-define {
+    background: var(--card-soft); border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 22px 26px; margin: 28px 0;
+  }
+  .pz-define-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); font-weight: 700; text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .pz-define p {
+    font-family: var(--serif); font-size: 17px; line-height: 1.6;
+    color: var(--body); margin: 0;
+  }
+  .pz-define p strong {
+    color: var(--text); font-weight: 700;
+  }
+
+  /* Body signals (proof in your own life) */
+  .pz-signal-list { margin: 28px 0 32px; }
+  .pz-signal {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 22px 0; border-bottom: 1px solid var(--border);
+  }
+  .pz-signal:first-child { border-top: 1px solid var(--border); }
+  .pz-signal-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--copper); font-weight: 700; min-width: 32px;
+    padding-top: 4px;
+  }
+  .pz-signal-body {
+    font-family: var(--serif); font-size: 17px; line-height: 1.6;
+    color: var(--body);
+  }
+  .pz-signal-body strong {
+    display: block; font-weight: 700; color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  /* Cost block */
+  .pz-cost-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;
+    margin: 28px 0;
+  }
+  @media (max-width: 700px) { .pz-cost-grid { grid-template-columns: 1fr; } }
+  .pz-cost-cell {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--danger); border-radius: var(--radius);
+    padding: 22px 24px;
+  }
+  .pz-cost-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: var(--danger); font-weight: 700; text-transform: uppercase;
+    margin-bottom: 8px; display: block;
+  }
+  .pz-cost-text {
+    font-family: var(--serif); font-size: 15px; line-height: 1.55;
+    color: var(--body);
+  }
+
+  /* The pivot screen — different feel */
+  .pz-pivot {
+    text-align: center; padding: 80px 0;
+  }
+  .pz-pivot-statement {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(24px, 4vw, 32px); line-height: 1.4;
+    color: var(--text); max-width: 640px; margin: 0 auto;
+  }
+
+  /* Diagnostic capstone */
+  .pz-diag-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 32px 36px; margin: 28px 0;
+    text-align: center;
+  }
+  .pz-diag-box h3 {
+    font-family: var(--serif); font-size: 24px; font-weight: 600;
+    color: var(--text); margin-bottom: 12px; letter-spacing: -0.2px;
+  }
+  .pz-diag-box p {
+    font-family: var(--serif); font-size: 16px; line-height: 1.6;
+    color: var(--body); margin-bottom: 22px; max-width: 540px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  /* Continue / door screen */
+  .pz-door-list {
+    display: flex; flex-direction: column; gap: 12px;
+    margin: 28px 0;
+  }
+  .pz-door {
+    display: flex; gap: 18px; align-items: center;
+    padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    text-decoration: none; color: inherit;
+    transition: border-color .15s ease;
+  }
+  .pz-door:hover { border-color: var(--gold); }
+  .pz-door-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); font-weight: 700; min-width: 32px;
+  }
+  .pz-door-info { flex: 1; }
+  .pz-door-name {
+    font-family: var(--serif); font-size: 18px; font-weight: 600;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .pz-door-desc {
+    font-family: var(--serif); font-size: 14px; line-height: 1.55;
+    color: var(--body-dim);
+  }
+  .pz-door-arrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+    color: var(--gold); font-weight: 700; text-transform: uppercase;
+  }
+
+  /* Bottom nav */
+  .nav-row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 32px 0 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .nav-meta {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  /* Resume banner */
+  .resume-banner {
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 16px 22px; margin: 0 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap;
+  }
+
+  /* Top contract banner — appears on screen 0 only */
+  .contract-banner {
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px;
+    margin: 24px 0 32px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+    color: var(--gold); font-weight: 700; text-transform: uppercase;
+    text-align: center;
+  }
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<div class="wrap">
+
+  <div class="resume-banner" id="resume-banner" style="display:none;">
+    <p>You started reading. <strong id="resume-where">—</strong></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="resume-continue">Continue &rarr;</button>
+      <button class="btn btn-ghost" onclick="restart()">Start Over</button>
+    </div>
+  </div>
+
+  <!-- ════════════ SCREEN 0 — THE CONTRACT ════════════ -->
+  <div class="screen active" id="screen-0">
+    <section class="hero" style="padding-top:64px;padding-bottom:36px;">
+      <span class="kicker">Protocol Zero · Tier 0</span>
+      <h1>We're going to do<br/><em>this once.</em></h1>
+      <p class="lede">After this, every piece of the architecture is a solution. We do not return to the diagnosis.</p>
+    </section>
+
+    <section class="block first">
+      <div class="contract-banner">
+        Read carefully. We don't repeat it.
+      </div>
+
+      <div class="pz-body">
+        <p>You have been told a thousand times that something is off. Sometimes you have agreed. Sometimes you have argued back. Either way, the something has not gone away.</p>
+        <p>This document does one thing. It names what is producing that feeling. Specifically. Without metaphor. Without softening. Then we move forward.</p>
+        <p>The framework you are now inside &mdash; Sovereign Synthesis &mdash; spends the rest of its time on solutions. Not on diagnosis. Not on therapy of the problem. Solutions. This page is the only exception. The only place where we slow down to make the problem completely visible.</p>
+        <p>Read it once. Carry it once. Then we build.</p>
+      </div>
+
+      <div class="nav-row">
+        <span class="nav-meta">Section 1 of 6</span>
+        <button class="btn" onclick="goTo(1)">Begin &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 1 — THE REVEAL ════════════ -->
+  <div class="screen" id="screen-1">
+    <section class="block first">
+      <div class="pz-screen-header">
+        <span class="pz-screen-num">1.0 · The Reveal</span>
+        <h1 class="pz-screen-title">What is actually <em>running you.</em></h1>
+        <p class="pz-screen-sub">Plain English. No metaphor. No allusion.</p>
+      </div>
+
+      <div class="pz-body">
+        <p>Pop culture calls it the Matrix. That word is unconscious shorthand for something specific that exists. The problem with the shorthand is that it sounds like fiction, so people treat it like fiction.</p>
+        <p>It is not fiction. The thing the word is pointing at is real. We call it <strong>The Containment Field</strong>.</p>
+      </div>
+
+      <div class="pz-define">
+        <span class="pz-define-tag">Definition</span>
+        <p><strong>The Containment Field.</strong> A psychological control architecture that operates by remaining unnamed. It is the inherited script that tells you how to want, what to feel, who to be, what to fear. It runs underneath your daily attention. You did not consent to its installation. Most of it was installed before you were old enough to consent to anything.</p>
+      </div>
+
+      <div class="pz-body">
+        <p>It is not a conspiracy. It is the steady-state of a system that runs on your reactivity. When you react &mdash; to fear, to disapproval, to the algorithm, to the social pressure of the room &mdash; the system gets fed. When you stop reacting, the system loses fuel. That is the entire mechanism.</p>
+        <p>It does not need anyone to maintain it on purpose. It maintains itself by harvesting the reactions of the people inside it. You are one of those people. Right now. Reading this sentence.</p>
+        <p>The reason you have not been able to name it is that the architecture was specifically designed to stay invisible. Naming it is the first move out.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(0)">&larr; Back</button>
+        <span class="nav-meta">Section 2 of 6</span>
+        <button class="btn" onclick="goTo(2)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 2 — PROOF IN YOUR OWN LIFE ════════════ -->
+  <div class="screen" id="screen-2">
+    <section class="block first">
+      <div class="pz-screen-header">
+        <span class="pz-screen-num">2.0 · The Proof</span>
+        <h1 class="pz-screen-title">You already <em>have the data.</em></h1>
+        <p class="pz-screen-sub">Four signals. You can verify each one in two minutes.</p>
+      </div>
+
+      <div class="pz-body">
+        <p>You don't have to take any of this on faith. The Containment Field has specific, body-level signatures. You have already had each one of these many times. The only thing that has been missing is the name.</p>
+      </div>
+
+      <div class="pz-signal-list">
+        <div class="pz-signal">
+          <span class="pz-signal-num">01</span>
+          <span class="pz-signal-body">
+            <strong>The reflexive yes.</strong>
+            Someone asks you for something. Before you have finished thinking, your mouth has already produced the word "yes." There is a small tightness at your throat that you swallowed. By the time you realize you didn't actually want to say yes, the conversation has moved on. You will deal with the cost in calendar time later this week.
+          </span>
+        </div>
+        <div class="pz-signal">
+          <span class="pz-signal-num">02</span>
+          <span class="pz-signal-body">
+            <strong>The Sunday night tightening.</strong>
+            You look at the week ahead. Your body tightens before your mind has finished cataloging what is on the calendar. You assumed this was just adult life. It is not just adult life. It is your nervous system reading a calendar that a different version of you would not have agreed to.
+          </span>
+        </div>
+        <div class="pz-signal">
+          <span class="pz-signal-num">03</span>
+          <span class="pz-signal-body">
+            <strong>The conversation you keep replaying.</strong>
+            Hours after a hard exchange, you are still rehearsing it. What you should have said. What they really meant. What they think of you now. The replaying is not productive thought. It is the system extracting more reactivity from the conversation after the conversation has already ended.
+          </span>
+        </div>
+        <div class="pz-signal">
+          <span class="pz-signal-num">04</span>
+          <span class="pz-signal-body">
+            <strong>The room you adjust to without noticing.</strong>
+            You walk into a room. Your tone, your posture, your sentences subtly shift to match the temperature of whoever else is there. You did not decide to do this. You did not even notice doing it. By the time you leave the room, the version of you that walked in is no longer the version of you that walked out.
+          </span>
+        </div>
+      </div>
+
+      <div class="pz-body">
+        <p>If you recognized any of these &mdash; one of them, two of them, all four &mdash; the Containment Field is not theoretical for you. It is operating right now. The recognition itself is the first crack in it.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(1)">&larr; Back</button>
+        <span class="nav-meta">Section 3 of 6</span>
+        <button class="btn" onclick="goTo(3)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 3 — WHAT IT COSTS ════════════ -->
+  <div class="screen" id="screen-3">
+    <section class="block first">
+      <div class="pz-screen-header">
+        <span class="pz-screen-num">3.0 · The Cost</span>
+        <h1 class="pz-screen-title">What you have <em>been paying.</em></h1>
+        <p class="pz-screen-sub">Three line items. Calculated in your actual life.</p>
+      </div>
+
+      <div class="pz-body">
+        <p>The Containment Field is not free to inhabit. It charges three things, continuously, in the background.</p>
+      </div>
+
+      <div class="pz-cost-grid">
+        <div class="pz-cost-cell">
+          <span class="pz-cost-tag">01 · Capacity</span>
+          <p class="pz-cost-text">The energetic tax of holding a costume on while a different version of you tries to move underneath it. Most of your daily exhaustion is not from the work you are doing. It is from this.</p>
+        </div>
+        <div class="pz-cost-cell">
+          <span class="pz-cost-tag">02 · Time</span>
+          <p class="pz-cost-text">Every reflexive yes has to be cleaned up later in calendar time. Every replayed conversation steals the hours it occupies. The math is brutal once you see it.</p>
+        </div>
+        <div class="pz-cost-cell">
+          <span class="pz-cost-tag">03 · Reality</span>
+          <p class="pz-cost-text">Your sentences begin to filter for the reaction you expect them to produce. Over years, you stop hearing your own voice. The version of you that lives in your body has not spoken in a long time.</p>
+        </div>
+      </div>
+
+      <div class="pz-body">
+        <p>This is why nothing else has worked. Therapy operates one floor up from the architecture and never names the floor itself. Self-help operates two floors up. Time management operates three. None of them touch the source.</p>
+        <p>The Containment Field is the source. It is what produces the symptoms the other frameworks treat. Treating symptoms is why you are tired but the tiredness has not gotten better.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(2)">&larr; Back</button>
+        <span class="nav-meta">Section 4 of 6</span>
+        <button class="btn" onclick="goTo(4)">Continue &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 4 — THE PIVOT ════════════ -->
+  <div class="screen" id="screen-4">
+    <section class="block first">
+      <div class="pz-screen-header" style="text-align:center;">
+        <span class="pz-screen-num" style="display:inline-block;">4.0 · The Pivot</span>
+      </div>
+
+      <div class="pz-pivot">
+        <p class="pz-pivot-statement">
+          That was the diagnosis.<br/><br/>
+          The rest of the framework is solutions.<br/>
+          We do not return to this.
+        </p>
+      </div>
+
+      <div class="pz-body" style="max-width:600px;margin:0 auto;">
+        <p>The next move is to identify the specific shape of the Containment Field's grip on you. Everyone has a primary pattern. Yours is the door the rest of the architecture will be calibrated against.</p>
+        <p>The diagnostic on the next screen returns that pattern. Three minutes. Twelve questions. The first answer is usually the true one.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(3)">&larr; Back</button>
+        <span class="nav-meta">Section 5 of 6</span>
+        <button class="btn" onclick="goTo(5)">Continue to the diagnostic &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 5 — DIAGNOSTIC CAPSTONE ════════════ -->
+  <div class="screen" id="screen-5">
+    <section class="block first">
+      <div class="pz-screen-header">
+        <span class="pz-screen-num">5.0 · The Capstone</span>
+        <h1 class="pz-screen-title">Your <em>specific pattern.</em></h1>
+        <p class="pz-screen-sub">Three minutes. Twelve questions. Returns the door.</p>
+      </div>
+
+      <div class="pz-diag-box">
+        <h3>Run the diagnostic.</h3>
+        <p>The diagnostic returns the specific Containment Field pattern currently running you, plus the framework rung calibrated against that pattern. Most people receive their pattern within three minutes of starting.</p>
+        <a href="/diagnostic" class="btn">Run the Diagnostic &rarr;</a>
+      </div>
+
+      <div class="pz-body" style="margin-top:32px;">
+        <p>The diagnostic opens in this same tab. When it ends, you will have a specific pattern name and a recommended next move. Return here when you're done &mdash; the last screen shows everything you have access to as a member.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(4)">&larr; Back</button>
+        <span class="nav-meta">Section 6 of 6</span>
+        <button class="btn" onclick="goTo(6)">Continue to the door &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════ SCREEN 6 — THE DOOR ════════════ -->
+  <div class="screen" id="screen-6">
+    <section class="block first">
+      <div class="pz-screen-header">
+        <span class="pz-screen-num">Continue</span>
+        <h1 class="pz-screen-title">The architecture is <em>open to you.</em></h1>
+        <p class="pz-screen-sub">You are a member. Every rung is visible. None is required.</p>
+      </div>
+
+      <div class="pz-body">
+        <p>From here forward, none of the architecture is hidden from you. You can move at the pace your life allows. The framework runs at whatever depth you choose.</p>
+      </div>
+
+      <div class="pz-door-list">
+        <a href="/members" class="pz-door">
+          <span class="pz-door-num">→</span>
+          <div class="pz-door-info">
+            <p class="pz-door-name">Your Member Dashboard</p>
+            <p class="pz-door-desc">Every property you have access to, in one place. Start here.</p>
+          </div>
+          <span class="pz-door-arrow">Enter &rarr;</span>
+        </a>
+        <a href="/manual" class="pz-door">
+          <span class="pz-door-num">→</span>
+          <div class="pz-door-info">
+            <p class="pz-door-name">The Reality Override Manual</p>
+            <p class="pz-door-desc">The deeper read. Free. The companion document to what you just absorbed.</p>
+          </div>
+          <span class="pz-door-arrow">Read &rarr;</span>
+        </a>
+        <a href="/p77" class="pz-door">
+          <span class="pz-door-num">→</span>
+          <div class="pz-door-info">
+            <p class="pz-door-name">Protocol 77 — The Shield · $77</p>
+            <p class="pz-door-desc">The defense layer. Twenty-one days. Stops the daily energy leak. Recommended baseline.</p>
+          </div>
+          <span class="pz-door-arrow">Open &rarr;</span>
+        </a>
+        <a href="/newsletter" class="pz-door">
+          <span class="pz-door-num">→</span>
+          <div class="pz-door-info">
+            <p class="pz-door-name">The Newsletter</p>
+            <p class="pz-door-desc">One mechanism named per edition. Read what is being made visible.</p>
+          </div>
+          <span class="pz-door-arrow">Browse &rarr;</span>
+        </a>
+      </div>
+
+      <div class="pz-body" style="margin-top:32px;text-align:center;font-style:italic;color:var(--body-dim);">
+        <p>Welcome to the formation.</p>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goTo(5)">&larr; Back</button>
+        <span class="nav-meta">Protocol Zero · Complete</span>
+        <button class="btn btn-ghost" onclick="restart()">Read again</button>
+      </div>
+    </section>
+  </div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+const TOTAL_SCREENS = 7; // 0..6
+const STORAGE_KEY = 'ss_protocol_zero_state_v1';
+const SECTION_LABELS = [
+  'The Contract',
+  'The Reveal',
+  'The Proof',
+  'The Cost',
+  'The Pivot',
+  'The Capstone',
+  'The Door'
+];
+
+let state = {
+  currentScreen: 0,
+  highestReached: 0
+};
+
+// Load state
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) state = Object.assign(state, JSON.parse(saved));
+} catch (e) {}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL_SCREENS) return;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-' + n);
+  if (target) {
+    target.classList.add('active');
+    state.currentScreen = n;
+    if (n > state.highestReached) state.highestReached = n;
+    saveState();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const banner = document.getElementById('resume-banner');
+    if (banner) banner.style.display = 'none';
+  }
+}
+
+function restart() {
+  state = { currentScreen: 0, highestReached: 0 };
+  saveState();
+  goTo(0);
+}
+
+// Resume logic
+if (state.highestReached > 0 && state.currentScreen > 0) {
+  const banner = document.getElementById('resume-banner');
+  document.getElementById('resume-where').textContent =
+    'Last visit: ' + SECTION_LABELS[state.currentScreen] +
+    ' (' + (state.currentScreen + 1) + ' of ' + TOTAL_SCREENS + ')';
+  if (banner) banner.style.display = 'flex';
+  const savedScreen = state.currentScreen;
+  document.getElementById('resume-continue').onclick = () => goTo(savedScreen);
+  goTo(0);
+  if (banner) banner.style.display = 'flex';
+} else {
+  goTo(0);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'protocol_zero';</script>
+<script src="/js/auth-gate.js"></script>
+
+</body>
+</html>
