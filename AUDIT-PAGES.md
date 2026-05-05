@@ -103,7 +103,7 @@ Two complete. Two remaining.
 |---|----------|-----------|--------|
 | ☐ | /tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf | `tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf` | **REBUILT** — 9 pages, light editorial. Linked from /manual cover. |
 | ☐ | /tier-3/assets/SOVEREIGN_ARCHITECTURE_MANIFESTO.pdf | `tier-3/assets/SOVEREIGN_ARCHITECTURE_MANIFESTO.pdf` | **NEW** — 16 pages. Linked from /manifesto-portal cover, /tier-3/manifesto-navigator, and tier-3 purchase email. |
-| ☐ | /tier-2/assets/PROTOCOL_77_v4.pdf | `tier-2/assets/PROTOCOL_77_v4.pdf` | Legacy aesthetic. Needs 77→21 day audit + light rebuild. |
+| ☐ | /tier-2/assets/THE_SHIELD_MANUAL.pdf | `tier-2/assets/THE_SHIELD_MANUAL.pdf` | **REBUILT** — 19 pages, light editorial. Renamed from PROTOCOL_77_v4.pdf. Aligned with 4-phase runner architecture (Gray Rock / Faraday / Lighthouse / Anchor) — preserves the 3 underlying systems (Approval Reflex / Overload Spiral / Identity Lock) as diagnostic doctrine. 21-day deployment plan replaces old 77-day plan. Linked from runner briefing + deliverables. |
 | ☐ | /tier-2/assets/GRAY_ROCK_FIELD_MANUAL.pdf | `tier-2/assets/GRAY_ROCK_FIELD_MANUAL.pdf` | **REBUILT + EXPANDED** — 19-page playbook (was 3-page one-pager). 12 scripted lines, 4 vector types, 5 trigger patterns, 7-day install, failure modes, field scenarios. Linked from runner Phase 1 + deliverables. Old gray-rock-override.pdf removed. |
 
 ## 8. WHAT'S STILL ON THE DOCKET
