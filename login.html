@@ -114,6 +114,14 @@ const redirectUrl = window.location.origin + nextPath;
 function showLoginForm() {
   document.getElementById('login-checking').style.display = 'none';
   document.getElementById('login-content').style.display = 'block';
+
+  // If user just signed out, show confirmation banner
+  if (urlParams.get('signed_out') === '1') {
+    const status = document.getElementById('login-status');
+    status.className = 'login-status info';
+    status.textContent = 'You have been signed out. Enter your email to sign back in from any device.';
+  }
+
   setTimeout(() => {
     const emailInput = document.getElementById('login-email');
     if (emailInput) emailInput.focus();
