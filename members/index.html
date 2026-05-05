@@ -215,7 +215,7 @@ function getRecommendation(userTiers) {
     };
   }
   if (userTiers.includes('inner_circle')) return null;
-  const ranks = userTiers.map(t => TIER_INFO[t]?.rank || 0);
+  const ranks = userTiers.map(t => TIER_INFO[t]?.rank ?? 0);
   const maxRank = Math.max(...ranks);
   if (maxRank < 2) {
     return {
@@ -296,7 +296,7 @@ async function init() {
     list.style.display = 'none';
     document.getElementById('empty-state').style.display = 'block';
   } else {
-    tiersToShow.sort((a, b) => (TIER_INFO[a]?.rank || 99) - (TIER_INFO[b]?.rank || 99));
+    tiersToShow.sort((a, b) => (TIER_INFO[a]?.rank ?? 99) - (TIER_INFO[b]?.rank ?? 99));
     list.innerHTML = tiersToShow.map(slug => {
       const info = TIER_INFO[slug];
       if (!info) return '';
