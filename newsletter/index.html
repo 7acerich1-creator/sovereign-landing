@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter | Sovereign Synthesis</title>
+<meta name="description" content="The Containment Field operates by staying unnamed. This is where it gets named. One mechanism per edition." />
+<link rel="canonical" href="https://sovereign-synthesis.com/newsletter" />
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .news-list { margin: 32px 0 48px; }
+  .news-row {
+    display: flex; gap: 32px; align-items: flex-start;
+    padding: 28px 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: inherit;
+    transition: opacity .15s ease;
+  }
+  .news-row:last-child { border-bottom: none; }
+  .news-row:hover { opacity: 0.78; }
+  .news-num {
+    font-family: var(--mono); font-size: 11px; color: var(--gold);
+    letter-spacing: 2px; font-weight: 700; min-width: 56px;
+    padding-top: 4px;
+  }
+  .news-meta { flex: 1; }
+  .news-date {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .news-title {
+    font-family: var(--serif); font-size: 22px; font-weight: 600;
+    color: var(--text); line-height: 1.3; letter-spacing: -0.2px;
+    margin-bottom: 8px;
+  }
+  .news-dek {
+    font-family: var(--serif); font-style: italic;
+    font-size: 15px; color: var(--body-dim); line-height: 1.6;
+  }
+  .news-arrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+    color: var(--gold); font-weight: 700; text-transform: uppercase;
+    white-space: nowrap; padding-top: 6px;
+  }
+  @media (max-width: 600px) {
+    .news-row { flex-direction: column; gap: 8px; }
+    .news-arrow { padding-top: 0; }
+  }
+  .news-empty {
+    text-align: center; padding: 32px;
+    background: var(--card-soft); border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--mono); font-size: 12px;
+    color: var(--muted); letter-spacing: 1px;
+  }
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="kicker">Newsletter</span>
+  <h1>The mechanisms,<br/><em>named.</em></h1>
+  <p class="lede">The Containment Field operates by staying unnamed. This is where it gets named. One mechanism per edition. Read what is being made visible.</p>
+</section>
+
+<section class="block first">
+  <div class="news-list">
+
+    <a href="/newsletter/your-default-settings-are-a-lie/" class="news-row">
+      <span class="news-num">01</span>
+      <div class="news-meta">
+        <span class="news-date">April 26, 2026</span>
+        <p class="news-title">Your Default Settings Are A Lie</p>
+        <p class="news-dek">Ever wonder why your desires feel pre-programmed? Let's talk about the script.</p>
+      </div>
+      <span class="news-arrow">Read &rarr;</span>
+    </a>
+
+  </div>
+
+  <div class="cta-block" style="margin-top:48px;">
+    <p class="cta-kicker">Stay current</p>
+    <h2 class="cta-headline">Receive each edition by email.</h2>
+    <p class="cta-sub">Direct to your inbox when published. No promotional cadence. No filler. One mechanism named per edition.</p>
+    <form id="subscribe-form" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:480px;margin:24px auto 0;">
+      <input type="email" id="subscribe-email" class="field" placeholder="your@email.com" required style="flex:1;min-width:220px;" />
+      <button type="submit" class="btn" id="subscribe-btn">Subscribe &rarr;</button>
+    </form>
+    <p id="subscribe-msg" style="display:none;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--success);margin-top:14px;text-align:center;"></p>
+    <p id="subscribe-err" style="display:none;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--danger);margin-top:14px;text-align:center;"></p>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
+
+document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('subscribe-email').value.trim().toLowerCase();
+  const btn = document.getElementById('subscribe-btn');
+  const msg = document.getElementById('subscribe-msg');
+  const err = document.getElementById('subscribe-err');
+  if (!email) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Subscribing...';
+  msg.style.display = 'none';
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/subscribers', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=ignore-duplicates'
+      },
+      body: JSON.stringify({ email: email, source: 'newsletter_archive' })
+    });
+    if (res.ok || res.status === 409) {
+      msg.textContent = 'Subscribed. The next edition arrives in your inbox.';
+      msg.style.display = 'block';
+      btn.textContent = 'Subscribed ✓';
+      document.getElementById('subscribe-email').disabled = true;
+    } else {
+      throw new Error('subscribe failed');
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Subscribe →';
+    err.textContent = 'Could not subscribe. Try again or email ace@sovereign-synthesis.com.';
+    err.style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>
