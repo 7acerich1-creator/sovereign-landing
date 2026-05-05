@@ -138,23 +138,23 @@ document.getElementById('subscribe-form').addEventListener('submit', async (e) =
   err.style.display = 'none';
 
   try {
-    const res = await fetch(SUPABASE_URL + '/rest/v1/newsletter_subscribers', {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/subscribe_newsletter', {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=ignore-duplicates'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email: email, source: 'newsletter_archive' })
+      body: JSON.stringify({ target_email: email, signup_source: 'newsletter_archive' })
     });
-    if (res.ok || res.status === 409) {
+    const data = await res.json();
+    if (res.ok && data.success) {
       msg.textContent = 'Subscribed. The next edition arrives in your inbox.';
       msg.style.display = 'block';
       btn.textContent = 'Subscribed ✓';
       document.getElementById('subscribe-email').disabled = true;
     } else {
-      throw new Error('subscribe failed');
+      throw new Error(data.error || 'subscribe_failed');
     }
   } catch (e) {
     btn.disabled = false;
