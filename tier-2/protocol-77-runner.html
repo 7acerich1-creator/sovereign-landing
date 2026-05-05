@@ -177,6 +177,34 @@
   }
   @media (max-width: 580px) { .prog-hint { display: none; } }
 
+  /* Briefing nav link */
+  .briefing-link {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: var(--muted); text-transform: uppercase;
+    cursor: pointer; padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: var(--card); transition: all 0.15s ease;
+    text-decoration: none; font-weight: 700;
+    white-space: nowrap;
+  }
+  .briefing-link:hover {
+    border-color: var(--gold); color: var(--text);
+    background: var(--card-soft);
+  }
+
+  /* Embargo reset link */
+  .embargo-reset-link {
+    display: inline-block; margin-top: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: var(--muted); text-transform: uppercase;
+    background: transparent; border: none;
+    cursor: pointer; text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+  }
+  .embargo-reset-link:hover { color: var(--danger); }
+
   /* Deliverables archive (Complete screen) */
   .deliverables-archive {
     margin: 32px 0; padding: 24px 26px;
@@ -223,6 +251,7 @@
 <div class="progress-bar" id="progress-bar" style="display:none">
   <div class="progress-inner">
     <span class="prog-label">Protocol 77<span class="prog-hint">click any phase</span></span>
+    <a class="briefing-link" onclick="showScreen(0)" title="Back to Briefing">Briefing</a>
     <div class="dot-rail">
       <div class="dot active" id="dot-1" data-phase="1" onclick="showScreen(1)" title="Phase 1 · Gray Rock"></div>
       <div class="dot" id="dot-2" data-phase="2" onclick="showScreen(2)" title="Phase 2 · Faraday"></div>
@@ -285,8 +314,8 @@
     <div class="companion-doc">
       <span class="doc-tag">Field tool</span>
       <p class="doc-title">The Gray Rock Override.</p>
-      <p class="doc-desc">A printable one-pager with six scripted lines for high-friction situations. Carry it on your phone or print it for the desk. It is the tactical companion to this phase &mdash; deploy the lines verbatim until the response becomes automatic.</p>
-      <a class="doc-cta" href="/tier-2/assets/gray-rock-override.pdf" target="_blank">Download One-Pager (PDF) &rarr;</a>
+      <p class="doc-desc">A printable field guide with six scripted lines for high-friction situations. Carry it on your phone or print it for the desk. It is the tactical companion to this phase &mdash; deploy the lines verbatim until the response becomes automatic.</p>
+      <a class="doc-cta" href="/tier-2/assets/gray-rock-override.pdf" target="_blank">Download Field Guide (PDF) &rarr;</a>
     </div>
 
     <div class="field-block">
@@ -367,6 +396,8 @@
       <p class="embargo-status" id="embargo-status">Blackout all classified Noise streams for 72 continuous hours. Start the timer when you are ready to execute.</p>
       <div class="timer-display" id="timer-display">72:00:00</div>
       <button class="btn btn-secondary" id="embargo-btn" onclick="startEmbargo()">Start Embargo</button>
+      <br/>
+      <button class="embargo-reset-link" id="embargo-reset" onclick="resetEmbargo()" style="display:none;">Reset embargo</button>
     </div>
 
     <div class="field-block">
@@ -413,12 +444,12 @@
 
     <div class="field-block">
       <span class="field-label">Lighthouse Calibration · Day 5 Task</span>
-      <p class="field-sub">Transmit once, from sovereign position, on one platform. Not for engagement. For calibration.</p>
+      <p class="field-sub">Transmit once, from sovereign position. Not for engagement. For calibration. The medium does not matter &mdash; a journal entry, a hard conversation, a written email, a public post. What matters is that you state the truth you hold and do not adjust the position based on how it lands.</p>
       <div class="checklist" style="margin-bottom:18px">
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">I have transmitted from Lighthouse position on at least one platform</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">I have transmitted once from Lighthouse position</span></div>
       </div>
-      <label class="field-sub">Platform and what you transmitted:</label>
-      <textarea id="lh-tx" class="field" rows="2" placeholder="Log the transmission."></textarea>
+      <label class="field-sub">Where you transmitted and what you said:</label>
+      <textarea id="lh-tx" class="field" rows="2" placeholder="Log the transmission. Medium and content."></textarea>
     </div>
 
     <button class="btn btn-block" onclick="deployPhase(3)">Deploy Phase 3 &rarr;</button>
@@ -680,11 +711,31 @@ let embargoInterval = null;
 
 function startEmbargo() {
   if (state.embargoStart && !isEmbargoComplete()) return;
+  if (!confirm('Start the 72-hour Input Embargo?\n\nThe timer runs in real time once you click OK. You can reset it later from the Reset embargo link if needed.')) return;
   state.embargoStart = Date.now();
   saveState();
   runEmbargoTimer();
   document.getElementById('embargo-btn').textContent = 'Embargo Active';
   document.getElementById('embargo-btn').disabled = true;
+  const resetEl = document.getElementById('embargo-reset');
+  if (resetEl) resetEl.style.display = 'inline-block';
+}
+
+function resetEmbargo() {
+  if (!confirm('Reset the embargo?\n\nYour current 72-hour countdown will be cleared. You can start fresh whenever you are ready.')) return;
+  state.embargoStart = null;
+  saveState();
+  if (embargoInterval) clearInterval(embargoInterval);
+  const disp = document.getElementById('timer-display');
+  const btn = document.getElementById('embargo-btn');
+  const status = document.getElementById('embargo-status');
+  const resetEl = document.getElementById('embargo-reset');
+  disp.textContent = '72:00:00';
+  disp.classList.remove('complete');
+  status.textContent = 'Blackout all classified Noise streams for 72 continuous hours. Start the timer when you are ready to execute.';
+  btn.textContent = 'Start Embargo';
+  btn.disabled = false;
+  if (resetEl) resetEl.style.display = 'none';
 }
 
 function runEmbargoTimer() {
@@ -767,7 +818,12 @@ if (state.anchorStatement && document.getElementById('anchor')) {
 if (state.anchorStatement && document.getElementById('anchor-display-text')) {
   document.getElementById('anchor-display-text').textContent = state.anchorStatement;
 }
-if (state.embargoStart) runEmbargoTimer();
+if (state.embargoStart) {
+  runEmbargoTimer();
+  // Show reset link if embargo is currently active
+  const resetEl = document.getElementById('embargo-reset');
+  if (resetEl && !isEmbargoComplete()) resetEl.style.display = 'inline-block';
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
