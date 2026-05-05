@@ -817,10 +817,11 @@ function restart() {
 loadState();
 hydrateDiag();
 if (state.highestReached > 0) {
+  // Capture the saved screen NOW before goTo(0) overwrites state.currentScreen
+  const savedScreen = state.currentScreen;
   const banner = document.getElementById('resume-banner');
-  document.getElementById('resume-where').textContent = 'You left off at Section ' + state.currentScreen + ' (' + (SECTION_LABELS[state.currentScreen] || '') + ').';
-  banner.style.display = 'flex';
-  document.getElementById('resume-continue').onclick = () => goTo(state.currentScreen);
+  document.getElementById('resume-where').textContent = 'You left off at Section ' + savedScreen + ' (' + (SECTION_LABELS[savedScreen] || '') + ').';
+  document.getElementById('resume-continue').onclick = () => goTo(savedScreen);
   goTo(0);
   banner.style.display = 'flex';
 } else {
