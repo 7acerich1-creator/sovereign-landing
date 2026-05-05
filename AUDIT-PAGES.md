@@ -23,6 +23,8 @@
 | ☐ | https://sovereign-synthesis.com/privacy | `privacy.html` | Privacy policy |
 | ☐ | https://sovereign-synthesis.com/terms | `terms.html` | Terms of service |
 | ☐ | https://sovereign-synthesis.com/unsubscribe | `unsubscribe.html` | Unsubscribe form |
+| ☐ | https://sovereign-synthesis.com/login | `login.html` | **Universal login** — magic-link entry point, works on any device. Supports `?next=/path` for post-auth redirect. |
+| ☐ | https://sovereign-synthesis.com/members | `members/index.html` | **Members dashboard** — lists every active tier the signed-in user has, plus smart "next rung" recommendation. Sign-out button. |
 
 ## 2. PAID MEMBER PORTALS (auth-gated · uses `/js/auth-gate.js`)
 

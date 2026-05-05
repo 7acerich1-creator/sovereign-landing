@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Members Access | Sovereign Synthesis</title>
+  <meta name="description" content="Sign in to your Sovereign Synthesis member portal. Magic link authentication — works on any device." />
+  <link rel="canonical" href="https://sovereign-synthesis.com/login" />
+  <link rel="stylesheet" href="/css/sovereign.css" />
+  <style>
+    .login-card {
+      max-width: 460px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 44px 40px;
+      position: relative; overflow: hidden;
+    }
+    .login-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--gold);
+    }
+    .login-status {
+      margin-top: 16px; padding: 14px 18px;
+      font-family: var(--sans); font-size: 14px; line-height: 1.55;
+      border-radius: var(--radius-sm); display: none;
+    }
+    .login-status.success {
+      display: block;
+      background: rgba(29,158,117,0.08); color: var(--success);
+      border: 1px solid rgba(29,158,117,0.25);
+    }
+    .login-status.error {
+      display: block;
+      background: rgba(217,85,85,0.08); color: var(--danger);
+      border: 1px solid rgba(217,85,85,0.25);
+    }
+    .login-status.info {
+      display: block;
+      background: var(--card-soft); color: var(--body);
+      border: 1px solid var(--border);
+    }
+    .login-checking {
+      text-align: center; padding: 80px 32px;
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+  </style>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<!-- While checking existing session -->
+<div id="login-checking" class="login-checking">Checking session...</div>
+
+<!-- Login form (shown if no session) -->
+<div id="login-content" style="display:none;">
+  <section class="hero" style="text-align:center;padding-top:64px;padding-bottom:36px;">
+    <span class="kicker">Members Access</span>
+    <h1 style="text-align:center;">Access your portal.</h1>
+    <p class="lede" style="margin:0 auto 8px;text-align:center;max-width:540px;">Enter the email you used to purchase. We'll send a magic link to sign you in. The link works on any device.</p>
+  </section>
+
+  <section class="block first" style="padding-top:8px;">
+    <div class="login-card">
+      <form id="login-form">
+        <input type="email" id="login-email" class="field" placeholder="your@email.com" required autocomplete="email" autofocus />
+        <button type="submit" class="btn btn-block" id="login-btn" style="margin-top:14px;">Send Magic Link &rarr;</button>
+      </form>
+      <div class="login-status" id="login-status"></div>
+
+      <hr class="divider-line" style="margin:28px 0 18px;">
+      <p style="font-size:13px;color:var(--muted);text-align:center;margin:0;line-height:1.6;">
+        Don't have access yet? <a href="/" style="color:var(--orange);font-weight:600;text-decoration:none;">View products &rarr;</a>
+      </p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Read ?next= param
+const urlParams = new URLSearchParams(window.location.search);
+const nextPath = urlParams.get('next') || '/members';
+const redirectUrl = window.location.origin + nextPath;
+
+function showLoginForm() {
+  document.getElementById('login-checking').style.display = 'none';
+  document.getElementById('login-content').style.display = 'block';
+  setTimeout(() => {
+    const emailInput = document.getElementById('login-email');
+    if (emailInput) emailInput.focus();
+  }, 50);
+}
+
+// Brief wait for any URL-fragment auth callback to be processed
+setTimeout(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    window.location.href = nextPath;
+  } else {
+    showLoginForm();
+  }
+}, 250);
+
+// Listen for sign-in (handles magic link callback)
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    window.location.href = nextPath;
+  }
+});
+
+// Form submit
+document.addEventListener('submit', async (e) => {
+  if (e.target.id !== 'login-form') return;
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const btn = document.getElementById('login-btn');
+  const status = document.getElementById('login-status');
+  if (!email) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  status.className = 'login-status info';
+  status.textContent = 'Sending magic link...';
+
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: redirectUrl }
+  });
+
+  if (error) {
+    status.className = 'login-status error';
+    status.textContent = error.message;
+    btn.disabled = false;
+    btn.textContent = 'Send Magic Link →';
+    return;
+  }
+
+  status.className = 'login-status success';
+  status.textContent = 'Magic link sent. Check your inbox and click the link to sign in. The link works on any device.';
+  btn.textContent = 'Link Sent ✓';
+  document.getElementById('login-email').disabled = true;
+});
+</script>
+
+</body>
+</html>

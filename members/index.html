@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Dashboard | Sovereign Synthesis</title>
+  <meta name="description" content="Your Sovereign Synthesis member dashboard. Every property you have access to, in one place." />
+  <link rel="canonical" href="https://sovereign-synthesis.com/members" />
+  <link rel="stylesheet" href="/css/sovereign.css" />
+  <style>
+    .access-loading {
+      text-align: center; padding: 80px 32px;
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .signed-in-bar {
+      background: var(--card-soft); border: 1px solid var(--border);
+      border-left: 3px solid var(--success);
+      border-radius: var(--radius);
+      padding: 16px 22px; margin: 0 0 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .signed-in-text {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--success); letter-spacing: 1.5px; text-transform: uppercase;
+      font-weight: 700; margin-right: 10px;
+    }
+    .signed-in-email {
+      font-family: var(--sans); font-size: 13px; color: var(--body-dim);
+      letter-spacing: 0.3px;
+    }
+    .signout-btn {
+      font-family: var(--sans); font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); cursor: pointer;
+      background: transparent; border: 1px solid var(--border);
+      padding: 8px 18px; border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+    }
+    .signout-btn:hover { color: var(--text); border-color: var(--text); }
+    .access-list { margin: 24px 0 32px; }
+    .access-row {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 3px solid var(--gold); border-radius: var(--radius);
+      padding: 22px 26px; margin: 12px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .access-row:hover {
+      border-color: var(--gold);
+      background: var(--card-soft);
+      transform: translateX(2px);
+    }
+    .access-info { flex: 1; min-width: 250px; }
+    .access-tag {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; font-weight: 700;
+      margin-bottom: 6px; display: block;
+    }
+    .access-name {
+      font-family: var(--serif); font-size: 18px; font-weight: 600;
+      color: var(--text); margin-bottom: 4px; letter-spacing: -0.1px;
+    }
+    .access-desc { font-size: 14px; color: var(--body-dim); line-height: 1.55; }
+    .access-arrow {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+      color: var(--gold); font-weight: 700; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .empty-state {
+      text-align: center; padding: 36px 28px;
+      background: var(--card-soft); border: 1px solid var(--border);
+      border-radius: var(--radius); margin: 24px 0;
+    }
+    .empty-state p {
+      font-size: 15px; color: var(--body); margin-bottom: 18px;
+      line-height: 1.6;
+    }
+  </style>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<div id="loading" class="access-loading">Verifying access...</div>
+
+<div id="content" style="display:none;">
+  <section class="hero">
+    <span class="kicker">Your Dashboard</span>
+    <h1>Welcome back.</h1>
+    <p class="lede">Every Sovereign Synthesis property you have access to is below. Click any to enter.</p>
+  </section>
+
+  <section class="block first">
+    <div class="signed-in-bar">
+      <div>
+        <span class="signed-in-text">✓ Signed in</span>
+        <span class="signed-in-email" id="user-email"></span>
+      </div>
+      <button class="signout-btn" onclick="handleSignOut()">Sign out</button>
+    </div>
+
+    <h2>Your active access.</h2>
+    <div class="access-list" id="access-list"><!-- filled by JS --></div>
+
+    <div id="empty-state" class="empty-state" style="display:none;">
+      <p>You're signed in, but no active tier purchases are linked to this email yet.</p>
+      <a href="/" class="btn">View Products &rarr;</a>
+    </div>
+  </section>
+
+  <section class="block bordered" id="next-step-section" style="display:none;">
+    <div class="cta-block">
+      <p class="cta-kicker" id="next-step-kicker">Recommended next</p>
+      <h2 class="cta-headline" id="next-step-title"></h2>
+      <p class="cta-sub" id="next-step-desc"></p>
+      <a class="btn" id="next-step-cta" href="">View &rarr;</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const TIER_INFO = {
+  p77: {
+    name: 'Protocol 77 — The Shield',
+    desc: 'The defense layer. 21-day deployment. Stops the daily energy leak.',
+    tag: 'Tier 02',
+    url: '/tier-2/protocol-77-runner',
+    rank: 2
+  },
+  manifesto: {
+    name: 'The Map — Navigation Override',
+    desc: 'How to read what a room is optimizing for before you walk into it.',
+    tag: 'Tier 03',
+    url: '/tier-3/manifesto-navigator',
+    rank: 3
+  },
+  dp1: {
+    name: 'The Architect — Phase 1: Declassification',
+    desc: 'Systematic naming of every term the legacy operating system marked off-limits.',
+    tag: 'Tier 04',
+    url: '/tier-4/course-portal',
+    rank: 4
+  },
+  dp2: {
+    name: 'The Architect — Phase 2: Adversarial Systems',
+    desc: 'Operating inside hostile architectures without being captured by them.',
+    tag: 'Tier 05',
+    url: '/tier-5/course-portal',
+    rank: 5
+  },
+  dp3: {
+    name: 'The Architect — Phase 3: Sovereign Integration',
+    desc: 'Personal operating doctrine. The capstone is your Inner Circle application.',
+    tag: 'Tier 06',
+    url: '/tier-6/course-portal',
+    rank: 6
+  },
+  inner_circle: {
+    name: 'Inner Circle — Sovereign Licensing',
+    desc: 'One hundred architects. The formation, at its deepest rung.',
+    tag: 'Tier 07',
+    url: '/tier-7/member-portal',
+    rank: 7
+  }
+};
+
+function getRecommendation(userTiers) {
+  if (userTiers.length === 0) {
+    return {
+      kicker: 'Start here',
+      title: 'Run the diagnostic.',
+      desc: 'Twelve questions. Three minutes. Returns the specific pattern currently running you — and the framework for stepping out of it. Free.',
+      url: '/diagnostic'
+    };
+  }
+  if (userTiers.includes('inner_circle')) return null;
+  const ranks = userTiers.map(t => TIER_INFO[t]?.rank || 0);
+  const maxRank = Math.max(...ranks);
+  if (maxRank < 2) {
+    return {
+      kicker: 'Recommended baseline',
+      title: 'Protocol 77 — The Shield · $77',
+      desc: 'The smallest move with the biggest immediate return. Stops the daily energy leak so you start feeling like yourself again. No deeper commitment required.',
+      url: '/p77'
+    };
+  }
+  if (maxRank < 3) {
+    return {
+      kicker: 'Next rung',
+      title: 'The Map — Navigation Override · $177',
+      desc: 'Once the bleeding stops, the Map teaches you to read what a room is optimizing for before you walk into it.',
+      url: '/tier-3/manifesto-navigator'
+    };
+  }
+  if (maxRank < 4) {
+    return {
+      kicker: 'Next rung',
+      title: 'The Architect — Phase 1 · $477',
+      desc: 'Declassification. The systematic naming of every term the legacy operating system marked off-limits. You cannot build what you are not allowed to name.',
+      url: '/tier-4/course-portal'
+    };
+  }
+  if (maxRank < 5) {
+    return {
+      kicker: 'Next rung',
+      title: 'The Architect — Phase 2 · $1,497',
+      desc: 'Adversarial Systems. Operating inside hostile architectures without being captured by them.',
+      url: '/tier-5/course-portal'
+    };
+  }
+  if (maxRank < 6) {
+    return {
+      kicker: 'Next rung',
+      title: 'The Architect — Phase 3 · $3,777',
+      desc: 'Sovereign Integration. The capstone — your personal operating doctrine. Also serves as your Inner Circle application.',
+      url: '/tier-6/course-portal'
+    };
+  }
+  return {
+    kicker: 'Final rung',
+    title: 'Inner Circle — Sovereign Licensing · $12,000',
+    desc: 'One hundred architects. Application only. Your Phase 3 capstone is the application.',
+    url: '/tier-7/member-portal'
+  };
+}
+
+async function init() {
+  // Brief delay for URL-fragment auth callback to be processed by supabase-js
+  await new Promise(r => setTimeout(r, 300));
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    window.location.href = '/login?next=/members';
+    return;
+  }
+
+  const email = session.user.email.toLowerCase();
+  document.getElementById('user-email').textContent = email;
+
+  const { data, error } = await sb.from('member_access')
+    .select('tier_slug')
+    .eq('email', email)
+    .eq('status', 'active');
+
+  if (error) console.error('Error fetching access:', error);
+
+  const userTiers = (data || []).map(r => r.tier_slug);
+  // Inner Circle grants access to all tiers
+  const tiersToShow = userTiers.includes('inner_circle')
+    ? Object.keys(TIER_INFO)
+    : userTiers;
+
+  const list = document.getElementById('access-list');
+  if (tiersToShow.length === 0) {
+    list.style.display = 'none';
+    document.getElementById('empty-state').style.display = 'block';
+  } else {
+    tiersToShow.sort((a, b) => (TIER_INFO[a]?.rank || 99) - (TIER_INFO[b]?.rank || 99));
+    list.innerHTML = tiersToShow.map(slug => {
+      const info = TIER_INFO[slug];
+      if (!info) return '';
+      return `
+        <a href="${info.url}" class="access-row">
+          <div class="access-info">
+            <span class="access-tag">${info.tag}</span>
+            <p class="access-name">${info.name}</p>
+            <p class="access-desc">${info.desc}</p>
+          </div>
+          <span class="access-arrow">Enter &rarr;</span>
+        </a>
+      `;
+    }).join('');
+  }
+
+  const rec = getRecommendation(userTiers);
+  if (rec) {
+    document.getElementById('next-step-section').style.display = 'block';
+    document.getElementById('next-step-kicker').textContent = rec.kicker;
+    document.getElementById('next-step-title').textContent = rec.title;
+    document.getElementById('next-step-desc').textContent = rec.desc;
+    document.getElementById('next-step-cta').href = rec.url;
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+}
+
+async function handleSignOut() {
+  await sb.auth.signOut();
+  window.location.href = '/login';
+}
+
+init();
+</script>
+
+</body>
+</html>
