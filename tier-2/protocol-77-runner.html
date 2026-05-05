@@ -117,6 +117,33 @@
     color: var(--text); font-family: var(--serif); font-weight: 600;
   }
 
+  /* Pacing disclaimer on Briefing */
+  .pacing-note {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 26px 30px; margin: 36px auto;
+    max-width: 600px; text-align: left;
+  }
+  .pacing-note .pacing-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    margin-bottom: 14px; display: block;
+  }
+  .pacing-note p {
+    font-family: var(--serif); font-style: italic;
+    font-size: 16px; color: var(--body); line-height: 1.7;
+    margin: 0 0 14px;
+  }
+  .pacing-note p:last-child { margin-bottom: 0; }
+
+  /* Clickable progress dots — phase navigation */
+  .dot { cursor: pointer; }
+  .dot:hover {
+    background: var(--gold-bright, #E8C56A);
+    transform: scaleY(1.3);
+    transition: all 0.15s ease;
+  }
+
   /* Deliverables archive (Complete screen) */
   .deliverables-archive {
     margin: 32px 0; padding: 24px 26px;
@@ -164,10 +191,10 @@
   <div class="progress-inner">
     <span class="prog-label">Protocol 77</span>
     <div class="dot-rail">
-      <div class="dot active" id="dot-1"></div>
-      <div class="dot" id="dot-2"></div>
-      <div class="dot" id="dot-3"></div>
-      <div class="dot" id="dot-4"></div>
+      <div class="dot active" id="dot-1" onclick="showScreen(1)" title="Phase 1 · Gray Rock"></div>
+      <div class="dot" id="dot-2" onclick="showScreen(2)" title="Phase 2 · Faraday"></div>
+      <div class="dot" id="dot-3" onclick="showScreen(3)" title="Phase 3 · Lighthouse"></div>
+      <div class="dot" id="dot-4" onclick="showScreen(4)" title="Phase 4 · Sovereign Anchor"></div>
     </div>
     <span class="day-badge" id="day-badge">Day 0</span>
   </div>
@@ -181,6 +208,14 @@
     <span class="tag-mono gold" style="margin-bottom:28px;">Protocol 77 · Activated</span>
     <h1>The <em>Shield</em> is now deploying.</h1>
     <p class="entry-sub">This is not a document. This is a 21-day deployment sequence. Each phase installs a layer of external defense. Run them in order.</p>
+
+    <div class="pacing-note">
+      <span class="pacing-tag">A note before you begin</span>
+      <p>This is not a course to consume. If you read straight through tonight, you will finish in an hour with no result &mdash; and the runner will feel like text, because that was never the contract.</p>
+      <p>Protocol 77 is a 21-day deployment. The value lives in the cadence, the hard decisions inside each phase, and the friction you push through to install each layer. Phase 1 on Day 1. Phase 2 on Day 2. Hold the embargo for the full 72 hours. Compose the Anchor on Day 7 and re-read it daily.</p>
+      <p>Run it on the cadence and the perimeter actually seals. The framework is tested. The work is yours.</p>
+    </div>
+
     <div class="seq">
       <div class="seq-title">Deployment Sequence</div>
       <div class="seq-row"><span class="seq-day">Day 0</span><span class="seq-text">Briefing received — begin deployment</span></div>
@@ -499,7 +534,7 @@
     </div>
 
     <hr class="divider-line">
-    <button class="btn btn-ghost" onclick="copyAnchor()" style="margin:0 auto;display:block;">Copy Sovereign Anchor</button>
+    <button class="btn btn-ghost" onclick="copyAnchor(this)" style="margin:0 auto;display:block;">Copy Sovereign Anchor</button>
   </div>
 </div>
 
@@ -663,12 +698,28 @@ function toggleCheck(el) {
   box.classList.toggle('checked');
 }
 
-function copyAnchor() {
+function copyAnchor(btn) {
   const txt = state.anchorStatement || document.getElementById('anchor')?.value || '';
-  navigator.clipboard.writeText(txt).then(() => {
-    const btn = event.target;
+  if (!txt || txt.trim() === '' || txt.includes('[core identity]')) {
+    btn.textContent = 'Compose your Anchor first';
+    setTimeout(() => btn.textContent = 'Copy Sovereign Anchor', 2400);
+    return;
+  }
+  if (!navigator.clipboard) {
+    // Fallback for older browsers / non-secure context
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     btn.textContent = 'Anchor Copied ✓';
     setTimeout(() => btn.textContent = 'Copy Sovereign Anchor', 2000);
+    return;
+  }
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = 'Anchor Copied ✓';
+    setTimeout(() => btn.textContent = 'Copy Sovereign Anchor', 2000);
+  }).catch(() => {
+    btn.textContent = 'Copy failed — try again';
+    setTimeout(() => btn.textContent = 'Copy Sovereign Anchor', 2400);
   });
 }
 
