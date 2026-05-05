@@ -95,10 +95,20 @@ git push origin main
 
 Vercel auto-deploys 60-90 seconds after push.
 
-## 7. WHAT'S STILL ON THE DOCKET
+## 7. COMPANION PDFS (light editorial brand)
+
+Two complete. Two remaining.
+
+| ☐ | Live URL | Repo path | Status |
+|---|----------|-----------|--------|
+| ☐ | /tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf | `tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf` | **REBUILT** — 9 pages, light editorial. Linked from /manual cover. |
+| ☐ | /tier-3/assets/SOVEREIGN_ARCHITECTURE_MANIFESTO.pdf | `tier-3/assets/SOVEREIGN_ARCHITECTURE_MANIFESTO.pdf` | **NEW** — 16 pages. Linked from /manifesto-portal cover, /tier-3/manifesto-navigator, and tier-3 purchase email. |
+| ☐ | /tier-2/assets/PROTOCOL_77_v4.pdf | `tier-2/assets/PROTOCOL_77_v4.pdf` | Legacy aesthetic. Needs 77→21 day audit + light rebuild. |
+| ☐ | /tier-2/assets/GRAY_ROCK_OVERRIDE.pdf (or similar) | `tier-2/assets/` | Decision pending: rebuild as true one-pager or expand and rename. |
+
+## 8. WHAT'S STILL ON THE DOCKET
 
 - **Protocol Zero** (architecture decision pending — placement + format)
-- **Companion PDF redesigns** in editorial light brand (Manual, Manifesto, P77 docs, Gray Rock one-pager) — currently the PDFs are still in old aesthetic. The interactives are the canonical experience now; PDFs become brand-consistent reference docs. Use docx/pdf skills for these.
 - **Audit ad-targeted sales pages for T3-T7** if needed (currently sold via portal CTAs and email)
 
 ## 8. AUDIT NOTES (write here as you walk through)
