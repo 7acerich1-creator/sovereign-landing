@@ -1100,8 +1100,18 @@ textarea.field { font-family: var(--sans); resize: vertical; min-height: 120px; 
   section.block { padding: 32px 22px; }
   .cta-block { padding: 28px 24px 26px; }
   .cta-headline { font-size: 22px; }
-  .top-inner { padding: 18px 22px; }
-  .nav { gap: 18px; }
+  .top-inner {
+    padding: 16px 22px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .wordmark { white-space: nowrap; }
+  .nav {
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav a { font-size: 11px; letter-spacing: 1.5px; }
   .btn { padding: 14px 24px; font-size: 12px; }
   .path-list li { gap: 14px; }
   .closing { padding: 56px 22px 64px; }
