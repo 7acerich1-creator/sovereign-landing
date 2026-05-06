@@ -53,6 +53,32 @@
     font-family: var(--mono); font-size: 12px;
     color: var(--muted); letter-spacing: 1px;
   }
+  .foundations { margin: 16px 0 56px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
+  .foundations-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--gold); font-weight: 700; text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .foundations-dek {
+    font-family: var(--serif); font-style: italic; font-size: 14px;
+    color: var(--body-dim); margin: 0 0 28px;
+  }
+  .foundations-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .foundation-card {
+    background: var(--card-soft); padding: 18px 20px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+  }
+  .foundation-card h3 {
+    font-family: var(--serif); font-size: 16px; font-weight: 600;
+    color: var(--text); margin: 0 0 6px;
+  }
+  .foundation-card p {
+    font-family: var(--sans); font-size: 13px; color: var(--body-dim);
+    line-height: 1.5; margin: 0;
+  }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -79,6 +105,21 @@
 </section>
 
 <section class="block first">
+  <div class="foundations">
+    <h2 class="foundations-label">Foundations</h2>
+    <p class="foundations-dek">Pinned concept pieces. The vocabulary the editions point at.</p>
+    <div class="foundations-grid">
+      <div class="foundation-card"><h3>The Simulation</h3><p>The legacy script most people never realize they are running.</p></div>
+      <div class="foundation-card"><h3>The Glitch</h3><p>The moment when the simulation breaks for a second. Most people patch over it; sovereigns lean in.</p></div>
+      <div class="foundation-card"><h3>Sovereign Synthesis</h3><p>Intentional architecture of your own reality and financial energy after recognizing the simulation.</p></div>
+      <div class="foundation-card"><h3>The Containment Field</h3><p>The layered system the simulation uses to hold you in place &mdash; economic, social, identity.</p></div>
+      <div class="foundation-card"><h3>Biological Drag</h3><p>The old habits and entities that try to slow the shift down &mdash; usually loudest near escape velocity.</p></div>
+      <div class="foundation-card"><h3>Escape Velocity</h3><p>The point at which your sovereign architecture is no longer governed by simulated fear.</p></div>
+      <div class="foundation-card"><h3>Lighthouse Stance</h3><p>The opposite of chasing. Become the signal others orient against &mdash; don't persuade, broadcast.</p></div>
+    </div>
+  </div>
+
+
   <div class="news-list">
 
     <a href="/newsletter/your-default-settings-are-a-lie/" class="news-row">
