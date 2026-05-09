@@ -522,10 +522,17 @@ async function init() {
   if (error) console.error('Error fetching access:', error);
 
   const userTiers = (data || []).map(r => r.tier_slug);
-  // Inner Circle grants access to all tiers
-  const tiersToShow = userTiers.includes('inner_circle')
-    ? Object.keys(TIER_INFO)
-    : userTiers;
+  // Inner Circle grants access to all tiers.
+  // Protocol Zero is free and granted to every signed-in member by default,
+  // even if their member_access table row is missing (e.g., direct paid-tier
+  // signup that bypassed the free auto-enrollment).
+  let tiersToShow;
+  if (userTiers.includes('inner_circle')) {
+    tiersToShow = Object.keys(TIER_INFO);
+  } else {
+    const merged = new Set(['protocol_zero', ...userTiers]);
+    tiersToShow = Array.from(merged);
+  }
 
   const list = document.getElementById('access-list');
   if (tiersToShow.length === 0) {
