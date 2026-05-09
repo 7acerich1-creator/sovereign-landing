@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Three Axioms — Tier 3 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .axiom-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+  .axiom-card .ax-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .axiom-card .ax-statement {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.6vw, 24px);
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 18px;
+  }
+  .axiom-card .ax-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 20px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .axiom-card .ax-row:first-of-type { border-top: 1px solid var(--border); }
+  .axiom-card .ax-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .axiom-card .ax-row p {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .axiom-card .ax-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  .check-tool { margin-top: 24px; }
+  .check-prompt {
+    margin-bottom: 22px;
+  }
+  .check-prompt label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .check-prompt .check-question {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.45;
+  }
+  .check-prompt textarea.field {
+    min-height: 70px;
+  }
+  .check-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .check-history-item {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 16px 22px;
+    margin-bottom: 12px;
+  }
+  .check-history-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .check-history-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 14px;
+    padding: 6px 0;
+    align-items: baseline;
+  }
+  .check-history-row .ch-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .check-history-row p {
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 0;
+    font-family: var(--serif);
+  }
+  .check-history-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row .day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 6px; }
+    .check-history-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 3 · Navigator · Module 03</span>
+  <h1>The Three<br/><em>Axioms.</em></h1>
+  <p class="lede">Three load-bearing statements. Read once. Operated daily. Each one removes a category of decision from the table — so the deliberation drops away and the move becomes obvious.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Module 01 gave you the read. Module 02 gave you the frequency. Module 03 removes the deliberation. The three axioms below are not advice and not philosophy. They are operating statements that, once accepted as true, kill three categories of decision you used to spend energy on. The energy returns. The move clarifies.</p>
+</section>
+
+<section class="block bordered">
+  <h2>The three axioms.</h2>
+  <p>Read each one. Sit with what it removes. The install happens in operation, not in reading — but the reading is where you accept the trade.</p>
+
+  <div style="margin-top: 28px;">
+
+    <div class="axiom-card">
+      <span class="ax-num">Axiom 01</span>
+      <p class="ax-statement">Every room runs on a frequency. None are neutral.</p>
+      <div class="ax-row">
+        <span class="ax-label">Removes</span>
+        <p>The deliberation "is this room okay?" — there is no okay, only the frequency it runs on. Read it.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Makes possible</span>
+        <p>Walking into rooms with the question already answered. The room becomes architecture, not mystery.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Daily operation</span>
+        <p>Before any room you walk into, name the frequency. If you don't know it yet, the room is the diagnostic.</p>
+      </div>
+    </div>
+
+    <div class="axiom-card">
+      <span class="ax-num">Axiom 02</span>
+      <p class="ax-statement">The frequency of a room caps your transmission while you are in it.</p>
+      <div class="ax-row">
+        <span class="ax-label">Removes</span>
+        <p>The deliberation "why can't I get traction here?" — you cannot transmit higher than the dominant frequency while engaged. The ceiling is the room, not you.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Makes possible</span>
+        <p>Stopping the self-blame loop when a room mutes you. Knowing when to leave because the ceiling is the problem.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Daily operation</span>
+        <p>If you feel smaller, slower, or scattered inside a room, check the room's frequency before checking yourself. The cap is usually structural.</p>
+      </div>
+    </div>
+
+    <div class="axiom-card">
+      <span class="ax-num">Axiom 03</span>
+      <p class="ax-statement">You always have three moves: theirs, yours, none. The default is unconscious.</p>
+      <div class="ax-row">
+        <span class="ax-label">Removes</span>
+        <p>The deliberation "do I have to engage?" — engagement is a choice with a cost, never a default. The unconscious choice is still a choice.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Makes possible</span>
+        <p>Choosing the move with the cost named. No more drifting into rooms that extract from you.</p>
+      </div>
+      <div class="ax-row">
+        <span class="ax-label">Daily operation</span>
+        <p>At every entry — meeting, conversation, message thread — pick one of the three moves before you act. Engagement on autopilot is the move you are trying to retire.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Daily axiom check.</h2>
+  <p>Run this once a day, end of day. Two minutes. The axioms install in the noticing — over a week of these, the axioms start operating ahead of the deliberation, and the deliberation drops away.</p>
+
+  <div class="check-tool" id="check-tool">
+
+    <div class="check-prompt">
+      <label>Axiom 01 · The frequency read</label>
+      <div class="check-question">Where today did you walk into a room and forget to name its frequency?</div>
+      <textarea id="check-q1" class="field" placeholder="The room and what you noticed in retrospect..."></textarea>
+    </div>
+
+    <div class="check-prompt">
+      <label>Axiom 02 · The transmission ceiling</label>
+      <div class="check-question">Where today did you try to transmit something the room could not carry?</div>
+      <textarea id="check-q2" class="field" placeholder="The room and what you were trying to put into it..."></textarea>
+    </div>
+
+    <div class="check-prompt">
+      <label>Axiom 03 · The conscious move</label>
+      <div class="check-question">Where today did you engage on autopilot instead of choosing the move?</div>
+      <textarea id="check-q3" class="field" placeholder="The room and the move that would have been more honest..."></textarea>
+    </div>
+
+    <div class="check-actions">
+      <button type="button" id="check-save" class="btn">Save check</button>
+      <button type="button" id="check-clear" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Past checks.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. Re-read your last week's checks every Sunday — the patterns are where the install is taking hold.</p>
+  <div id="check-history">
+    <div class="check-history-empty">Your saved checks will appear here.</div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 03.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. Run alongside the Read Protocol and the Classifier — they compound.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row">
+      <span class="day-label">Day 1</span>
+      <p>Read all three axioms. Sit with what each one removes. Run the daily check at end of day.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Days 2&ndash;6</span>
+      <p>Run the daily check every evening. Each day, pick one axiom and consciously try to apply it once during the day before reflecting at night.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 7</span>
+      <p>Re-read your week of checks. Note where each axiom started operating ahead of the deliberation. Module 03 is installed when at least one axiom runs without you summoning it.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The deliberation was the cost.<br/>The axiom is what kills it.</p>
+  <a href="/tier-3/manifesto-navigator" class="btn">Back to Navigator &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_axiom_checks_v1';
+  const q1 = document.getElementById('check-q1');
+  const q2 = document.getElementById('check-q2');
+  const q3 = document.getElementById('check-q3');
+  const saveBtn = document.getElementById('check-save');
+  const clearBtn = document.getElementById('check-clear');
+  const historyEl = document.getElementById('check-history');
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  }
+
+  function saveHistoryArr(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch {}
+  }
+
+  function renderHistory() {
+    const arr = loadHistory();
+    if (!arr.length) {
+      historyEl.innerHTML = '<div class="check-history-empty">Your saved checks will appear here.</div>';
+      return;
+    }
+    historyEl.innerHTML = arr.slice().reverse().map(r => {
+      const d = new Date(r.t);
+      const dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      const row = (label, val) => val ? '<div class="check-history-row"><span class="ch-label">' + label + '</span><p>' + escapeHtml(val) + '</p></div>' : '';
+      return '<div class="check-history-item">' +
+        '<div class="check-history-date">' + escapeHtml(dateStr) + '</div>' +
+        row('Axiom 01', r.q1) +
+        row('Axiom 02', r.q2) +
+        row('Axiom 03', r.q3) +
+        '</div>';
+    }).join('');
+  }
+
+  saveBtn.addEventListener('click', () => {
+    const a = q1.value.trim(), b = q2.value.trim(), c = q3.value.trim();
+    if (!a && !b && !c) {
+      alert('Fill in at least one prompt before saving.');
+      return;
+    }
+    const arr = loadHistory();
+    arr.push({ t: Date.now(), q1: a, q2: b, q3: c });
+    saveHistoryArr(arr);
+    q1.value = ''; q2.value = ''; q3.value = '';
+    renderHistory();
+    window.scrollTo({ top: historyEl.offsetTop - 100, behavior: 'smooth' });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    q1.value = ''; q2.value = ''; q3.value = '';
+  });
+
+  renderHistory();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'manifesto';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

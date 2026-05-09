@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase Navigator — Tier 3 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .phase-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 14px;
+  }
+  .phase-card.current { border-left-color: var(--gold); background: var(--card-soft); }
+  .phase-card .ph-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .phase-card.current .ph-num { color: var(--gold); }
+  .phase-card .ph-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .phase-card .ph-desc {
+    color: var(--body-dim);
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .nav-tool { margin-top: 24px; }
+  .nav-prompt {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-prompt:last-child { border-bottom: none; }
+  .nav-prompt .nav-question {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .nav-options {
+    display: flex;
+    gap: 10px;
+  }
+  .nav-opt {
+    flex: 1;
+    padding: 10px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--body-dim);
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all .2s;
+    text-align: center;
+  }
+  .nav-opt:hover { border-color: var(--gold); color: var(--text); }
+  .nav-opt.selected {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold);
+  }
+
+  .nav-result {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-top: 28px;
+  }
+  .nav-result-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+  .nav-result .nr-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .nav-result h3 {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3vw, 28px);
+    color: var(--text);
+    font-weight: 600;
+    margin: 0 0 14px;
+    line-height: 1.3;
+  }
+  .nav-result p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .nav-result p:last-child { margin-bottom: 0; }
+  .nav-result .nr-move-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 18px 0 8px;
+    display: block;
+  }
+
+  .nav-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .nav-history-item {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 14px 22px;
+    margin-bottom: 10px;
+  }
+  .nav-history-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .nav-history-phase {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    margin: 0;
+  }
+  .nav-history-phase strong {
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .nav-history-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 3 · Navigator · Module 04</span>
+  <h1>Phase<br/><em>Navigator.</em></h1>
+  <p class="lede">Where you are in the install. What is blocking the next phase. What to do next, with no guesswork. Run it weekly until the install completes — then run it monthly to keep the perimeter of conscious engagement intact.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>The Navigator install is not linear in time — it is layered in capacity. This module runs the assessment, names the phase you are operating in right now, and surfaces the single next move that takes you into the phase above. No syllabus pacing. No arbitrary timelines. The phase is what your operation actually shows, not what week you are on.</p>
+</section>
+
+<section class="block bordered">
+  <h2>The four phases.</h2>
+  <p>Every Navigator install passes through these in order. Read each one. After the assessment below, your current phase is the highest one your operation actually meets.</p>
+
+  <div style="margin-top: 28px;">
+    <div class="phase-card">
+      <span class="ph-num">Phase 01 · Reading</span>
+      <h3 class="ph-name">You can read a room with effort.</h3>
+      <p class="ph-desc">The Environmental Read Protocol works. Naming what a room optimizes for takes a minute or two of conscious attention. The read is real, but it costs energy.</p>
+    </div>
+
+    <div class="phase-card">
+      <span class="ph-num">Phase 02 · Classifying</span>
+      <h3 class="ph-name">The frequency registers.</h3>
+      <p class="ph-desc">Reading is faster. Naming the operating frequency &mdash; Fear, Ego, Attention, Sovereign &mdash; happens in seconds. The classification stops requiring the tool because the pattern is internalized.</p>
+    </div>
+
+    <div class="phase-card">
+      <span class="ph-num">Phase 03 · Axiom-driven</span>
+      <h3 class="ph-name">The deliberation drops away.</h3>
+      <p class="ph-desc">The three axioms operate ahead of the deliberation. You don't ask "is this room okay" — you ask "what frequency" because the first question is no longer a question. Categories of decision retire.</p>
+    </div>
+
+    <div class="phase-card">
+      <span class="ph-num">Phase 04 · Conscious engagement</span>
+      <h3 class="ph-name">You choose your rooms.</h3>
+      <p class="ph-desc">Entry is deliberate. You stop drifting into rooms by inertia. You leave rooms whose frequency caps your transmission. The Navigator is installed; from here it is maintenance, not learning.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Run the assessment.</h2>
+  <p>Six questions. Yes or no, honestly. The phase is not aspirational — it is what your operation actually shows in the past two weeks.</p>
+
+  <div class="nav-tool" id="nav-tool">
+
+    <div class="nav-prompt">
+      <div class="nav-question">01. Can you name what a room is optimizing for after a few minutes of attention?</div>
+      <div class="nav-options" data-q="1">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-prompt">
+      <div class="nav-question">02. Does the read happen automatically &mdash; under sixty seconds, no friction?</div>
+      <div class="nav-options" data-q="2">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-prompt">
+      <div class="nav-question">03. Can you name the operating frequency of a room without opening the classifier?</div>
+      <div class="nav-options" data-q="3">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-prompt">
+      <div class="nav-question">04. Do you find yourself running the three axioms without summoning them?</div>
+      <div class="nav-options" data-q="4">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-prompt">
+      <div class="nav-question">05. Have you left a room &mdash; relationship, role, group, conversation &mdash; in the past month because of its frequency?</div>
+      <div class="nav-options" data-q="5">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-prompt">
+      <div class="nav-question">06. Are you choosing your rooms now based on what you want to transmit, not on what is available by default?</div>
+      <div class="nav-options" data-q="6">
+        <button type="button" class="nav-opt" data-val="yes">Yes</button>
+        <button type="button" class="nav-opt" data-val="no">Not yet</button>
+      </div>
+    </div>
+
+    <div class="nav-result" id="nav-result">
+      <span class="nav-result-empty">Answer the six questions. Your current phase and next move appear here.</span>
+    </div>
+
+    <div class="nav-actions">
+      <button type="button" id="nav-save" class="btn">Log this assessment</button>
+      <button type="button" id="nav-clear" class="btn btn-secondary">Reset</button>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Past assessments.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. Run the assessment weekly during install and monthly afterward &mdash; the trajectory is the install.</p>
+  <div id="nav-history">
+    <div class="nav-history-empty">Your saved assessments will appear here.</div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The phase is not what you read.<br/>The phase is what you operate.</p>
+  <a href="/tier-3/manifesto-navigator" class="btn">Back to Navigator &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_phase_assessments_v1';
+  const PHASE_DATA = {
+    1: {
+      label: 'Phase 01 · Reading',
+      title: 'You are in Phase 01 — Reading.',
+      diagnosis: 'The Environmental Read Protocol is your active install. Naming what a room optimizes for is starting to work, but the read still costs effort. That cost is the phase, not a failure.',
+      move: 'Run the Read Protocol on three rooms today. Save each one. The read becomes reflexive at roughly forty cycles — log them.',
+      link: '/tier-3/environmental-read-protocol'
+    },
+    2: {
+      label: 'Phase 02 · Classifying',
+      title: 'You are in Phase 02 — Classifying.',
+      diagnosis: 'The read is faster, but you still reach for the Classifier to name the frequency. That is normal. The classifier is doing its job — building the pattern recognition until the tool becomes unnecessary.',
+      move: 'Classify every room you read. After two weeks of daily use, attempt classification without the tool. The day the tool feels redundant is the day you have moved into Phase 03.',
+      link: '/tier-3/frequency-classification-system'
+    },
+    3: {
+      label: 'Phase 03 · Axiom-driven',
+      title: 'You are in Phase 03 — Axiom-driven.',
+      diagnosis: 'The reading and classifying have internalized. The three axioms are now the operating layer. You are starting to notice deliberations dropping away — categories of decision retiring.',
+      move: 'Run the Daily Axiom Check every evening for two weeks. Notice which axiom starts firing ahead of the deliberation. When you have logged at least one axiom operating without summons, you are in Phase 04.',
+      link: '/tier-3/three-axioms'
+    },
+    4: {
+      label: 'Phase 04 · Conscious engagement',
+      title: 'You are in Phase 04 — Conscious engagement.',
+      diagnosis: 'The Navigator is installed. Entry into rooms is deliberate. You are leaving rooms whose frequency caps you. From here, the Navigator is no longer learning — it is maintenance.',
+      move: 'Run this Phase Navigator monthly to verify the install is holding. When perimeter integrity feels firm and you are choosing rooms with intent, begin Tier 4 — The Architect.',
+      link: '/tier-4/course-portal'
+    }
+  };
+
+  const opts = document.querySelectorAll('.nav-opt');
+  const result = document.getElementById('nav-result');
+  const saveBtn = document.getElementById('nav-save');
+  const clearBtn = document.getElementById('nav-clear');
+  const historyEl = document.getElementById('nav-history');
+  const answers = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function determinePhase() {
+    const a = answers;
+    if (Object.values(a).some(v => v === null)) return null;
+    // Phase 4: requires all of 1-4 yes AND at least one of 5/6 yes
+    if (a[1] === 'yes' && a[2] === 'yes' && a[3] === 'yes' && a[4] === 'yes' && (a[5] === 'yes' || a[6] === 'yes')) return 4;
+    // Phase 3: requires 1, 2, 3 yes (axioms running)
+    if (a[1] === 'yes' && a[2] === 'yes' && a[3] === 'yes' && a[4] === 'yes') return 3;
+    // Phase 2: requires 1 yes (read works) and 3 yes OR 2 yes
+    if (a[1] === 'yes' && (a[2] === 'yes' || a[3] === 'yes')) return 2;
+    // Phase 1: starting
+    return 1;
+  }
+
+  function update() {
+    const phase = determinePhase();
+    if (phase === null) {
+      result.innerHTML = '<span class="nav-result-empty">Answer the six questions. Your current phase and next move appear here.</span>';
+      return;
+    }
+    const data = PHASE_DATA[phase];
+    result.innerHTML =
+      '<span class="nr-label">Current phase</span>' +
+      '<h3>' + escapeHtml(data.title) + '</h3>' +
+      '<p>' + escapeHtml(data.diagnosis) + '</p>' +
+      '<span class="nr-move-label">The next move</span>' +
+      '<p>' + escapeHtml(data.move) + '</p>' +
+      '<p><a href="' + data.link + '" class="btn">Go to the work &rarr;</a></p>';
+  }
+
+  opts.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.parentElement;
+      group.querySelectorAll('.nav-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[group.dataset.q] = btn.dataset.val;
+      update();
+    });
+  });
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  }
+
+  function saveHistoryArr(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch {}
+  }
+
+  function renderHistory() {
+    const arr = loadHistory();
+    if (!arr.length) {
+      historyEl.innerHTML = '<div class="nav-history-empty">Your saved assessments will appear here.</div>';
+      return;
+    }
+    historyEl.innerHTML = arr.slice().reverse().map(r => {
+      const d = new Date(r.t);
+      const dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      return '<div class="nav-history-item">' +
+        '<div class="nav-history-date">' + escapeHtml(dateStr) + '</div>' +
+        '<p class="nav-history-phase"><strong>' + escapeHtml(PHASE_DATA[r.phase].label) + '</strong></p>' +
+        '</div>';
+    }).join('');
+  }
+
+  saveBtn.addEventListener('click', () => {
+    const phase = determinePhase();
+    if (phase === null) {
+      alert('Answer all six questions before logging.');
+      return;
+    }
+    const arr = loadHistory();
+    arr.push({ t: Date.now(), phase: phase, answers: { ...answers } });
+    saveHistoryArr(arr);
+    renderHistory();
+    window.scrollTo({ top: historyEl.offsetTop - 100, behavior: 'smooth' });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    Object.keys(answers).forEach(k => { answers[k] = null; });
+    document.querySelectorAll('.nav-opt').forEach(b => b.classList.remove('selected'));
+    update();
+  });
+
+  renderHistory();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'manifesto';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
