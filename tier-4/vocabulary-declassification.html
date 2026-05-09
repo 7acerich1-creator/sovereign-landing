@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Vocabulary Declassification — Tier 4 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Library cards */
+  .lib-cat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 14px;
+  }
+  .lib-cat-card .lc-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .lib-cat-card .lc-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .lib-cat-card .lc-desc {
+    color: var(--body-dim);
+    font-size: 14.5px;
+    line-height: 1.65;
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .lib-cat-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lib-cat-card li {
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 6px 0 6px 22px;
+    position: relative;
+  }
+  .lib-cat-card li::before {
+    content: "\201C";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--gold);
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .lib-cat-card li::after {
+    content: "\201D";
+    color: var(--gold);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  /* Declassify form */
+  .dc-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 18px;
+  }
+  .dc-step { margin-bottom: 22px; }
+  .dc-step label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .dc-step .dc-question {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .dc-step .dc-helper {
+    font-size: 13.5px;
+    color: var(--body-dim);
+    margin-bottom: 12px;
+    font-style: italic;
+    line-height: 1.55;
+  }
+  .dc-step input.field { font-family: var(--serif); font-size: 16px; }
+  .dc-step textarea.field { min-height: 80px; }
+  .dc-step select.field {
+    appearance: none;
+    background: var(--card) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%23d4a843' d='M6 8L0 0h12z'/></svg>") right 16px center no-repeat;
+    padding-right: 40px;
+  }
+
+  .dc-actions { margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* History */
+  .dc-history-item {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-bottom: 12px;
+  }
+  .dc-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .dc-history-phrase {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-style: italic;
+  }
+  .dc-history-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .dc-history-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 14px;
+    padding: 6px 0;
+    align-items: baseline;
+  }
+  .dc-history-row .dh-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .dc-history-row p {
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+    font-family: var(--serif);
+  }
+  .dc-history-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  /* Sovereign tip */
+  .sovereign-tip {
+    background: var(--card-soft);
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0 8px;
+  }
+  .sovereign-tip .st-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .sovereign-tip p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .sovereign-tip p:last-child { margin-bottom: 0; }
+
+  /* Day schedule rows */
+  .day-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row .day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+
+  /* Asset card row */
+  .deeper-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .asset-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+  }
+  .asset-card .ac-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .asset-card .ac-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .asset-card .ac-desc {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--body-dim);
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .asset-card .ac-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 6px; }
+    .dc-history-row { grid-template-columns: 1fr; gap: 4px; }
+    .lib-cat-card { padding: 20px 22px; }
+    .deeper-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Phase 1 · Module 02</span>
+  <h1>The Vocabulary<br/><em>Declassification.</em></h1>
+  <p class="lede">Six categories of commonly off-limits language. Name what you have not been allowed to operate on. Once a word is declassified, the architecture it was holding back becomes buildable.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>The legacy operating system embargoed certain words. Not because the words are dangerous, but because the words are operationally powerful &mdash; and the system needed those operations to stay off-limits. Every adult inside the field has a personal vocabulary they were not permitted to use. The words sit there, off the table, and the architecture that depends on those words stays unbuildable.</p>
+  <p>Module 02 is the unembargo. You name what is off-limits, what made it off-limits, and what becomes possible once you can operate on it. Naming the prohibition removes the mechanism that made the word unspeakable. Operating on the word in the world is what makes the install permanent.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>Read the library below. It is not exhaustive &mdash; it is a starter set of categories most adults find off-limits to varying degrees. Use it to identify which categories are most active for you. Then declassify one entry per day, end-of-day, using the form below the library. Save each entry. By Day 7 you have a personal vocabulary of declassified words you can now operate on.</p>
+
+  <div class="sovereign-tip">
+    <span class="st-label">Sovereign Tip</span>
+    <p>The library is starter material. Your real vocabulary is what surfaces when you sit with the question: <em>what have I never said out loud, even to myself?</em> The most powerful entries are not in the library &mdash; they are the words specific to your life that you have been operating without for so long you forgot they were missing. Add your own freely.</p>
+    <p>If the install slips during these seven days, <a href="/assets/WHEN_THE_BUILD_SLIPS.pdf" target="_blank" style="color: var(--gold); text-decoration: underline;">open the recovery manual</a> &mdash; the situations are named there.</p>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The library.</h2>
+  <p>Six categories. The phrases inside each are common starting points &mdash; not exhaustive, not prescriptive. They are listed here so you can recognize the kind of language that has been off-limits, then look for the specific words that are off-limits in your life.</p>
+
+  <div style="margin-top: 28px;">
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 01 · Self</span>
+      <h3 class="lc-name">Who you actually are.</h3>
+      <p class="lc-desc">Direct first-person statements about yourself that the costume has been holding back.</p>
+      <ul>
+        <li>I am not the responsible one anymore</li>
+        <li>I am not okay</li>
+        <li>I do not know</li>
+        <li>I am wrong about this</li>
+        <li>I am not the strong one</li>
+        <li>I am not nice</li>
+        <li>I am tired of being this way</li>
+      </ul>
+    </div>
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 02 · Want</span>
+      <h3 class="lc-name">What you actually want, in plain words.</h3>
+      <p class="lc-desc">Direct desire, named without strategy, hedge, or apology.</p>
+      <ul>
+        <li>I want this</li>
+        <li>I want more</li>
+        <li>I want it now</li>
+        <li>I want it from you</li>
+        <li>I want to stop</li>
+        <li>I want to leave</li>
+        <li>I want to be paid more</li>
+      </ul>
+    </div>
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 03 · Refuse</span>
+      <h3 class="lc-name">What you decline.</h3>
+      <p class="lc-desc">The plain-language no, said without explanation or guilt.</p>
+      <ul>
+        <li>No</li>
+        <li>Not anymore</li>
+        <li>I will not do that</li>
+        <li>I am not interested</li>
+        <li>That does not work for me</li>
+        <li>I am leaving this</li>
+      </ul>
+    </div>
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 04 · Truth</span>
+      <h3 class="lc-name">What you actually think.</h3>
+      <p class="lc-desc">Disagreement, dissent, and direct contradiction &mdash; named without performance.</p>
+      <ul>
+        <li>That is not what I think</li>
+        <li>I do not believe that</li>
+        <li>I disagree</li>
+        <li>I think you are wrong</li>
+        <li>I think this is broken</li>
+        <li>I am not sure</li>
+      </ul>
+    </div>
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 05 · Power</span>
+      <h3 class="lc-name">Naming the dynamics.</h3>
+      <p class="lc-desc">The structural language for what is actually happening between you and the room.</p>
+      <ul>
+        <li>You have more power here than I do</li>
+        <li>I have more power here than you think</li>
+        <li>This is extracting from me</li>
+        <li>This is unfair</li>
+        <li>I am being used</li>
+        <li>I am using</li>
+      </ul>
+    </div>
+
+    <div class="lib-cat-card">
+      <span class="lc-num">Category 06 · Receipt</span>
+      <h3 class="lc-name">What you have actually received, given, been owed.</h3>
+      <p class="lc-desc">The ledger language &mdash; credit, debt, and the truth about what was exchanged.</p>
+      <ul>
+        <li>I deserve credit for this</li>
+        <li>I am owed an apology</li>
+        <li>I gave more than I received</li>
+        <li>You owe me</li>
+        <li>I have not been paid for this</li>
+        <li>I am proud of myself</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Declassify a word.</h2>
+  <p>For each word or phrase you want to declassify, complete the four steps below. Save each entry. Return to refine. The words become operable as you write the prohibition and name what becomes possible.</p>
+
+  <div class="dc-form" id="dc-form">
+
+    <div class="dc-step">
+      <label>Step 01 · Name the word</label>
+      <div class="dc-question">What word, phrase, or statement has been off-limits?</div>
+      <div class="dc-helper">From the library above, or your own. Write it as you would actually say it.</div>
+      <input type="text" id="dc-q1" class="field" placeholder="The exact word or phrase..." />
+    </div>
+
+    <div class="dc-step">
+      <label>Step 02 · The category</label>
+      <div class="dc-question">Which kind of language is this?</div>
+      <div class="dc-helper">Pick the closest fit. The category clarifies which architecture this word was holding back.</div>
+      <select id="dc-q2" class="field">
+        <option value="">Select a category...</option>
+        <option value="self">Self &mdash; who you actually are</option>
+        <option value="want">Want &mdash; what you actually want</option>
+        <option value="refuse">Refuse &mdash; what you decline</option>
+        <option value="truth">Truth &mdash; what you actually think</option>
+        <option value="power">Power &mdash; the dynamics</option>
+        <option value="receipt">Receipt &mdash; what you have received, given, owed</option>
+        <option value="other">Other / not in library</option>
+      </select>
+    </div>
+
+    <div class="dc-step">
+      <label>Step 03 · The prohibition</label>
+      <div class="dc-question">What made this word off-limits?</div>
+      <div class="dc-helper">Who taught you the prohibition. What the cost of breaking it seemed to be. Be specific.</div>
+      <textarea id="dc-q3" class="field" placeholder="Where the embargo came from and what kept it in place..."></textarea>
+    </div>
+
+    <div class="dc-step">
+      <label>Step 04 · The operation</label>
+      <div class="dc-question">What becomes possible once you can use this language?</div>
+      <div class="dc-helper">The architecture this word unblocks. The conversation, decision, or move you can now make.</div>
+      <textarea id="dc-q4" class="field" placeholder="What gets built once the embargo lifts..."></textarea>
+    </div>
+
+    <div class="dc-actions">
+      <button type="button" id="dc-save" class="btn">Save entry</button>
+      <button type="button" id="dc-clear" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Your declassified vocabulary.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. The list grows as you declassify. By Day 7 you have a vocabulary you can carry into the world.</p>
+  <div id="dc-history">
+    <div class="dc-history-empty">Your declassified entries will appear here.</div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Going deeper than the surface.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">The page-level work declassifies the words. The two assets below push past the surface &mdash; into how the embargo actually got installed across centuries of language and how to operate the new vocabulary inside rooms that have not caught up.</p>
+
+  <div class="deeper-grid">
+    <div class="asset-card">
+      <span class="ac-label">Field Manual · PDF</span>
+      <h3 class="ac-title">The Vocabulary Declassification &mdash; Field Manual.</h3>
+      <p class="ac-desc">Companion text. The history of the embargo (where the off-limits-list comes from across institutions). The mechanics of how language shapes what is operable. The per-category deeper prompts. How to operate declassified vocabulary inside rooms that still hold the embargo.</p>
+      <span class="ac-meta">Field Manual · Coming this week</span>
+      <a href="/tier-4/assets/VOCABULARY_DECLASSIFICATION_FIELD_MANUAL.pdf" class="btn" target="_blank">Download Field Manual &rarr;</a>
+    </div>
+
+    <div class="asset-card">
+      <span class="ac-label">Listening Companion</span>
+      <h3 class="ac-title">The Vocabulary Declassification &mdash; Listening Companion.</h3>
+      <p class="ac-desc">Roughly twelve minutes of contemplative material. Walks you through the experience of saying the off-limits words out loud for the first time. Surfaces the body-response that the embargo trained. Lands the sovereignty frame for operating the new vocabulary in real environments.</p>
+      <span class="ac-meta">Audio · Coming this week</span>
+      <a href="/tier-4/assets/vocabulary-declassification-listening-companion.mp3" class="btn" target="_blank">Listen to Companion &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 02.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. Run it after Module 01 (Costume Audit) is at least surface-named. The vocabulary work compounds the costume work.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row">
+      <span class="day-label">Day 1</span>
+      <p>Read the library. Identify three to five words or phrases that are most off-limits for you. Do not declassify them yet &mdash; just notice which ones feel unsayable.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Days 2&ndash;6</span>
+      <p>One entry per day. Pick a word from your Day 1 list, complete all four steps in the form, save. Each entry takes ten to fifteen minutes if done honestly.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 7</span>
+      <p>Re-read all your entries. Pick one word and use it in the world &mdash; out loud, in writing, in a real conversation. Module 02 is installed when the word that was off-limits has been operated at least once.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>What you cannot say, you cannot build.<br/>What you declassify, you can finally operate.</p>
+  <a href="/tier-4/course-portal" class="btn">Back to The Architect &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_vocab_declass_v1';
+  const CATEGORY_LABELS = {
+    self: 'Self',
+    want: 'Want',
+    refuse: 'Refuse',
+    truth: 'Truth',
+    power: 'Power',
+    receipt: 'Receipt',
+    other: 'Other'
+  };
+
+  const q1 = document.getElementById('dc-q1');
+  const q2 = document.getElementById('dc-q2');
+  const q3 = document.getElementById('dc-q3');
+  const q4 = document.getElementById('dc-q4');
+  const saveBtn = document.getElementById('dc-save');
+  const clearBtn = document.getElementById('dc-clear');
+  const historyEl = document.getElementById('dc-history');
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  }
+
+  function saveHistoryArr(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch {}
+  }
+
+  function renderHistory() {
+    const arr = loadHistory();
+    if (!arr.length) {
+      historyEl.innerHTML = '<div class="dc-history-empty">Your declassified entries will appear here.</div>';
+      return;
+    }
+    historyEl.innerHTML = arr.slice().reverse().map(r => {
+      const d = new Date(r.t);
+      const dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      const catLabel = CATEGORY_LABELS[r.cat] || r.cat;
+      const row = (label, val) => val ? '<div class="dc-history-row"><span class="dh-label">' + label + '</span><p>' + escapeHtml(val) + '</p></div>' : '';
+      return '<div class="dc-history-item">' +
+        '<div class="dc-history-header">' +
+          '<p class="dc-history-phrase">&ldquo;' + escapeHtml(r.phrase) + '&rdquo;</p>' +
+          '<span class="dc-history-meta">' + escapeHtml(catLabel) + ' &middot; ' + escapeHtml(dateStr) + '</span>' +
+        '</div>' +
+        row('Prohibition', r.prohibition) +
+        row('Operation', r.operation) +
+        '</div>';
+    }).join('');
+  }
+
+  saveBtn.addEventListener('click', () => {
+    const phrase = q1.value.trim();
+    const cat = q2.value;
+    const prohibition = q3.value.trim();
+    const operation = q4.value.trim();
+    if (!phrase) {
+      alert('Step 01: name the word or phrase before saving.');
+      return;
+    }
+    if (!cat) {
+      alert('Step 02: pick a category before saving.');
+      return;
+    }
+    const arr = loadHistory();
+    arr.push({ t: Date.now(), phrase, cat, prohibition, operation });
+    saveHistoryArr(arr);
+    q1.value = ''; q2.value = ''; q3.value = ''; q4.value = '';
+    renderHistory();
+    window.scrollTo({ top: historyEl.offsetTop - 100, behavior: 'smooth' });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    q1.value = ''; q2.value = ''; q3.value = ''; q4.value = '';
+  });
+
+  renderHistory();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp1';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
