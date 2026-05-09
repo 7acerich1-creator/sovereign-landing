@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 Recalibration — Tier 4 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .recal-frame { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+
+  .recal-section { padding: 56px 0; border-top: 1px solid var(--border); }
+  .recal-section:first-of-type { border-top: 1px solid var(--border-soft); }
+  .recal-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 34px);
+    color: var(--text);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .recal-section h2 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .arch-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+  }
+  .arch-list li {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text);
+    padding: 12px 0 12px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    position: relative;
+  }
+  .arch-list li:last-child { border-bottom: none; }
+  .arch-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .iow-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 24px;
+  }
+  .iow-block .iow-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .iow-block .iow-intro {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .iow-block ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .iow-block li {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 8px 0 8px 22px;
+    position: relative;
+  }
+  .iow-block li::before {
+    content: "\201C";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--gold);
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .iow-block.installed { border-left-color: var(--gold); }
+  .iow-block.installed .iow-label { color: var(--gold); }
+
+  .sxs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 24px 0 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .sxs-header {
+    padding: 14px 22px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .sxs-header.old { background: var(--card-soft); color: var(--copper); border-right: 1px solid var(--border); }
+  .sxs-header.new { background: var(--card); color: var(--gold); }
+  .sxs-cell {
+    padding: 18px 22px;
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--text);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .sxs-cell.old { background: var(--card-soft); border-right: 1px solid var(--border); }
+  .sxs-cell.new { background: var(--card); }
+  .sxs-cell:nth-last-child(-n+2) { border-bottom: none; }
+
+  .math-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+  }
+  .math-block .math-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .math-block .math-row:first-of-type { border-top: 1px solid var(--border); }
+  .math-block .math-row:last-of-type { border-bottom: none; }
+  .math-block .math-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .math-block .math-val {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .math-block .math-val.fill {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .math-block .math-final {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 2px solid var(--gold);
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .crabs-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+  }
+  .crabs-block p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .crabs-block p:last-child { margin-bottom: 0; }
+
+  .forward-block {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .forward-block p {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .sxs-grid { grid-template-columns: 1fr; }
+    .sxs-header.old, .sxs-cell.old { border-right: none; }
+    .math-block .math-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Phase 1 · Recalibration</span>
+  <h1>What you walked in with.<br/><em>What you walked out with.</em></h1>
+  <p class="lede">A perception audit at the close of Phase 1. The work below is in noticing what changed, not in agreeing with what is written. Substitute your specifics into the projections. The math is yours to run.</p>
+</section>
+
+<div class="recal-frame">
+
+  <!-- ========= WHAT YOU WALKED IN WITH ========= -->
+  <section class="recal-section">
+    <h2>What you walked in with.</h2>
+
+    <ul class="arch-list">
+      <li>A costume installed before you had words to refuse it.</li>
+      <li>A vocabulary embargoed by the systems that needed you not to operate on it.</li>
+      <li>A sketch of the life you would have built &mdash; structurally suppressed.</li>
+      <li>An integration document of the architecture &mdash; structurally impossible to write.</li>
+    </ul>
+
+    <div class="iow-block">
+      <span class="iow-label">In other words</span>
+      <p class="iow-intro">The unconscious script you have been running, possibly for decades:</p>
+      <ul>
+        <li>That's just how I am.</li>
+        <li>I can't do that &mdash; that's not me.</li>
+        <li>I've always been the [responsible one, quiet one, fixer, strong one].</li>
+        <li>Money is just hard for people like me.</li>
+        <li>Every time I tried, this happened &mdash; so I stopped trying.</li>
+        <li>Better not to want it than to want it and not get it.</li>
+        <li>The people who get those things are different from me.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= WHAT YOU WALKED OUT WITH ========= -->
+  <section class="recal-section">
+    <h2>What you walked out with.</h2>
+
+    <ul class="arch-list">
+      <li>The costume named in five domains. It is no longer you &mdash; it is something you can audit.</li>
+      <li>The vocabulary declassified. Every term you couldn't operate on now operates as architecture.</li>
+      <li>The sketch produced. The life that was structurally suppressed now has a first-pass blueprint.</li>
+      <li>The Phase 1 Integration Document load-bearing. The reference Phases 2 and 3 build from.</li>
+    </ul>
+
+    <div class="iow-block installed">
+      <span class="iow-label">In other words</span>
+      <p class="iow-intro">The new script available to you, every time the old one fires:</p>
+      <ul>
+        <li>I can name what is running me. It is not me.</li>
+        <li>I have words for what I never had words for. That changes what I can operate on.</li>
+        <li>I do not have to perform that costume to stay safe.</li>
+        <li>What I want is mine to name. The architecture for it is buildable.</li>
+        <li>When the old pattern shows up, I see it. Seeing it is half of changing it.</li>
+        <li>The version I was waiting to become is the one I am building toward, deliberately.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= SIDE-BY-SIDE ========= -->
+  <section class="recal-section">
+    <h2>Side-by-side. <em>Apply your specifics.</em></h2>
+
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 12px;">Below are projections of what this layer of the install can produce in a typical life. They are not affirmations and they are not aimed at any specific person. Substitute your specifics. The point is to apply the paradigm to your position and notice what is true in your case.</p>
+
+    <div class="sxs-grid">
+      <div class="sxs-header old">Old life</div>
+      <div class="sxs-header new">New life</div>
+
+      <div class="sxs-cell old">Stuck in a role that pays you in money and costs you in purpose.</div>
+      <div class="sxs-cell new">Building or operating in something whose use-value you can name in one sentence.</div>
+
+      <div class="sxs-cell old">Smiling through dinners and texts because the alternative was conflict you could not survive.</div>
+      <div class="sxs-cell new">Saying the thing that needs saying &mdash; even when it costs the relationship its old shape.</div>
+
+      <div class="sxs-cell old">Performing competence in front of people while a quieter knowing lives unspoken inside.</div>
+      <div class="sxs-cell new">Operating from the quieter knowing, even when the room hasn't caught up yet.</div>
+
+      <div class="sxs-cell old">Spending money in patterns you have never named because you never had to.</div>
+      <div class="sxs-cell new">Every spending decision touches a question you can now answer.</div>
+
+      <div class="sxs-cell old">Curating a version of yourself that needs the audience's approval to feel real.</div>
+      <div class="sxs-cell new">Letting the audience be optional &mdash; the operating frequency does not depend on who is watching.</div>
+    </div>
+  </section>
+
+  <!-- ========= THE MATH ========= -->
+  <section class="recal-section">
+    <h2>The math. <em>Yours.</em></h2>
+
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 18px;">Run this against your own life. The numbers are yours, not anyone else's. The point is not to validate the framing &mdash; the point is to see the gap.</p>
+
+    <div class="math-block">
+      <div class="math-row">
+        <span class="math-label">Years inside this architecture</span>
+        <p class="math-val fill">Estimate honestly &mdash; from the first costume installation to today.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Domains it extracted from</span>
+        <p class="math-val">Work. Family of origin. Intimate. Social. Money. Each one named in your audit.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Cost across those years</span>
+        <p class="math-val fill">Time, energy, money, relationships, possibilities. Enumerate by domain.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Tier 4 investment</span>
+        <p class="math-val">$477. One-time.</p>
+      </div>
+      <p class="math-final">The math is what the math is. The gap between the two columns is what was extracted. The investment column is what stops the extraction from extending another year.</p>
+    </div>
+  </section>
+
+  <!-- ========= WHY YOU COULDN'T HAVE DONE THIS ALONE ========= -->
+  <section class="recal-section">
+    <h2>Why you couldn't have done this alone.</h2>
+
+    <div class="crabs-block">
+      <p>Humanity has operated inside the same containment field for the entire time it has had a name for itself. The crabs in the bucket pull each other back into the bucket because that is what crabs in a bucket do &mdash; there is no architectural fault to assign. You did not get here by personal weakness. You got here by structural design.</p>
+
+      <p>The work this rung did was not motivation. It was reconstruction. Talk is cheap. Patterns are hard to identify and harder to break. Every legacy system around you had a reason for the costume to stay on, and most of them are still in the room.</p>
+
+      <p>The system you just paid for did the part you would not have done unaided. It made the architecture visible. It forced you to operate on it inside a container that did not let you slip back in unaware. That is what was bought. That is what is being acknowledged now.</p>
+    </div>
+  </section>
+
+  <!-- ========= FORWARD ========= -->
+  <section class="recal-section">
+    <div class="forward-block">
+      <p>Phase 1 closes here. Phase 2 &mdash; Adversarial Systems &mdash; is how you operate the new architecture inside structures that are still hostile to it.</p>
+      <a href="/tier-5/course-portal" class="btn">Continue to Phase 2 &rarr;</a>
+    </div>
+  </section>
+
+</div>
+
+<div class="closing">
+  <p>The audit was the install.<br/>The recalibration is the receipt.</p>
+  <a href="/tier-4/course-portal" class="btn">Back to The Architect &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp1';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
