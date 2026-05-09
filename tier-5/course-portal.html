@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Architect — Phase 2: Adversarial Systems | Sovereign Synthesis</title>
 <link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .seq-module { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 16px; }
+  .seq-module-active { border-left: 3px solid var(--gold); }
+  .seq-module-pending { background: var(--card-soft); opacity: 0.78; }
+  .seq-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .seq-num { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; }
+  .seq-status { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; font-weight: 700; }
+  .seq-status-available { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+  .seq-status-deploying { color: var(--muted); border: 1px solid var(--border); }
+  .seq-title { font-family: var(--serif); font-size: 22px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .seq-desc { color: var(--body-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+  .seq-module-active .seq-desc { margin-bottom: 24px; }
+</style>
 </head>
 <body>
 
@@ -59,38 +72,44 @@
 </section>
 
 <section class="block bordered">
-  <h2>Curriculum modules.</h2>
-  <p>Phase 2 is being deployed in waves to Tier 5 holders. As each module ships you will receive a notification by email and it will appear here.</p>
-  <ul class="path-list">
-    <li>
-      <span class="num">01</span>
-      <span class="body-cell">
-        <strong>Adversarial Architecture Recognition</strong>
-        <span>The seven structural signatures of a system that is optimized to capture you. How to identify each one in the first interaction.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">02</span>
-      <span class="body-cell">
-        <strong>The Non-Performance Posture</strong>
-        <span>How to remain present in an adversarial environment without producing the performance that the environment is optimized to extract.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">03</span>
-      <span class="body-cell">
-        <strong>The Asymmetric Exit</strong>
-        <span>When exit is required, how to execute it on terms that preserve sovereignty rather than exhaust it.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">04</span>
-      <span class="body-cell">
-        <strong>Phase 2 Capstone</strong>
-        <span>A live audit of one adversarial system you currently operate inside, with the specific Phase 2 moves applied.</span>
-      </span>
-    </li>
-  </ul>
+  <h2>Your sequence.</h2>
+  <p>Phase 2 deploys in stages. Modules ship in sequence; as each one is built it appears here as Available. Foundation chain (Step 00) must be in place before beginning any module &mdash; Phase 2's work cannot stand on incomplete Phase 1.</p>
+
+  <div class="seq-module seq-module-pending" style="margin-top: 28px;">
+    <div class="seq-header">
+      <span class="seq-num">Module 01</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Adversarial Architecture Recognition.</h3>
+    <p class="seq-desc">The seven structural signatures of a system optimized to capture you. How to identify each one in the first interaction &mdash; before the system has had time to install its hooks. Builds on the Environmental Read Protocol from Tier 3 and the Costume Audit from Tier 4.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 02</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Non-Performance Posture.</h3>
+    <p class="seq-desc">How to remain present in an adversarial environment without producing the performance the environment is optimized to extract. The middle path between collapse-into-costume and costly-exit.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 03</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Asymmetric Exit.</h3>
+    <p class="seq-desc">When exit is required, how to execute it on terms that preserve sovereignty rather than exhaust it. The architecture of leaving without burning the operator on the way out.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 04</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Phase 2 Integration Document.</h3>
+    <p class="seq-desc">A live audit of one adversarial system you currently operate inside, with the specific Phase 2 moves applied and the integration named. Synthesis document parallel to Phase 1's, composed in the same workspace pattern.</p>
+  </div>
 </section>
 
 <section class="block bordered">

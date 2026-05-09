@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Architect — Phase 3: Sovereign Integration | Sovereign Synthesis</title>
 <link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .seq-module { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 16px; }
+  .seq-module-active { border-left: 3px solid var(--gold); }
+  .seq-module-pending { background: var(--card-soft); opacity: 0.78; }
+  .seq-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .seq-num { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; }
+  .seq-status { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; font-weight: 700; }
+  .seq-status-available { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+  .seq-status-deploying { color: var(--muted); border: 1px solid var(--border); }
+  .seq-title { font-family: var(--serif); font-size: 22px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .seq-desc { color: var(--body-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+  .seq-module-active .seq-desc { margin-bottom: 24px; }
+</style>
 </head>
 <body>
 
@@ -60,38 +73,44 @@
 </section>
 
 <section class="block bordered">
-  <h2>Curriculum modules.</h2>
-  <p>Phase 3 is being deployed in waves to Tier 6 holders. As each module ships you will receive a notification by email and it will appear here.</p>
-  <ul class="path-list">
-    <li>
-      <span class="num">01</span>
-      <span class="body-cell">
-        <strong>The Integration Audit</strong>
-        <span>A complete review of every Phase 1 and Phase 2 deliverable, mapped against the architecture you are now able to build.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">02</span>
-      <span class="body-cell">
-        <strong>Doctrine Composition</strong>
-        <span>Compressing the framework into your personal operating doctrine — the load-bearing document you will run from for life.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">03</span>
-      <span class="body-cell">
-        <strong>The Five-Domain Build</strong>
-        <span>Concurrent build-out of life, work, relationship, money, and health architecture using the doctrine as the rotation point.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">04</span>
-      <span class="body-cell">
-        <strong>Phase 3 Capstone</strong>
-        <span>The Sovereign Integration Document — your final deliverable. The same document that determines Inner Circle eligibility.</span>
-      </span>
-    </li>
-  </ul>
+  <h2>Your sequence.</h2>
+  <p>Phase 3 deploys in stages. Modules ship in sequence; as each one is built it appears here as Available. Phase 3 is doctrine, not protocol &mdash; the work composes the operating system you run for life.</p>
+
+  <div class="seq-module seq-module-pending" style="margin-top: 28px;">
+    <div class="seq-header">
+      <span class="seq-num">Module 01</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Integration Audit.</h3>
+    <p class="seq-desc">A complete review of every Phase 1 and Phase 2 deliverable, mapped against the architecture you are now able to build. The first move of Phase 3 is taking inventory of what is already load-bearing and what is still scaffolding.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 02</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Doctrine Composition.</h3>
+    <p class="seq-desc">Compressing the framework into your personal operating doctrine &mdash; the load-bearing document you will run from for life. Doctrine is what survives every individual protocol; it is the layer above tactics.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 03</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Five-Domain Build.</h3>
+    <p class="seq-desc">Concurrent build-out of life, work, relationship, money, and health architecture using the doctrine as the rotation point. The five domains move together because the doctrine integrates them; one cannot lag without the others compensating.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 04</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Sovereign Integration Document.</h3>
+    <p class="seq-desc">Your final deliverable. The same document that determines Inner Circle eligibility. Synthesizes the entire architecture &mdash; from Protocol Zero through Phase 3 &mdash; into one operating spec that is yours alone, written by you, for you, defensible at the Inner Circle altitude.</p>
+  </div>
 </section>
 
 <section class="block bordered">
