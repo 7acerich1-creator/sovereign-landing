@@ -134,10 +134,88 @@
     padding-top: 3px;
   }
   .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+
+  .sovereign-tip {
+    background: var(--card-soft);
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0 8px;
+  }
+  .sovereign-tip .st-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .sovereign-tip p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .sovereign-tip p:last-child { margin-bottom: 0; }
+
+  .deeper-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .asset-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+  }
+  .asset-card .ac-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .asset-card .ac-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .asset-card .ac-desc {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--body-dim);
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .asset-card .ac-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
   @media (max-width: 600px) {
     .day-row { grid-template-columns: 1fr; gap: 6px; }
     .map-row { grid-template-columns: 1fr; gap: 4px; }
     .domain-card { padding: 22px 22px; }
+    .deeper-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -171,6 +249,12 @@
 <section class="block bordered">
   <h2>How to use it.</h2>
   <p>One domain per day, in order. Roughly ten minutes of honest writing per domain. Save each one as you finish. After Day 5, all five domain costumes appear in the costume map below &mdash; that is your first declassified inventory. Re-edit any domain at any time as the audit refines.</p>
+
+  <div class="sovereign-tip">
+    <span class="st-label">Sovereign Tip</span>
+    <p>The ten minutes at the end of the day are the close-out. The real work is during the day &mdash; watching yourself, asking honestly why you are doing what you are doing. Every layer you uncover is a layer the architecture loses on you.</p>
+    <p>The deeper you go now, the fewer costumes you will have to peel back later. There is a level where you see all the way through and the system has no more power over you. That is sovereignty. This is the path. Use the Field Manual and Listening Companion below to push past the surface read &mdash; the depth you bring to these seven days is what compounds.</p>
+  </div>
 
   <div style="margin-top: 36px;">
 
@@ -351,6 +435,27 @@
     <div class="map-row" data-map="money">
       <span class="map-domain-label">Money</span>
       <p class="map-domain-costume map-domain-empty" data-map-text="money">Save Day 5 to populate.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Going deeper than the surface.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">The audit prompts surface the costume. These two assets push past the surface &mdash; running them alongside the seven days is how you get to the levels the system was hoping you would not look at.</p>
+
+  <div class="deeper-grid">
+    <div class="asset-card">
+      <span class="ac-label">Field Manual · PDF</span>
+      <h3 class="ac-title">The Costume Audit &mdash; Field Manual.</h3>
+      <p class="ac-desc">Eight to ten pages, going below the five-domain summary. How the costume actually got installed and why it took on its specific function. The depth problem &mdash; why you can only see so far from one position. The fooling-ourselves loop that keeps the costume in place even while you "do the work." Per-domain deeper prompts that push past the first answer.</p>
+      <span class="ac-meta">Field Manual · Coming this week</span>
+      <a href="/tier-4/assets/COSTUME_AUDIT_FIELD_MANUAL.pdf" class="btn" target="_blank">Download Field Manual &rarr;</a>
+    </div>
+
+    <div class="asset-card">
+      <span class="ac-label">Listening Companion · Audio</span>
+      <h3 class="ac-title">The Costume Audit &mdash; Listening Companion.</h3>
+      <p class="ac-desc">Twelve to fifteen minutes of contemplative audio. Walks you through one domain as a deep contemplation, surfaces the depth question, lands the sovereignty frame, and closes with reflection prompts to take into the day. Designed to run while you write, walk, or sit &mdash; the input that turns the ten-minute close-out into a full-day audit.</p>
+      <span class="ac-meta">Audio · Coming this week</span>
+      <a href="/tier-4/assets/costume-audit-listening-companion.mp3" class="btn" target="_blank">Listen to Companion &rarr;</a>
     </div>
   </div>
 </section>
