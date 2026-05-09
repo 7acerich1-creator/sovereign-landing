@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Architecture Sketch — Tier 4 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Domain cards */
+  .domain-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    margin-bottom: 18px;
+  }
+  .domain-card.complete { border-left-color: var(--gold); }
+  .domain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .domain-day {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .domain-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .domain-card.complete .domain-status { color: var(--gold); }
+  .domain-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .domain-frame {
+    color: var(--body-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+  .domain-prompt { margin-bottom: 16px; }
+  .domain-prompt label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .domain-card.complete .domain-prompt label { color: var(--gold); }
+  .domain-prompt .prompt-question {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .domain-prompt textarea.field { min-height: 80px; }
+  .domain-actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Sketch map */
+  .map-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 14px;
+  }
+  .map-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .map-row:first-of-type { border-top: 1px solid var(--border); }
+  .map-row:last-of-type { border-bottom: none; }
+  .map-domain-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .map-domain-sketch {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .map-domain-empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Sovereign tip + day-row + asset blocks reuse Module 01/02 patterns */
+  .sovereign-tip {
+    background: var(--card-soft);
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0 8px;
+  }
+  .sovereign-tip .st-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .sovereign-tip p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .sovereign-tip p:last-child { margin-bottom: 0; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row .day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+
+  .deeper-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .asset-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+  }
+  .asset-card .ac-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .asset-card .ac-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .asset-card .ac-desc {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--body-dim);
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .asset-card .ac-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 6px; }
+    .map-row { grid-template-columns: 1fr; gap: 4px; }
+    .domain-card { padding: 22px 22px; }
+    .deeper-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Phase 1 · Module 03</span>
+  <h1>The Architecture<br/><em>Sketch.</em></h1>
+  <p class="lede">Five life domains. Three prompts each. The first-pass blueprint of the life, work, and identity you would build if no costume was required &mdash; not as fantasy, as the surface from which the actual architecture starts being designed.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Module 01 named the costume. Module 02 declassified the vocabulary. Module 03 sketches what would actually be built if the costume came off and the vocabulary became operable. The sketch is not the architecture. It is the surface from which Phase 1's Integration Document gets composed and Phase 2's adversarial-systems work gets directed. Without it, Phase 2 builds against undefined ground.</p>
+  <p>This is forward work. Backward audit is complete. Now the question shifts: what would the un-costumed version of this domain actually look like &mdash; specifically, in your life, in concrete sentences you can later operate on?</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>One domain per day, in order. Three prompts each: the sketch (what would this look like un-costumed), the first move (what's the smallest concrete step you can take now), the 12-month projection (where does that move land you a year from now). Save each domain. By Day 5 you have a sketch across all five domains; Days 6&ndash;7 are synthesis.</p>
+
+  <div class="sovereign-tip">
+    <span class="st-label">Sovereign Tip</span>
+    <p>The sketch is not a plan. A plan demands certainty before it allows movement; a sketch is the act of drawing what you can see now so that the next layer of vision becomes available. If you cannot answer a prompt yet, write what you can see and leave the rest open. The sketch deepens as you operate &mdash; you will return to refine it for the rest of Phase 1 and into Phase 2.</p>
+    <p>If the install slips during these seven days, <a href="/assets/WHEN_THE_BUILD_SLIPS.pdf" target="_blank" style="color: var(--gold); text-decoration: underline;">open the recovery manual</a> &mdash; the situations are named there.</p>
+  </div>
+
+  <div style="margin-top: 36px;">
+
+    <div class="domain-card" data-domain="work" id="card-work">
+      <div class="domain-header">
+        <span class="domain-day">Day 1</span>
+        <span class="domain-status" data-status="work">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Work and Vocation.</h3>
+      <p class="domain-frame">What you would do for income, meaning, and contribution if the work-costume was off. Not fantasy &mdash; what you can already see is buildable from where you are.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 &middot; The sketch</label>
+        <div class="prompt-question">What would your work look like if no costume was required?</div>
+        <textarea class="field" data-field="work-q1" placeholder="The shape of the work, the use-value, the way you would spend your time..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 &middot; The first move</label>
+        <div class="prompt-question">What is the smallest concrete move from where you are now toward that sketch?</div>
+        <textarea class="field" data-field="work-q2" placeholder="Something specific. Something you can do this month..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 &middot; 12-month projection</label>
+        <div class="prompt-question">Where does that first move land you in twelve months, conservatively?</div>
+        <textarea class="field" data-field="work-q3" placeholder="The plausible state of work twelve months out if the first move compounds..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="work">Save Day 1</button>
+        <button type="button" class="btn btn-secondary" data-clear="work">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="family" id="card-family">
+      <div class="domain-header">
+        <span class="domain-day">Day 2</span>
+        <span class="domain-status" data-status="family">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Family and Inherited Relationships.</h3>
+      <p class="domain-frame">You cannot redesign your family of origin &mdash; that is history. But you can architect how you operate inside ongoing family relationships now that you see the costume the family system shaped.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 &middot; The sketch</label>
+        <div class="prompt-question">What would your family relationships look like if you operated un-costumed in them?</div>
+        <textarea class="field" data-field="family-q1" placeholder="The truth you would speak, the role you would not play, the boundary you would hold..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 &middot; The first move</label>
+        <div class="prompt-question">What is the smallest move you can make in those relationships from where you are now?</div>
+        <textarea class="field" data-field="family-q2" placeholder="A specific conversation, a specific refusal, a specific reach-out..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 &middot; 12-month projection</label>
+        <div class="prompt-question">Where do those relationships land twelve months from now if you make that move and hold it?</div>
+        <textarea class="field" data-field="family-q3" placeholder="Some relationships will reshape; some will cost what they cost. Both are honest..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="family">Save Day 2</button>
+        <button type="button" class="btn btn-secondary" data-clear="family">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="intimate" id="card-intimate">
+      <div class="domain-header">
+        <span class="domain-day">Day 3</span>
+        <span class="domain-status" data-status="intimate">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Intimate and Romantic.</h3>
+      <p class="domain-frame">What intimate life would actually be if the strategy-costume was off &mdash; the wanting plain, the asking direct, the version of you that does not perform for closeness.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 &middot; The sketch</label>
+        <div class="prompt-question">What would your intimate life look like un-costumed?</div>
+        <textarea class="field" data-field="intimate-q1" placeholder="The relationship shape, the conversations you would actually have, the wanting named..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 &middot; The first move</label>
+        <div class="prompt-question">What is the smallest move toward that from where you are now?</div>
+        <textarea class="field" data-field="intimate-q2" placeholder="A request you have not made, a truth you have not spoken, a pattern you would refuse to repeat..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 &middot; 12-month projection</label>
+        <div class="prompt-question">Where does intimate life land twelve months from that move?</div>
+        <textarea class="field" data-field="intimate-q3" placeholder="The plausible shape of the relationship (or the path to a different one) once the strategy is no longer running..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="intimate">Save Day 3</button>
+        <button type="button" class="btn btn-secondary" data-clear="intimate">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="social" id="card-social">
+      <div class="domain-header">
+        <span class="domain-day">Day 4</span>
+        <span class="domain-status" data-status="social">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Social and Public.</h3>
+      <p class="domain-frame">What social life would actually be if the curation-costume was off &mdash; who you would spend time with by choice, what you would say in groups, where you would stop performing for approval.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 &middot; The sketch</label>
+        <div class="prompt-question">What would your social and public life look like un-costumed?</div>
+        <textarea class="field" data-field="social-q1" placeholder="The people, the conversations, the public version of you that does not need the audience to feel real..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 &middot; The first move</label>
+        <div class="prompt-question">What is the smallest move toward that from where you are now?</div>
+        <textarea class="field" data-field="social-q2" placeholder="A relationship you would deepen, a group you would leave, an opinion you would say out loud..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 &middot; 12-month projection</label>
+        <div class="prompt-question">Where does social life land twelve months from that move?</div>
+        <textarea class="field" data-field="social-q3" placeholder="The reshaping of who is around you, what rooms you walk into, how it feels to leave them..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="social">Save Day 4</button>
+        <button type="button" class="btn btn-secondary" data-clear="social">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="money" id="card-money">
+      <div class="domain-header">
+        <span class="domain-day">Day 5</span>
+        <span class="domain-status" data-status="money">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Money.</h3>
+      <p class="domain-frame">What financial architecture you would actually build if the money-prohibition was off &mdash; the income, the asking, the keeping, the deploying. Concrete amounts and concrete moves, not affirmations.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 &middot; The sketch</label>
+        <div class="prompt-question">What would your money architecture look like un-costumed?</div>
+        <textarea class="field" data-field="money-q1" placeholder="The income shape, the savings architecture, the asking, the spending decisions you would make..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 &middot; The first move</label>
+        <div class="prompt-question">What is the smallest concrete money move toward that from where you are now?</div>
+        <textarea class="field" data-field="money-q2" placeholder="A rate to raise, a price to ask, an account to open, a spending pattern to stop, a conversation to have about money..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 &middot; 12-month projection</label>
+        <div class="prompt-question">Where does money land twelve months from that move?</div>
+        <textarea class="field" data-field="money-q3" placeholder="The plausible state of your finances, conservatively, if the first move compounds..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="money">Save Day 5</button>
+        <button type="button" class="btn btn-secondary" data-clear="money">Clear</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The sketch map.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">As you save each domain, the sketch line appears below. Once all five are filled, this is your first-pass architecture &mdash; the surface Phase 1's Integration Document gets composed from.</p>
+
+  <div class="map-card" id="map-card">
+    <div class="map-row" data-map="work">
+      <span class="map-domain-label">Work</span>
+      <p class="map-domain-sketch map-domain-empty" data-map-text="work">Save Day 1 to populate.</p>
+    </div>
+    <div class="map-row" data-map="family">
+      <span class="map-domain-label">Family</span>
+      <p class="map-domain-sketch map-domain-empty" data-map-text="family">Save Day 2 to populate.</p>
+    </div>
+    <div class="map-row" data-map="intimate">
+      <span class="map-domain-label">Intimate</span>
+      <p class="map-domain-sketch map-domain-empty" data-map-text="intimate">Save Day 3 to populate.</p>
+    </div>
+    <div class="map-row" data-map="social">
+      <span class="map-domain-label">Social</span>
+      <p class="map-domain-sketch map-domain-empty" data-map-text="social">Save Day 4 to populate.</p>
+    </div>
+    <div class="map-row" data-map="money">
+      <span class="map-domain-label">Money</span>
+      <p class="map-domain-sketch map-domain-empty" data-map-text="money">Save Day 5 to populate.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Going deeper than the surface.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">The page-level work surfaces the sketch. The two assets below push past the surface &mdash; into how to keep the sketch from collapsing into either fantasy or rigid plan, and how to operate the first-move in real environments.</p>
+
+  <div class="deeper-grid">
+    <div class="asset-card">
+      <span class="ac-label">Field Manual &middot; PDF</span>
+      <h3 class="ac-title">The Architecture Sketch &mdash; Field Manual.</h3>
+      <p class="ac-desc">Companion text. The sketch-vs-plan distinction. The honest-projection rule (conservative, specific, no aspirational drift). The first-move sizing (small enough to actually take this month). Per-domain deeper prompts for the second pass.</p>
+      <span class="ac-meta">Field Manual &middot; Coming this week</span>
+      <a href="/tier-4/assets/ARCHITECTURE_SKETCH_FIELD_MANUAL.pdf" class="btn" target="_blank">Download Field Manual &rarr;</a>
+    </div>
+
+    <div class="asset-card">
+      <span class="ac-label">Listening Companion</span>
+      <h3 class="ac-title">The Architecture Sketch &mdash; Listening Companion.</h3>
+      <p class="ac-desc">Roughly twelve minutes of contemplative material. Walks you through the work-domain sketch as a deep contemplation. Surfaces the resistance the costume puts up against forward sketching. Lands the principle that the sketch is the surface, not the architecture &mdash; and that is the point.</p>
+      <span class="ac-meta">Audio &middot; Coming this week</span>
+      <a href="/tier-4/assets/architecture-sketch-listening-companion.mp3" class="btn" target="_blank">Listen to Companion &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 03.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. Days 1&ndash;5 sketch one domain each. Days 6&ndash;7 synthesize across them.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row">
+      <span class="day-label">Days 1&ndash;5</span>
+      <p>One domain per day, in order. Three prompts each. Save each domain as you finish. Each entry takes fifteen to twenty-five minutes if done concretely &mdash; sketches collapse fast when forced to name specific moves with specific timeframes.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 6</span>
+      <p>Re-read all five domains in order. Notice the cross-cutting first moves &mdash; the ones that show up in multiple domains. Those are the load-bearing moves: a single action that advances the sketch in two or three areas at once.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 7</span>
+      <p>Look at the sketch map. Module 03 is installed when the sketch reads as something you would actually build &mdash; not what you should want, not what would impress someone, but the architecture you would design if no one was watching and no costume was required. That single document is what Phase 1's Integration Document is composed from.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The sketch is not the architecture.<br/>It is the surface from which the architecture starts being designed.</p>
+  <a href="/tier-4/course-portal" class="btn">Back to The Architect &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_architecture_sketch_v1';
+  const DOMAINS = ['work', 'family', 'intimate', 'social', 'money'];
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadSketch() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveSketch(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  function applyToFields() {
+    const data = loadSketch();
+    DOMAINS.forEach(d => {
+      ['q1', 'q2', 'q3'].forEach(q => {
+        const ta = document.querySelector('[data-field="' + d + '-' + q + '"]');
+        if (ta && data[d] && data[d][q]) ta.value = data[d][q];
+      });
+      updateStatus(d, data);
+      updateMap(d, data);
+    });
+  }
+
+  function updateStatus(domain, data) {
+    const statusEl = document.querySelector('[data-status="' + domain + '"]');
+    const card = document.getElementById('card-' + domain);
+    if (data[domain] && data[domain].q1) {
+      const d = new Date(data[domain].t);
+      statusEl.textContent = 'Saved ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      card.classList.add('complete');
+    } else {
+      statusEl.textContent = 'Not yet saved';
+      card.classList.remove('complete');
+    }
+  }
+
+  function updateMap(domain, data) {
+    const mapText = document.querySelector('[data-map-text="' + domain + '"]');
+    if (data[domain] && data[domain].q1) {
+      mapText.textContent = data[domain].q1;
+      mapText.classList.remove('map-domain-empty');
+    } else {
+      const dayLabel = { work: 1, family: 2, intimate: 3, social: 4, money: 5 }[domain];
+      mapText.textContent = 'Save Day ' + dayLabel + ' to populate.';
+      mapText.classList.add('map-domain-empty');
+    }
+  }
+
+  document.querySelectorAll('[data-save]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const domain = btn.dataset.save;
+      const q1 = document.querySelector('[data-field="' + domain + '-q1"]').value.trim();
+      const q2 = document.querySelector('[data-field="' + domain + '-q2"]').value.trim();
+      const q3 = document.querySelector('[data-field="' + domain + '-q3"]').value.trim();
+      if (!q1) {
+        alert('At minimum, write the sketch in Prompt 01 before saving.');
+        return;
+      }
+      const data = loadSketch();
+      data[domain] = { q1: q1, q2: q2, q3: q3, t: Date.now() };
+      saveSketch(data);
+      updateStatus(domain, data);
+      updateMap(domain, data);
+    });
+  });
+
+  document.querySelectorAll('[data-clear]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const domain = btn.dataset.clear;
+      ['q1', 'q2', 'q3'].forEach(q => {
+        const ta = document.querySelector('[data-field="' + domain + '-' + q + '"]');
+        if (ta) ta.value = '';
+      });
+      const data = loadSketch();
+      delete data[domain];
+      saveSketch(data);
+      updateStatus(domain, data);
+      updateMap(domain, data);
+    });
+  });
+
+  applyToFields();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp1';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
