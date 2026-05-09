@@ -5,6 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Architect — Phase 1: Declassification | Sovereign Synthesis</title>
 <link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Sequence pattern matching Tier 3 navigator */
+  .seq-module {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+  .seq-module-active { border-left: 3px solid var(--gold); }
+  .seq-module-pending { background: var(--card-soft); opacity: 0.78; }
+  .seq-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .seq-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .seq-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .seq-status-available { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+  .seq-status-deploying { color: var(--muted); border: 1px solid var(--border); }
+  .seq-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .seq-desc { color: var(--body-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+  .seq-module-active .seq-desc { margin-bottom: 24px; }
+  .seq-days {
+    margin: 0 0 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .seq-day {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .seq-day:last-child { border-bottom: none; }
+  .seq-day-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .seq-day p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+  @media (max-width: 600px) {
+    .seq-day { grid-template-columns: 1fr; gap: 6px; }
+    .seq-module { padding: 22px 22px; }
+  }
+</style>
 </head>
 <body>
 
@@ -25,55 +94,78 @@
 <section class="hero">
   <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Member Portal</span>
   <h1>The Architect.<br/><em>Phase 1 — Declassification.</em></h1>
-  <p class="lede">The first phase of building the life, the work, and the architecture the costume would never have allowed you to build.</p>
+  <p class="lede">The first phase of the build. Naming the identity components installed before you had the tools to choose them, so the architecture you would have built can finally be operated on.</p>
 </section>
 
 <section class="block first">
-  <h2>What Declassification is.</h2>
-  <p>Most of what you have been told is a lie has been classified. Hidden. Made unspeakable. Phase 1 is the unclassification of the framework — the systematic naming of everything the legacy operating system marked as off-limits, so it can be spoken about, audited, and stepped out of.</p>
-  <p>This is not philosophy. It is an operating manual for an architecture that cannot be built while the basic vocabulary is still under embargo.</p>
+  <h2>What Phase 1 is.</h2>
+  <p>The Shield held the perimeter. The Map gave you the geography. The Architect builds inside that geography &mdash; but it cannot build while the basic vocabulary, the costume, and the sketch of the life you came to live are still under embargo.</p>
+  <p>Phase 1 is the unembargo. You audit the costume the legacy system installed, declassify the vocabulary you were never allowed to operate on, sketch the architecture you would have built, and produce the load-bearing Integration Document that becomes the operating spec for Phases 2 and 3.</p>
 </section>
 
 <section class="block bordered">
-  <h2>Curriculum modules.</h2>
-  <p>Phase 1 is being deployed in waves to Tier 4 holders. As each module ships you will receive a notification by email and it will appear here. The order below is the canonical sequence.</p>
-  <ul class="path-list">
-    <li>
-      <span class="num">01</span>
-      <span class="body-cell">
-        <strong>The Costume Audit</strong>
-        <span>A line-by-line inventory of the identity components installed before you had the tools to choose them.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">02</span>
-      <span class="body-cell">
-        <strong>The Vocabulary Declassification</strong>
-        <span>The complete glossary of terms the legacy system marked off-limits. Naming each one removes the mechanism that made it unspeakable.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">03</span>
-      <span class="body-cell">
-        <strong>The Architecture Sketch</strong>
-        <span>A first-pass blueprint of the life, work, and identity you would build if no costume was required.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">04</span>
-      <span class="body-cell">
-        <strong>Phase 1 Capstone</strong>
-        <span>A single declassified document — written by you, for you — that becomes the load-bearing reference for Phases 2 and 3.</span>
-      </span>
-    </li>
-  </ul>
+  <h2>Your sequence.</h2>
+  <p>Phase 1 installs in stages. Module 01 is your first move &mdash; run it on the schedule below. Modules 02&ndash;04 deploy as Module 01 surfaces what they are working on.</p>
+
+  <div class="seq-module seq-module-active" style="margin-top: 28px;">
+    <div class="seq-header">
+      <span class="seq-num">Module 01</span>
+      <span class="seq-status seq-status-available">Available</span>
+    </div>
+    <h3 class="seq-title">The Costume Audit.</h3>
+    <p class="seq-desc">A structured audit across five life domains. Names the identity components installed before you had the tools to choose them. Once named, they stop running you in the background &mdash; they become architecture you can operate on.</p>
+
+    <div class="seq-days">
+      <div class="seq-day">
+        <span class="seq-day-num">Days 1&ndash;5</span>
+        <p>One domain per day &mdash; Work, Family of Origin, Intimate, Social, Money. Three prompts each. Roughly ten minutes of honest writing per domain.</p>
+      </div>
+      <div class="seq-day">
+        <span class="seq-day-num">Day 6</span>
+        <p>Re-read all five domains. Notice the patterns. Where does the same costume show up across multiple domains? That is the load-bearing one.</p>
+      </div>
+      <div class="seq-day">
+        <span class="seq-day-num">Day 7</span>
+        <p>Build the costume map &mdash; one line per domain naming the operating costume. Module 01 is installed when you can name your costume in five sentences without hesitation.</p>
+      </div>
+    </div>
+
+    <a href="/tier-4/costume-audit" class="btn">Begin Day 1 &rarr;</a>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 02</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Vocabulary Declassification.</h3>
+    <p class="seq-desc">The complete glossary of terms the legacy system marked off-limits. Naming each one removes the mechanism that made it unspeakable &mdash; and unspeakable is what kept the architecture unbuildable.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 03</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Architecture Sketch.</h3>
+    <p class="seq-desc">A first-pass blueprint of the life, work, and identity you would build if no costume was required. The sketch is not the architecture &mdash; it is the surface from which the architecture starts being designed.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 04</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Phase 1 Integration Document.</h3>
+    <p class="seq-desc">A single declassified document &mdash; written by you, for you &mdash; that synthesizes the audit, the vocabulary, and the sketch into the load-bearing reference for Phases 2 and 3.</p>
+  </div>
 </section>
 
 <section class="block bordered">
   <div class="cta-block">
     <p class="cta-kicker">Continuation</p>
     <h2 class="cta-headline">Phase 2 — Adversarial Systems.</h2>
-    <p class="cta-sub">Once Declassification is complete, Phase 2 covers how to operate inside hostile architectures without being captured by them. Available to Tier 5 holders.</p>
+    <p class="cta-sub">Once Phase 1 is installed, Phase 2 covers how to operate inside hostile architectures without being captured by them. Available to Tier 5 holders.</p>
     <a href="/tier-5/course-portal" class="btn">Phase 2 · $1,497 &rarr;</a>
   </div>
 </section>

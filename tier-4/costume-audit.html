@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Costume Audit — Tier 4 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .domain-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    margin-bottom: 18px;
+  }
+  .domain-card.complete { border-left-color: var(--gold); }
+  .domain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .domain-day {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .domain-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .domain-card.complete .domain-status { color: var(--gold); }
+  .domain-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .domain-frame {
+    color: var(--body-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+  .domain-prompt { margin-bottom: 16px; }
+  .domain-prompt label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .domain-card.complete .domain-prompt label { color: var(--gold); }
+  .domain-prompt .prompt-question {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .domain-prompt textarea.field { min-height: 70px; }
+  .domain-actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .map-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 14px;
+  }
+  .map-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .map-row:first-of-type { border-top: 1px solid var(--border); }
+  .map-row:last-of-type { border-bottom: none; }
+  .map-domain-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .map-domain-costume {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .map-domain-empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row .day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 6px; }
+    .map-row { grid-template-columns: 1fr; gap: 4px; }
+    .domain-card { padding: 22px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Phase 1 · Module 01</span>
+  <h1>The Costume<br/><em>Audit.</em></h1>
+  <p class="lede">Five domains. Three prompts each. The identity components installed before you had the tools to choose them, named so they stop running you in the background and become architecture you can operate on.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>The costume is not metaphor. It is the literal set of identity components &mdash; postures, voices, defaults, suppressions &mdash; installed by the legacy operating system before you had the language to refuse any of them. Most of what you call "your personality" is the costume. The audit names it. Once named, it stops being you and starts being something you can audit, edit, or take off.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>One domain per day, in order. Roughly ten minutes of honest writing per domain. Save each one as you finish. After Day 5, all five domain costumes appear in the costume map below &mdash; that is your first declassified inventory. Re-edit any domain at any time as the audit refines.</p>
+
+  <div style="margin-top: 36px;">
+
+    <div class="domain-card" data-domain="work" id="card-work">
+      <div class="domain-header">
+        <span class="domain-day">Day 1</span>
+        <span class="domain-status" data-status="work">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Work and Career.</h3>
+      <p class="domain-frame">The role you perform in earning. The version of yourself that shows up to be employable, professional, capable. The costume you put on to be paid.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 · Name it</label>
+        <div class="prompt-question">Name the costume(s) you wear here.</div>
+        <textarea class="field" data-field="work-q1" placeholder="The version of yourself that shows up to work..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 · What it produces</label>
+        <div class="prompt-question">What does this costume produce &mdash; what reward does it pull?</div>
+        <textarea class="field" data-field="work-q2" placeholder="The income, the status, the safety it secures..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 · What it costs</label>
+        <div class="prompt-question">What does this costume cost &mdash; what does it suppress or kill?</div>
+        <textarea class="field" data-field="work-q3" placeholder="The version of yourself that doesn't get to show up..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="work">Save Day 1</button>
+        <button type="button" class="btn btn-secondary" data-clear="work">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="family" id="card-family">
+      <div class="domain-header">
+        <span class="domain-day">Day 2</span>
+        <span class="domain-status" data-status="family">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Family of Origin.</h3>
+      <p class="domain-frame">The role you took on as a child to be safe, loved, or seen. The costume you have worn since before you had words for it. Often the deepest one &mdash; and the one that shapes every other domain.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 · Name it</label>
+        <div class="prompt-question">Name the costume(s) you wear here.</div>
+        <textarea class="field" data-field="family-q1" placeholder="The role you took on at home..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 · What it produces</label>
+        <div class="prompt-question">What does this costume produce &mdash; what reward does it pull?</div>
+        <textarea class="field" data-field="family-q2" placeholder="The love, safety, recognition it secures..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 · What it costs</label>
+        <div class="prompt-question">What does this costume cost &mdash; what does it suppress or kill?</div>
+        <textarea class="field" data-field="family-q3" placeholder="The version of yourself the family can't see..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="family">Save Day 2</button>
+        <button type="button" class="btn btn-secondary" data-clear="family">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="intimate" id="card-intimate">
+      <div class="domain-header">
+        <span class="domain-day">Day 3</span>
+        <span class="domain-status" data-status="intimate">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Intimate and Romantic.</h3>
+      <p class="domain-frame">The version of yourself that shows up in love, dating, marriage. The costume you wear when wanting matters. The version most people only see under pressure &mdash; and that pressure is the diagnostic.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 · Name it</label>
+        <div class="prompt-question">Name the costume(s) you wear here.</div>
+        <textarea class="field" data-field="intimate-q1" placeholder="The version that shows up when wanting matters..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 · What it produces</label>
+        <div class="prompt-question">What does this costume produce &mdash; what reward does it pull?</div>
+        <textarea class="field" data-field="intimate-q2" placeholder="The desire, the closeness, the keeping that it secures..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 · What it costs</label>
+        <div class="prompt-question">What does this costume cost &mdash; what does it suppress or kill?</div>
+        <textarea class="field" data-field="intimate-q3" placeholder="The honesty, the desire, the truth it suppresses..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="intimate">Save Day 3</button>
+        <button type="button" class="btn btn-secondary" data-clear="intimate">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="social" id="card-social">
+      <div class="domain-header">
+        <span class="domain-day">Day 4</span>
+        <span class="domain-status" data-status="social">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Social and Public.</h3>
+      <p class="domain-frame">The version you wear in groups, online, with friends. The most visibly curated costume. The one most calibrated to others' approval &mdash; and most addicted to it.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 · Name it</label>
+        <div class="prompt-question">Name the costume(s) you wear here.</div>
+        <textarea class="field" data-field="social-q1" placeholder="The version of yourself that shows up in groups..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 · What it produces</label>
+        <div class="prompt-question">What does this costume produce &mdash; what reward does it pull?</div>
+        <textarea class="field" data-field="social-q2" placeholder="The belonging, the recognition, the access it secures..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 · What it costs</label>
+        <div class="prompt-question">What does this costume cost &mdash; what does it suppress or kill?</div>
+        <textarea class="field" data-field="social-q3" placeholder="The opinions, edges, or tastes it makes you hide..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="social">Save Day 4</button>
+        <button type="button" class="btn btn-secondary" data-clear="social">Clear</button>
+      </div>
+    </div>
+
+    <div class="domain-card" data-domain="money" id="card-money">
+      <div class="domain-header">
+        <span class="domain-day">Day 5</span>
+        <span class="domain-status" data-status="money">Not yet saved</span>
+      </div>
+      <h3 class="domain-name">Money.</h3>
+      <p class="domain-frame">What you perform around earning, spending, asking, owing. The frequency you operate on when money is at stake. Often the operating tell of every other domain &mdash; the place where the deepest costume shows itself.</p>
+
+      <div class="domain-prompt">
+        <label>Prompt 01 · Name it</label>
+        <div class="prompt-question">Name the costume(s) you wear here.</div>
+        <textarea class="field" data-field="money-q1" placeholder="The version that shows up around money..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 02 · What it produces</label>
+        <div class="prompt-question">What does this costume produce &mdash; what reward does it pull?</div>
+        <textarea class="field" data-field="money-q2" placeholder="The safety, the avoidance, the leverage it secures..."></textarea>
+      </div>
+      <div class="domain-prompt">
+        <label>Prompt 03 · What it costs</label>
+        <div class="prompt-question">What does this costume cost &mdash; what does it suppress or kill?</div>
+        <textarea class="field" data-field="money-q3" placeholder="The asking, the earning, the truth it forecloses..."></textarea>
+      </div>
+
+      <div class="domain-actions">
+        <button type="button" class="btn" data-save="money">Save Day 5</button>
+        <button type="button" class="btn btn-secondary" data-clear="money">Clear</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The costume map.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">As you save each domain, the named costume appears below. Once all five are filled, this is your declassified inventory &mdash; the first artifact of Phase 1.</p>
+
+  <div class="map-card" id="map-card">
+    <div class="map-row" data-map="work">
+      <span class="map-domain-label">Work</span>
+      <p class="map-domain-costume map-domain-empty" data-map-text="work">Save Day 1 to populate.</p>
+    </div>
+    <div class="map-row" data-map="family">
+      <span class="map-domain-label">Family</span>
+      <p class="map-domain-costume map-domain-empty" data-map-text="family">Save Day 2 to populate.</p>
+    </div>
+    <div class="map-row" data-map="intimate">
+      <span class="map-domain-label">Intimate</span>
+      <p class="map-domain-costume map-domain-empty" data-map-text="intimate">Save Day 3 to populate.</p>
+    </div>
+    <div class="map-row" data-map="social">
+      <span class="map-domain-label">Social</span>
+      <p class="map-domain-costume map-domain-empty" data-map-text="social">Save Day 4 to populate.</p>
+    </div>
+    <div class="map-row" data-map="money">
+      <span class="map-domain-label">Money</span>
+      <p class="map-domain-costume map-domain-empty" data-map-text="money">Save Day 5 to populate.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 01.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. Days 1&ndash;5 are the audit itself. Days 6&ndash;7 are the synthesis that makes the audit usable.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row">
+      <span class="day-label">Days 1&ndash;5</span>
+      <p>One domain per day, in order. Ten minutes of honest writing. Save each domain as you finish. Do not skip a day &mdash; the spacing is part of the install.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 6</span>
+      <p>Re-read all five domains. Notice the patterns. Where does the same costume show up across multiple domains? That is the load-bearing one.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 7</span>
+      <p>Look at the costume map. Module 01 is installed when you can name your costume across all five domains in a single sentence each, without hesitation. That single inventory is the surface from which Module 02 starts.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The costume was running you.<br/>Naming it is how it stops.</p>
+  <a href="/tier-4/course-portal" class="btn">Back to The Architect &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_costume_audit_v1';
+  const DOMAINS = ['work', 'family', 'intimate', 'social', 'money'];
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadAudit() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveAudit(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  function applyToFields() {
+    const data = loadAudit();
+    DOMAINS.forEach(d => {
+      ['q1', 'q2', 'q3'].forEach(q => {
+        const ta = document.querySelector('[data-field="' + d + '-' + q + '"]');
+        if (ta && data[d] && data[d][q]) ta.value = data[d][q];
+      });
+      updateStatus(d, data);
+      updateMap(d, data);
+    });
+  }
+
+  function updateStatus(domain, data) {
+    const statusEl = document.querySelector('[data-status="' + domain + '"]');
+    const card = document.getElementById('card-' + domain);
+    if (data[domain] && data[domain].q1) {
+      const d = new Date(data[domain].t);
+      statusEl.textContent = 'Saved ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      card.classList.add('complete');
+    } else {
+      statusEl.textContent = 'Not yet saved';
+      card.classList.remove('complete');
+    }
+  }
+
+  function updateMap(domain, data) {
+    const mapText = document.querySelector('[data-map-text="' + domain + '"]');
+    if (data[domain] && data[domain].q1) {
+      mapText.textContent = data[domain].q1;
+      mapText.classList.remove('map-domain-empty');
+    } else {
+      const dayLabel = { work: 1, family: 2, intimate: 3, social: 4, money: 5 }[domain];
+      mapText.textContent = 'Save Day ' + dayLabel + ' to populate.';
+      mapText.classList.add('map-domain-empty');
+    }
+  }
+
+  document.querySelectorAll('[data-save]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const domain = btn.dataset.save;
+      const q1 = document.querySelector('[data-field="' + domain + '-q1"]').value.trim();
+      const q2 = document.querySelector('[data-field="' + domain + '-q2"]').value.trim();
+      const q3 = document.querySelector('[data-field="' + domain + '-q3"]').value.trim();
+      if (!q1) {
+        alert('At minimum, name the costume in Prompt 01 before saving.');
+        return;
+      }
+      const data = loadAudit();
+      data[domain] = { q1: q1, q2: q2, q3: q3, t: Date.now() };
+      saveAudit(data);
+      updateStatus(domain, data);
+      updateMap(domain, data);
+    });
+  });
+
+  document.querySelectorAll('[data-clear]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const domain = btn.dataset.clear;
+      ['q1', 'q2', 'q3'].forEach(q => {
+        const ta = document.querySelector('[data-field="' + domain + '-' + q + '"]');
+        if (ta) ta.value = '';
+      });
+      const data = loadAudit();
+      delete data[domain];
+      saveAudit(data);
+      updateStatus(domain, data);
+      updateMap(domain, data);
+    });
+  });
+
+  applyToFields();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp1';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
