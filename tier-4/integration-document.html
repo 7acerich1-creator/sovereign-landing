@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 Integration Document — Tier 4 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Section cards */
+  .sec-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    margin-bottom: 18px;
+  }
+  .sec-card.complete { border-left-color: var(--gold); }
+  .sec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .sec-day {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .sec-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .sec-card.complete .sec-status { color: var(--gold); }
+  .sec-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .sec-frame {
+    color: var(--body-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .sec-prompts-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .sec-card.complete .sec-prompts-label { color: var(--gold); }
+  .sec-prompts {
+    background: var(--card-soft);
+    border-left: 2px solid var(--border);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .sec-prompts ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sec-prompts li {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.65;
+    padding: 4px 0 4px 18px;
+    position: relative;
+  }
+  .sec-prompts li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .sec-write-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .sec-write textarea.field {
+    min-height: 160px;
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .sec-actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Document view */
+  .doc-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .doc-view {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 56px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .doc-view .doc-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .doc-view h1.doc-title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 36px);
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+  }
+  .doc-view .doc-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    display: block;
+  }
+  .doc-view .doc-section { margin-bottom: 36px; }
+  .doc-view .doc-section h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .doc-view .doc-section .doc-sec-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .doc-view .doc-section p {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+  }
+  .doc-view .doc-section p.doc-empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .doc-view .doc-closing {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .doc-view-hidden { display: none; }
+  .compose-view-hidden { display: none; }
+
+  /* Sovereign tip + day-row + asset pattern reuse */
+  .sovereign-tip {
+    background: var(--card-soft);
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0 8px;
+  }
+  .sovereign-tip .st-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .sovereign-tip p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .sovereign-tip p:last-child { margin-bottom: 0; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row .day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .day-row p { color: var(--text); font-size: 15px; line-height: 1.65; margin: 0; }
+
+  /* Print styles — clean PDF when user prints */
+  @media print {
+    body { background: white; }
+    .top, footer, .closing, .block.first, .block.bordered:not(#doc-view-section), .doc-toolbar, .hero, .sovereign-tip { display: none !important; }
+    #doc-view-section { display: block !important; }
+    .doc-view {
+      max-width: 100%;
+      padding: 0;
+      border: none;
+      margin: 0;
+    }
+    .doc-view-hidden { display: block !important; }
+    .compose-view-hidden { display: none !important; }
+  }
+
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 6px; }
+    .sec-card { padding: 22px 22px; }
+    .doc-view { padding: 32px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 4 · Phase 1 · Module 04</span>
+  <h1>Phase 1 Integration<br/><em>Document.</em></h1>
+  <p class="lede">Six sections. Written by you, for you. The single load-bearing document that synthesizes the costume audit, the declassified vocabulary, and the architecture sketch into the operating reference Phases 2 and 3 are built on.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Modules 01, 02, and 03 produced three artifacts: the Costume Map, the Declassified Vocabulary, and the Architecture Sketch. Each was complete on its own. Module 04 is the synthesis &mdash; a single document, six sections, that reads as the operating spec of the architecture you have built across Phase 1. This document becomes the reference Phase 2 (Adversarial Systems) builds against, the foundation Phase 3 (Sovereign Integration) integrates from, and the application material Tier 7 (Inner Circle) reviews on admission.</p>
+  <p>Compose it slowly, one section per day. Reference your Module 01, 02, and 03 entries as you write. Save each section. On Day 7, the View Document mode renders the full assembled document &mdash; the Phase 1 Integration Document &mdash; ready to read, print, or save as a PDF.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>One section per day. The prompts under each section are scaffolds &mdash; not questions to answer in order, but anchors for the composition. Free-write each section. Save when ready. The page also renders a clean &ldquo;View Document&rdquo; mode that assembles all six sections into a single readable document with print-ready formatting.</p>
+
+  <div class="sovereign-tip">
+    <span class="st-label">Sovereign Tip</span>
+    <p>This is your document. Not a deliverable for a grader, not material for a marketing page. Write in plain language, in sentences you would actually say out loud about your own life. Specificity over performance. If a section reads like it could have been written by anyone, rewrite it until it could only have been written by you.</p>
+    <p>If the install slips during these seven days, <a href="/assets/WHEN_THE_BUILD_SLIPS.pdf" target="_blank" style="color: var(--gold); text-decoration: underline;">open the recovery manual</a> &mdash; the situations are named there.</p>
+  </div>
+</section>
+
+<section class="block bordered">
+  <div class="doc-toolbar">
+    <button type="button" id="view-compose" class="btn">Compose mode</button>
+    <button type="button" id="view-document" class="btn btn-secondary">View document</button>
+    <button type="button" id="view-print" class="btn btn-secondary" onclick="window.print()">Print &middot; Save as PDF</button>
+  </div>
+</section>
+
+<!-- ============== COMPOSE MODE ============== -->
+<section class="block bordered" id="compose-section">
+  <h2>Compose your Integration Document.</h2>
+
+  <div style="margin-top: 28px;">
+
+    <div class="sec-card" data-sec="identity" id="card-identity">
+      <div class="sec-header">
+        <span class="sec-day">Section 01 &middot; Day 1</span>
+        <span class="sec-status" data-status="identity">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">Identity Statement.</h3>
+      <p class="sec-frame">Who you are now that the costume is audited and named. Not who you aspire to be &mdash; who you actually are with the costume separated from the operator.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>Who is the named operator &mdash; the version of you that runs the architecture, distinct from the costume that ran in the background?</li>
+          <li>What is true about you that you can now say in plain language because the costume no longer requires it to stay hidden?</li>
+          <li>What is your operating frequency &mdash; the baseline state you are running on, named precisely?</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 01</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="identity" placeholder="Write your Identity Statement here. One to several paragraphs. Plain language."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="identity">Save Section 01</button>
+        <button type="button" class="btn btn-secondary" data-clear="identity">Clear</button>
+      </div>
+    </div>
+
+    <div class="sec-card" data-sec="costume" id="card-costume">
+      <div class="sec-header">
+        <span class="sec-day">Section 02 &middot; Day 2</span>
+        <span class="sec-status" data-status="costume">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">Costume Synthesis.</h3>
+      <p class="sec-frame">The Costume Map from Module 01, synthesized. Not a re-listing &mdash; an articulation of the cross-cutting pattern. Where does the same costume show up across multiple domains? That load-bearing one is the spine of the synthesis.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>The five named costumes from Module 01, restated in this document so the synthesis is self-contained.</li>
+          <li>The load-bearing costume that shows up across multiple domains. Name it directly. Name where it operates.</li>
+          <li>What the costume produced (the rewards across domains) and what it cost (across domains).</li>
+          <li>What is now operable about that costume now that it is named.</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 02</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="costume" placeholder="Write your Costume Synthesis here. Reference your Module 01 saved entries."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="costume">Save Section 02</button>
+        <button type="button" class="btn btn-secondary" data-clear="costume">Clear</button>
+      </div>
+    </div>
+
+    <div class="sec-card" data-sec="vocabulary" id="card-vocabulary">
+      <div class="sec-header">
+        <span class="sec-day">Section 03 &middot; Day 3</span>
+        <span class="sec-status" data-status="vocabulary">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">Vocabulary as Operations.</h3>
+      <p class="sec-frame">The Declassified Vocabulary from Module 02, restated as operational claims. Each declassified word names something you can now do, refuse, ask, or operate on that the costume previously kept off the table.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>The vocabulary entries that surfaced in Module 02, named in this document.</li>
+          <li>Each declassified word as a corresponding operational claim &mdash; what becomes possible now that the word is operable.</li>
+          <li>The single most load-bearing word in your vocabulary &mdash; the one that unblocks the largest piece of architecture.</li>
+          <li>The conversations or moves you have already made (or will make) using the new vocabulary.</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 03</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="vocabulary" placeholder="Write your Vocabulary Operations here. Reference your Module 02 saved entries."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="vocabulary">Save Section 03</button>
+        <button type="button" class="btn btn-secondary" data-clear="vocabulary">Clear</button>
+      </div>
+    </div>
+
+    <div class="sec-card" data-sec="sketch" id="card-sketch">
+      <div class="sec-header">
+        <span class="sec-day">Section 04 &middot; Day 4</span>
+        <span class="sec-status" data-status="sketch">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">Architecture Sketch (in operation).</h3>
+      <p class="sec-frame">The Architecture Sketch from Module 03, with the cross-cutting first moves named. Not a restating of the five sketches &mdash; the synthesis: the load-bearing first moves that advance the architecture across multiple domains at once.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>The five-domain sketch as the architecture, in one paragraph each.</li>
+          <li>The cross-cutting first moves &mdash; the ones that advance two or three domains together. Name them.</li>
+          <li>The 12-month projection if those load-bearing moves are taken and held.</li>
+          <li>What is unbuildable until later phases (note as scope, not as failure).</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 04</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="sketch" placeholder="Write your Architecture Sketch synthesis here. Reference your Module 03 saved entries."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="sketch">Save Section 04</button>
+        <button type="button" class="btn btn-secondary" data-clear="sketch">Clear</button>
+      </div>
+    </div>
+
+    <div class="sec-card" data-sec="claim" id="card-claim">
+      <div class="sec-header">
+        <span class="sec-day">Section 05 &middot; Day 5</span>
+        <span class="sec-status" data-status="claim">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">The Integration Claim.</h3>
+      <p class="sec-frame">A short, declarative paragraph (or two) that captures, in your own voice, what Phase 1 has installed and what now operates because of it. This is the thesis sentence of the document &mdash; the single piece that, if everything else fell away, would still be load-bearing.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>What is now installed that was not installed before Phase 1?</li>
+          <li>What now operates differently in your day-to-day because of what was installed?</li>
+          <li>State it in plain declarative sentences. No hedging.</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 05</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="claim" placeholder="Write your Integration Claim here. Tight. Declarative. Yours."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="claim">Save Section 05</button>
+        <button type="button" class="btn btn-secondary" data-clear="claim">Clear</button>
+      </div>
+    </div>
+
+    <div class="sec-card" data-sec="bridge" id="card-bridge">
+      <div class="sec-header">
+        <span class="sec-day">Section 06 &middot; Day 6</span>
+        <span class="sec-status" data-status="bridge">Not yet saved</span>
+      </div>
+      <h3 class="sec-name">The Phase 2 Bridge.</h3>
+      <p class="sec-frame">What Phase 1's install opens for Phase 2 (Adversarial Systems). What the costume's removal makes operable inside hostile environments that you previously could not navigate. The bridge sentence between this document and the next phase of the architecture.</p>
+
+      <span class="sec-prompts-label">Prompts &middot; Anchors for your composition</span>
+      <div class="sec-prompts">
+        <ul>
+          <li>What about Phase 1's install makes Phase 2 possible &mdash; specifically, the operating in hostile architectures without being captured?</li>
+          <li>What rooms (literal or figurative) do you already see Phase 2 as relevant for?</li>
+          <li>What would be the first move you would make in Phase 2 once it begins?</li>
+        </ul>
+      </div>
+
+      <span class="sec-write-label">Write Section 06</span>
+      <div class="sec-write">
+        <textarea class="field" data-field="bridge" placeholder="Write your Phase 2 Bridge here. The hand-off."></textarea>
+      </div>
+
+      <div class="sec-actions">
+        <button type="button" class="btn" data-save="bridge">Save Section 06</button>
+        <button type="button" class="btn btn-secondary" data-clear="bridge">Clear</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============== DOCUMENT VIEW MODE ============== -->
+<section class="block bordered doc-view-hidden" id="doc-view-section">
+  <div class="doc-view">
+    <span class="doc-eyebrow">Sovereign Synthesis &middot; Tier 4 &middot; Phase 1 &middot; Integration Document</span>
+    <h1 class="doc-title">Phase 1 Integration Document.</h1>
+    <span class="doc-meta" id="doc-meta">Composed and assembled by the architect.</span>
+
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 01</span>
+      <h2>Identity Statement.</h2>
+      <p data-doc="identity" class="doc-empty">Compose Section 01 to populate.</p>
+    </div>
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 02</span>
+      <h2>Costume Synthesis.</h2>
+      <p data-doc="costume" class="doc-empty">Compose Section 02 to populate.</p>
+    </div>
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 03</span>
+      <h2>Vocabulary as Operations.</h2>
+      <p data-doc="vocabulary" class="doc-empty">Compose Section 03 to populate.</p>
+    </div>
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 04</span>
+      <h2>Architecture Sketch (in operation).</h2>
+      <p data-doc="sketch" class="doc-empty">Compose Section 04 to populate.</p>
+    </div>
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 05</span>
+      <h2>The Integration Claim.</h2>
+      <p data-doc="claim" class="doc-empty">Compose Section 05 to populate.</p>
+    </div>
+    <div class="doc-section">
+      <span class="doc-sec-num">Section 06</span>
+      <h2>The Phase 2 Bridge.</h2>
+      <p data-doc="bridge" class="doc-empty">Compose Section 06 to populate.</p>
+    </div>
+
+    <p class="doc-closing">End of Phase 1 Integration Document &middot; Composed in Sovereign Synthesis</p>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 04.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. One section per day. Day 7 reads the assembled document and locks it.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row">
+      <span class="day-label">Days 1&ndash;6</span>
+      <p>One section per day, in order. Reference your Module 01, 02, and 03 entries as you compose. Save each section as you finish. Twenty to forty minutes per section if done concretely.</p>
+    </div>
+    <div class="day-row">
+      <span class="day-label">Day 7</span>
+      <p>Switch to View Document mode and read the full assembled Integration Document end-to-end. Print or save as PDF for your records. Module 04 is installed when the document reads as a complete operating spec for the architecture you have built &mdash; the document Phase 2 will build against and Tier 7 will admit on.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The audit named what was. The vocabulary named what could be said.<br/>The sketch named what could be built.<br/>The Integration Document is what you actually built.</p>
+  <a href="/tier-4/recalibration" class="btn">Open the Recalibration &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_integration_document_v1';
+  const SECTIONS = ['identity', 'costume', 'vocabulary', 'sketch', 'claim', 'bridge'];
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadDoc() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveDoc(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  function applyToFields() {
+    const data = loadDoc();
+    SECTIONS.forEach(sec => {
+      const ta = document.querySelector('[data-field="' + sec + '"]');
+      if (ta && data[sec] && data[sec].text) ta.value = data[sec].text;
+      updateStatus(sec, data);
+      updateDocView(sec, data);
+    });
+    updateMeta(data);
+  }
+
+  function updateStatus(sec, data) {
+    const statusEl = document.querySelector('[data-status="' + sec + '"]');
+    const card = document.getElementById('card-' + sec);
+    if (data[sec] && data[sec].text) {
+      const d = new Date(data[sec].t);
+      statusEl.textContent = 'Saved ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      card.classList.add('complete');
+    } else {
+      statusEl.textContent = 'Not yet saved';
+      card.classList.remove('complete');
+    }
+  }
+
+  function updateDocView(sec, data) {
+    const docEl = document.querySelector('[data-doc="' + sec + '"]');
+    if (data[sec] && data[sec].text) {
+      docEl.textContent = data[sec].text;
+      docEl.classList.remove('doc-empty');
+    } else {
+      const num = SECTIONS.indexOf(sec) + 1;
+      docEl.textContent = 'Compose Section ' + num.toString().padStart(2, '0') + ' to populate.';
+      docEl.classList.add('doc-empty');
+    }
+  }
+
+  function updateMeta(data) {
+    const completed = SECTIONS.filter(s => data[s] && data[s].text).length;
+    const meta = document.getElementById('doc-meta');
+    if (completed === 0) {
+      meta.textContent = 'Composition in progress &middot; 0 of 6 sections complete';
+    } else if (completed < SECTIONS.length) {
+      meta.textContent = 'Composition in progress · ' + completed + ' of ' + SECTIONS.length + ' sections complete';
+    } else {
+      // Find latest save date
+      const latest = Math.max(...SECTIONS.map(s => data[s]?.t || 0));
+      const d = new Date(latest);
+      meta.textContent = 'Composed and assembled · ' + d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+  }
+
+  document.querySelectorAll('[data-save]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sec = btn.dataset.save;
+      const text = document.querySelector('[data-field="' + sec + '"]').value.trim();
+      if (!text) {
+        alert('Write the section before saving.');
+        return;
+      }
+      const data = loadDoc();
+      data[sec] = { text: text, t: Date.now() };
+      saveDoc(data);
+      updateStatus(sec, data);
+      updateDocView(sec, data);
+      updateMeta(data);
+    });
+  });
+
+  document.querySelectorAll('[data-clear]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sec = btn.dataset.clear;
+      const ta = document.querySelector('[data-field="' + sec + '"]');
+      if (ta) ta.value = '';
+      const data = loadDoc();
+      delete data[sec];
+      saveDoc(data);
+      updateStatus(sec, data);
+      updateDocView(sec, data);
+      updateMeta(data);
+    });
+  });
+
+  // View toggle
+  const composeSection = document.getElementById('compose-section');
+  const docSection = document.getElementById('doc-view-section');
+  document.getElementById('view-compose').addEventListener('click', () => {
+    composeSection.classList.remove('compose-view-hidden');
+    docSection.classList.add('doc-view-hidden');
+    document.getElementById('view-compose').classList.remove('btn-secondary');
+    document.getElementById('view-document').classList.add('btn-secondary');
+  });
+  document.getElementById('view-document').addEventListener('click', () => {
+    composeSection.classList.add('compose-view-hidden');
+    docSection.classList.remove('doc-view-hidden');
+    document.getElementById('view-compose').classList.add('btn-secondary');
+    document.getElementById('view-document').classList.remove('btn-secondary');
+    docSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  applyToFields();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp1';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
