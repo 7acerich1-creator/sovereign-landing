@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environmental Read Protocol — Tier 3 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  /* Local additions only — everything else inherits sovereign.css */
+  .erp-step { margin-bottom: 28px; }
+  .erp-step .erp-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 700;
+  }
+  .erp-step .erp-question {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.6vw, 24px);
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .erp-step .erp-helper {
+    font-size: 14px;
+    color: var(--body-dim);
+    margin-bottom: 14px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .erp-step textarea.field { min-height: 90px; }
+  .erp-synthesis {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0 28px;
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .erp-synthesis-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 16px;
+  }
+  .erp-decision-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin: 18px 0 14px;
+    display: block;
+    font-weight: 700;
+  }
+  .erp-decision {
+    padding: 18px 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: 10px;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    display: block;
+  }
+  .erp-decision:hover {
+    border-color: var(--gold);
+    background: var(--card-soft);
+  }
+  .erp-decision.selected {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+  }
+  .erp-decision-title {
+    display: block;
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .erp-decision-cost {
+    display: block;
+    font-size: 14px;
+    color: var(--body-dim);
+    line-height: 1.55;
+  }
+  .erp-actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .erp-history-item {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-bottom: 12px;
+  }
+  .erp-history-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .erp-history-arch {
+    font-family: var(--serif);
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .erp-history-decision {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .erp-history-empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 3 · Navigator · Module 01</span>
+  <h1>Environmental Read<br/><em>Protocol.</em></h1>
+  <p class="lede">Use before, during, or after any room you have to walk into. Three questions. One architecture. One conscious move.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Every room is optimizing for something. When the optimization is invisible, the room runs you. Naming the optimization is how you stop being run by it.</p>
+  <p>This protocol installs the read. Three questions, in order. Once the optimization is named, engagement stops being automatic and becomes a conscious choice with the cost visible.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>Run it before you walk into a room you suspect. During a room you are sitting inside. Or after a room you just left and need to debrief. Save your read. Re-run on the same environment in twenty-four or seventy-two hours and check what changed — in the architecture, or in your read of it.</p>
+
+  <div id="erp-tool" style="margin-top: 36px;">
+
+    <div class="erp-step">
+      <span class="erp-label">Step 01 · Reward Map</span>
+      <div class="erp-question">What is this room visibly rewarding?</div>
+      <div class="erp-helper">What gets praised, promoted, given attention here. What is the room teaching you to do more of. List one to three behaviors.</div>
+      <textarea id="erp-q1" class="field" placeholder="The behaviors that get rewarded..."></textarea>
+    </div>
+
+    <div class="erp-step">
+      <span class="erp-label">Step 02 · Cost Map</span>
+      <div class="erp-question">What is this room visibly punishing or costing?</div>
+      <div class="erp-helper">What gets ignored, corrected, pushed out, made expensive here. What is the room teaching you to do less of. List one to three behaviors.</div>
+      <textarea id="erp-q2" class="field" placeholder="The behaviors that pay a price..."></textarea>
+    </div>
+
+    <div class="erp-step">
+      <span class="erp-label">Step 03 · Extraction Read</span>
+      <div class="erp-question">Whose resource is funding the optimization?</div>
+      <div class="erp-helper">Energy, time, attention, credit, dignity. Yours, theirs, a third party's. Name the role, not the person.</div>
+      <textarea id="erp-q3" class="field" placeholder="The role this optimization extracts from..."></textarea>
+    </div>
+
+    <div class="erp-synthesis" id="erp-synthesis">
+      <span class="erp-synthesis-empty">The architecture appears here once all three steps are complete.</span>
+    </div>
+
+    <div id="erp-decisions">
+      <span class="erp-decision-label">Decision · What is your move?</span>
+      <button type="button" class="erp-decision" data-decision="engage-room">
+        <span class="erp-decision-title">Engage on the room's terms.</span>
+        <span class="erp-decision-cost">You take the cost. You produce the reward. You become or accept the extraction.</span>
+      </button>
+      <button type="button" class="erp-decision" data-decision="engage-mine">
+        <span class="erp-decision-title">Engage on my terms.</span>
+        <span class="erp-decision-cost">You stay sovereign. The room punishes. You absorb the punishment.</span>
+      </button>
+      <button type="button" class="erp-decision" data-decision="dont-engage">
+        <span class="erp-decision-title">Don't engage.</span>
+        <span class="erp-decision-cost">You leave, decline, or never enter. You absorb the social, economic, or relational cost.</span>
+      </button>
+    </div>
+
+    <div class="erp-actions">
+      <button type="button" id="erp-save" class="btn">Save read</button>
+      <button type="button" id="erp-clear" class="btn btn-secondary">Clear</button>
+    </div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Past reads.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. Use them to track how an environment changes — or how your read of it sharpens.</p>
+  <div id="erp-history">
+    <div class="erp-history-empty">Your saved reads will appear here.</div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>The room ran you when the optimization was invisible.<br/>Once it is named, the room is just architecture.</p>
+  <a href="/tier-3/manifesto-navigator" class="btn">Back to Navigator &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ss_erp_reads_v1';
+  const q1 = document.getElementById('erp-q1');
+  const q2 = document.getElementById('erp-q2');
+  const q3 = document.getElementById('erp-q3');
+  const synth = document.getElementById('erp-synthesis');
+  const decisionBtns = document.querySelectorAll('.erp-decision');
+  const saveBtn = document.getElementById('erp-save');
+  const clearBtn = document.getElementById('erp-clear');
+  const historyEl = document.getElementById('erp-history');
+  let selectedDecision = null;
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function decisionLabel(d) {
+    return ({
+      'engage-room': "Engaged on the room's terms",
+      'engage-mine': 'Engaged on my terms',
+      'dont-engage': "Did not engage"
+    })[d] || '';
+  }
+
+  function updateSynth() {
+    const a = q1.value.trim();
+    const b = q2.value.trim();
+    const c = q3.value.trim();
+    if (a && b && c) {
+      synth.innerHTML = 'This room optimizes for <strong>' + escapeHtml(a) + '</strong>, at the cost of <strong>' + escapeHtml(b) + '</strong>, drawing on <strong>' + escapeHtml(c) + '</strong>.';
+    } else {
+      synth.innerHTML = '<span class="erp-synthesis-empty">The architecture appears here once all three steps are complete.</span>';
+    }
+  }
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+
+  function saveHistoryArr(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  function renderHistory() {
+    const reads = loadHistory();
+    if (!reads.length) {
+      historyEl.innerHTML = '<div class="erp-history-empty">Your saved reads will appear here.</div>';
+      return;
+    }
+    historyEl.innerHTML = reads.slice().reverse().map(r => {
+      const d = new Date(r.t);
+      const dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      return '<div class="erp-history-item">' +
+        '<div class="erp-history-date">' + escapeHtml(dateStr) + '</div>' +
+        '<div class="erp-history-arch">Optimizes for <em>' + escapeHtml(r.q1) + '</em>, at the cost of <em>' + escapeHtml(r.q2) + '</em>, drawing on <em>' + escapeHtml(r.q3) + '</em>.</div>' +
+        (r.decision ? '<div class="erp-history-decision">' + escapeHtml(decisionLabel(r.decision)) + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  [q1, q2, q3].forEach(el => el.addEventListener('input', updateSynth));
+
+  decisionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      decisionBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedDecision = btn.dataset.decision;
+    });
+  });
+
+  saveBtn.addEventListener('click', () => {
+    const a = q1.value.trim();
+    const b = q2.value.trim();
+    const c = q3.value.trim();
+    if (!a || !b || !c) {
+      alert('Complete all three steps before saving the read.');
+      return;
+    }
+    const reads = loadHistory();
+    reads.push({ t: Date.now(), q1: a, q2: b, q3: c, decision: selectedDecision });
+    saveHistoryArr(reads);
+    q1.value = ''; q2.value = ''; q3.value = '';
+    decisionBtns.forEach(b => b.classList.remove('selected'));
+    selectedDecision = null;
+    updateSynth();
+    renderHistory();
+    window.scrollTo({ top: document.getElementById('erp-history').offsetTop - 80, behavior: 'smooth' });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    q1.value = ''; q2.value = ''; q3.value = '';
+    decisionBtns.forEach(b => b.classList.remove('selected'));
+    selectedDecision = null;
+    updateSynth();
+  });
+
+  renderHistory();
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'manifesto';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
