@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Dashboard | Sovereign Synthesis</title>
-  <meta name="description" content="Your Sovereign Synthesis member dashboard. Every property you have access to, in one place." />
+  <meta name="description" content="Your Sovereign Synthesis member dashboard. Every property and document you have access to, in one place." />
   <link rel="canonical" href="https://sovereign-synthesis.com/members" />
   <link rel="stylesheet" href="/css/sovereign.css" />
   <style>
@@ -39,7 +39,44 @@
       transition: all 0.15s ease;
     }
     .signout-btn:hover { color: var(--text); border-color: var(--text); }
-    .access-list { margin: 24px 0 32px; }
+
+    /* Onboarding block — first-time-here */
+    .onboarding-block {
+      background: var(--card-soft); border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 24px 28px; margin: 0 0 32px;
+      position: relative;
+    }
+    .onboarding-block .ob-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 2px; color: var(--gold); text-transform: uppercase;
+      font-weight: 700; margin-bottom: 10px; display: block;
+    }
+    .onboarding-block h2 {
+      font-family: var(--serif); font-size: 22px; color: var(--text);
+      font-weight: 600; margin-bottom: 12px; line-height: 1.3;
+    }
+    .onboarding-block p {
+      font-size: 15px; line-height: 1.7; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .onboarding-block p:last-of-type { margin-bottom: 18px; }
+    .onboarding-block .ob-tip {
+      font-size: 13.5px; color: var(--body-dim); font-style: italic;
+    }
+    .onboarding-dismiss {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--gold); cursor: pointer;
+      background: transparent; border: 1px solid var(--gold);
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      transition: all 0.15s ease; margin-top: 4px;
+    }
+    .onboarding-dismiss:hover { background: var(--gold-soft); }
+
+    /* Tier access tiles */
+    .access-list { margin: 16px 0 32px; }
     .access-row {
       background: var(--card); border: 1px solid var(--border);
       border-left: 3px solid var(--gold); border-radius: var(--radius);
@@ -79,6 +116,50 @@
       font-size: 15px; color: var(--body); margin-bottom: 18px;
       line-height: 1.6;
     }
+
+    /* Library section */
+    .library-section { margin-top: 56px; }
+    .library-section h2 { margin-bottom: 8px; }
+    .library-section .lib-intro {
+      font-size: 14.5px; color: var(--body-dim); line-height: 1.65;
+      margin-bottom: 24px; max-width: 680px;
+    }
+    .lib-group { margin-bottom: 28px; }
+    .lib-group-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+      color: var(--copper); text-transform: uppercase; font-weight: 700;
+      margin: 18px 0 12px; display: block;
+      border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    }
+    .lib-group-label.cross { color: var(--gold); border-bottom-color: var(--gold); }
+    .lib-row {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px; margin: 10px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .lib-row:hover {
+      border-color: var(--gold);
+      background: var(--card-soft);
+    }
+    .lib-info { flex: 1; min-width: 240px; }
+    .lib-name {
+      font-family: var(--serif); font-size: 16px; font-weight: 600;
+      color: var(--text); margin-bottom: 3px; letter-spacing: -0.1px;
+    }
+    .lib-desc { font-size: 13.5px; color: var(--body-dim); line-height: 1.5; margin-bottom: 4px; }
+    .lib-meta {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+      color: var(--muted); text-transform: uppercase; font-weight: 700;
+    }
+    .lib-arrow {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+      color: var(--gold); font-weight: 700; text-transform: uppercase;
+      white-space: nowrap;
+    }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -104,16 +185,25 @@
   <section class="hero">
     <span class="kicker">Your Dashboard</span>
     <h1>Welcome back.</h1>
-    <p class="lede">Every Sovereign Synthesis property you have access to is below. Click any to enter.</p>
+    <p class="lede">Every Sovereign Synthesis property and document you have access to is below. Tiers up top. Your library underneath.</p>
   </section>
 
   <section class="block first">
     <div class="signed-in-bar">
       <div>
-        <span class="signed-in-text">✓ Signed in</span>
+        <span class="signed-in-text">&#10003; Signed in</span>
         <span class="signed-in-email" id="user-email"></span>
       </div>
       <button class="signout-btn" onclick="handleSignOut()">Sign out</button>
+    </div>
+
+    <div class="onboarding-block" id="onboarding-block" style="display: none;">
+      <span class="ob-label">First time here?</span>
+      <h2>How this dashboard works.</h2>
+      <p>Every tier you have access to is listed below as a tile &mdash; click any one to enter that tier's portal and run its work. Below the tiles, <strong>Your library</strong> shows every PDF document unlocked across your tiers, plus the cross-tier doctrine documents (the <em>Containment Field Architectural Definition</em> and the <em>When the Build Slips</em> recovery manual) that stay available no matter where you are in the architecture.</p>
+      <p>Sign-in is sticky and works across devices &mdash; request a magic link from any browser at <code style="font-family: var(--mono); font-size: 12px; background: var(--card); padding: 2px 6px; border-radius: 3px;">/login</code> and you land back here. Bookmark this page; <code style="font-family: var(--mono); font-size: 12px; background: var(--card); padding: 2px 6px; border-radius: 3px;">/members</code> is your one anchor across the whole architecture.</p>
+      <p class="ob-tip">If the install slips between sessions, the recovery manual in your library is the first place to go.</p>
+      <button class="onboarding-dismiss" onclick="dismissOnboarding()">Got it &mdash; dismiss</button>
     </div>
 
     <h2>Your active access.</h2>
@@ -122,6 +212,12 @@
     <div id="empty-state" class="empty-state" style="display:none;">
       <p>You're signed in, but no active tier purchases are linked to this email yet.</p>
       <a href="/" class="btn">View Products &rarr;</a>
+    </div>
+
+    <div class="library-section" id="library-section">
+      <h2>Your library.</h2>
+      <p class="lib-intro">Every PDF you have access to, in one place. Cross-tier doctrine documents are always available. Tier-specific documents appear as you unlock the tiers above.</p>
+      <div id="library-list"><!-- filled by JS --></div>
     </div>
   </section>
 
@@ -205,6 +301,65 @@ const TIER_INFO = {
   }
 };
 
+// Document library — keyed by tier_slug. cross_tier docs are always shown.
+const TIER_DOCS = {
+  cross_tier: [
+    {
+      name: 'When the Build Slips — Recovery Manual',
+      desc: 'Reach for it when the install slips. Full read for reset, random pull for a single hit, or scan the index for the situation you are inside.',
+      url: '/assets/WHEN_THE_BUILD_SLIPS.pdf',
+      meta: 'PDF · ~35 pages · cross-tier'
+    },
+    {
+      name: 'The Containment Field — Architectural Definition',
+      desc: 'Foundational doctrine. The map of what every rung is built to operate against. Personal view, collective view, and the advanced architecture for those at higher awareness.',
+      url: '/tier-4/assets/CONTAINMENT_FIELD_DEFINITION.pdf',
+      meta: 'PDF · 12 pages · cross-tier'
+    }
+  ],
+  protocol_zero: [
+    {
+      name: 'The Reality Override Manual',
+      desc: 'Names the legacy operating system. Companion PDF for the interactive Manual at /manual.',
+      url: '/tier-1/assets/REALITY_OVERRIDE_MANUAL.pdf',
+      meta: 'PDF · 9 pages'
+    }
+  ],
+  p77: [
+    {
+      name: 'The Shield Manual',
+      desc: 'The deeper doctrine behind the 21-day Runner. Four phases, three underlying systems, biological drag patterns.',
+      url: '/tier-2/assets/THE_SHIELD_MANUAL.pdf',
+      meta: 'PDF · 19 pages'
+    },
+    {
+      name: 'Gray Rock Field Manual',
+      desc: 'Full Gray Rock playbook. 12 scripted lines, 4 vector types, 5 trigger patterns, 7-day install.',
+      url: '/tier-2/assets/GRAY_ROCK_FIELD_MANUAL.pdf',
+      meta: 'PDF · 19 pages'
+    }
+  ],
+  manifesto: [
+    {
+      name: 'The Sovereign Architecture Manifesto',
+      desc: 'Companion PDF for the Manifesto Portal interactive read. Eleven sections, four sync protocols.',
+      url: '/tier-3/assets/SOVEREIGN_ARCHITECTURE_MANIFESTO.pdf',
+      meta: 'PDF · 16 pages'
+    }
+  ],
+  dp1: [
+    {
+      name: 'The Costume Audit — Field Manual',
+      desc: 'How deep the costume actually goes. Companion to Module 01. The depth problem, the fooling-ourselves loop, per-domain deeper prompts.',
+      url: '/tier-4/assets/COSTUME_AUDIT_FIELD_MANUAL.pdf',
+      meta: 'PDF · 9 pages'
+    }
+  ],
+  dp2: [],
+  dp3: [],
+  inner_circle: []
+};
+
 function getRecommendation(userTiers) {
   if (userTiers.length === 0) {
     return {
@@ -265,6 +420,87 @@ function getRecommendation(userTiers) {
   };
 }
 
+function renderLibrary(userTiers) {
+  const list = document.getElementById('library-list');
+  const groups = [];
+
+  // Cross-tier always first
+  groups.push({
+    label: 'Cross-tier doctrine (always available)',
+    cls: 'cross',
+    docs: TIER_DOCS.cross_tier
+  });
+
+  // Tier-specific based on what user has
+  // Protocol Zero is implicit for any signed-in member with at least the free tier
+  const userOwnedTiers = new Set(userTiers);
+  if (userOwnedTiers.has('inner_circle')) {
+    // Inner Circle gets all
+    Object.keys(TIER_DOCS).forEach(slug => {
+      if (slug === 'cross_tier') return;
+      const docs = TIER_DOCS[slug] || [];
+      if (docs.length === 0) return;
+      const info = TIER_INFO[slug];
+      if (!info) return;
+      groups.push({
+        label: `${info.tag} · ${info.name.split(' — ')[0]}`,
+        cls: '',
+        docs: docs
+      });
+    });
+  } else {
+    // Show tier-specific docs only for owned tiers; protocol_zero is shown if any tier owned
+    const orderedSlugs = Object.keys(TIER_INFO).sort((a, b) => TIER_INFO[a].rank - TIER_INFO[b].rank);
+    orderedSlugs.forEach(slug => {
+      // Show protocol_zero docs if user has at least signed up (no purchases needed)
+      const showThisTier = slug === 'protocol_zero' || userOwnedTiers.has(slug);
+      if (!showThisTier) return;
+      const docs = TIER_DOCS[slug] || [];
+      if (docs.length === 0) return;
+      const info = TIER_INFO[slug];
+      if (!info) return;
+      groups.push({
+        label: `${info.tag} · ${info.name.split(' — ')[0]}`,
+        cls: '',
+        docs: docs
+      });
+    });
+  }
+
+  list.innerHTML = groups.map(g => {
+    const rows = g.docs.map(d => `
+      <a href="${d.url}" target="_blank" class="lib-row">
+        <div class="lib-info">
+          <p class="lib-name">${d.name}</p>
+          <p class="lib-desc">${d.desc}</p>
+          <span class="lib-meta">${d.meta}</span>
+        </div>
+        <span class="lib-arrow">Open &rarr;</span>
+      </a>
+    `).join('');
+    return `<div class="lib-group">
+      <span class="lib-group-label ${g.cls}">${g.label}</span>
+      ${rows}
+    </div>`;
+  }).join('');
+}
+
+function maybeShowOnboarding() {
+  try {
+    const dismissed = localStorage.getItem('ss_members_onboarding_dismissed_v1');
+    if (!dismissed) {
+      document.getElementById('onboarding-block').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('onboarding-block').style.display = 'block';
+  }
+}
+
+function dismissOnboarding() {
+  try { localStorage.setItem('ss_members_onboarding_dismissed_v1', '1'); } catch (e) {}
+  document.getElementById('onboarding-block').style.display = 'none';
+}
+
 async function init() {
   // Brief delay for URL-fragment auth callback to be processed by supabase-js
   await new Promise(r => setTimeout(r, 300));
@@ -313,6 +549,9 @@ async function init() {
     }).join('');
   }
 
+  // Render the library based on owned tiers
+  renderLibrary(userTiers);
+
   const rec = getRecommendation(userTiers);
   if (rec) {
     document.getElementById('next-step-section').style.display = 'block';
@@ -321,6 +560,8 @@ async function init() {
     document.getElementById('next-step-desc').textContent = rec.desc;
     document.getElementById('next-step-cta').href = rec.url;
   }
+
+  maybeShowOnboarding();
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('content').style.display = 'block';
