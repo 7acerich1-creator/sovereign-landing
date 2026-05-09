@@ -7,7 +7,7 @@
    • Editorial publication aesthetic — calm, premium, sovereign.
    • Reference: sovereign-synthesis.com main landing.
    ===================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
 
 /* ---------- TOKENS ---------- */
 :root {
@@ -77,14 +77,14 @@ a { color: var(--orange); }
   align-items: center;
 }
 .wordmark {
-  font-family: 'Sacramento', 'Brush Script MT', cursive;
-  font-size: 30px;
+  font-family: 'Yellowtail', 'Brush Script MT', cursive;
+  font-size: 32px;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
   color: var(--text);
   text-decoration: none;
-  line-height: 1;
+  line-height: 0.95;
 }
 .nav { display: flex; gap: 28px; }
 .nav a {
@@ -194,7 +194,7 @@ section.block.bordered { border-top: 1px solid var(--border); }
   padding: 6px 14px;
   background: var(--card-soft);
 }
-.tag-mono.gold { color: var(--gold); border-color: var(--gold); }
+.tag-mono.gold { color: var(--text); border-color: var(--gold); font-weight: 700; }
 
 h1, .h1 {
   font-family: var(--serif);
