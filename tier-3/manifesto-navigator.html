@@ -5,6 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Map — Navigation Override | Sovereign Synthesis</title>
 <link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .seq-module {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+  .seq-module-active {
+    border-left: 3px solid var(--gold);
+  }
+  .seq-module-pending {
+    background: var(--card-soft);
+    opacity: 0.78;
+  }
+  .seq-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .seq-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .seq-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .seq-status-available {
+    background: var(--gold-soft);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+  .seq-status-deploying {
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .seq-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .seq-desc {
+    color: var(--body-dim);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+  .seq-module-active .seq-desc {
+    margin-bottom: 24px;
+  }
+  .seq-days {
+    margin: 0 0 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .seq-day {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .seq-day:last-child { border-bottom: none; }
+  .seq-day-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-top: 3px;
+  }
+  .seq-day p {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .seq-day { grid-template-columns: 1fr; gap: 6px; }
+    .seq-module { padding: 22px 22px; }
+  }
+</style>
 </head>
 <body>
 
@@ -44,38 +141,61 @@
 </section>
 
 <section class="block bordered">
-  <h2>Navigator modules.</h2>
-  <p>The Navigator toolset is deploying in waves. As each module ships, it appears here. Module 01 is live now.</p>
-  <ul class="path-list">
-    <li>
-      <span class="num">01</span>
-      <span class="body-cell">
-        <strong><a href="/tier-3/environmental-read-protocol" style="color:var(--text);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px;">Environmental Read Protocol</a> <span style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-left:10px;font-weight:700;">Available</span></strong>
-        <span>A three-question read for any environment — relational, professional, social. Names what the room is optimizing for, what it is costing, and whose resource is funding it. Surfaces the conscious choice instead of the automatic reaction.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">02</span>
-      <span class="body-cell">
-        <strong>Frequency Classification System</strong>
-        <span>The full Fear / Ego / Attention / Sovereign frequency map. Where most rooms operate. How to recognize the rare ones that don't.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">03</span>
-      <span class="body-cell">
-        <strong>The Three Axioms</strong>
-        <span>The three load-bearing axioms that govern sovereign navigation. Read once. Operated daily. Each one removes a category of decision from the table.</span>
-      </span>
-    </li>
-    <li>
-      <span class="num">04</span>
-      <span class="body-cell">
-        <strong>Phase Navigator (interactive)</strong>
-        <span>The walk-through tool that maps your current phase, identifies the next phase's prerequisites, and surfaces the specific navigation move required.</span>
-      </span>
-    </li>
-  </ul>
+  <h2>Your sequence.</h2>
+  <p>The Navigator installs in stages. Module 01 is your first move &mdash; run it on the schedule below. Modules 02&ndash;04 deploy after Module 01 is installed and the read is reflexive.</p>
+
+  <div class="seq-module seq-module-active" style="margin-top: 28px;">
+    <div class="seq-header">
+      <span class="seq-num">Module 01</span>
+      <span class="seq-status seq-status-available">Available</span>
+    </div>
+    <h3 class="seq-title">Environmental Read Protocol.</h3>
+    <p class="seq-desc">A three-question read for any environment &mdash; relational, professional, social. Names what the room is optimizing for, what it is costing, and whose resource is funding it. Surfaces the conscious choice instead of the automatic reaction.</p>
+
+    <div class="seq-days">
+      <div class="seq-day">
+        <span class="seq-day-num">Day 1</span>
+        <p>Run the Read Protocol on a current room you're stalled in. Save the read.</p>
+      </div>
+      <div class="seq-day">
+        <span class="seq-day-num">Days 2&ndash;6</span>
+        <p>Run the protocol on a different room each day. Build the reflex. The 60-second read becomes automatic.</p>
+      </div>
+      <div class="seq-day">
+        <span class="seq-day-num">Day 7</span>
+        <p>Re-read your Day 1 entry. Note what changed &mdash; in the architecture, or in your read of it. Module 01 is installed when the read is reflexive.</p>
+      </div>
+    </div>
+
+    <a href="/tier-3/environmental-read-protocol" class="btn">Begin Day 1 &rarr;</a>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 02</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Frequency Classification System.</h3>
+    <p class="seq-desc">The full Fear / Ego / Attention / Sovereign frequency map. Where most rooms operate. How to recognize the rare ones that don't.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 03</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">The Three Axioms.</h3>
+    <p class="seq-desc">The three load-bearing axioms that govern sovereign navigation. Read once. Operated daily. Each one removes a category of decision from the table.</p>
+  </div>
+
+  <div class="seq-module seq-module-pending">
+    <div class="seq-header">
+      <span class="seq-num">Module 04</span>
+      <span class="seq-status seq-status-deploying">Deploying</span>
+    </div>
+    <h3 class="seq-title">Phase Navigator (interactive).</h3>
+    <p class="seq-desc">The walkthrough tool that maps your current phase, identifies the next phase's prerequisites, and surfaces the specific navigation move required.</p>
+  </div>
 </section>
 
 <div class="closing">
