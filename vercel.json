@@ -8,6 +8,7 @@
   ],
   "rewrites": [
     { "source": "/diagnostic", "destination": "/tier-1/diagnostic" },
-    { "source": "/manual", "destination": "/manual/index.html" }
+    { "source": "/manual", "destination": "/manual/index.html" },
+    { "source": "/protocol-zero", "destination": "/tier-0/protocol-zero" }
   ]
 }
