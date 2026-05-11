@@ -145,6 +145,20 @@
       border-color: var(--gold);
       background: var(--card-soft);
     }
+    .lib-row-first {
+      border-left: 3px solid var(--gold);
+      background: var(--card-soft);
+    }
+    .lib-tag-first {
+      display: inline-block; margin-left: 10px;
+      padding: 3px 9px; vertical-align: middle;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 2px; color: var(--gold);
+      text-transform: uppercase; font-weight: 700;
+      background: rgba(212, 168, 67, 0.1);
+      border: 1px solid var(--gold);
+      border-radius: 3px;
+    }
     .lib-info { flex: 1; min-width: 240px; }
     .lib-name {
       font-family: var(--serif); font-size: 16px; font-weight: 600;
@@ -424,14 +438,7 @@ function renderLibrary(userTiers) {
   const list = document.getElementById('library-list');
   const groups = [];
 
-  // Cross-tier always first
-  groups.push({
-    label: 'Cross-tier doctrine (always available)',
-    cls: 'cross',
-    docs: TIER_DOCS.cross_tier
-  });
-
-  // Tier-specific based on what user has
+  // Tier-specific FIRST (the user's actual entry-point content)
   // Protocol Zero is implicit for any signed-in member with at least the free tier
   const userOwnedTiers = new Set(userTiers);
   if (userOwnedTiers.has('inner_circle')) {
@@ -449,10 +456,8 @@ function renderLibrary(userTiers) {
       });
     });
   } else {
-    // Show tier-specific docs only for owned tiers; protocol_zero is shown if any tier owned
     const orderedSlugs = Object.keys(TIER_INFO).sort((a, b) => TIER_INFO[a].rank - TIER_INFO[b].rank);
     orderedSlugs.forEach(slug => {
-      // Show protocol_zero docs if user has at least signed up (no purchases needed)
       const showThisTier = slug === 'protocol_zero' || userOwnedTiers.has(slug);
       if (!showThisTier) return;
       const docs = TIER_DOCS[slug] || [];
@@ -467,17 +472,28 @@ function renderLibrary(userTiers) {
     });
   }
 
+  // Cross-tier doctrine LAST — the deep reference, not the entry point
+  groups.push({
+    label: 'Cross-tier doctrine (always available)',
+    cls: 'cross',
+    docs: TIER_DOCS.cross_tier
+  });
+
   list.innerHTML = groups.map(g => {
-    const rows = g.docs.map(d => `
-      <a href="${d.url}" target="_blank" class="lib-row">
+    const rows = g.docs.map(d => {
+      const isFirstRead = d.name === 'The Reality Override Manual';
+      const tag = isFirstRead ? '<span class="lib-tag-first">First read</span>' : '';
+      return `
+      <a href="${d.url}" target="_blank" class="lib-row${isFirstRead ? ' lib-row-first' : ''}">
         <div class="lib-info">
-          <p class="lib-name">${d.name}</p>
+          <p class="lib-name">${d.name}${tag}</p>
           <p class="lib-desc">${d.desc}</p>
           <span class="lib-meta">${d.meta}</span>
         </div>
         <span class="lib-arrow">Open &rarr;</span>
       </a>
-    `).join('');
+    `;
+    }).join('');
     return `<div class="lib-group">
       <span class="lib-group-label ${g.cls}">${g.label}</span>
       ${rows}
