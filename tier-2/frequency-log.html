@@ -624,6 +624,14 @@ let state = {
   days: {}
 };
 
+function localDateKey(d) {
+  d = d || new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
 function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -657,7 +665,7 @@ function lockBaseline() {
     alert('Set your pattern, baseline frequency, and target frequency before locking.');
     return;
   }
-  if (!state.startDate) state.startDate = new Date().toISOString().slice(0,10);
+  if (!state.startDate) state.startDate = localDateKey();
   saveState();
   showSave('baseline-status');
   document.getElementById('today-section').classList.remove('hidden');
@@ -668,14 +676,15 @@ function lockBaseline() {
 
 function dayNumber() {
   if (!state.startDate) return 0;
-  const start = new Date(state.startDate + 'T00:00:00');
-  const now = new Date();
-  const diff = Math.floor((now - start) / 86400000);
+  // Noon-anchored to avoid DST edge cases; rounds out 23/25-hour DST days
+  const start = new Date(state.startDate + 'T12:00:00');
+  const today = new Date(localDateKey() + 'T12:00:00');
+  const diff = Math.round((today - start) / 86400000);
   return Math.min(diff + 1, 21);
 }
 
 function todayKey() {
-  return new Date().toISOString().slice(0,10);
+  return localDateKey();
 }
 
 function isLocked(timestamp) {
@@ -754,7 +763,7 @@ function renderTimeline() {
   for (let i = 1; i <= 21; i++) {
     const cellDate = new Date(start);
     cellDate.setDate(start.getDate() + i - 1);
-    const key = cellDate.toISOString().slice(0,10);
+    const key = localDateKey(cellDate);
     const dayData = state.days[key] || {};
     const hasData = dayData.preFreq || dayData.postFreq;
     const isFuture = i > dn;
