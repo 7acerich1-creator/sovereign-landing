@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Frequency Log — Tier 2 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .log-frame { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+  .log-section { padding: 48px 0; border-top: 1px solid var(--border); }
+  .log-section:first-of-type { border-top: 1px solid var(--border-soft); }
+  .log-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3.5vw, 30px);
+    color: var(--text);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .log-section h2 em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .log-section p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .log-section p:last-child { margin-bottom: 0; }
+
+  .doctrinal-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 4px 0 20px;
+  }
+  .doctrinal-block .dlabel {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .freq-defn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin: 18px 0;
+  }
+  .freq-defn h3 {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .freq-states {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 18px 0 0;
+  }
+  .freq-state {
+    padding: 18px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .freq-state-drained { background: rgba(120, 120, 120, 0.06); border-left: 3px solid #888; }
+  .freq-state-holding { background: rgba(201, 128, 76, 0.05); border-left: 3px solid var(--copper); }
+  .freq-state-sovereign { background: rgba(212, 168, 67, 0.06); border-left: 3px solid var(--gold); }
+  .freq-state .fs-name {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .freq-state-drained .fs-name { color: #888; }
+  .freq-state-holding .fs-name { color: var(--copper); }
+  .freq-state-sovereign .fs-name { color: var(--gold); }
+  .freq-state p {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .pattern-picker, .freq-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0 14px;
+  }
+  .pat-btn, .freq-btn {
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    font-family: var(--serif);
+    font-size: 15px;
+    transition: all .15s;
+    flex: 1 1 auto;
+    min-width: 140px;
+    text-align: center;
+  }
+  .pat-btn:hover, .freq-btn:hover {
+    border-color: var(--gold);
+    background: var(--card-soft);
+  }
+  .pat-btn.active, .freq-btn.active {
+    background: rgba(212, 168, 67, 0.12);
+    border-color: var(--gold);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .freq-btn[data-freq="drained"].active { background: rgba(120, 120, 120, 0.12); border-color: #888; }
+  .freq-btn[data-freq="holding"].active { background: rgba(201, 128, 76, 0.12); border-color: var(--copper); }
+  .freq-btn[data-freq="sovereign"].active { background: rgba(212, 168, 67, 0.14); border-color: var(--gold); }
+
+  .field-lbl {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+  textarea.field, input.field {
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  textarea.field:focus, input.field:focus {
+    border-color: var(--gold);
+    outline: none;
+  }
+
+  .baseline-card, .today-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+  }
+  .today-card.active { border-left-color: var(--gold); }
+  .today-card h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .today-card .day-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .today-section {
+    margin: 22px 0 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .today-section h4 {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .today-section .helper {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--body-dim);
+    margin-bottom: 12px;
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .locked-banner {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(120, 120, 120, 0.12);
+    color: #888;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-left: 10px;
+  }
+
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin: 24px 0 0;
+  }
+  .tl-day {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 6px;
+    background: var(--card-soft);
+    text-align: center;
+    transition: all .15s;
+  }
+  .tl-day.future { opacity: 0.35; }
+  .tl-day.today { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  .tl-day-num {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .tl-cell-row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  .tl-cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: rgba(120, 120, 120, 0.12);
+  }
+  .tl-cell[data-freq="drained"] { background: #888; }
+  .tl-cell[data-freq="holding"] { background: var(--copper); }
+  .tl-cell[data-freq="sovereign"] { background: var(--gold); }
+  .tl-legend {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .tl-legend-item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .tl-legend-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .save-status {
+    display: inline-block;
+    margin-left: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .save-status.show { opacity: 1; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 720px) {
+    .freq-states { grid-template-columns: 1fr; }
+    .timeline-grid { grid-template-columns: repeat(5, 1fr); }
+    .pat-btn, .freq-btn { min-width: 100px; }
+  }
+  @media (max-width: 480px) {
+    .timeline-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 2 · Protocol 77 · Frequency Log</span>
+  <h1>The Frequency Log.<br/><em>Your containment field, made visible.</em></h1>
+  <p class="lede">Day 0 through 21. A pre-day reading and a post-day reading. Two minutes per check-in. Twenty-one days that show you what has been operating on you in the background &mdash; and what changes when you can finally see it.</p>
+</section>
+
+<div class="log-frame">
+
+<!-- ========= WHAT THIS IS ========= -->
+<section class="log-section">
+  <h2>What this is. <em>And why it has to exist.</em></h2>
+
+  <div class="doctrinal-block">
+    <span class="dlabel">What frequency means here</span>
+    <p>Frequency is not a vibe. It is not mystical. Frequency is the operating state you are conducting yourself from in this moment &mdash; how clearly you can see what is happening, how deliberately you can choose your next move, how much of your bandwidth is actually yours versus how much is being harvested by the field.</p>
+
+    <div class="freq-states">
+      <div class="freq-state freq-state-drained">
+        <span class="fs-name">Drained</span>
+        <p>The day operated on you. Bandwidth claimed. The pattern fired and you didn't catch it &mdash; you only felt the cost after.</p>
+      </div>
+      <div class="freq-state freq-state-holding">
+        <span class="fs-name">Holding</span>
+        <p>You held the perimeter today. The pattern fired and you saw it. You got through without leaking. The muscle is building.</p>
+      </div>
+      <div class="freq-state freq-state-sovereign">
+        <span class="fs-name">Sovereign</span>
+        <p>You were not just defending. You were transmitting. The architecture was load-bearing. The day moved on your terms.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="doctrinal-block">
+    <span class="dlabel">What the containment field is doing to you right now</span>
+    <p>The Interference Pattern Diagnostic already named your dominant extraction method &mdash; the Approval Loop, the Overload Spiral, or the Identity Lock. That pattern is the specific way the field harvests your bandwidth. It is not a personality flaw. It is an operation running on you.</p>
+    <p>The reason most people never break the pattern is that the field's drain is hypnotic. It is small enough most days to feel like normal life. You only notice when a pain moment forces you to. By the time the pain hits, the drain has been operating invisibly for days, weeks, sometimes years. The pain moment is when the field <em>lets you see it</em> &mdash; on its terms.</p>
+    <p>This log is how you start seeing it on your terms instead.</p>
+  </div>
+
+  <div class="doctrinal-block">
+    <span class="dlabel">The pattern is the install</span>
+    <p>You do not pass or fail by what you log. Reading Drained for ten days straight is not a failure &mdash; it is the install. That pattern, made visible, is the diagnostic that makes the rest of Protocol 77 legible. Without the log, the drain is invisible. With the log, the drain becomes structural evidence.</p>
+    <p>Most architects start the protocol thinking the work is the four phases. The four phases are the moves. The log is what makes you <em>see</em> the moves working &mdash; or not working. Without seeing it, no shift holds.</p>
+    <p>This is not a streak to maintain. It is not a grade you receive. It is a noticing tool. The honesty of the reads in the moment is what makes the architecture install.</p>
+  </div>
+
+  <div class="doctrinal-block">
+    <span class="dlabel">Sovereign Tip · Set two alarms</span>
+    <p>Pre-day check-in: morning, before the day starts running you. Post-day check-in: evening, before sleep. Set two phone alarms now. Specific times. Both repeating daily for 21 days.</p>
+    <p>When something pulls you off the check-in, that pull <em>is the field operating on your schedule</em>. It is not life getting in the way. There is no &ldquo;life&rdquo; pulling you off &mdash; there is the containment field, harvesting attention through the schedule it has already arranged for you. The missed check-in is itself a data point. Notice it. Log the next one. Keep going.</p>
+    <p>If you miss a day entirely, do not retroactively fill it in. Leave the gap. The gap is also the pattern. The gap is also data.</p>
+  </div>
+</section>
+
+<!-- ========= DAY 0 — BASELINE & TARGET ========= -->
+<section class="log-section" id="baseline-section">
+  <h2>Day 0. <em>Baseline &amp; target.</em></h2>
+  <p style="margin-bottom: 20px;">Set this once. Lock it in. This is the floor you walked in with and the target you are calibrating toward across the next twenty-one days.</p>
+
+  <div class="baseline-card" id="baseline-card">
+    <span class="field-lbl">Your dominant interference pattern</span>
+    <p style="font-size: 14.5px; color: var(--body-dim); margin-bottom: 8px;">From the Interference Pattern Diagnostic. If you have not run it yet, <a href="/diagnostic" style="color: var(--gold); font-weight: 600;">run it first</a> &mdash; the log only works when you know which extraction pattern is running you. If you know yours already, pick it below.</p>
+    <div class="pattern-picker">
+      <button class="pat-btn" data-pattern="approval-loop" onclick="setPattern('approval-loop')">The Approval Loop</button>
+      <button class="pat-btn" data-pattern="overload-spiral" onclick="setPattern('overload-spiral')">The Overload Spiral</button>
+      <button class="pat-btn" data-pattern="identity-lock" onclick="setPattern('identity-lock')">The Identity Lock</button>
+    </div>
+
+    <span class="field-lbl">Your baseline frequency today</span>
+    <p style="font-size: 14.5px; color: var(--body-dim); margin-bottom: 8px;">Honest read. Right now. Where are you operating from?</p>
+    <div class="freq-picker">
+      <button class="freq-btn" data-freq="drained" onclick="setBaselineFreq('drained')">Drained</button>
+      <button class="freq-btn" data-freq="holding" onclick="setBaselineFreq('holding')">Holding</button>
+      <button class="freq-btn" data-freq="sovereign" onclick="setBaselineFreq('sovereign')">Sovereign</button>
+    </div>
+
+    <span class="field-lbl">Anchor prompt &middot; cumulative cost</span>
+    <p style="font-size: 14.5px; color: var(--body-dim); margin-bottom: 8px;">If today repeated every day for the next twenty-one days, what would the cumulative cost be? Energy. Relationships. Decisions you'd carry. Things you'd not have done. Be specific.</p>
+    <textarea id="baseline-anchor" class="field" rows="3" placeholder="The cost of staying at this frequency for 21 more days..."></textarea>
+
+    <span class="field-lbl">Your target frequency by Day 21</span>
+    <p style="font-size: 14.5px; color: var(--body-dim); margin-bottom: 8px;">Where are you calibrating toward? Naming it is the install.</p>
+    <div class="freq-picker">
+      <button class="freq-btn" data-freq="drained" onclick="setTargetFreq('drained')" style="display:none">Drained</button>
+      <button class="freq-btn" data-freq="holding" onclick="setTargetFreq('holding')">Holding</button>
+      <button class="freq-btn" data-freq="sovereign" onclick="setTargetFreq('sovereign')">Sovereign</button>
+    </div>
+
+    <div class="btn-row" style="margin-top: 20px;">
+      <button class="btn" id="lock-baseline-btn" onclick="lockBaseline()">Lock Day 0 baseline &rarr;</button>
+      <span class="save-status" id="baseline-status">Locked</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========= TODAY'S CHECK-IN ========= -->
+<section class="log-section hidden" id="today-section">
+  <h2>Today's check-in. <em><span id="today-day-name">Day 1</span>.</em></h2>
+  <p style="margin-bottom: 20px;">Two reads per day. Honest in the moment. Auto-locks after twenty-four hours so retroactive softening cannot reach in.</p>
+
+  <div class="today-card active" id="today-card">
+    <span class="day-label" id="today-day-label">Day 1 &middot; <span id="today-date"></span></span>
+    <h3>Pre-day reading <span class="locked-banner hidden" id="pre-locked">Locked</span></h3>
+    <p class="helper">Morning. Before the day starts running you. Where are you walking in from?</p>
+    <div class="freq-picker">
+      <button class="freq-btn" data-freq="drained" data-period="pre" onclick="setTodayFreq('pre','drained')">Drained</button>
+      <button class="freq-btn" data-freq="holding" data-period="pre" onclick="setTodayFreq('pre','holding')">Holding</button>
+      <button class="freq-btn" data-freq="sovereign" data-period="pre" onclick="setTodayFreq('pre','sovereign')">Sovereign</button>
+    </div>
+    <textarea id="pre-notes" class="field" rows="2" placeholder="What's pulling on your bandwidth this morning?"></textarea>
+
+    <div class="today-section">
+      <h4>Post-day reading <span class="locked-banner hidden" id="post-locked">Locked</span></h4>
+      <p class="helper">Evening. Before sleep. Where did the day land you?</p>
+      <div class="freq-picker">
+        <button class="freq-btn" data-freq="drained" data-period="post" onclick="setTodayFreq('post','drained')">Drained</button>
+        <button class="freq-btn" data-freq="holding" data-period="post" onclick="setTodayFreq('post','holding')">Holding</button>
+        <button class="freq-btn" data-freq="sovereign" data-period="post" onclick="setTodayFreq('post','sovereign')">Sovereign</button>
+      </div>
+      <textarea id="post-notes" class="field" rows="2" placeholder="Did the perimeter hold or leak — where? What did the field try today, and did you see it in the moment or only after?"></textarea>
+    </div>
+
+    <div class="btn-row" style="margin-top: 20px;">
+      <button class="btn" onclick="saveToday()">Save check-in</button>
+      <span class="save-status" id="today-status">Saved</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========= 21-DAY TIMELINE ========= -->
+<section class="log-section hidden" id="timeline-section">
+  <h2>21-Day Frequency Timeline. <em>The pattern, made visible.</em></h2>
+  <p style="margin-bottom: 12px;">Each day shows your two reads &mdash; pre-day on the left, post-day on the right. Empty cells are days not yet logged.</p>
+  <p style="margin-bottom: 20px;">Look for the shape. The drain trajectory. The days the pattern fired hardest. The days the perimeter held. The architecture is in the pattern, not in any single read.</p>
+
+  <div class="timeline-grid" id="timeline-grid"></div>
+
+  <div class="tl-legend">
+    <div class="tl-legend-item"><div class="tl-legend-cell" style="background:#888"></div>Drained</div>
+    <div class="tl-legend-item"><div class="tl-legend-cell" style="background:var(--copper)"></div>Holding</div>
+    <div class="tl-legend-item"><div class="tl-legend-cell" style="background:var(--gold)"></div>Sovereign</div>
+    <div class="tl-legend-item"><div class="tl-legend-cell" style="background:rgba(120,120,120,0.12)"></div>Not yet logged</div>
+  </div>
+</section>
+
+</div>
+
+<div class="closing">
+  <p>Naming the pattern is the beginning of breaking it.<br/>Showing up to the log when life pulls you away is the architecture installing.</p>
+  <a href="/tier-2/protocol-77-runner" class="btn">Back to Protocol 77 Runner &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'p77';</script>
+<script src="/js/auth-gate.js"></script>
+<script>
+const STORAGE_KEY = 'ss_freq_log_v1';
+const LOCK_HOURS = 24;
+let state = {
+  pattern: null,
+  baselineFreq: null,
+  targetFreq: null,
+  baselineAnchor: '',
+  startDate: null,
+  days: {}
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function setPattern(p) {
+  state.pattern = p;
+  document.querySelectorAll('.pat-btn').forEach(b => b.classList.toggle('active', b.dataset.pattern === p));
+}
+function setBaselineFreq(f) {
+  state.baselineFreq = f;
+  document.querySelectorAll('#baseline-card .freq-picker').forEach((row, idx) => {
+    if (idx === 0) row.querySelectorAll('.freq-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === f));
+  });
+}
+function setTargetFreq(f) {
+  state.targetFreq = f;
+  document.querySelectorAll('#baseline-card .freq-picker').forEach((row, idx) => {
+    if (idx === 1) row.querySelectorAll('.freq-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === f));
+  });
+}
+
+function lockBaseline() {
+  state.baselineAnchor = document.getElementById('baseline-anchor').value;
+  if (!state.pattern || !state.baselineFreq || !state.targetFreq) {
+    alert('Set your pattern, baseline frequency, and target frequency before locking.');
+    return;
+  }
+  if (!state.startDate) state.startDate = new Date().toISOString().slice(0,10);
+  saveState();
+  showSave('baseline-status');
+  document.getElementById('today-section').classList.remove('hidden');
+  document.getElementById('timeline-section').classList.remove('hidden');
+  renderToday();
+  renderTimeline();
+}
+
+function dayNumber() {
+  if (!state.startDate) return 0;
+  const start = new Date(state.startDate + 'T00:00:00');
+  const now = new Date();
+  const diff = Math.floor((now - start) / 86400000);
+  return Math.min(diff + 1, 21);
+}
+
+function todayKey() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function isLocked(timestamp) {
+  if (!timestamp) return false;
+  const elapsed = (Date.now() - timestamp) / 3600000;
+  return elapsed >= LOCK_HOURS;
+}
+
+function renderToday() {
+  const dn = dayNumber();
+  if (dn < 1) { document.getElementById('today-section').classList.add('hidden'); return; }
+  if (dn > 21) {
+    document.getElementById('today-day-name').textContent = 'Protocol complete';
+    document.getElementById('today-day-label').innerHTML = 'Day 21+ &middot; All twenty-one days logged';
+    return;
+  }
+  document.getElementById('today-day-name').textContent = 'Day ' + dn;
+  document.getElementById('today-day-label').innerHTML = 'Day ' + dn + ' &middot; <span id="today-date">' + todayKey() + '</span>';
+
+  const tk = todayKey();
+  const dayData = state.days[tk] || {};
+
+  // Pre-day
+  const preFreq = dayData.preFreq;
+  document.querySelectorAll('.freq-btn[data-period="pre"]').forEach(b => b.classList.toggle('active', b.dataset.freq === preFreq));
+  document.getElementById('pre-notes').value = dayData.preNotes || '';
+  const preLocked = isLocked(dayData.preTimestamp);
+  document.getElementById('pre-locked').classList.toggle('hidden', !preLocked);
+  document.querySelectorAll('.freq-btn[data-period="pre"]').forEach(b => b.disabled = preLocked);
+  document.getElementById('pre-notes').disabled = preLocked;
+
+  // Post-day
+  const postFreq = dayData.postFreq;
+  document.querySelectorAll('.freq-btn[data-period="post"]').forEach(b => b.classList.toggle('active', b.dataset.freq === postFreq));
+  document.getElementById('post-notes').value = dayData.postNotes || '';
+  const postLocked = isLocked(dayData.postTimestamp);
+  document.getElementById('post-locked').classList.toggle('hidden', !postLocked);
+  document.querySelectorAll('.freq-btn[data-period="post"]').forEach(b => b.disabled = postLocked);
+  document.getElementById('post-notes').disabled = postLocked;
+}
+
+function setTodayFreq(period, freq) {
+  const tk = todayKey();
+  if (!state.days[tk]) state.days[tk] = {};
+  state.days[tk][period + 'Freq'] = freq;
+  if (!state.days[tk][period + 'Timestamp']) state.days[tk][period + 'Timestamp'] = Date.now();
+  document.querySelectorAll('.freq-btn[data-period="' + period + '"]').forEach(b => b.classList.toggle('active', b.dataset.freq === freq));
+  saveState();
+  renderTimeline();
+}
+
+function saveToday() {
+  const tk = todayKey();
+  if (!state.days[tk]) state.days[tk] = {};
+  state.days[tk].preNotes = document.getElementById('pre-notes').value;
+  state.days[tk].postNotes = document.getElementById('post-notes').value;
+  if (state.days[tk].preFreq && !state.days[tk].preTimestamp) state.days[tk].preTimestamp = Date.now();
+  if (state.days[tk].postFreq && !state.days[tk].postTimestamp) state.days[tk].postTimestamp = Date.now();
+  saveState();
+  showSave('today-status');
+  renderTimeline();
+}
+
+function showSave(id) {
+  const el = document.getElementById(id);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+function renderTimeline() {
+  if (!state.startDate) return;
+  const grid = document.getElementById('timeline-grid');
+  grid.innerHTML = '';
+  const start = new Date(state.startDate + 'T00:00:00');
+  const dn = dayNumber();
+  for (let i = 1; i <= 21; i++) {
+    const cellDate = new Date(start);
+    cellDate.setDate(start.getDate() + i - 1);
+    const key = cellDate.toISOString().slice(0,10);
+    const dayData = state.days[key] || {};
+    const isFuture = i > dn;
+    const isToday = i === dn;
+    const div = document.createElement('div');
+    div.className = 'tl-day' + (isFuture ? ' future' : '') + (isToday ? ' today' : '');
+    div.innerHTML = '<span class="tl-day-num">Day ' + i + '</span><div class="tl-cell-row">' +
+      '<div class="tl-cell"' + (dayData.preFreq ? ' data-freq="' + dayData.preFreq + '"' : '') + ' title="Pre-day"></div>' +
+      '<div class="tl-cell"' + (dayData.postFreq ? ' data-freq="' + dayData.postFreq + '"' : '') + ' title="Post-day"></div>' +
+    '</div>';
+    grid.appendChild(div);
+  }
+}
+
+function applyBaseline() {
+  if (state.pattern) document.querySelectorAll('.pat-btn').forEach(b => b.classList.toggle('active', b.dataset.pattern === state.pattern));
+  if (state.baselineFreq) {
+    document.querySelectorAll('#baseline-card .freq-picker').forEach((row, idx) => {
+      if (idx === 0) row.querySelectorAll('.freq-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === state.baselineFreq));
+    });
+  }
+  if (state.targetFreq) {
+    document.querySelectorAll('#baseline-card .freq-picker').forEach((row, idx) => {
+      if (idx === 1) row.querySelectorAll('.freq-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === state.targetFreq));
+    });
+  }
+  if (state.baselineAnchor) document.getElementById('baseline-anchor').value = state.baselineAnchor;
+  if (state.startDate) {
+    document.getElementById('today-section').classList.remove('hidden');
+    document.getElementById('timeline-section').classList.remove('hidden');
+    renderToday();
+    renderTimeline();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  applyBaseline();
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
