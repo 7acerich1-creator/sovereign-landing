@@ -230,9 +230,104 @@
     background: var(--card-soft);
     text-align: center;
     transition: all .15s;
+    cursor: pointer;
   }
-  .tl-day.future { opacity: 0.35; }
+  .tl-day:hover { border-color: var(--gold); }
+  .tl-day.future { opacity: 0.35; cursor: default; }
+  .tl-day.future:hover { border-color: var(--border); }
   .tl-day.today { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  .tl-day.empty { cursor: default; opacity: 0.55; }
+  .tl-day.empty:hover { border-color: var(--border); }
+
+  .day-detail-panel {
+    margin-top: 24px;
+    padding: 24px 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+  }
+  .day-detail-panel .dd-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .day-detail-panel h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .day-detail-panel .dd-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: block;
+  }
+  .dd-row {
+    padding: 14px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .dd-row:first-of-type { border-top: 1px solid var(--border); }
+  .dd-row .dd-period {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-right: 12px;
+  }
+  .dd-row .dd-freq {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .dd-freq[data-freq="drained"] { background: rgba(120, 120, 120, 0.2); color: #888; }
+  .dd-freq[data-freq="holding"] { background: rgba(201, 128, 76, 0.15); color: var(--copper); }
+  .dd-freq[data-freq="sovereign"] { background: rgba(212, 168, 67, 0.18); color: var(--gold); }
+  .dd-row .dd-notes {
+    margin-top: 10px;
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .dd-row .dd-empty {
+    margin-top: 8px;
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .dd-close {
+    margin-top: 18px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .dd-close:hover { border-color: var(--gold); color: var(--gold); }
   .tl-day-num {
     display: block;
     font-family: var(--mono);
@@ -357,6 +452,8 @@
         <p>You were not just defending. You were transmitting. The architecture was load-bearing. The day moved on your terms.</p>
       </div>
     </div>
+
+    <p style="margin-top: 18px;"><strong>And bandwidth.</strong> Your processing power. Your capacity to think about how your life is actually set up and to change it toward what you would prefer. When bandwidth is intact, you can see the architecture of your own situation and operate on it. When the field is harvesting your bandwidth, you can feel that something is off &mdash; but you cannot quite think clearly enough to name it, let alone change it. That is not a personal failure. That is the operation working as designed. Most of what the field harvests is bandwidth.</p>
   </div>
 
   <div class="doctrinal-block">
@@ -371,6 +468,15 @@
     <p>You do not pass or fail by what you log. Reading Drained for ten days straight is not a failure &mdash; it is the install. That pattern, made visible, is the diagnostic that makes the rest of Protocol 77 legible. Without the log, the drain is invisible. With the log, the drain becomes structural evidence.</p>
     <p>Most architects start the protocol thinking the work is the four phases. The four phases are the moves. The log is what makes you <em>see</em> the moves working &mdash; or not working. Without seeing it, no shift holds.</p>
     <p>This is not a streak to maintain. It is not a grade you receive. It is a noticing tool. The honesty of the reads in the moment is what makes the architecture install.</p>
+  </div>
+
+  <div class="doctrinal-block">
+    <span class="dlabel">What to log &mdash; baseline, not spikes</span>
+    <p>What you are measuring across these twenty-one days is your <strong>operating frequency</strong> &mdash; the consistent level you are running at most of the day. Not the spikes. Not the single moment something great happened. Not the single moment something terrible happened. The baseline.</p>
+    <p>Log these. They move the baseline:</p>
+    <p style="padding-left: 20px;">Tired and drained from the day. Sustained stress that did not let up. Something crazy that happened. A boring, regular day. Double work. A meeting that took more out of you than it should have. A conversation you cannot shake. A day that felt fine but oddly empty. A day that ran on autopilot.</p>
+    <p>Be careful with this one: <em>&ldquo;It was a good day.&rdquo;</em> A good day inside the containment field's regular operation is still a good day inside the field. Honest read: was the lift sustained across the day, or was it a frequency spike inside an otherwise baseline-drained life? If it is a spike, do not log it as Sovereign. If the lift held all day &mdash; sustained, structural, the way the day was conducted from start to finish &mdash; log it. Either answer is honest. Both are the work.</p>
+    <p>The point is not to be Sovereign every day. The point is to see, accurately, what your operating baseline is right now &mdash; before the install starts moving it.</p>
   </div>
 
   <div class="doctrinal-block">
@@ -440,13 +546,13 @@
 
     <div class="today-section">
       <h4>Post-day reading <span class="locked-banner hidden" id="post-locked">Locked</span></h4>
-      <p class="helper">Evening. Before sleep. Where did the day land you?</p>
+      <p class="helper">Evening. Before sleep. Where did the day land you on the baseline &mdash; not on the spike?</p>
       <div class="freq-picker">
         <button class="freq-btn" data-freq="drained" data-period="post" onclick="setTodayFreq('post','drained')">Drained</button>
         <button class="freq-btn" data-freq="holding" data-period="post" onclick="setTodayFreq('post','holding')">Holding</button>
         <button class="freq-btn" data-freq="sovereign" data-period="post" onclick="setTodayFreq('post','sovereign')">Sovereign</button>
       </div>
-      <textarea id="post-notes" class="field" rows="2" placeholder="Did the perimeter hold or leak — where? What did the field try today, and did you see it in the moment or only after?"></textarea>
+      <textarea id="post-notes" class="field" rows="2" placeholder="What drained the baseline today — specifically? Stress, double work, a conversation you carried, an autopilot day, a sustained drag? If the lift was real and held all day, name that instead. Skip the single-moment spikes."></textarea>
     </div>
 
     <div class="btn-row" style="margin-top: 20px;">
@@ -469,6 +575,16 @@
     <div class="tl-legend-item"><div class="tl-legend-cell" style="background:var(--copper)"></div>Holding</div>
     <div class="tl-legend-item"><div class="tl-legend-cell" style="background:var(--gold)"></div>Sovereign</div>
     <div class="tl-legend-item"><div class="tl-legend-cell" style="background:rgba(120,120,120,0.12)"></div>Not yet logged</div>
+  </div>
+
+  <p style="margin-top: 18px; font-family: var(--serif); font-size: 14.5px; color: var(--body-dim); font-style: italic;">Click any day above to see that day's full reads and notes.</p>
+
+  <div class="day-detail-panel hidden" id="day-detail-panel">
+    <span class="dd-label">Day detail</span>
+    <h3 id="dd-title">Day &mdash;</h3>
+    <span class="dd-date" id="dd-date"></span>
+    <div id="dd-content"></div>
+    <button class="dd-close" onclick="closeDayDetail()">Close &times;</button>
   </div>
 </section>
 
@@ -640,16 +756,53 @@ function renderTimeline() {
     cellDate.setDate(start.getDate() + i - 1);
     const key = cellDate.toISOString().slice(0,10);
     const dayData = state.days[key] || {};
+    const hasData = dayData.preFreq || dayData.postFreq;
     const isFuture = i > dn;
     const isToday = i === dn;
+    const isEmpty = !isFuture && !hasData;
     const div = document.createElement('div');
-    div.className = 'tl-day' + (isFuture ? ' future' : '') + (isToday ? ' today' : '');
+    div.className = 'tl-day' + (isFuture ? ' future' : '') + (isToday ? ' today' : '') + (isEmpty ? ' empty' : '');
     div.innerHTML = '<span class="tl-day-num">Day ' + i + '</span><div class="tl-cell-row">' +
       '<div class="tl-cell"' + (dayData.preFreq ? ' data-freq="' + dayData.preFreq + '"' : '') + ' title="Pre-day"></div>' +
       '<div class="tl-cell"' + (dayData.postFreq ? ' data-freq="' + dayData.postFreq + '"' : '') + ' title="Post-day"></div>' +
     '</div>';
+    if (!isFuture && hasData) {
+      div.onclick = () => showDayDetail(i, key);
+    } else if (!isFuture && !hasData) {
+      div.onclick = () => showDayDetail(i, key);
+    }
     grid.appendChild(div);
   }
+}
+
+function showDayDetail(dayNum, dateKey) {
+  const dayData = state.days[dateKey] || {};
+  const panel = document.getElementById('day-detail-panel');
+  document.getElementById('dd-title').textContent = 'Day ' + dayNum;
+  document.getElementById('dd-date').textContent = dateKey;
+  const content = document.getElementById('dd-content');
+  const freqLabel = f => f ? f.charAt(0).toUpperCase() + f.slice(1) : '';
+  const preHtml = dayData.preFreq ?
+    '<div class="dd-row"><span class="dd-period">Pre-day</span><span class="dd-freq" data-freq="' + dayData.preFreq + '">' + freqLabel(dayData.preFreq) + '</span>' +
+    (dayData.preNotes ? '<div class="dd-notes">' + escapeHtml(dayData.preNotes) + '</div>' : '<div class="dd-empty">No notes recorded.</div>') +
+    '</div>' :
+    '<div class="dd-row"><span class="dd-period">Pre-day</span><span class="dd-empty">Not logged.</span></div>';
+  const postHtml = dayData.postFreq ?
+    '<div class="dd-row"><span class="dd-period">Post-day</span><span class="dd-freq" data-freq="' + dayData.postFreq + '">' + freqLabel(dayData.postFreq) + '</span>' +
+    (dayData.postNotes ? '<div class="dd-notes">' + escapeHtml(dayData.postNotes) + '</div>' : '<div class="dd-empty">No notes recorded.</div>') +
+    '</div>' :
+    '<div class="dd-row"><span class="dd-period">Post-day</span><span class="dd-empty">Not logged.</span></div>';
+  content.innerHTML = preHtml + postHtml;
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function closeDayDetail() {
+  document.getElementById('day-detail-panel').classList.add('hidden');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function applyBaseline() {
