@@ -117,6 +117,53 @@
     color: var(--text); font-family: var(--serif); font-weight: 600;
   }
 
+  /* Phase framing blocks — WHAT this installs / WHY this phase now / Sovereign Tip */
+  .install-block, .tip-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--copper); border-radius: var(--radius);
+    padding: 22px 26px; margin: 18px 0;
+  }
+  .tip-block { border-left-color: var(--gold); background: var(--card-soft); }
+  .install-block .ib-label, .tip-block .tb-label {
+    display: block; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .install-block .ib-label { color: var(--copper); }
+  .tip-block .tb-label { color: var(--gold); }
+  .install-block p, .tip-block p {
+    font-family: var(--serif); font-size: 15.5px; line-height: 1.7;
+    color: var(--text); margin: 0 0 12px;
+  }
+  .install-block p:last-child, .tip-block p:last-child { margin-bottom: 0; }
+
+  /* Today's check-in callout — points users to the Frequency Log */
+  .checkin-callout {
+    margin: 18px 0; padding: 14px 18px;
+    background: rgba(212, 168, 67, 0.06);
+    border: 1px solid var(--border); border-left: 3px solid var(--gold);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .checkin-callout .co-text {
+    flex: 1 1 280px;
+    font-family: var(--serif); font-size: 14.5px; line-height: 1.6;
+    color: var(--text); margin: 0;
+  }
+  .checkin-callout .co-text strong {
+    color: var(--gold); font-weight: 700;
+  }
+  .checkin-callout a {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: var(--gold); text-transform: uppercase; font-weight: 700;
+    text-decoration: none; padding: 8px 14px;
+    border: 1px solid var(--gold); border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+  }
+  .checkin-callout a:hover {
+    background: var(--gold); color: var(--text);
+  }
+
   /* Pacing disclaimer on Briefing */
   .pacing-note {
     background: var(--card); border: 1px solid var(--border);
@@ -367,6 +414,30 @@
 
     <p class="lex-note">An <em>interference vector</em> is any person, pattern, or situation that consistently pulls your energy and attention off-mission.</p>
 
+    <div class="install-block">
+      <span class="ib-label">What this installs</span>
+      <p>Gray Rock is a defense protocol that stops you from being a battery for reactive systems. It does not close relationships, withdraw love, or end communication. It removes the <strong>emotional surface area</strong> that reactive systems feed on. Flat tone. Minimal content. No exposed reactivity for the vector to lock onto. The vector cannot harvest what is not transmitting.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">Why this phase first</span>
+      <p>Every other phase fails if Gray Rock is not in place. Faraday seals input streams &mdash; but if your output is still leaking reactivity, the field finds new channels to feed on. Lighthouse requires an elevated position &mdash; impossible while reactive bandwidth is being harvested every hour. Anchor requires clarity &mdash; clarity needs bandwidth, which is what Gray Rock recovers first. Gray Rock is the foundational seal.</p>
+    </div>
+
+    <div class="tip-block">
+      <span class="tb-label">Sovereign Tip &middot; The escalation is the install working</span>
+      <p>When Gray Rock holds, the vector escalates. First a small jab. Then a louder one. Then something explicit, designed to force a reaction. Most architects break on round three. Hold flat through round three &mdash; the cascade is structured to find your reactivity threshold, and round three is where the vector exhausts its arsenal. If you do not react, the pattern collapses, and the cascade itself becomes evidence of the architecture you have just exposed.</p>
+    </div>
+
+    <div class="phantom-limb-note">
+      <strong>Advance note &middot; Phantom Limb sensations.</strong> Within the first 48&ndash;72 hours of Gray Rock holding, you may feel psychological residue &mdash; rumination, grief loops, the urge to reach back into the dynamic you just stopped feeding. This is not failure. It is the nervous system metabolizing a severed feedback loop. The sensation fades when refused. Acknowledge it. Refuse to act on it. Log it in your Frequency Log.
+    </div>
+
+    <div class="checkin-callout">
+      <p class="co-text"><strong>Today's check-in.</strong> Run your pre-day reading before deploying Phase 1. Post-day reading after. The two reads bracket the day's work &mdash; that is how the install becomes visible instead of theoretical.</p>
+      <a href="/tier-2/frequency-log">Open Frequency Log &rarr;</a>
+    </div>
+
     <div class="companion-doc">
       <span class="doc-tag">Field manual</span>
       <p class="doc-title">The Gray Rock Field Manual.</p>
@@ -403,6 +474,27 @@
       <div class="func-tag">Phase 02 of 04 · Day 2</div>
       <h2 class="phase-title">Faraday Protocol</h2>
       <p class="phase-desc">The Faraday cage blocks external electromagnetic fields. You are building the informational equivalent. Every input stream classified: Signal or Noise. Then the Input Embargo begins — a 72-hour minimum blackout of all classified Noise streams. The frequency data before and after will confirm the contamination source.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">What this installs</span>
+      <p>The Faraday Protocol classifies every input stream entering your bandwidth as either <strong>Signal</strong> (useful to the mission) or <strong>Noise</strong> (a feed-the-field channel). Then a 72-hour blackout of all classified Noise. The blackout is not a vacation from media. It is a forensic test &mdash; what changes in your frequency, your bandwidth, your clarity when the Noise is gone? The data from before and after confirms the contamination source.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">Why this phase now</span>
+      <p>Gray Rock stopped your own output from being harvested. Faraday stops the input streams that were re-loading the reactivity Gray Rock just shut down. Without Faraday, every news cycle, every algorithm, every drama-thread re-installs the exact reactivity pattern Gray Rock cleared. The two phases together seal both directions of the perimeter.</p>
+    </div>
+
+    <div class="tip-block">
+      <span class="tb-label">Sovereign Tip &middot; Boredom is bandwidth coming back online</span>
+      <p>The 72 hours will feel longer than they should because the Noise was filling more bandwidth than you realized. Boredom is the first signal &mdash; boredom is bandwidth returning. Do not fill the silence. The silence <strong>is</strong> the install.</p>
+      <p>Your pre-day and post-day frequency reads will diverge most during Faraday. That divergence is data &mdash; it tells you exactly which Noise streams were drawing the most. Log carefully across the 72 hours. The pattern that emerges is the contamination source named.</p>
+    </div>
+
+    <div class="checkin-callout">
+      <p class="co-text"><strong>Today's check-in.</strong> Run today's reads. During the 72-hour embargo, the daily log is the only data you'll have on whether the embargo is producing the shift it should.</p>
+      <a href="/tier-2/frequency-log">Open Frequency Log &rarr;</a>
     </div>
 
     <div class="companion-doc">
@@ -479,6 +571,27 @@
       <p class="phase-desc">The Lighthouse does not fight the ocean. It transmits from a fixed, elevated position — and the ships that need it find it. Your values, mission parameters, and operating limits do not move based on social pressure. The Lighthouse does not leave its position to save ships. It transmits. Reception is the ship's responsibility.</p>
     </div>
 
+    <div class="install-block">
+      <span class="ib-label">What this installs</span>
+      <p>Lighthouse is the operational stance you take <strong>once the perimeter is sealed</strong> by Gray Rock and Faraday. You transmit from a fixed, elevated position &mdash; your values, your operating limits, the truth as you see it &mdash; without leaving the position to defend it. Ships that need the signal find it. Ships that do not, sail past. The Lighthouse does not chase reception.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">Why this phase now</span>
+      <p>Sealing the perimeter in Phases 1&ndash;2 recovered the bandwidth. Lighthouse is what you <em>do</em> with the recovered bandwidth. Without that recovery, you cannot hold an elevated position &mdash; you'll drop to engage the first criticism, the first social pressure, the first invitation to negotiate. Lighthouse only stands on the foundation Gray Rock and Faraday just built.</p>
+    </div>
+
+    <div class="tip-block">
+      <span class="tb-label">Sovereign Tip &middot; The descent-pull is strongest the day after</span>
+      <p>The pull to descend will be strongest the day after your first transmission. Someone will misread, criticize, or pretend not to understand on purpose. Holding position through that pull is the install. Descending to &ldquo;clarify&rdquo; &mdash; even once &mdash; un-installs Lighthouse and resets the protocol.</p>
+      <p>Log the pull in the Frequency Log. Naming &ldquo;I felt the descent-pull today and did not move&rdquo; is the architecture being recorded. That entry becomes the proof, weeks from now, that you held when it mattered.</p>
+    </div>
+
+    <div class="checkin-callout">
+      <p class="co-text"><strong>Today's check-in.</strong> Pre-day reading before you compose the transmission. Post-day reading after it lands. The frequency before and after a transmission is the cleanest evidence of whether Lighthouse held or whether you descended without noticing.</p>
+      <a href="/tier-2/frequency-log">Open Frequency Log &rarr;</a>
+    </div>
+
     <div class="field-block">
       <span class="field-label">Biological Drag Recognition</span>
       <p class="field-sub">Identify the three specific patterns that have historically pulled you off-position. Name them.</p>
@@ -519,6 +632,27 @@
       <div class="func-tag">Phase 04 of 04 · Day 7</div>
       <h2 class="phase-title">Sovereign Anchor</h2>
       <p class="phase-desc">The Sovereign Anchor is a single, irreducible statement of the Architect's core identity and mission. Not a mantra. A load-bearing axiom — the fixed point around which the entire sovereign architecture rotates. Written, stored, and reviewed at the beginning of each execution session. When biological drag fires, when all four phases are under pressure — this is the return point.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">What this installs</span>
+      <p>The Anchor is a single irreducible statement of identity and mission that fits on a card you carry. Not a mantra, not a goal, not a vision statement &mdash; a <strong>load-bearing axiom</strong> that decides for you when biological drag fires. Written once, then read daily. The Anchor is the fixed point around which Gray Rock, Faraday, and Lighthouse continue to operate.</p>
+    </div>
+
+    <div class="install-block">
+      <span class="ib-label">Why this phase now</span>
+      <p>The previous three phases installed the architecture. The Anchor is what holds the architecture in place when the field's pull-back arrives. The pull-back is real &mdash; the field does not lose its battery without protest. Without an Anchor, the architecture is correct but ungrounded. The Anchor grounds it.</p>
+    </div>
+
+    <div class="tip-block">
+      <span class="tb-label">Sovereign Tip &middot; The Anchor is maintained, not installed</span>
+      <p>Re-read the Anchor card aloud every morning regardless of how stable you feel. The repetition is the install. Days without re-reading are days the erosion runs unchecked &mdash; biological drag does not announce itself; it loosens the grip while you are not looking.</p>
+      <p>The Frequency Log makes this visible: the days you skip re-reading correlate with drops on the timeline. That correlation, made visible across the next two weeks of operational use, is what makes the Anchor structural rather than performative.</p>
+    </div>
+
+    <div class="checkin-callout">
+      <p class="co-text"><strong>Today's check-in.</strong> Post-day reading after the Anchor is composed and the four counter-protocols are reviewed. The reading from today becomes the baseline against which every Anchor-erosion day will be compared. Make it honest.</p>
+      <a href="/tier-2/frequency-log">Open Frequency Log &rarr;</a>
     </div>
 
     <div class="field-block">
