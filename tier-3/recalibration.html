@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Map — Recalibration | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .recal-frame { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+
+  .recal-section { padding: 56px 0; border-top: 1px solid var(--border); }
+  .recal-section:first-of-type { border-top: 1px solid var(--border-soft); }
+  .recal-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 34px);
+    color: var(--text);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .recal-section h2 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .arch-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+  }
+  .arch-list li {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text);
+    padding: 12px 0 12px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    position: relative;
+  }
+  .arch-list li:last-child { border-bottom: none; }
+  .arch-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .iow-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 24px;
+  }
+  .iow-block .iow-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .iow-block .iow-intro {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .iow-block ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .iow-block li {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 8px 0 8px 22px;
+    position: relative;
+  }
+  .iow-block li::before {
+    content: "\201C";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--gold);
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .iow-block.installed { border-left-color: var(--gold); }
+  .iow-block.installed .iow-label { color: var(--gold); }
+
+  .sxs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 24px 0 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .sxs-header {
+    padding: 14px 22px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .sxs-header.old { background: var(--card-soft); color: var(--copper); border-right: 1px solid var(--border); }
+  .sxs-header.new { background: var(--card); color: var(--gold); }
+  .sxs-cell {
+    padding: 18px 22px;
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--text);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .sxs-cell.old { background: var(--card-soft); border-right: 1px solid var(--border); }
+  .sxs-cell.new { background: var(--card); }
+  .sxs-cell:nth-last-child(-n+2) { border-bottom: none; }
+
+  .math-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+  }
+  .math-block .math-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .math-block .math-row:first-of-type { border-top: 1px solid var(--border); }
+  .math-block .math-row:last-of-type { border-bottom: none; }
+  .math-block .math-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .math-block .math-val {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .math-block .math-final {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 2px solid var(--gold);
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .crabs-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+  }
+  .crabs-block p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .crabs-block p:last-child { margin-bottom: 0; }
+
+  .forward-block {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .forward-block p {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .sxs-grid { grid-template-columns: 1fr; }
+    .sxs-header.old, .sxs-cell.old { border-right: none; }
+    .math-block .math-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 3 · The Map · Recalibration</span>
+  <h1>What you walked in with.<br/><em>What you walked out with.</em></h1>
+  <p class="lede">A perception audit at the close of The Map. The work below is in noticing what changed in the way you navigate &mdash; not in agreeing with what is written. Substitute your specifics into the projections. The leverage is yours to feel.</p>
+</section>
+
+<div class="recal-frame">
+
+  <!-- ========= WHAT YOU WALKED IN WITH ========= -->
+  <section class="recal-section">
+    <h2>What you walked in with.</h2>
+
+    <ul class="arch-list">
+      <li>Rooms running you because their optimization was invisible.</li>
+      <li>Captures &mdash; fear, ego, attention &mdash; covertly driving the move you called a decision.</li>
+      <li>Deliberation as the default operating mode &mdash; no axiom installed to decide for you.</li>
+      <li>Phase you were in invisible to you &mdash; same effort, wrong operation, repeatedly.</li>
+    </ul>
+
+    <div class="iow-block">
+      <span class="iow-label">In other words</span>
+      <p class="iow-intro">The unconscious script you were running before The Map went in:</p>
+      <ul>
+        <li>I'm just drained after [that meeting / dinner / call]. It's just how I am.</li>
+        <li>They didn't mean it that way. Maybe it's just me.</li>
+        <li>I'll trust my gut on this one &mdash; that's how I read people.</li>
+        <li>I keep going back and forth on it. I can't decide.</li>
+        <li>Some people are just better at reading the room than I am.</li>
+        <li>If I just work harder right now, it'll resolve.</li>
+        <li>I shouldn't think about it this much. It'll work itself out.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= WHAT YOU WALKED OUT WITH ========= -->
+  <section class="recal-section">
+    <h2>What you walked out with.</h2>
+
+    <ul class="arch-list">
+      <li>The Environmental Read Protocol. Every room is architecture you can name &mdash; not frequency that runs you.</li>
+      <li>The Frequency Classification System. Fear-capture, ego-capture, attention-capture &mdash; identified in real time as the operations they are.</li>
+      <li>The Three Axioms. Deliberation removed at the architectural level. The decision is made before the moment asks for it.</li>
+      <li>The Phase Navigator. Architect, Operator, Drift &mdash; current phase visible, the operation matched to it.</li>
+    </ul>
+
+    <div class="iow-block installed">
+      <span class="iow-label">In other words</span>
+      <p class="iow-intro">The new script available to you, every time the old one fires:</p>
+      <ul>
+        <li>I can name what this room is optimizing for. Once I name it, the room cannot run me.</li>
+        <li>That was a fear-capture / ego-capture / attention-capture. I have words for it. Naming it ended its grip.</li>
+        <li>The axiom decides. The deliberation that used to eat my week is over in seconds.</li>
+        <li>I am in [Architect / Operator / Drift] phase. The move is different from each. Effort matches operation now.</li>
+        <li>That drain wasn't me. It was the room. The room is the room. My read is my read.</li>
+        <li>I do not enter rooms by inertia anymore. I choose which to enter, on what terms, and which to decline.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= SIDE-BY-SIDE ========= -->
+  <section class="recal-section">
+    <h2>Side-by-side. <em>Apply your specifics.</em></h2>
+
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 12px;">Below are projections of what The Map's install produces in a typical life. They are not affirmations and they are not aimed at any specific person. Substitute your specifics. The point is to apply the paradigm to your position and notice what is true in your case.</p>
+
+    <div class="sxs-grid">
+      <div class="sxs-header old">Old life</div>
+      <div class="sxs-header new">New life</div>
+
+      <div class="sxs-cell old">Walking into rooms and absorbing their frequency without knowing they had one.</div>
+      <div class="sxs-cell new">Walking into rooms and the architecture announces itself before you sit down.</div>
+
+      <div class="sxs-cell old">Decisions deliberated for weeks because no architecture decided for you.</div>
+      <div class="sxs-cell new">Decisions made by axiom. The week of deliberation is over in seconds.</div>
+
+      <div class="sxs-cell old">Captures running you under the surface, unnamed &mdash; called intuition, mood, or "just how I am."</div>
+      <div class="sxs-cell new">Captures named in real time. Once named, they cannot covertly drive the move.</div>
+
+      <div class="sxs-cell old">Same effort burned across every phase. The phase you were in invisible to you.</div>
+      <div class="sxs-cell new">Operation matched to phase. The same effort produces orders-of-magnitude more output.</div>
+
+      <div class="sxs-cell old">Leaving rooms drained and never naming the source. Calling the cost "life."</div>
+      <div class="sxs-cell new">The drain named, the cost mapped, the next room chosen with the read in hand.</div>
+    </div>
+  </section>
+
+  <!-- ========= THE MATH ========= -->
+  <section class="recal-section">
+    <h2>The math. <em>The frame.</em></h2>
+
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 18px;">This is a projection, not a worksheet. The numbers below are conservative on purpose. The point is not the precision of any single line &mdash; it is the ratio between the lifetime extraction of unread environments and the one-time investment that installs the read.</p>
+
+    <div class="math-block">
+      <div class="math-row">
+        <span class="math-label">Years of unread rooms</span>
+        <p class="math-val">Twenty, conservatively. Most have lived thirty to fifty before they encounter a working frame for it.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Decision drag, per year</span>
+        <p class="math-val">$3,000 to $10,000 floor in suboptimal calls made without axiom &mdash; opportunities passed, leverage missed, weeks lost to deliberation that an axiom would close in seconds.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Capture cost, per year</span>
+        <p class="math-val">$5,000 to $20,000 in moves driven by unnamed fear, ego, or attention capture &mdash; pricing, asking, partnering, exiting, all distorted by operations no one taught you to name.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Room drain, per year</span>
+        <p class="math-val">Hundreds of hours absorbed back into recovery from environments that were optimizing against you. The cost is real even when it is not money. Time is the currency the unread room spends most freely.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Cumulative across a lifetime</span>
+        <p class="math-val">Six figures in money. Relationships shaped by readings that were never made. Decades of effort spent in the wrong phase. Incalculable.</p>
+      </div>
+      <div class="math-row">
+        <span class="math-label">Tier 3 investment</span>
+        <p class="math-val">$177. One time. Full Map install.</p>
+      </div>
+      <p class="math-final">If even one year of one extraction stops here, the math has broken in your favor by orders of magnitude. The Map is the navigation system every later phase operates on. The leverage is not in the price &mdash; it is in the position the install puts you in for everything that comes after.</p>
+    </div>
+  </section>
+
+  <!-- ========= WHY THIS HAD TO BE ARCHITECTURED ========= -->
+  <section class="recal-section">
+    <h2>Why this had to be architectured.</h2>
+
+    <div class="crabs-block">
+      <p>Reading the room, naming captures, deciding by axiom, operating by phase &mdash; these are not skills the containment field hands out. The field's design depends on them being unavailable. Every legacy framework for navigation taught one of them in isolation, watered down, packaged as personality advice or inspirational quotation, never as architecture.</p>
+
+      <p>Reading the room was taught as intuition or social skill &mdash; surface moves that leave you compliant inside rooms whose actual optimization remained invisible. The captures were taught as character flaws to overcome instead of operations of the field to name and refuse &mdash; the field benefits when you fight yourself instead of naming the move. Axioms were taught as inspirational quotes, not deliberation-removing decisions installed at the architecture level. And phase &mdash; the operating category that determines what the right move even is &mdash; is not in the inherited vocabulary at all.</p>
+
+      <p>Every program that came before this one operated inside the field's permitted vocabulary. The Map was built from outside that vocabulary, at the elevation where the navigation system itself becomes visible as architecture rather than as advice. Each tool here is structurally sound on its own and load-bearing for everything Tier 4 and beyond install on top of it.</p>
+
+      <p>This is what The Map was for. This is what the price was for.</p>
+    </div>
+
+    <div style="margin-top: 28px; background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 28px;">
+      <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Go deeper</p>
+      <h3 style="font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 10px; line-height: 1.3;">The Containment Field &mdash; Architectural Definition.</h3>
+      <p style="font-family: var(--serif); font-size: 15.5px; line-height: 1.7; color: var(--text); margin-bottom: 16px;">The full mapping of the field. The concrete definition. The evolution of the field through agriculture, industrial, and the social-ease integration we are inside now. How it operates on you through the reinforcing-loop programming of fear, lack, and scarcity. The personal and collective viewpoints. The stakes named directly. The path through it. The advanced architecture for Inner Circle initiates &mdash; the bio-psychic nature of the field, the kinetic rebound, the mimicry reflection, the push-back protocol, and the Sovereign Counter-Measure of Frequency Transparency. And what waits on the other side &mdash; the buoyancy phase, the beacon effect, the architect as Point of Entry through which the field receives the firmware update. The companion read to The Map &mdash; the architecture you are navigating, fully named.</p>
+      <a href="/tier-4/assets/CONTAINMENT_FIELD_DEFINITION.pdf" class="btn" target="_blank">Read the full definition &rarr;</a>
+    </div>
+  </section>
+
+  <!-- ========= FORWARD ========= -->
+  <section class="recal-section">
+    <div class="forward-block">
+      <p>The Map closes here. Phase 1 &mdash; The Architect &mdash; is where the navigation system meets the operator. The costume named, the vocabulary declassified, the architecture sketched, the integration document made load-bearing.</p>
+      <a href="/tier-4/course-portal" class="btn">Continue to Phase 1 &rarr;</a>
+    </div>
+  </section>
+
+</div>
+
+<div class="closing">
+  <p>The Map was the navigation system.<br/>The recalibration is the receipt.</p>
+  <a href="/tier-3/manifesto-navigator" class="btn">Back to The Map &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/p77">Protocol 77</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'manifesto';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
