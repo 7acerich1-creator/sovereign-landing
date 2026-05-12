@@ -237,6 +237,20 @@ const SUPABASE_URL = 'https://wzthxohtgojenukmdubz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGh4b2h0Z29qZW51a21kdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzY1ODcsImV4cCI6MjA4OTQ1MjU4N30.YaUrxPCBKGWscbebkdekDvRMGb_eFD0yRTVaM8C2frU';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Capture URL params for attribution (UTMs + Facebook click ID + referrer)
+const __pzSignupMeta = (function() {
+  const params = new URLSearchParams(window.location.search);
+  const meta = {};
+  ['utm_source','utm_campaign','utm_content','utm_medium','utm_term','fbclid','gclid','referrer'].forEach(k => {
+    const v = params.get(k);
+    if (v) meta[k] = v;
+  });
+  if (document.referrer && !meta.referrer) meta.referrer = document.referrer;
+  meta.landing_path = window.location.pathname;
+  meta.signed_up_at_iso = new Date().toISOString();
+  return meta;
+})();
+
 document.getElementById('pz-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const emailInput = document.getElementById('pz-email');
@@ -260,12 +274,26 @@ document.getElementById('pz-form').addEventListener('submit', async (e) => {
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ target_email: email })
+      body: JSON.stringify({ target_email: email, signup_metadata: __pzSignupMeta })
     });
     const enrollData = await enrollRes.json();
     if (!enrollData.success) {
       throw new Error(enrollData.error || 'enrollment_failed');
     }
+
+    // Fire Meta Pixel Lead event so the campaign can attribute and optimize for actual signups
+    if (typeof window.fbq === 'function') {
+      try {
+        window.fbq('track', 'Lead', {
+          content_name: 'Protocol Zero Signup',
+          content_category: 'protocol_zero',
+          source: __pzSignupMeta.utm_source || 'organic',
+          campaign: __pzSignupMeta.utm_campaign || 'none',
+          variant: __pzSignupMeta.utm_content || 'none'
+        });
+      } catch (_) { /* fail silent — never block signup on tracking */ }
+    }
+
 
     // Step 2: Send magic link, redirect to Tier 0 portal on click
     const { error: otpError } = await sb.auth.signInWithOtp({
