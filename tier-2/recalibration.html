@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocol 77 — Recalibration | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .recal-frame { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+
+  .recal-section { padding: 56px 0; border-top: 1px solid var(--border); }
+  .recal-section:first-of-type { border-top: 1px solid var(--border-soft); }
+  .recal-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 34px);
+    color: var(--text);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .recal-section h2 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .two-state {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .two-state-header {
+    padding: 14px 22px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .two-state-header.activated { background: var(--card-soft); color: var(--copper); border-right: 1px solid var(--border); }
+  .two-state-header.integrated { background: var(--card); color: var(--gold); }
+  .two-state-cell {
+    padding: 22px 24px;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .two-state-cell.activated { background: var(--card-soft); border-right: 1px solid var(--border); }
+  .two-state-cell.integrated { background: var(--card); }
+
+  .audit-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 30px 32px;
+    margin-top: 18px;
+  }
+  .audit-intro {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 22px;
+  }
+  .audit-q {
+    padding: 22px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .audit-q:first-of-type { border-top: 1px solid var(--border); }
+  .audit-q .q-num {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  .audit-q .q-text {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 0 0 8px;
+    display: inline;
+  }
+  .audit-q .q-hint {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    color: var(--body-dim);
+    font-style: italic;
+    margin: 8px 0 14px;
+    line-height: 1.6;
+  }
+  .audit-q textarea.field {
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 14px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .audit-q textarea.field:focus { border-color: var(--gold); outline: none; }
+  .audit-q .q-toggle {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .audit-q .q-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card-soft);
+    color: var(--text);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all .15s;
+  }
+  .audit-q .q-btn:hover { border-color: var(--gold); }
+  .audit-q .q-btn.active.yes { background: rgba(212, 168, 67, 0.14); border-color: var(--gold); color: var(--gold); }
+  .audit-q .q-btn.active.no { background: rgba(120, 120, 120, 0.14); border-color: #888; color: #888; }
+
+  .integration-result {
+    margin-top: 26px;
+    padding: 22px 26px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--copper);
+    border-radius: var(--radius);
+    background: var(--card-soft);
+  }
+  .integration-result.installed { border-left-color: var(--gold); }
+  .integration-result .ir-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--copper);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .integration-result.installed .ir-label { color: var(--gold); }
+  .integration-result p {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .integration-result p:last-child { margin-bottom: 0; }
+
+  .doctrinal-block {
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+  }
+  .doctrinal-block p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 14px;
+  }
+  .doctrinal-block p:last-child { margin-bottom: 0; }
+  .doctrinal-block .dlabel {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .forward-block {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .forward-block p {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .two-state { grid-template-columns: 1fr; }
+    .two-state-header.activated, .two-state-cell.activated { border-right: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 2 · Protocol 77 · Recalibration</span>
+  <h1>Shield activated.<br/><em>Did it integrate?</em></h1>
+  <p class="lede">Twenty-one days closed. The Shield is built. The harder question is whether the architecture translated into the shape of your actual life. The audit below is honest. The reads are yours. The data is in what you can name.</p>
+</section>
+
+<div class="recal-frame">
+
+<!-- ========= TWO STATES ========= -->
+<section class="recal-section">
+  <h2>Activated. <em>Integrated.</em></h2>
+  <p style="font-family: var(--serif); font-size: 17px; line-height: 1.75; color: var(--text); margin-bottom: 22px;">Two different states. The runner can mark you Activated &mdash; you ran the four phases, you composed the Anchor, the protocol completed in the system. <strong>Integration</strong> is what happens in your actual life. The principles translated into real moves. The architecture started reshaping the terrain around you. The audit below tells you which state you are in.</p>
+
+  <div class="two-state">
+    <div class="two-state-header activated">Shield activated</div>
+    <div class="two-state-header integrated">Shield integrated</div>
+    <div class="two-state-cell activated">You ran all four phases in order. You held the embargo. You composed an Anchor. The runner shows complete. The architecture is in the system &mdash; correct on paper.</div>
+    <div class="two-state-cell integrated">The architecture is in your life. You made tough decisions you had been avoiding. You held position somewhere you used to fold. Your bandwidth came back online. The terrain around you started reshaping in small specific ways &mdash; and you can name them.</div>
+  </div>
+
+  <div class="doctrinal-block" style="margin-top: 28px;">
+    <span class="dlabel">Why the distinction matters</span>
+    <p>Sovereign Synthesis works one way: when you change the architecture you operate from, the containment field reshapes around you. The way to verify the architecture changed is to look at how your actual life looks right now versus how it looked twenty-one days ago. Not in feelings. In structural facts &mdash; decisions made, positions held, drains stopped, terrain shifted.</p>
+    <p>If the principles never translated into real moves, the protocol was read, not run. There is no shame in that read. It just means the install is still ahead of you, and the audit below tells you where to come back to.</p>
+  </div>
+</section>
+
+<!-- ========= THE AUDIT ========= -->
+<section class="recal-section">
+  <h2>The integration audit. <em>Six honest questions.</em></h2>
+  <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 14px;">For each question: answer honestly. Yes means you can name something specific. No means you cannot &mdash; or what you can name happened before the protocol started, not inside the twenty-one days. The reads save automatically.</p>
+  <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 14px;">This is not a grade. It is a structural read of whether the install took. Four or more honest yes-with-evidence answers signals integration. Three or fewer signals the protocol is still ahead of you &mdash; in which case the audit itself becomes the map for where to re-run.</p>
+
+  <div class="audit-block">
+
+    <div class="audit-q">
+      <span class="q-num">01</span>
+      <span class="q-text">The tough decision.</span>
+      <p class="q-hint">In the last twenty-one days, did you make a decision you had been avoiding before the protocol started? Something you knew was right but had been postponing because the cost of choosing felt heavier than the cost of drift.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="1" data-val="yes" onclick="setAnswer(1, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="1" data-val="no" onclick="setAnswer(1, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-1" class="field" placeholder="Name the decision. Specifically." oninput="saveNote(1)"></textarea>
+    </div>
+
+    <div class="audit-q">
+      <span class="q-num">02</span>
+      <span class="q-text">The position held.</span>
+      <p class="q-hint">Name one specific situation where you held a position you could not have held three weeks ago. A person you didn't fold to. A boundary you didn't soften. A truth you didn't apologize for.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="2" data-val="yes" onclick="setAnswer(2, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="2" data-val="no" onclick="setAnswer(2, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-2" class="field" placeholder="Name the situation. What you held. What you didn't move on." oninput="saveNote(2)"></textarea>
+    </div>
+
+    <div class="audit-q">
+      <span class="q-num">03</span>
+      <span class="q-text">The drain stopped.</span>
+      <p class="q-hint">Name one specific thing you are no longer giving energy to that was extracting it every day before the protocol. The leak you finally identified and closed. The channel you finally cut.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="3" data-val="yes" onclick="setAnswer(3, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="3" data-val="no" onclick="setAnswer(3, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-3" class="field" placeholder="Name the drain. What you stopped feeding." oninput="saveNote(3)"></textarea>
+    </div>
+
+    <div class="audit-q">
+      <span class="q-num">04</span>
+      <span class="q-text">The truer self.</span>
+      <p class="q-hint">In what specific situation, in the last twenty-one days, did you operate as yourself instead of as the version the field rewards? A moment, however small, where the un-costumed you was the one in the room.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="4" data-val="yes" onclick="setAnswer(4, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="4" data-val="no" onclick="setAnswer(4, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-4" class="field" placeholder="Name the situation. What you did that the costume would not have." oninput="saveNote(4)"></textarea>
+    </div>
+
+    <div class="audit-q">
+      <span class="q-num">05</span>
+      <span class="q-text">The responsibility taken.</span>
+      <p class="q-hint">Name a part of your life that you are now actively taking responsibility for &mdash; in a way you could not see before the protocol. Something that was outside your hands twenty-one days ago and is now structurally yours to operate on.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="5" data-val="yes" onclick="setAnswer(5, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="5" data-val="no" onclick="setAnswer(5, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-5" class="field" placeholder="Name what you are now taking responsibility for that you could not see before." oninput="saveNote(5)"></textarea>
+    </div>
+
+    <div class="audit-q">
+      <span class="q-num">06</span>
+      <span class="q-text">The shifted vision.</span>
+      <p class="q-hint">What part of your future looks different than it did twenty-one days ago? Even one specific element &mdash; a possibility you can now see, a path that opened, a version of your life that became thinkable.</p>
+      <div class="q-toggle">
+        <button class="q-btn" data-q="6" data-val="yes" onclick="setAnswer(6, 'yes')">Yes &mdash; I can name it</button>
+        <button class="q-btn" data-q="6" data-val="no" onclick="setAnswer(6, 'no')">No &mdash; not yet</button>
+      </div>
+      <textarea id="aq-6" class="field" placeholder="Name what is now thinkable that wasn't before." oninput="saveNote(6)"></textarea>
+    </div>
+
+  </div>
+
+  <div class="integration-result" id="integration-result">
+    <span class="ir-label" id="ir-label">Answer above to see your read</span>
+    <p id="ir-text">Six honest answers tell you whether the Shield is activated only, or activated and integrated. Reads save automatically as you click.</p>
+  </div>
+</section>
+
+<!-- ========= TERRAIN SIDE-BY-SIDE ========= -->
+<section class="recal-section">
+  <h2>The terrain. <em>Old shape, new shape.</em></h2>
+  <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 14px;">These are projections of what the integration produces in a typical life. Substitute your specifics. The point is to apply the paradigm to your position and notice what is true in your case.</p>
+
+  <div class="two-state">
+    <div class="two-state-header activated">Old terrain</div>
+    <div class="two-state-header integrated">New terrain</div>
+
+    <div class="two-state-cell activated">You ended every day drained and could not say from what. The depletion felt like a personal failure.</div>
+    <div class="two-state-cell integrated">You can name the specific drains the perimeter is now sealing against. The depletion is structural, not personal &mdash; and the structure is yours to operate on.</div>
+
+    <div class="two-state-cell activated">Conversations and dynamics ran you. You reacted, then explained, then justified, then carried the cost for hours after.</div>
+    <div class="two-state-cell integrated">Conversations land on you and you choose your response. Some you engage. Some you decline. Some you walk away from without justifying the walk.</div>
+
+    <div class="two-state-cell activated">Information flooded in &mdash; news, social, drama, opinion &mdash; and shaped your inner state without you choosing.</div>
+    <div class="two-state-cell integrated">You have an audit of your input streams. The Noise is named. Some streams stay. Some are cut. Your inner state is downstream of choices you can actually see.</div>
+
+    <div class="two-state-cell activated">You held opinions privately and softened them publicly. The cost was your sense of being a real person.</div>
+    <div class="two-state-cell integrated">You can transmit from position. Not always. Not perfectly. But the position exists &mdash; and it is yours to return to.</div>
+
+    <div class="two-state-cell activated">The future was a smear of obligation and hope, with no clear shape and no clear move.</div>
+    <div class="two-state-cell integrated">An Anchor exists. A direction is named. The next move is visible. Not solved. Visible.</div>
+  </div>
+</section>
+
+<!-- ========= WHY THIS HAD TO BE ARCHITECTURED ========= -->
+<section class="recal-section">
+  <h2>Why the integration matters.</h2>
+
+  <div class="doctrinal-block">
+    <p>The containment field does not lose its battery without protest. The pull-back is real. Every architecture-in-waiting who runs a Protocol 77 cycle creates pressure on the field &mdash; the same field that has been quietly metabolizing their bandwidth for decades. The field reshapes around the new architecture, but reshaping is not surrender. Some of the reshaping is the field finding new channels to feed on.</p>
+    <p>This is why integration matters more than activation. Activation says you completed the steps. Integration says the architecture is now load-bearing in your actual life &mdash; which means the field has had to reshape around it, and you can <em>see</em> that reshape in the terrain. The audit above is how you verify the reshape happened in fact, not just in protocol.</p>
+    <p>If the audit returns mostly &ldquo;not yet&rdquo;, the integration is still ahead of you. That is not failure. That is the diagnostic. The questions you could not answer are the exact places where the protocol is asking to be re-run with the awareness this audit just installed.</p>
+  </div>
+</section>
+
+<!-- ========= FORWARD ========= -->
+<section class="recal-section">
+  <div class="forward-block">
+    <p>The Shield stops the bleeding. The bleeding has stopped &mdash; or it has not, and you know where to come back to.</p>
+    <p>If the integration took, reality should be looking like different terrain. The next layer is The Map &mdash; how to navigate that terrain consciously instead of by inertia. Read the rooms before they read you. Classify the captures in real time. Operate on axioms instead of deliberation. See the phase you are in.</p>
+    <p>The Shield was the perimeter. The Map is the geography.</p>
+    <a href="/tier-3/manifesto-navigator" class="btn">Continue to The Map &rarr;</a>
+  </div>
+</section>
+
+</div>
+
+<div class="closing">
+  <p>Activation is what the runner records.<br/>Integration is what your life shows.<br/>The Shield is the beginning, not the destination.</p>
+  <a href="/tier-2/protocol-77-runner" class="btn">Back to Protocol 77 Runner &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'p77';</script>
+<script src="/js/auth-gate.js"></script>
+<script>
+const STORAGE_KEY = 'ss_p77_integration_audit_v1';
+let state = { answers: {}, notes: {} };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function setAnswer(q, val) {
+  state.answers[q] = val;
+  document.querySelectorAll('.q-btn[data-q="' + q + '"]').forEach(b => {
+    b.classList.remove('active', 'yes', 'no');
+    if (b.dataset.val === val) { b.classList.add('active', val); }
+  });
+  saveState();
+  renderResult();
+}
+
+function saveNote(q) {
+  const el = document.getElementById('aq-' + q);
+  if (el) state.notes[q] = el.value;
+  saveState();
+}
+
+function applyState() {
+  for (let q = 1; q <= 6; q++) {
+    const val = state.answers[q];
+    if (val) {
+      document.querySelectorAll('.q-btn[data-q="' + q + '"]').forEach(b => {
+        if (b.dataset.val === val) b.classList.add('active', val);
+      });
+    }
+    const note = state.notes[q];
+    if (note) {
+      const el = document.getElementById('aq-' + q);
+      if (el) el.value = note;
+    }
+  }
+  renderResult();
+}
+
+function renderResult() {
+  const yes = Object.values(state.answers).filter(v => v === 'yes').length;
+  const no = Object.values(state.answers).filter(v => v === 'no').length;
+  const total = yes + no;
+  const result = document.getElementById('integration-result');
+  const label = document.getElementById('ir-label');
+  const text = document.getElementById('ir-text');
+  if (total < 6) {
+    result.classList.remove('installed');
+    label.textContent = 'Answer all six to see your read';
+    text.textContent = (6 - total) + ' question' + (6 - total === 1 ? '' : 's') + ' remaining. Reads save automatically as you click.';
+    return;
+  }
+  if (yes >= 4) {
+    result.classList.add('installed');
+    label.textContent = 'Shield · activated AND integrated';
+    text.innerHTML = '<strong>' + yes + ' of 6 honest yes-with-evidence reads.</strong> The architecture translated. The terrain reshaped. The integration is in your life, not just in the runner. The Shield is load-bearing. You are ready for the next layer &mdash; The Map. Read the rooms, classify the captures, operate by axiom, name your phase.';
+  } else {
+    result.classList.remove('installed');
+    label.textContent = 'Shield · activated, integration still ahead';
+    text.innerHTML = '<strong>' + yes + ' of 6 honest yes-with-evidence reads.</strong> The runner completed. The architecture is correct on paper. The integration into your actual life is still ahead of you &mdash; and that is not failure. The questions you could not answer with evidence are the exact places where the protocol is asking to be re-run with the awareness this audit just installed. Return to the Runner. Start with Phase 1 again, with the missing answers in mind. The second pass installs what the first pass introduced.';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  applyState();
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
