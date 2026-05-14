@@ -28,11 +28,17 @@ src="https://www.facebook.com/tr?id=1513312646866512&ev=PageView&noscript=1"
 <link rel="stylesheet" href="/css/sovereign.css" />
 <style>
   /* Protocol Zero — blunt voice, tighter screens */
-  .screen { display: none; animation: fadeUp .4s ease; }
-  .screen.active { display: block; }
+  /* Screens are hidden until .active. Animation uses transform only so opacity can never
+     fail to a stuck-at-zero state on iOS Safari (which has been observed killing animations
+     mid-run under memory pressure or for elements near the fold). */
+  .screen { display: none; }
+  .screen.active {
+    display: block;
+    animation: fadeUp .4s ease both;
+  }
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { transform: translateY(8px); }
+    to { transform: translateY(0); }
   }
   .pz-screen-header { text-align: left; margin: 16px 0 28px; }
   .pz-screen-num {
