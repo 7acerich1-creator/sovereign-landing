@@ -295,6 +295,17 @@ document.getElementById('pz-form').addEventListener('submit', async (e) => {
       throw new Error(enrollData.error || 'enrollment_failed');
     }
 
+    // Fire step 1 of the nurture sequence (welcome / manual delivery).
+    // The set_nurture_defaults trigger marks email_step=1 in the database,
+    // but ONLY this fetch actually sends the email via Resend. Fire-and-forget
+    // so a network hiccup never blocks the magic link or the success message.
+    // The orchestrator cron handles steps 2-5 on the delay schedule.
+    fetch(SUPABASE_URL + '/functions/v1/send-nurture-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, step: 1 })
+    }).catch(() => { /* silent — orchestrator backfills next tick if needed */ });
+
     // Fire Meta Pixel Lead event so the campaign can attribute and optimize for actual signups
     if (typeof window.fbq === 'function') {
       try {
