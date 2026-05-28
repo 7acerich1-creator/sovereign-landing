@@ -29,8 +29,116 @@
   <!-- End Meta Pixel Code -->
   <link rel="stylesheet" href="/css/sovereign.css" />
   <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    /* Reading progress bar */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--gold);
+      z-index: 1000;
+      transition: width 0.08s ease-out;
+      pointer-events: none;
+    }
+
+    /* Share button — fixed top-right, floats below the existing header */
+    #share-button {
+      position: fixed;
+      top: 76px;
+      right: 24px;
+      z-index: 999;
+      background: var(--gold);
+      color: #0a0a0a;
+      border: none;
+      padding: 10px 18px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    #share-button:hover { opacity: 0.92; transform: translateY(-1px); }
+    #share-button:active { transform: translateY(0); }
+    @media (max-width: 720px) {
+      #share-button { top: 70px; right: 12px; font-size: 10px; padding: 8px 14px; letter-spacing: 1.5px; }
+    }
+
+    /* Section breaks — off-margin italic thread */
+    .section-break {
+      max-width: var(--max-w-wide);
+      margin: 40px auto;
+      padding: 0 32px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .section-break > span {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--gold);
+      text-align: right;
+      max-width: 380px;
+      border-right: 2px solid var(--gold);
+      padding-right: 16px;
+    }
+    @media (max-width: 720px) {
+      .section-break { margin: 28px auto; padding: 0 20px; }
+      .section-break > span { font-size: 15px; max-width: 280px; padding-right: 12px; }
+    }
+
+    /* Wake-up overlay — fires once mid-page */
+    #wake-up-overlay {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1001;
+      background: var(--card, #161616);
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      padding: 20px 26px;
+      max-width: 340px;
+      font-family: var(--serif);
+      color: var(--text, #f0f0f0);
+      font-size: 17px;
+      line-height: 1.55;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.55);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+      pointer-events: none;
+    }
+    #wake-up-overlay.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #wake-up-overlay p { margin: 0; }
+    #wake-up-overlay p strong { color: var(--gold); font-weight: 600; font-style: normal; }
+    @media (max-width: 720px) {
+      #wake-up-overlay { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 16px 20px; font-size: 16px; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Reading progress bar -->
+  <div id="reading-progress"></div>
+
+  <!-- Share button — Sound the alarm -->
+  <button id="share-button" type="button">Sound the alarm</button>
+
+  <!-- Wake-up pop-in — fires once mid-page -->
+  <div id="wake-up-overlay" aria-live="polite" hidden>
+    <p><strong>You are still here.</strong><br/>Keep reading.<br/><em>The truth matters.</em></p>
+  </div>
 
   <!-- Header -->
   <div class="top">
@@ -59,6 +167,8 @@
     </p>
   </section>
 
+  <div class="section-break"><span>Are you still here?</span></div>
+
   <!-- What I have seen -->
   <section class="block first">
     <h2>What I have seen.</h2>
@@ -68,8 +178,10 @@
     <p><em>I know how this sounds. I am saying it anyway. Because no one else is going far enough to see why it has to be said.</em></p>
   </section>
 
+  <div class="section-break"><span>Pause. Notice what just landed.</span></div>
+
   <!-- What it means if I am right -->
-  <section class="block bordered">
+  <section class="block bordered" data-wake-trigger>
     <h2>What it means if I am right.</h2>
     <p>Sit with this for a moment. These are the implications.</p>
     <p>If I am right, <strong>ascension never came because we were not coordinated enough to work together as a whole.</strong> The path was real. The destination was real. What was missing was the alignment between us &mdash; and the awakened were too scattered to provide it.</p>
@@ -77,6 +189,8 @@
     <p>If I am right &mdash; and this is the one that is harder to look at &mdash; <strong>you were called and chosen, and you did not act fully.</strong> You believed in your fear more than in the truth. You were afraid to make the real walk through fire that purifies you. You chose the easier story, out of negligence.</p>
     <p>These are not threats. These are the implications. I am asking you to weigh them. Not so you will be afraid. So you will be willing to consider, just once, that what I am saying could be true &mdash; and that if it is, the cost of continuing as you have is exactly what I just named.</p>
   </section>
+
+  <div class="section-break"><span>Sit with what you just read.</span></div>
 
   <!-- Who this is for -->
   <section class="block bordered">
@@ -98,6 +212,8 @@
     <p>When you operate on this plane, your mind and heart are locked into a predictable, low-signal broadcast range. You run the loop. You chase the external metrics. And no matter how high you climb, your soul still feels entirely starved. The starvation is the system functioning correctly. Your soul cannot be fed by the rewards of a system designed to harvest your life force.</p>
   </section>
 
+  <div class="section-break"><span>If your mind just drifted &mdash; that was the system.</span></div>
+
   <!-- The Glitch in the Matrix -->
   <section class="block">
     <p style="font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; font-weight: 700; text-align: center; margin-bottom: 28px;">The Glitch in the Matrix</p>
@@ -117,6 +233,8 @@
     <p>The script underneath the contempt is rarely spoken: that the system that promised to save them has never actually fed them, and to acknowledge your truth is to acknowledge their own collusion with the architecture that has kept them small. It is easier for the survival mind to defend a system that oppresses it than to step into the absolute responsibility that real truth demands.</p>
     <p>On the competitive plane, morals do not matter &mdash; only the position on the scoreboard matters. And that scoreboard is rigged by a collapsing machine that requires your life-force energy to stay alive.</p>
   </section>
+
+  <div class="section-break"><span>You are at the threshold.</span></div>
 
   <!-- The Threshold -->
   <section class="block bordered">
@@ -138,6 +256,8 @@
     <p>You are radically responsible for your own support. That responsibility, walked into fully, is the doorway to a life you cannot currently imagine. That responsibility, refused, is the loop you are already in.</p>
     <p>None of this is said in anger, or urgency, or fear. It is said with the precision of a lighthouse &mdash; the exact reason a lighthouse exists. The work is real. The path is real. The door is open. The signal is for whoever can hear it.</p>
   </section>
+
+  <div class="section-break"><span>Wake up. The door is below.</span></div>
 
   <!-- CTA — the call restated above the door -->
   <section class="block">
@@ -180,6 +300,97 @@
       <p style="margin-top: 16px; color: #aaaaaa;">&copy; Sovereign Synthesis &middot; sovereign-synthesis.com</p>
     </div>
   </footer>
+
+  <script>
+    // Reading progress bar
+    (function() {
+      var bar = document.getElementById('reading-progress');
+      if (!bar) return;
+      var update = function() {
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var scrolled = window.scrollY || window.pageYOffset;
+        var pct = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+        bar.style.width = pct + '%';
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+      update();
+    })();
+
+    // Wake-up overlay — fires once when the heavy section comes into view
+    (function() {
+      var overlay = document.getElementById('wake-up-overlay');
+      if (!overlay) return;
+      try {
+        if (sessionStorage.getItem('ss_wake_shown')) return;
+      } catch (e) {}
+      var trigger = document.querySelector('[data-wake-trigger]');
+      if (!trigger || !('IntersectionObserver' in window)) return;
+
+      var showOverlay = function() {
+        try { sessionStorage.setItem('ss_wake_shown', '1'); } catch (e) {}
+        overlay.hidden = false;
+        requestAnimationFrame(function() { overlay.classList.add('visible'); });
+        setTimeout(function() {
+          overlay.classList.remove('visible');
+          setTimeout(function() { overlay.hidden = true; }, 500);
+        }, 7000);
+      };
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            showOverlay();
+            observer.disconnect();
+          }
+        });
+      }, { rootMargin: '-25% 0px -25% 0px' });
+      observer.observe(trigger);
+    })();
+
+    // Share button — Sound the alarm
+    (function() {
+      var btn = document.getElementById('share-button');
+      if (!btn) return;
+
+      var playBell = function() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          var ctx = new AC();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = 880;
+          gain.gain.setValueAtTime(0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.25);
+          setTimeout(function() { try { ctx.close(); } catch (e) {} }, 1500);
+        } catch (e) {}
+      };
+
+      btn.addEventListener('click', async function() {
+        playBell();
+        var url = window.location.href;
+        var title = 'Sovereign Synthesis';
+        var text = 'I am sounding an alarm. Set everything else down and weigh what this means if I am right.';
+        if (navigator.share) {
+          try { await navigator.share({ title: title, text: text, url: url }); } catch (e) {}
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(url);
+            var orig = btn.textContent;
+            btn.textContent = 'Link copied';
+            setTimeout(function() { btn.textContent = orig; }, 2000);
+          } catch (e) {}
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
