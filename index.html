@@ -44,7 +44,7 @@
       pointer-events: none;
     }
 
-    /* Share button â€” fixed top-right, floats below the existing header */
+    /* Share button Ã¢â‚¬â€ fixed top-right, floats below the existing header */
     #share-button {
       position: fixed;
       top: 76px;
@@ -70,7 +70,7 @@
       #share-button { top: 70px; right: 12px; font-size: 10px; padding: 8px 14px; letter-spacing: 1.5px; }
     }
 
-    /* Audio player â€” hidden until audio file loads */
+    /* Audio player Ã¢â‚¬â€ hidden until audio file loads */
     #audio-player {
       max-width: 720px;
       margin: 24px auto 8px;
@@ -149,7 +149,7 @@
       .audio-label { font-size: 13px; }
     }
 
-    /* Section breaks â€” off-margin italic thread */
+    /* Section breaks Ã¢â‚¬â€ off-margin italic thread */
     .section-break {
       max-width: var(--max-w-wide);
       margin: 40px auto;
@@ -173,7 +173,7 @@
       .section-break > span { font-size: 15px; max-width: 280px; padding-right: 12px; }
     }
 
-    /* Wake-up overlay â€” fires once mid-page */
+    /* Wake-up overlay Ã¢â‚¬â€ fires once mid-page */
     #wake-up-overlay {
       position: fixed;
       bottom: 24px;
@@ -211,10 +211,10 @@
   <!-- Reading progress bar -->
   <div id="reading-progress"></div>
 
-  <!-- Share button â€” Sound the alarm -->
+  <!-- Share button Ã¢â‚¬â€ Sound the alarm -->
   <button id="share-button" type="button">Sound the alarm</button>
 
-  <!-- Wake-up pop-in â€” fires once mid-page -->
+  <!-- Wake-up pop-in Ã¢â‚¬â€ fires once mid-page -->
   <div id="wake-up-overlay" aria-live="polite" hidden>
     <p><strong>You are still here.</strong><br/>Keep reading.<br/><em>The truth matters.</em></p>
   </div>
@@ -234,7 +234,7 @@
   </div>
   <div class="gold-line"></div>
 
-  <!-- Hero â€” The Alarm -->
+  <!-- Hero Ã¢â‚¬â€ The Alarm -->
   <section class="hero">
     <p class="kicker">A signal, not a pitch &middot; let the signal land</p>
     <h1>I am sounding an alarm.</h1>
@@ -246,7 +246,7 @@
     </p>
   </section>
 
-  <!-- Audio player â€” hidden until audio file is available -->
+  <!-- Audio player Ã¢â‚¬â€ hidden until audio file is available -->
   <div id="audio-player" class="hidden" aria-label="Listen as I read this aloud">
     <button class="audio-play" type="button" aria-label="Play">
       <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 1 L12 7 L2 13 Z"/></svg>
@@ -258,7 +258,7 @@
       <div class="audio-progress"></div>
     </div>
     <div class="audio-time">0:00 / 0:00</div>
-    <div class="audio-label">Listen as I read this aloud.</div>
+    <div class="audio-label">For the full weight and signal, listen along as I read aloud.</div>
     <audio preload="metadata" src="/assets/audio/home-narration.m4a"></audio>
   </div>
 
@@ -354,7 +354,7 @@
 
   <div class="section-break"><span>Wake up. The door is below.</span></div>
 
-  <!-- CTA â€” the call restated above the door -->
+  <!-- CTA Ã¢â‚¬â€ the call restated above the door -->
   <section class="block">
     <div class="cta-block">
       <p class="cta-kicker">The door &middot; $0</p>
@@ -412,7 +412,7 @@
       update();
     })();
 
-    // Wake-up overlay â€” fires once when the heavy section comes into view
+    // Wake-up overlay Ã¢â‚¬â€ fires once when the heavy section comes into view
     (function() {
       var overlay = document.getElementById('wake-up-overlay');
       if (!overlay) return;
@@ -443,7 +443,7 @@
       observer.observe(trigger);
     })();
 
-    // Share button â€” Sound the alarm
+    // Share button Ã¢â‚¬â€ Sound the alarm
     (function() {
       var btn = document.getElementById('share-button');
       if (!btn) return;
@@ -486,7 +486,7 @@
       });
     })();
 
-    // Audio player â€” hidden until audio file loads
+    // Audio player Ã¢â‚¬â€ hidden until audio file loads
     (function() {
       var player = document.getElementById('audio-player');
       if (!player) return;
