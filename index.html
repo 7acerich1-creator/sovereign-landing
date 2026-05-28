@@ -44,7 +44,7 @@
       pointer-events: none;
     }
 
-    /* Share button Ã¢â‚¬â€ fixed top-right, floats below the existing header */
+    /* Share button ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â fixed top-right, floats below the existing header */
     #share-button {
       position: fixed;
       top: 76px;
@@ -70,7 +70,7 @@
       #share-button { top: 70px; right: 12px; font-size: 10px; padding: 8px 14px; letter-spacing: 1.5px; }
     }
 
-    /* Audio player Ã¢â‚¬â€ hidden until audio file loads */
+    /* Audio player ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hidden until audio file loads */
     #audio-player {
       max-width: 720px;
       margin: 24px auto 8px;
@@ -149,7 +149,7 @@
       .audio-label { font-size: 13px; }
     }
 
-    /* Section breaks Ã¢â‚¬â€ off-margin italic thread */
+    /* Section breaks ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â off-margin italic thread */
     .section-break {
       max-width: var(--max-w-wide);
       margin: 40px auto;
@@ -173,7 +173,7 @@
       .section-break > span { font-size: 15px; max-width: 280px; padding-right: 12px; }
     }
 
-    /* Wake-up overlay Ã¢â‚¬â€ fires once mid-page */
+    /* Wake-up overlay ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â fires once mid-page */
     #wake-up-overlay {
       position: fixed;
       bottom: 24px;
@@ -204,6 +204,52 @@
     @media (max-width: 720px) {
       #wake-up-overlay { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 16px 20px; font-size: 16px; }
     }
+    /* Recording-note chat bubble â€” appears after first audio play */
+    .recording-note {
+      max-width: 720px;
+      margin: 16px auto 32px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+      pointer-events: none;
+    }
+    .recording-note.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .recording-note-bubble {
+      background: linear-gradient(135deg, var(--card, #161616) 0%, var(--card-soft, #0f0f0f) 100%);
+      border: 1px solid var(--gold);
+      border-radius: 18px 18px 4px 18px;
+      padding: 20px 24px;
+      max-width: 560px;
+      position: relative;
+      font-family: var(--serif);
+      color: var(--text, #f0f0f0);
+      font-size: 16px;
+      line-height: 1.6;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+    .recording-note-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+    .recording-note-bubble p { margin: 0 0 14px; }
+    .recording-note-bubble p:last-child { margin-bottom: 0; }
+    .recording-note-close strong { color: var(--gold); font-weight: 600; }
+    @media (max-width: 720px) {
+      .recording-note { padding: 0 16px; margin: 12px auto 24px; }
+      .recording-note-bubble { font-size: 15px; padding: 16px 18px; }
+    }
   </style>
 </head>
 <body>
@@ -211,10 +257,10 @@
   <!-- Reading progress bar -->
   <div id="reading-progress"></div>
 
-  <!-- Share button Ã¢â‚¬â€ Sound the alarm -->
+  <!-- Share button ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Sound the alarm -->
   <button id="share-button" type="button">Sound the alarm</button>
 
-  <!-- Wake-up pop-in Ã¢â‚¬â€ fires once mid-page -->
+  <!-- Wake-up pop-in ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â fires once mid-page -->
   <div id="wake-up-overlay" aria-live="polite" hidden>
     <p><strong>You are still here.</strong><br/>Keep reading.<br/><em>The truth matters.</em></p>
   </div>
@@ -234,7 +280,7 @@
   </div>
   <div class="gold-line"></div>
 
-  <!-- Hero Ã¢â‚¬â€ The Alarm -->
+  <!-- Hero ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â The Alarm -->
   <section class="hero">
     <p class="kicker">A signal, not a pitch &middot; let the signal land</p>
     <h1>I am sounding an alarm.</h1>
@@ -246,7 +292,7 @@
     </p>
   </section>
 
-  <!-- Audio player Ã¢â‚¬â€ hidden until audio file is available -->
+  <!-- Audio player ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hidden until audio file is available -->
   <div id="audio-player" class="hidden" aria-label="Listen as I read this aloud">
     <button class="audio-play" type="button" aria-label="Play">
       <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 1 L12 7 L2 13 Z"/></svg>
@@ -260,6 +306,17 @@
     <div class="audio-time">0:00 / 0:00</div>
     <div class="audio-label">For the full weight and signal, listen along as I read aloud.</div>
     <audio preload="metadata" src="/assets/audio/home-narration.m4a"></audio>
+  </div>
+
+  <!-- Recording note â€” appears 2s after first audio play -->
+  <div class="recording-note">
+    <div class="recording-note-bubble">
+      <p class="recording-note-meta">A note from the recording</p>
+      <p>The audio glitches as I read through. This is your chance to experience first-hand the proof of my message.</p>
+      <p>The rendering of reality is glitching because it is trying to render two different realities. The Sovereign Operating System is now attained on earth and will be the dominant baseline from here on out. It has been established.</p>
+      <p>The path is available if you are willing. It is not about being perfect and completely prepared for this &mdash; it is whether you are willing to change your direction and operating system, one step at a time.</p>
+      <p class="recording-note-close"><strong>The truth speaks for itself. What will it say about you?</strong><br/>Make the change. We&rsquo;ve got some work to do.</p>
+    </div>
   </div>
 
   <div class="section-break"><span>Are you still here?</span></div>
@@ -354,7 +411,7 @@
 
   <div class="section-break"><span>Wake up. The door is below.</span></div>
 
-  <!-- CTA Ã¢â‚¬â€ the call restated above the door -->
+  <!-- CTA ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the call restated above the door -->
   <section class="block">
     <div class="cta-block">
       <p class="cta-kicker">The door &middot; $0</p>
@@ -412,7 +469,7 @@
       update();
     })();
 
-    // Wake-up overlay Ã¢â‚¬â€ fires once when the heavy section comes into view
+    // Wake-up overlay ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â fires once when the heavy section comes into view
     (function() {
       var overlay = document.getElementById('wake-up-overlay');
       if (!overlay) return;
@@ -443,7 +500,7 @@
       observer.observe(trigger);
     })();
 
-    // Share button Ã¢â‚¬â€ Sound the alarm
+    // Share button ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Sound the alarm
     (function() {
       var btn = document.getElementById('share-button');
       if (!btn) return;
@@ -486,7 +543,7 @@
       });
     })();
 
-    // Audio player Ã¢â‚¬â€ hidden until audio file loads
+    // Audio player ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hidden until audio file loads
     (function() {
       var player = document.getElementById('audio-player');
       if (!player) return;
@@ -524,6 +581,11 @@
       audio.addEventListener('play', function() {
         playBtn.innerHTML = PAUSE_SVG;
         playBtn.setAttribute('aria-label', 'Pause');
+        var note = document.querySelector('.recording-note');
+        if (note && !note.dataset.revealed) {
+          note.dataset.revealed = '1';
+          setTimeout(function() { note.classList.add('visible'); }, 2000);
+        }
       });
       audio.addEventListener('pause', function() {
         playBtn.innerHTML = PLAY_SVG;
