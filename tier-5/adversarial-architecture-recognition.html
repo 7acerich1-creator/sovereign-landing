@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adversarial Architecture Recognition — Tier 5 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .aar-step { margin-bottom: 24px; }
+  .aar-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: 700; }
+  .aar-signature {
+    background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--copper);
+    border-radius: var(--radius); padding: 22px 26px; margin-bottom: 14px;
+  }
+  .aar-sig-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; display: block;
+  }
+  .aar-sig-name {
+    font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600;
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .aar-sig-desc {
+    font-family: var(--serif); font-size: 15px; line-height: 1.65; color: var(--body); margin-bottom: 14px;
+  }
+  .aar-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
+  .aar-btn {
+    padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--card-soft); color: var(--text); cursor: pointer;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 700; transition: all .15s;
+  }
+  .aar-btn:hover { border-color: var(--gold); }
+  .aar-btn.active.high { background: rgba(217, 85, 85, 0.14); border-color: var(--danger); color: var(--danger); }
+  .aar-btn.active.partial { background: rgba(201, 128, 76, 0.14); border-color: var(--copper); color: var(--copper); }
+  .aar-btn.active.absent { background: rgba(120, 120, 120, 0.14); border-color: #888; color: #888; }
+
+  .aar-result {
+    background: var(--card-soft); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+    border-radius: var(--radius); padding: 24px 28px; margin: 28px 0;
+    font-family: var(--serif); font-size: 17px; line-height: 1.7; color: var(--text);
+  }
+  .aar-result-empty { color: var(--muted); font-style: italic; font-size: 16px; }
+  .aar-actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .aar-history-item {
+    background: var(--card-soft); border: 1px solid var(--border); border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm); padding: 18px 22px; margin-bottom: 12px;
+  }
+  .aar-history-name { font-family: var(--serif); font-size: 17px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .aar-history-date { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .aar-history-score { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; font-weight: 700; }
+  .aar-history-empty { color: var(--muted); font-style: italic; font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 5 · Phase 2 · Module 01</span>
+  <h1>Adversarial Architecture<br/><em>Recognition.</em></h1>
+  <p class="lede">Seven structural signatures of a system optimized to capture you. Score one specific environment against the seven; the dominant signatures tell you exactly what you are inside.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Phase 2 begins with seeing the architecture you are operating inside, in structural detail. The Environmental Read Protocol from Tier 3 named what rooms optimize for. The Costume Audit from Tier 4 named what you became inside them. This module installs the next layer: <strong>the seven specific structural signatures that mark a system as adversarial — built to capture rather than to develop the people inside it.</strong></p>
+  <p>Not every difficult environment is adversarial. Some are merely indifferent. The signatures distinguish the two. Once installed, you walk into a system and the signatures register in the first interaction &mdash; before the system has had time to install its hooks. The recognition is what makes the Phase 2 moves available; without it, every move is a guess.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>Name one specific system you currently operate inside that you suspect is adversarial. A workplace, a family system, a relationship structure, a professional network, a legal-financial container, a community. Score each of the seven signatures against that system: high presence, partial presence, or absent. The dominant signatures appear in the read below.</p>
+
+  <div style="background: var(--card-soft); border: 1px solid var(--gold); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 28px; margin: 32px 0 8px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 12px;">Sovereign Tip</span>
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin: 0 0 12px;">Recognition installs at the level of first contact. Once you can name a system's structural signatures in the first interaction, you stop entering systems blind and discovering their architecture only after they have already started extracting from you. The recognition is what lets you choose engagement, set terms, or decline — before the system has installed its hooks.</p>
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin: 0;">The systems will not announce themselves as adversarial. Most call themselves opportunities, families, careers, communities. The signatures are how you read what they are doing structurally, regardless of what they call themselves.</p>
+  </div>
+
+  <div id="aar-tool" style="margin-top: 36px;">
+
+    <div class="aar-step">
+      <span class="aar-label">The System</span>
+      <input type="text" id="aar-name" class="field" placeholder="Name the specific system. The more specific, the cleaner the read." />
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 01 · Performance Threshold</span>
+      <p class="aar-sig-name">The system requires a specific performance to grant access or safety.</p>
+      <p class="aar-sig-desc">You cannot operate inside the system as your un-costumed self without structural consequence. The performance is the price of entry, and the price gets renewed every interaction. Withdraw the performance and access narrows or closes.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="1" data-val="high" onclick="setScore(1,'high')">High presence</button>
+        <button class="aar-btn" data-sig="1" data-val="partial" onclick="setScore(1,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="1" data-val="absent" onclick="setScore(1,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 02 · Asymmetric Information</span>
+      <p class="aar-sig-name">The system has more data on you than you have on it.</p>
+      <p class="aar-sig-desc">Decisions affecting you happen in spaces you cannot see. The terms shift without your input. Information you would need to operate strategically is structurally withheld. Information about you flows freely upward.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="2" data-val="high" onclick="setScore(2,'high')">High presence</button>
+        <button class="aar-btn" data-sig="2" data-val="partial" onclick="setScore(2,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="2" data-val="absent" onclick="setScore(2,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 03 · Captured Feedback Loops</span>
+      <p class="aar-sig-name">Feedback you receive is shaped by the system's optimization, not by reality.</p>
+      <p class="aar-sig-desc">Praise rewards behavior that serves the system. Criticism punishes behavior that threatens it. Neither tells you what is actually true about your work or your operation. Over time, the feedback teaches you to optimize for the system rather than for reality.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="3" data-val="high" onclick="setScore(3,'high')">High presence</button>
+        <button class="aar-btn" data-sig="3" data-val="partial" onclick="setScore(3,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="3" data-val="absent" onclick="setScore(3,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 04 · Exit Cost Externalization</span>
+      <p class="aar-sig-name">Leaving carries a structural cost the system has placed on you.</p>
+      <p class="aar-sig-desc">Financial penalties. Relational rupture engineered to follow exit. Reputational damage the system can deploy. Legal containers designed to outlast your participation. The system pretends you are free to go; the structure says otherwise.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="4" data-val="high" onclick="setScore(4,'high')">High presence</button>
+        <button class="aar-btn" data-sig="4" data-val="partial" onclick="setScore(4,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="4" data-val="absent" onclick="setScore(4,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 05 · Vocabulary Capture</span>
+      <p class="aar-sig-name">The system has installed its own vocabulary that you have to use to participate.</p>
+      <p class="aar-sig-desc">Saying what is actually happening requires words the system has not authorized. Internal language that names the system's actual operation is structurally absent from the system's own discourse. You learn to translate your read into the system's permitted vocabulary to be heard at all.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="5" data-val="high" onclick="setScore(5,'high')">High presence</button>
+        <button class="aar-btn" data-sig="5" data-val="partial" onclick="setScore(5,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="5" data-val="absent" onclick="setScore(5,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 06 · Time-Stake Compounding</span>
+      <p class="aar-sig-name">The longer you stay, the more your accumulated investment becomes leverage against you.</p>
+      <p class="aar-sig-desc">Years given. Equity vesting. Tenure earned. Relationships built. Each is real value &mdash; and each becomes a reason the system can use to keep you operating inside it past the point where the math has flipped. &ldquo;You&rsquo;ve come too far to leave now&rdquo; is the system speaking.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="6" data-val="high" onclick="setScore(6,'high')">High presence</button>
+        <button class="aar-btn" data-sig="6" data-val="partial" onclick="setScore(6,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="6" data-val="absent" onclick="setScore(6,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-signature">
+      <span class="aar-sig-num">Signature 07 · Mimicry Tolerance</span>
+      <p class="aar-sig-name">The system rewards a specific narrow version of sovereignty as long as it does not threaten the system's structural operation.</p>
+      <p class="aar-sig-desc">You can be &ldquo;your real self&rdquo; in the ways the system has pre-approved. Authentic moves outside those bounds trigger a different response &mdash; soft punishment, withdrawal of access, social rerouting. The system tolerates mimicry-sovereignty and only mimicry-sovereignty.</p>
+      <div class="aar-toggle">
+        <button class="aar-btn" data-sig="7" data-val="high" onclick="setScore(7,'high')">High presence</button>
+        <button class="aar-btn" data-sig="7" data-val="partial" onclick="setScore(7,'partial')">Partial</button>
+        <button class="aar-btn" data-sig="7" data-val="absent" onclick="setScore(7,'absent')">Absent</button>
+      </div>
+    </div>
+
+    <div class="aar-result" id="aar-result">
+      <span class="aar-result-empty">Score all seven signatures. The structural read appears here once they are complete.</span>
+    </div>
+
+    <div class="aar-actions">
+      <button type="button" id="aar-save" class="btn">Save read</button>
+      <button type="button" id="aar-clear" class="btn btn-secondary">Clear</button>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Past reads.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. Re-read the same system in 30 days and compare &mdash; either the signature profile shifted, or the system's grip is structural.</p>
+  <div id="aar-history">
+    <div class="aar-history-empty">Your saved reads will appear here.</div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The Field Manual.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">The seven signatures produce the structural read. The Field Manual takes you past the surface &mdash; the mechanics behind each signature, common system archetypes (corporate, family, professional, legal), the compounding patterns that make some systems harder to leave than others, the recognition-versus-engagement decision, and the depth move that distinguishes structurally adversarial systems from merely difficult ones.</p>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 26px; margin-top: 18px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Field Manual</span>
+    <h3 style="font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3;">Adversarial Architecture Recognition &mdash; Field Manual.</h3>
+    <p style="font-size: 14.5px; line-height: 1.65; color: var(--body-dim); margin-bottom: 16px;">Nine sections. Premise, the seven signatures in depth, system archetypes, recognition-vs-engagement, the depth move, sovereignty.</p>
+    <a href="/tier-5/assets/ADVERSARIAL_ARCHITECTURE_RECOGNITION_FIELD_MANUAL.pdf" class="btn" target="_blank">Open the Field Manual &rarr;</a>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The Listening Companion.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">A contemplative companion, written specifically for the listening register. Walks you through naming a specific adversarial system in your life, reading each of the seven signatures against it live, and arriving at the structural profile that decides your next move. Runs while you walk, sit, or move through the day.</p>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 26px; margin-top: 18px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Listening Companion</span>
+    <h3 style="font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3;">Adversarial Architecture Recognition &mdash; Listening Companion.</h3>
+    <p style="font-size: 14.5px; line-height: 1.65; color: var(--body-dim); margin-bottom: 16px;">Single-speaker, contemplative pacing. Flowing prose. Lands the recognition install live while you walk through a specific system.</p>
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px;">~10 min audio + script &middot; Audio synthesizing &middot; Script available now</span>
+    <a href="/tier-5/assets/ADVERSARIAL_ARCHITECTURE_RECOGNITION_LISTENING_COMPANION_SCRIPT.pdf" class="btn" target="_blank">Read the script &rarr;</a>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 01.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 7-day install. One system per day, in order of how much weekly time it consumes.</p>
+
+  <div style="margin-top: 14px;">
+    <div class="day-row" style="display:grid;grid-template-columns:100px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--border-soft);">
+      <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:700;padding-top:3px;">Day 1</span>
+      <p style="margin:0;color:var(--text);line-height:1.65;">Score the system that consumes the most weekly hours. Save the read.</p>
+    </div>
+    <div class="day-row" style="display:grid;grid-template-columns:100px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--border-soft);">
+      <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:700;padding-top:3px;">Days 2&ndash;6</span>
+      <p style="margin:0;color:var(--text);line-height:1.65;">Score one different system each day. Mix work, family, professional, social, financial. Notice which signatures are most common across your systems &mdash; that pattern is the field operating on you specifically.</p>
+    </div>
+    <div class="day-row" style="display:grid;grid-template-columns:100px 1fr;gap:20px;padding:14px 0;">
+      <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:700;padding-top:3px;">Day 7</span>
+      <p style="margin:0;color:var(--text);line-height:1.65;">Re-read your seven reads. Notice which signatures repeated. Module 01 is installed when you walk into a new room and the dominant signatures register in the first interaction, before you have consciously assessed them.</p>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>Recognition is the precondition for every Phase 2 move that follows.<br/>The system is the system. Your read of it is yours.</p>
+  <a href="/tier-5/course-portal" class="btn">Back to Phase 2 portal &rarr;</a>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp2';</script>
+<script src="/js/auth-gate.js"></script>
+<script>
+const STORAGE_KEY = 'ss_aar_v1';
+const SIGNATURE_NAMES = {
+  1: 'Performance Threshold',
+  2: 'Asymmetric Information',
+  3: 'Captured Feedback Loops',
+  4: 'Exit Cost Externalization',
+  5: 'Vocabulary Capture',
+  6: 'Time-Stake Compounding',
+  7: 'Mimicry Tolerance'
+};
+
+let state = { current: { name: '', scores: {} }, history: [] };
+
+function loadState() {
+  try { const s = localStorage.getItem(STORAGE_KEY); if (s) state = { ...state, ...JSON.parse(s) }; } catch(e) {}
+}
+function saveStorage() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }
+
+function setScore(sig, val) {
+  state.current.scores[sig] = val;
+  document.querySelectorAll('.aar-btn[data-sig="' + sig + '"]').forEach(b => {
+    b.classList.remove('active', 'high', 'partial', 'absent');
+    if (b.dataset.val === val) b.classList.add('active', val);
+  });
+  saveStorage();
+  renderResult();
+}
+
+function renderResult() {
+  const r = document.getElementById('aar-result');
+  const scored = Object.keys(state.current.scores).length;
+  if (scored < 7) {
+    r.innerHTML = '<span class="aar-result-empty">' + (7 - scored) + ' signature' + (7 - scored === 1 ? '' : 's') + ' remaining. The structural read appears here once all seven are scored.</span>';
+    return;
+  }
+  const high = Object.entries(state.current.scores).filter(([k,v]) => v === 'high').map(([k]) => SIGNATURE_NAMES[k]);
+  const partial = Object.entries(state.current.scores).filter(([k,v]) => v === 'partial').map(([k]) => SIGNATURE_NAMES[k]);
+  const absent = Object.entries(state.current.scores).filter(([k,v]) => v === 'absent').map(([k]) => SIGNATURE_NAMES[k]);
+
+  let label, body;
+  if (high.length >= 5) {
+    label = 'STRUCTURALLY ADVERSARIAL';
+    body = 'Five or more signatures at high presence. This system is structurally optimized to capture rather than develop. Every Phase 2 move below assumes this read. Engagement requires the non-performance posture (Module 02). Exit, if chosen, requires the asymmetric exit architecture (Module 03). Do not assume the system will respond to good faith. It will respond to architectural moves.';
+  } else if (high.length + partial.length >= 5) {
+    label = 'STRUCTURALLY HOSTILE (NOT FULLY ADVERSARIAL)';
+    body = 'Five or more signatures at high or partial presence. The system is not fully adversarial but the structure leans hostile. Phase 2 moves apply but the engagement window is wider. Watch the signatures that are currently at partial &mdash; if they shift to high over the next 30 days, the system is closing into fully adversarial.';
+  } else if (high.length >= 2) {
+    label = 'INDIFFERENT WITH ADVERSARIAL SURFACES';
+    body = 'The system is not structurally adversarial as a whole, but the named high-presence signatures (' + high.join(', ') + ') are. Operate Phase 2 specifically on those surfaces. The rest of the system can be engaged normally.';
+  } else {
+    label = 'NON-ADVERSARIAL';
+    body = 'The signatures do not establish a structurally adversarial system. The friction may be real but the architecture is not built to capture. Standard sovereign operation applies; Phase 2 moves are not required here.';
+  }
+
+  r.innerHTML = '<p style="font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:10px;">' + label + '</p><p style="margin:0;">' + body + '</p>';
+}
+
+function saveRead() {
+  const name = document.getElementById('aar-name').value.trim();
+  if (!name) { alert('Name the system before saving.'); return; }
+  if (Object.keys(state.current.scores).length < 7) { alert('Score all seven signatures before saving.'); return; }
+  state.history.unshift({
+    name: name,
+    scores: { ...state.current.scores },
+    date: new Date().toISOString().slice(0,10)
+  });
+  state.current = { name: '', scores: {} };
+  saveStorage();
+  document.getElementById('aar-name').value = '';
+  document.querySelectorAll('.aar-btn').forEach(b => b.classList.remove('active','high','partial','absent'));
+  renderResult();
+  renderHistory();
+}
+
+function clearRead() {
+  state.current = { name: '', scores: {} };
+  document.getElementById('aar-name').value = '';
+  document.querySelectorAll('.aar-btn').forEach(b => b.classList.remove('active','high','partial','absent'));
+  saveStorage();
+  renderResult();
+}
+
+function renderHistory() {
+  const h = document.getElementById('aar-history');
+  if (!state.history.length) {
+    h.innerHTML = '<div class="aar-history-empty">Your saved reads will appear here.</div>';
+    return;
+  }
+  h.innerHTML = state.history.map(e => {
+    const high = Object.values(e.scores).filter(v => v === 'high').length;
+    return '<div class="aar-history-item"><p class="aar-history-name">' + e.name.replace(/</g,'&lt;') + '</p><p class="aar-history-date">' + e.date + '</p><p class="aar-history-score">' + high + ' of 7 signatures at high presence</p></div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  document.getElementById('aar-save').onclick = saveRead;
+  document.getElementById('aar-clear').onclick = clearRead;
+  if (state.current.name) document.getElementById('aar-name').value = state.current.name;
+  document.getElementById('aar-name').addEventListener('input', e => { state.current.name = e.target.value; saveStorage(); });
+  Object.entries(state.current.scores).forEach(([sig, val]) => {
+    document.querySelectorAll('.aar-btn[data-sig="' + sig + '"]').forEach(b => {
+      if (b.dataset.val === val) b.classList.add('active', val);
+    });
+  });
+  renderResult();
+  renderHistory();
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
