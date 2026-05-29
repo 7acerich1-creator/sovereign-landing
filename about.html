@@ -25,6 +25,87 @@
 <!-- End Meta Pixel Code -->
   <link rel="stylesheet" href="/css/sovereign.css" />
   <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    /* Audio player */
+    #audio-player {
+      max-width: 720px;
+      margin: 24px auto 8px;
+      padding: 14px 22px;
+      background: var(--card-soft, #0f0f0f);
+      border: 1px solid var(--border, #222);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    #audio-player.hidden { display: none; }
+    .audio-play, .audio-rewind {
+      background: var(--gold);
+      color: #0a0a0a;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.2s ease;
+    }
+    .audio-play:hover, .audio-rewind:hover { opacity: 0.88; }
+    .audio-rewind {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .audio-play svg { width: 14px; height: 14px; fill: currentColor; }
+    .audio-rewind-label { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+    .audio-rewind-label span { font-size: 9px; }
+    .audio-rewind-label strong { font-size: 11px; font-weight: 700; }
+    .audio-track {
+      flex: 1;
+      min-width: 120px;
+      height: 4px;
+      background: var(--border, #222);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+    .audio-progress {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      border-radius: 2px;
+    }
+    .audio-time {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--body-dim, #aaa);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .audio-label {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--body-dim, #aaa);
+      width: 100%;
+      text-align: center;
+      margin-top: 6px;
+    }
+    @media (max-width: 720px) {
+      #audio-player { padding: 12px 16px; gap: 10px; }
+      .audio-label { font-size: 13px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -47,6 +128,22 @@
   <h1>About <em>Sovereign Synthesis.</em></h1>
   <p class="lede">A formation, not a course. One hundred individuals who have installed the sovereign operating system and now operate from it as baseline. The first such group in history.</p>
 </section>
+
+<!-- Audio player — about narration -->
+<div id="audio-player" aria-label="Listen as I read this aloud">
+  <button class="audio-play" type="button" aria-label="Play">
+    <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 1 L12 7 L2 13 Z"/></svg>
+  </button>
+  <button class="audio-rewind" type="button" aria-label="Rewind 10 seconds">
+    <span class="audio-rewind-label"><span>&#8634;</span><strong>10s</strong></span>
+  </button>
+  <div class="audio-track" role="slider" aria-label="Seek">
+    <div class="audio-progress"></div>
+  </div>
+  <div class="audio-time">0:00 / --:--</div>
+  <div class="audio-label">For the full weight and signal, listen along as I read aloud.</div>
+  <audio preload="none" src="/assets/audio/about-narration.m4a"></audio>
+</div>
 
 <section class="block first">
   <h2>What this is.</h2>
@@ -151,6 +248,75 @@
     <p style="margin-top: 16px; color: #aaaaaa;">&copy; Sovereign Synthesis &middot; sovereign-synthesis.com</p>
   </div>
 </footer>
+
+<script>
+  // Audio player
+  (function() {
+    var player = document.getElementById('audio-player');
+    if (!player) return;
+    var audio = player.querySelector('audio');
+    var playBtn = player.querySelector('.audio-play');
+    var rewindBtn = player.querySelector('.audio-rewind');
+    var track = player.querySelector('.audio-track');
+    var progress = player.querySelector('.audio-progress');
+    var timeEl = player.querySelector('.audio-time');
+
+    var PLAY_SVG = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 1 L12 7 L2 13 Z"/></svg>';
+    var PAUSE_SVG = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/></svg>';
+
+    var fmt = function(s) {
+      if (!isFinite(s)) return '0:00';
+      s = Math.max(0, Math.floor(s));
+      var m = Math.floor(s / 60);
+      var sec = s % 60;
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    };
+
+    audio.addEventListener('loadedmetadata', function() {
+      timeEl.textContent = '0:00 / ' + fmt(audio.duration);
+    });
+    audio.addEventListener('error', function() {
+      player.classList.add('hidden');
+    });
+    audio.addEventListener('timeupdate', function() {
+      if (!isFinite(audio.duration)) return;
+      var pct = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = pct + '%';
+      timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+    });
+    audio.addEventListener('play', function() {
+      playBtn.innerHTML = PAUSE_SVG;
+      playBtn.setAttribute('aria-label', 'Pause');
+    });
+    audio.addEventListener('pause', function() {
+      playBtn.innerHTML = PLAY_SVG;
+      playBtn.setAttribute('aria-label', 'Play');
+    });
+    audio.addEventListener('ended', function() {
+      playBtn.innerHTML = PLAY_SVG;
+      playBtn.setAttribute('aria-label', 'Play');
+    });
+
+    playBtn.addEventListener('click', function() {
+      if (audio.paused) {
+        var p = audio.play();
+        if (p && p.catch) p.catch(function() {});
+      } else {
+        audio.pause();
+      }
+    });
+    rewindBtn.addEventListener('click', function() {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+    track.addEventListener('click', function(e) {
+      if (!isFinite(audio.duration)) return;
+      var rect = track.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var pct = Math.max(0, Math.min(1, x / rect.width));
+      audio.currentTime = audio.duration * pct;
+    });
+  })();
+</script>
 
 </body>
 </html>
