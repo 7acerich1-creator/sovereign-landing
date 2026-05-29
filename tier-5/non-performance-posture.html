@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Non-Performance Posture — Tier 5 | Sovereign Synthesis</title>
+<link rel="stylesheet" href="/css/sovereign.css" />
+<style>
+  .npp-step { margin-bottom: 24px; }
+  .npp-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: 700; }
+  .npp-move {
+    background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--copper);
+    border-radius: var(--radius); padding: 22px 26px; margin-bottom: 14px;
+    transition: all .15s;
+  }
+  .npp-move.active { border-left-color: var(--gold); background: var(--card-soft); }
+  .npp-move-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+    color: var(--copper); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; display: block;
+  }
+  .npp-move.active .npp-move-num { color: var(--gold); }
+  .npp-move-name {
+    font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600;
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .npp-move-desc {
+    font-family: var(--serif); font-size: 15px; line-height: 1.65; color: var(--body); margin-bottom: 14px;
+  }
+  .npp-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
+  .npp-btn {
+    padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--card-soft); color: var(--text); cursor: pointer;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 700; transition: all .15s;
+  }
+  .npp-btn:hover { border-color: var(--gold); }
+  .npp-btn.active.in-queue { background: rgba(212, 175, 55, 0.16); border-color: var(--gold); color: var(--gold); }
+  .npp-btn.active.skip { background: rgba(120, 120, 120, 0.14); border-color: #888; color: #888; }
+
+  .npp-result {
+    background: var(--card-soft); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+    border-radius: var(--radius); padding: 24px 28px; margin: 28px 0;
+    font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text);
+  }
+  .npp-result-empty { color: var(--muted); font-style: italic; font-size: 16px; }
+  .npp-queue-item {
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .npp-queue-item:last-child { border-bottom: none; }
+  .npp-queue-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--gold);
+    text-transform: uppercase; font-weight: 700; margin-bottom: 4px; display: block;
+  }
+  .npp-queue-name { font-family: var(--serif); font-size: 17px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .npp-queue-prompt { font-family: var(--serif); font-size: 14.5px; line-height: 1.6; color: var(--body-dim); }
+
+  .npp-actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .npp-log-entry { margin-top: 22px; }
+  .npp-log-entry label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  .npp-log-entry textarea, .npp-log-entry input { width: 100%; }
+
+  .npp-history-item {
+    background: var(--card-soft); border: 1px solid var(--border); border-left: 2px solid var(--gold);
+    border-radius: var(--radius-sm); padding: 18px 22px; margin-bottom: 12px;
+  }
+  .npp-history-room { font-family: var(--serif); font-size: 17px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .npp-history-move { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+  .npp-history-date { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .npp-history-note { font-family: var(--serif); font-size: 14.5px; line-height: 1.6; color: var(--body); margin-bottom: 6px; }
+  .npp-history-hold { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--copper); text-transform: uppercase; font-weight: 700; }
+  .npp-history-empty { color: var(--muted); font-style: italic; font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <a href="/" class="wordmark">Sovereign Synthesis</a>
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+    </nav>
+  </div>
+</div>
+<div class="gold-line"></div>
+
+<section class="hero">
+  <span class="tag-mono gold" style="margin-bottom:24px;">Tier 5 · Phase 2 · Module 02</span>
+  <h1>The Non-Performance<br/><em>Posture.</em></h1>
+  <p class="lede">How to remain present in an adversarial system without producing the performance the system is optimized to extract. The middle path between collapse-into-costume and costly-exit.</p>
+</section>
+
+<section class="block first">
+  <h2>What this installs.</h2>
+  <p>Module 01 installed recognition. You can now name what the system is structurally optimizing for, in real time, before it has installed its hooks. Module 02 installs what you do once you have read the room.</p>
+  <p>There are two default responses to an adversarial system, and both are losses. The first is <strong>collapse-into-costume</strong> &mdash; you produce the performance the system rewards, and the system extracts from the performance. The second is <strong>costly exit</strong> &mdash; you leave, often before exit is structurally available, and pay the externalized exit cost. The Non-Performance Posture is the third move. <strong>You remain present in the system, and you refuse to produce the performance.</strong></p>
+  <p>The posture is not resistance. Resistance is still a performance the system can read and extract from. The posture is structural &mdash; you offer the system a surface it cannot extract from, while remaining inside it. The system's optimization runs into a no-op. Over time, the system reroutes around you, narrows the demands it makes on you, or releases you on terms that do not trigger the exit cost. The posture is what makes adversarial rooms operable.</p>
+</section>
+
+<section class="block bordered">
+  <h2>How to use it.</h2>
+  <p>Below are the seven moves of the Non-Performance Posture. Read each one. Pick up to three moves to install this week &mdash; the ones that fit your current rooms and your current capacity. Trying to install all seven at once produces no install at all; trying to install one is too narrow to hold under pressure. Three is the structural width that holds.</p>
+
+  <div style="background: var(--card-soft); border: 1px solid var(--gold); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 28px; margin: 32px 0 8px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 12px;">Sovereign Tip</span>
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin: 0 0 12px;">The posture is not control. The costume tries to read this module as a new set of moves to perform &mdash; better, smarter, more strategic moves than the old costume offered. That re-read is the costume protecting itself. The posture is structural refusal of the extraction surface, not a more sophisticated version of performing.</p>
+    <p style="font-family: var(--serif); font-size: 16px; line-height: 1.75; color: var(--text); margin: 0;">Run the moves from the operator beneath the costume. The first sign that you have the posture installed is that the room loses the lever it used to have on you. The system can still ask. You are no longer structurally obligated to deliver.</p>
+  </div>
+
+  <div id="npp-tool" style="margin-top: 36px;">
+
+    <div class="npp-move" data-move="1">
+      <span class="npp-move-num">Move 01 · The Pause</span>
+      <p class="npp-move-name">Refuse to fill the silence the system is structured to demand you fill.</p>
+      <p class="npp-move-desc">Adversarial rooms are built around the assumption that the entrant will immediately produce performance to relieve their own discomfort. The Pause is the refusal to do that. You let the silence sit. You let the room's structure surface itself. The discomfort the room is trying to offload onto you stays with the room.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="1" data-val="in-queue" onclick="setMove(1,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="1" data-val="skip" onclick="setMove(1,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="2">
+      <span class="npp-move-num">Move 02 · The Specific Question</span>
+      <p class="npp-move-name">Surface the room's architecture in real time without confronting it.</p>
+      <p class="npp-move-desc">When the room makes a structural demand, ask the specific question that surfaces what the room is actually asking for. Not a challenge. Not a confrontation. A precise question that requires the room to either name its own architecture or move on. Most adversarial rooms cannot answer; the question itself disarms the demand.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="2" data-val="in-queue" onclick="setMove(2,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="2" data-val="skip" onclick="setMove(2,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="3">
+      <span class="npp-move-num">Move 03 · The Neutral Affect</span>
+      <p class="npp-move-name">Decline the emotional currency the system is optimized to extract.</p>
+      <p class="npp-move-desc">Adversarial systems run on specific emotional currencies &mdash; enthusiasm, deference, anxiety, resistance, validation. The Neutral Affect is the structural refusal to supply the currency the room is calibrated for. You remain warm and present. You do not perform the affect the room is asking for. The room's extraction logic loses the substrate it runs on.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="3" data-val="in-queue" onclick="setMove(3,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="3" data-val="skip" onclick="setMove(3,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="4">
+      <span class="npp-move-num">Move 04 · Vocabulary Independence</span>
+      <p class="npp-move-name">Use your own vocabulary without arguing against the room's.</p>
+      <p class="npp-move-desc">The room supplies the vocabulary in which the conversation is structured. Vocabulary Independence is the move of speaking from your own terms without translating into the room's, and without spending energy arguing against the room's vocabulary. You describe what you are doing in the words that name it accurately. The room either follows you across or it does not.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="4" data-val="in-queue" onclick="setMove(4,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="4" data-val="skip" onclick="setMove(4,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="5">
+      <span class="npp-move-num">Move 05 · The Held Position</span>
+      <p class="npp-move-name">Refuse to update your stated position under social pressure that is not a structural argument.</p>
+      <p class="npp-move-desc">Adversarial rooms apply social pressure to shift your stated position &mdash; tone, group consensus, escalation, ostracism &mdash; without producing a structural argument that would justify the shift. The Held Position is the refusal to update on pressure alone. If the room produces an argument, you update. If the room produces pressure, you do not.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="5" data-val="in-queue" onclick="setMove(5,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="5" data-val="skip" onclick="setMove(5,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="6">
+      <span class="npp-move-num">Move 06 · Selective Engagement</span>
+      <p class="npp-move-name">Engage on what serves you. Withhold from what feeds the extraction.</p>
+      <p class="npp-move-desc">Inside the same room, some interactions are aligned with what you are building and some are pure extraction. Selective Engagement is the practice of distinguishing them in real time and routing your energy accordingly. You become unreadable in the dimensions the system was optimizing for, and present in the dimensions that serve your architecture.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="6" data-val="in-queue" onclick="setMove(6,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="6" data-val="skip" onclick="setMove(6,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-move" data-move="7">
+      <span class="npp-move-num">Move 07 · The Counter-Surface</span>
+      <p class="npp-move-name">Offer the room a surface to operate against that does not deliver the performance.</p>
+      <p class="npp-move-desc">The room's extraction logic needs a surface to operate against. The Counter-Surface is the move of offering one &mdash; competent, present, cooperative &mdash; that does not produce the specific performance the system is optimized to extract. You are not absent. You are not resistant. You are operating from a surface the room was not designed to read.</p>
+      <div class="npp-toggle">
+        <button class="npp-btn" data-move="7" data-val="in-queue" onclick="setMove(7,'in-queue')">In practice queue</button>
+        <button class="npp-btn" data-move="7" data-val="skip" onclick="setMove(7,'skip')">Skip this week</button>
+      </div>
+    </div>
+
+    <div class="npp-result" id="npp-result">
+      <span class="npp-result-empty">Pick up to three moves above. Your practice queue appears here.</span>
+    </div>
+
+    <div class="npp-actions">
+      <button type="button" id="npp-save-queue" class="btn">Save practice queue</button>
+      <button type="button" id="npp-clear" class="btn btn-secondary">Clear</button>
+    </div>
+
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Log an attempt.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">After you run a move in a specific room, log what happened. The pattern across attempts is what installs the posture; a single attempt does not yet name the install.</p>
+
+  <div class="npp-log-entry">
+    <label for="npp-log-room">The room</label>
+    <input type="text" id="npp-log-room" class="field" placeholder="The specific room or interaction." />
+  </div>
+
+  <div class="npp-log-entry">
+    <label for="npp-log-move">The move</label>
+    <select id="npp-log-move" class="field">
+      <option value="">Pick the move you ran...</option>
+      <option value="The Pause">Move 01 · The Pause</option>
+      <option value="The Specific Question">Move 02 · The Specific Question</option>
+      <option value="The Neutral Affect">Move 03 · The Neutral Affect</option>
+      <option value="Vocabulary Independence">Move 04 · Vocabulary Independence</option>
+      <option value="The Held Position">Move 05 · The Held Position</option>
+      <option value="Selective Engagement">Move 06 · Selective Engagement</option>
+      <option value="The Counter-Surface">Move 07 · The Counter-Surface</option>
+    </select>
+  </div>
+
+  <div class="npp-log-entry">
+    <label for="npp-log-note">What happened</label>
+    <textarea id="npp-log-note" class="field" rows="4" placeholder="Briefly: what the room did, what you did, what the room did back."></textarea>
+  </div>
+
+  <div class="npp-log-entry">
+    <label>Did the move hold?</label>
+    <div class="npp-toggle">
+      <button type="button" class="npp-btn" id="npp-hold-held" onclick="setHold('held')">Held fully</button>
+      <button type="button" class="npp-btn" id="npp-hold-partial" onclick="setHold('partial')">Held partially</button>
+      <button type="button" class="npp-btn" id="npp-hold-collapsed" onclick="setHold('collapsed')">Collapsed into costume</button>
+    </div>
+  </div>
+
+  <div class="npp-actions">
+    <button type="button" id="npp-save-log" class="btn">Save attempt</button>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>Past attempts.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 18px;">Saved on this device. The pattern across attempts is the install. Look for which moves hold for you and which collapse &mdash; that is the calibration data.</p>
+  <div id="npp-history">
+    <div class="npp-history-empty">Your saved attempts will appear here.</div>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The Field Manual.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">The seven moves above are the surface. The Field Manual takes you past the surface &mdash; why each move works structurally, the four common collapse points (when each move fails and how to recover), the practice cadence, and the way the posture compounds across rooms once it begins to install.</p>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 26px; margin-top: 18px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Field Manual</span>
+    <h3 style="font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3;">The Non-Performance Posture &mdash; Field Manual.</h3>
+    <p style="font-size: 14.5px; line-height: 1.65; color: var(--body-dim); margin-bottom: 16px;">Seven sections. The structural premise, the seven moves in depth, the four collapse points, the practice cadence, what the posture changes about the room, sovereignty.</p>
+    <a href="/tier-5/assets/NON_PERFORMANCE_POSTURE_FIELD_MANUAL.pdf" class="btn" target="_blank">Open the Field Manual &rarr;</a>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>The Listening Companion.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 8px;">A contemplative companion, written specifically for the listening register. Walks you through the structural premise of the posture, each of the seven moves live, the collapse points to watch for, and the practice cadence. Runs while you walk, sit, or move through the day.</p>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 24px 26px; margin-top: 18px;">
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Listening Companion</span>
+    <h3 style="font-family: var(--serif); font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 8px; line-height: 1.3;">The Non-Performance Posture &mdash; Listening Companion.</h3>
+    <p style="font-size: 14.5px; line-height: 1.65; color: var(--body-dim); margin-bottom: 16px;">Single-speaker, contemplative pacing. Flowing prose. Walks the listener through the structural premise, the seven moves, the four collapse points, the practice cadence.</p>
+    <span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px;">~11 min audio + script &middot; Audio synthesizing &middot; Script available now</span>
+    <a href="/tier-5/assets/NON_PERFORMANCE_POSTURE_LISTENING_COMPANION_SCRIPT.pdf" class="btn" target="_blank">Read the script &rarr;</a>
+  </div>
+</section>
+
+<section class="block bordered">
+  <h2>How to install Module 02.</h2>
+  <p style="color: var(--body-dim); font-size: 15px; margin-bottom: 12px;">A 21-day install. Three weeks. The posture is muscle, not concept &mdash; it installs by reps, in real rooms.</p>
+  <ol style="font-family: var(--serif); font-size: 16px; line-height: 1.85; color: var(--text); margin: 0 0 18px 24px; padding: 0;">
+    <li><strong>Week 1 &mdash; Pick.</strong> <span style="color: var(--body-dim);">Read all seven moves. Pick three. Save the practice queue above. Read the Field Manual sections for the three moves you picked.</span></li>
+    <li><strong>Week 2 &mdash; Run.</strong> <span style="color: var(--body-dim);">Run each of the three moves in at least one adversarial room each. Log every attempt above. Aim for nine attempts minimum across the week.</span></li>
+    <li><strong>Week 3 &mdash; Read the pattern.</strong> <span style="color: var(--body-dim);">Review the log. Which moves held? Which collapsed? Re-pick the queue for the next pass &mdash; keep the moves that are installing, swap out the ones that aren't yet landing for fresh ones. Module 03 (The Asymmetric Exit) becomes accessible once the posture is holding in at least two rooms.</span></li>
+  </ol>
+  <p style="font-family: var(--serif); font-style: italic; color: var(--body-dim); font-size: 15px;">The posture installs by reps, not by understanding. Reading this module without running it produces no install at all.</p>
+</section>
+
+<div class="closing">
+  <p>You no longer need to leave the room.<br/>You no longer need to perform inside it.<br/>That is the install.</p>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <a href="/about">About</a>
+      <a href="/diagnostic">Diagnostic</a>
+      <a href="/the-journey">The Journey</a>
+      <a href="/newsletter">Newsletter</a>
+      <a href="/members">Members</a>
+      <a href="/unsubscribe">Unsubscribe</a>
+    </p>
+    <p style="margin-top: 16px; color: #aaaaaa;">© Sovereign Synthesis · sovereign-synthesis.com</p>
+  </div>
+</footer>
+
+<script>
+const NPP_PROMPTS = {
+  1: "Pick one room this week. When the room produces silence calibrated to demand performance, let it sit. Notice what the room does next.",
+  2: "Draft one specific question per active room. The question that surfaces what the room is actually asking for, without confrontation.",
+  3: "Name the emotional currency each active room runs on. Walk into the next interaction warm but without supplying it.",
+  4: "Identify two words you currently translate into the room's vocabulary. Stop translating. Use your own terms once this week.",
+  5: "Pick one position you have updated under pressure in the last 30 days without a structural argument. Re-state it.",
+  6: "List what the room is genuinely doing for you and what it is extracting. Engage on the first list. Withhold from the second.",
+  7: "Show up competent, present, cooperative. Decline to produce the specific performance the room is calibrated to extract."
+};
+const NPP_NAMES = {
+  1: "Move 01 · The Pause",
+  2: "Move 02 · The Specific Question",
+  3: "Move 03 · The Neutral Affect",
+  4: "Move 04 · Vocabulary Independence",
+  5: "Move 05 · The Held Position",
+  6: "Move 06 · Selective Engagement",
+  7: "Move 07 · The Counter-Surface"
+};
+
+let moves = JSON.parse(localStorage.getItem('npp-moves') || '{}');
+let logs = JSON.parse(localStorage.getItem('npp-logs') || '[]');
+let currentHold = null;
+
+function setMove(n, val) {
+  if (val === 'in-queue') {
+    const queued = Object.values(moves).filter(v => v === 'in-queue').length;
+    if (moves[n] !== 'in-queue' && queued >= 3) {
+      alert('Three is the practice queue cap. Skip a move first.');
+      return;
+    }
+  }
+  moves[n] = val;
+  renderMoves();
+  renderResult();
+}
+
+function renderMoves() {
+  document.querySelectorAll('.npp-move').forEach(el => {
+    const n = el.getAttribute('data-move');
+    el.classList.toggle('active', moves[n] === 'in-queue');
+  });
+  document.querySelectorAll('.npp-btn[data-move]').forEach(btn => {
+    const n = btn.getAttribute('data-move');
+    const val = btn.getAttribute('data-val');
+    btn.classList.remove('active', 'in-queue', 'skip');
+    if (moves[n] === val) {
+      btn.classList.add('active', val);
+    }
+  });
+}
+
+function renderResult() {
+  const queued = Object.entries(moves).filter(([n, v]) => v === 'in-queue').map(([n]) => n);
+  const el = document.getElementById('npp-result');
+  if (queued.length === 0) {
+    el.innerHTML = '<span class="npp-result-empty">Pick up to three moves above. Your practice queue appears here.</span>';
+    return;
+  }
+  let html = '<span style="display:block; font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 14px;">Practice queue · this week</span>';
+  queued.forEach(n => {
+    html += `<div class="npp-queue-item"><span class="npp-queue-tag">${NPP_NAMES[n]}</span><div class="npp-queue-prompt">${NPP_PROMPTS[n]}</div></div>`;
+  });
+  el.innerHTML = html;
+}
+
+document.getElementById('npp-save-queue').addEventListener('click', () => {
+  const queued = Object.entries(moves).filter(([n, v]) => v === 'in-queue').map(([n]) => n);
+  if (queued.length === 0) { alert('Pick at least one move first.'); return; }
+  localStorage.setItem('npp-moves', JSON.stringify(moves));
+  alert('Practice queue saved.');
+});
+
+document.getElementById('npp-clear').addEventListener('click', () => {
+  moves = {};
+  localStorage.removeItem('npp-moves');
+  renderMoves();
+  renderResult();
+});
+
+function setHold(val) {
+  currentHold = val;
+  ['held', 'partial', 'collapsed'].forEach(v => {
+    const btn = document.getElementById('npp-hold-' + v);
+    btn.classList.remove('active', 'in-queue', 'skip');
+    if (v === val) btn.classList.add('active', 'in-queue');
+  });
+}
+
+document.getElementById('npp-save-log').addEventListener('click', () => {
+  const room = document.getElementById('npp-log-room').value.trim();
+  const move = document.getElementById('npp-log-move').value;
+  const note = document.getElementById('npp-log-note').value.trim();
+  if (!room || !move || !note || !currentHold) {
+    alert('Fill all four fields before saving.');
+    return;
+  }
+  logs.unshift({
+    room, move, note, hold: currentHold, date: new Date().toISOString()
+  });
+  localStorage.setItem('npp-logs', JSON.stringify(logs));
+  document.getElementById('npp-log-room').value = '';
+  document.getElementById('npp-log-move').value = '';
+  document.getElementById('npp-log-note').value = '';
+  setHold(null);
+  renderHistory();
+  alert('Attempt logged.');
+});
+
+function renderHistory() {
+  const el = document.getElementById('npp-history');
+  if (logs.length === 0) {
+    el.innerHTML = '<div class="npp-history-empty">Your saved attempts will appear here.</div>';
+    return;
+  }
+  const holdLabel = { held: 'Held fully', partial: 'Held partially', collapsed: 'Collapsed into costume' };
+  el.innerHTML = logs.map(l => `
+    <div class="npp-history-item">
+      <div class="npp-history-room">${escapeHtml(l.room)}</div>
+      <div class="npp-history-move">${escapeHtml(l.move)}</div>
+      <div class="npp-history-date">${new Date(l.date).toLocaleDateString()}</div>
+      <div class="npp-history-note">${escapeHtml(l.note)}</div>
+      <div class="npp-history-hold">${holdLabel[l.hold]}</div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+renderMoves();
+renderResult();
+renderHistory();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.SS_TIER_SLUG = 'dp2';</script>
+<script src="/js/auth-gate.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
